@@ -60,24 +60,44 @@ siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # rem
 #
 ## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
 
+# Site ID
 # table(siteinfo_raw$SiteID) # Unique ID for each site - validated
+
+# Ecological zones
 # unique(siteinfo_raw$NiBioEcologicalZone) # Three categories for ecological zone - validated
+
+# Geographical locations
 # unique(siteinfo_raw$Location) # Correct locations and location names
+
+# Muncipalities
 # unique(siteinfo_raw$Municipality) # missing data + US2 Stordalen -> did you guys went that far ? Yes validated
 # siteinfo_raw[is.na(siteinfo_raw$Municipality),] # NA identified - US2, Stordalen is located in Masfjorden
 siteinfo_raw <- siteinfo_raw |> 
-  mutate(Municipality=ifelse(SiteID == "US2", "Masfjorden", Municipality)) # Replace NA by municipality name
+  mutate(Municipality = ifelse(SiteID == "US2", "Masfjorden", Municipality)) # Replace NA by municipality name
 # unique(siteinfo_raw$Municipality) # NA in Municipality replaced - validated
-unique(siteinfo_raw$Farmer) # Missing two full names and one NA
-#siteinfo_raw[is.na(siteinfo_raw$Farmer)]
-#unique(siteinfo_raw$Type_livestock)
-siteinfo_raw <- siteinfo_raw %>% 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Villsau" = "Sheep")) # Villsau as sheep category
-table(siteinfo_raw$Type_livestock) #10 cows, 11 goats, 23 sheep -> ask Amy again about UG1 & UG2
-#unique(siteinfo_raw$Habitat) #needs to standardise categories, no more than 5 - burnt/non-burnt? alpine/subalpine? 
+
+# Farmers
+# unique(siteinfo_raw$Farmer) # Missing two full names and one NA
+# siteinfo_raw[is.na(siteinfo_raw$Farmer),] # NA identified - UC1, farmer same as for US1
+siteinfo_raw <- siteinfo_raw |> 
+  mutate(Farmer = ifelse(SiteID == "UC1", "Hans Magne Haukeland", Farmer)) |> 
+  mutate(Farmer = dplyr::recode(Farmer, "Tormod" = "Tormod Magnesen")) |> 
+  mutate(Farmer = dplyr::recode(Farmer, "Dan" = "Ole Mathias Lygren")) # Full farmer names - validated
+
+# Livestock
+# unique(siteinfo_raw$Type_livestock) # Villsau should be within sheep category
+siteinfo_raw <- siteinfo_raw |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Villsau" = "Sheep")) # Only 3 livestock categories - validated
+# table(siteinfo_raw$Type_livestock) # correct number of sites per livestock category - validated
+
+# Habitat type
+# unique(siteinfo_raw$Habitat) # 3 categories + one extra (bog) which will not be considered in the analysis
+# table(siteinfo_raw$Habitat) # habitat repartition - validated
+
 #unique(siteinfo_raw$Animal_on_site)
 
-#Binding geology
+#
+## Geological information Binding geology
 Geol_raw <- read_xlsx("..\\06_SurveyDataSets\\Tradmod site geology.xlsx")
 #length(Geol_raw$SiteID) #45 sites
 #sort(table(Geol_raw$SiteID)) # 1 value per site
