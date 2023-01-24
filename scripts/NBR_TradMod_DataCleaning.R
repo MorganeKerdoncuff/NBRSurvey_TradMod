@@ -16,8 +16,8 @@ library(lubridate) #standard date data
 #### DATA LOADING ####
 
 siteinfo_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SiteInfo") #Farm information, field location and habitat type
-landuse_raw <- read_excel(path = "data/FarmerSurvey.xlsx", sheet="Farms Information_R") #Field management data from farmer interview, at site level
-farmer_raw <- read_excel(path = "data/NBR_FarmRepertoire.xlsx") #Farm management data from farmer interview med Margit, at site level
+landuse_raw <- read_excel(path = "data/NBR_FarmerSurvey.xlsx", sheet="Farms Information_R") #Field management data from farmer interview, at site level
+#farmer_raw <- read_excel(path = "data/NBR_FarmRepertoire.xlsx") #Farm management data from farmer interview med Margit, at site level
 landscape_raw <- read_excel(path = "data/NBR_LandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
 area20x20_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="20mX20m") #Sampling area description, vegetation cover at the site level
 vgcover_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilCover") #Vegetation cover at the quadrat (subplot) level
@@ -32,6 +32,8 @@ arthro_raw <- read_excel(path = "data/NBR_RawArthro2019-2020.xlsx", na="NA") #ar
 
 
 #### SITE INFO ####
+
+## Description
 
 ## List of variables
 
@@ -126,6 +128,64 @@ siteinfo_full <- siteinfo_full |>
 
 #### FIELD MANAGEMENT ####
 
+## Description
+
+## List of variables
+
+# [1] Field identification code for data collection
+# [2] Geographical location of the field, hamlet
+# [3] Geographical location of the field, postcode
+# [4] Geographical location of the field, municipality (both former and current classification)
+# [5] Date of the interview with the farmer
+# [6] Site productivity - infield high productivity, outfield low productivity
+# [7] National identification number of the farm
+# [8] Main livestock, currently grazing in the field - ! rotational grazing management
+# [9] Other livestock, grazing in other fields - ! rotational grazing management
+# [10] Name of cow breed
+# [11] Name of goat breed
+# [12] Name of sheep breed
+# [13] Number of adult animals in the main livestock
+# [14] Number of young animals in the main livestock
+# [15] Number of adult animals in other livestock
+# [16] Number of young animals in other livestock
+# [17] Size of the field containing the sampling area (ha) ! rotational grazing management
+# [18] FROM GÅRDSKSART - Total grazing area of the farm (ha) ! rotational grazing management
+# [19] Grazing density on the field - not collected, empty column
+# [20] Period since the farmer has had the current livestock
+# [21] Period without grazing management on the field
+# [22] Number of months the main livestock grazes in the field in a year
+# [23] Number of months other livestock graze in the field in a year ! rotational grazing
+# [24] If the animals are kept inside or outside at night
+# [25] Farmer impression of grazing pressure on the site
+# [26] Former livestock which used to graze in the field (1)
+# [27] Former livestock which used to graze in the field (2)
+# [28] Former livestock which used to graze in the field (3)
+# [29] Former livestock grazing period (1)
+# [30] Former livestock grazing period (2)
+# [31] Former livestock grazing period (3)
+# [32] Type of farm management during the past 10 years (1)
+# [33] Type of farm management during the past 10 years (2)
+# [34] Type of farm management during the past 10 years (3)
+# [35] If applicable, frequency of grass cutting
+# [36] If applicable, frequency of mulching
+# [37] If applicable, frequency of fertilization with manure
+# [38] If applicable, type of manure used
+# [39] If applicable, volume of manure used (m3)
+# [40] If applicable, in which season the manure is used
+# [41] If applicable, frequency of fertilization with artificial fertilizer
+# [42] If applicable, weight of artificial fertilizer used (kg)
+# [43] If applicable, in which season the artificial fertilizer is used
+# [44] If applicable, frequency of fertilization with shell-sand/lime
+# [45] If applicable, weight of shell-sand/limer used (kg)
+# [46] If applicable, in which season the shell-sand/lime is used
+# [47] If applicable, last time the field was sowed
+# [48] If applicable, last time the field was plowed
+# [49] If applicable, last time the field was drained
+# [50] Type of land use prior to grazing
+# [51] If applicable, type of production prior to grazing (1)
+# [52] If applicable, type of production prior to grazing (2)
+# [53] Time period of land use type prior to grazing
+# [54] Comments
 
 
 #### SAMPLING AREA 20X20 ####
