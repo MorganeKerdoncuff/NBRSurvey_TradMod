@@ -61,11 +61,14 @@ str(siteinfo_raw) # All good
 #
 ## Name & character cleaning Site info
 
+# R friendly variable names
 names(siteinfo_raw) <- gsub("%", "percent", names(siteinfo_raw))
 names(siteinfo_raw) <- gsub(" ", "", names(siteinfo_raw)) 
 names(siteinfo_raw) <-  gsub("\\(", "_", names(siteinfo_raw))
 names(siteinfo_raw) <-  gsub("\\)", "", names(siteinfo_raw))
-siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # remove empty variables, which will be included in another dataset
+
+# Removal empty columns
+#siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # remove empty variables, which will be included in another dataset
 
 #
 ## Data cleaning - new R object
@@ -76,8 +79,20 @@ siteinfo_full <- siteinfo_raw
 ## Numeric var Site Info - Check min/max, distribution and potential outliers
 
 # Check min/max
-test <- siteinfo_full %>% 
-  summarise(tibble(across(where(is.numeric), ~min(.x, na.rm = TRUE), .names = "min_{.col}"),across(where(is.numeric), ~max(.x, na.rm = TRUE), .names = "max_{.col}"))) %>% 
+test <- siteinfo_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+        ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+      )
+    ) |>  
   transpose() # All good
 
 # Check distribution of quantitative variable
@@ -90,7 +105,12 @@ test <- siteinfo_full %>%
 #table(siteinfo_full$SiteID) # Unique ID for each site - validated
 
 # Ecological zones
-#unique(siteinfo_full$NiBioEcologicalZone) # Three categories for ecological zone - validated
+unique(siteinfo_full$NiBioEcologicalZone) # Three categories for ecological zone - validated
+# Homogeneous character writing - removing capital letters for common nouns
+siteinfo_full <- siteinfo_full |> 
+  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Coastal" = "coastal")) |> 
+  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Fjord" = "fjord")) |> 
+  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Mountain" = "mountain"))
 
 # Geographical locations
 #unique(siteinfo_full$Location) # Correct locations and location names
@@ -113,12 +133,22 @@ siteinfo_full <- siteinfo_full |>
 # Livestock
 #unique(siteinfo_full$Type_livestock) # Villsau should be within sheep category
 siteinfo_full <- siteinfo_full |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Villsau" = "Sheep")) # Only 3 livestock categories - validated
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Villsau" = "sheep")) # Only 3 livestock categories - validated
+# Homogeneous character writing - removing capital letters for common nouns
+siteinfo_full <- siteinfo_full |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Sheep" = "sheep")) |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Cows" = "cow")) |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Goats" = "goat"))
 #table(siteinfo_full$Type_livestock) # correct number of sites per livestock category - validated
 
 # Habitat type
-# unique(siteinfo_full$Habitat) # 3 categories + one extra (bog) which will not be considered in the analysis
-# table(siteinfo_full$Habitat) # habitat repartition - validated
+#unique(siteinfo_full$Habitat) # 3 categories + one extra (bog) which will not be considered in the analysis
+# Homogeneous character writing - removing capital letters for common nouns
+siteinfo_full <- siteinfo_full |> 
+  mutate(Habitat = dplyr::recode(Habitat, "Coastal heathland" = "coastal heathland")) |> 
+  mutate(Habitat = dplyr::recode(Habitat, "Permanent grassland" = "permanent grassland")) |> 
+  mutate(Habitat = dplyr::recode(Habitat, "Subalpine heathland" = "subalpine heathland"))
+#table(siteinfo_full$Habitat) # habitat repartition - validated
 
 #unique(siteinfo_full$Animal_on_site)
 
@@ -136,56 +166,141 @@ siteinfo_full <- siteinfo_full |>
 # [2] Geographical location of the field, hamlet
 # [3] Geographical location of the field, postcode
 # [4] Geographical location of the field, municipality (both former and current classification)
-# [5] Date of the interview with the farmer
-# [6] Site productivity - infield high productivity, outfield low productivity
-# [7] National identification number of the farm
-# [8] Main livestock, currently grazing in the field - ! rotational grazing management
-# [9] Other livestock, grazing in other fields - ! rotational grazing management
-# [10] Name of cow breed
-# [11] Name of goat breed
-# [12] Name of sheep breed
-# [13] Number of adult animals in the main livestock
-# [14] Number of young animals in the main livestock
-# [15] Number of adult animals in other livestock
-# [16] Number of young animals in other livestock
-# [17] Size of the field containing the sampling area (ha) ! rotational grazing management
-# [18] FROM GÅRDSKSART - Total grazing area of the farm (ha) ! rotational grazing management
-# [19] Grazing density on the field - not collected, empty column
-# [20] Period since the farmer has had the current livestock
-# [21] Period without grazing management on the field
-# [22] Number of months the main livestock grazes in the field in a year
-# [23] Number of months other livestock graze in the field in a year ! rotational grazing
-# [24] If the animals are kept inside or outside at night
-# [25] Farmer impression of grazing pressure on the site
-# [26] Former livestock which used to graze in the field (1)
-# [27] Former livestock which used to graze in the field (2)
-# [28] Former livestock which used to graze in the field (3)
-# [29] Former livestock grazing period (1)
-# [30] Former livestock grazing period (2)
-# [31] Former livestock grazing period (3)
-# [32] Type of farm management during the past 10 years (1)
-# [33] Type of farm management during the past 10 years (2)
-# [34] Type of farm management during the past 10 years (3)
-# [35] If applicable, frequency of grass cutting
-# [36] If applicable, frequency of mulching
-# [37] If applicable, frequency of fertilization with manure
-# [38] If applicable, type of manure used
-# [39] If applicable, volume of manure used (m3)
-# [40] If applicable, in which season the manure is used
-# [41] If applicable, frequency of fertilization with artificial fertilizer
-# [42] If applicable, weight of artificial fertilizer used (kg)
-# [43] If applicable, in which season the artificial fertilizer is used
-# [44] If applicable, frequency of fertilization with shell-sand/lime
-# [45] If applicable, weight of shell-sand/limer used (kg)
-# [46] If applicable, in which season the shell-sand/lime is used
-# [47] If applicable, last time the field was sowed
-# [48] If applicable, last time the field was plowed
-# [49] If applicable, last time the field was drained
-# [50] Type of land use prior to grazing
-# [51] If applicable, type of production prior to grazing (1)
-# [52] If applicable, type of production prior to grazing (2)
-# [53] Time period of land use type prior to grazing
-# [54] Comments
+# [5] Name of the farmer
+# [6] Date of the interview with the farmer
+# [7] Site productivity - infield high productivity, outfield low productivity
+# [8] National identification number of the farm
+# [9] Main livestock, currently grazing in the field - ! rotational grazing management
+# [10] Other livestock, grazing in other fields - ! rotational grazing management
+# [11] Name of cow breed
+# [12] Name of goat breed
+# [13] Name of sheep breed
+# [14] Number of adult animals in the main livestock
+# [15] Number of young animals in the main livestock
+# [16] Number of adult animals in other livestock
+# [17] Number of young animals in other livestock
+# [18] Size of the field containing the sampling area (ha) ! rotational grazing management
+# [19] FROM GÅRDSKSART - Total grazing area of the farm (ha) ! rotational grazing management
+# [20] Grazing density on the field - not collected, empty column
+# [21] Period since the farmer has had the current livestock
+# [22] Period without grazing management on the field
+# [23] Number of months the main livestock grazes in the field in a year
+# [24] Number of months other livestock graze in the field in a year ! rotational grazing
+# [25] If the animals are kept inside or outside at night
+# [26] Farmer impression of grazing pressure on the site
+# [27] Former livestock which used to graze in the field (1)
+# [28] Former livestock which used to graze in the field (2)
+# [29] Former livestock which used to graze in the field (3)
+# [30] Former livestock grazing period (1)
+# [31] Former livestock grazing period (2)
+# [32] Former livestock grazing period (3)
+# [33] Type of farm management during the past 10 years (1)
+# [34] Type of farm management during the past 10 years (2)
+# [35] Type of farm management during the past 10 years (3)
+# [36] If applicable, frequency of grass cutting
+# [37] If applicable, frequency of mulching
+# [38] If applicable, frequency of fertilization with manure
+# [39] If applicable, type of manure used
+# [40] If applicable, volume of manure used (m3)
+# [41] If applicable, in which season the manure is used
+# [42] If applicable, frequency of fertilization with artificial fertilizer
+# [43] If applicable, weight of artificial fertilizer used (kg)
+# [44] If applicable, in which season the artificial fertilizer is used
+# [45] If applicable, frequency of fertilization with shell-sand/lime
+# [46] If applicable, weight of shell-sand/limer used (kg)
+# [47] If applicable, in which season the shell-sand/lime is used
+# [48] If applicable, last time the field was sowed
+# [49] If applicable, last time the field was plowed
+# [50] If applicable, last time the field was drained
+# [51] Type of land use prior to grazing
+# [52] If applicable, type of production prior to grazing (1)
+# [53] If applicable, type of production prior to grazing (2)
+# [54] Time period of land use type prior to grazing
+# [55] Comments
+
+#
+## Summary land use - Check table size, list of variables, variable types (num/chr)
+
+str(landuse_raw) # All good
+
+#
+## Name & character cleaning land use
+
+# R friendly variable names
+names(landuse_raw)<-  gsub(" ", "", names(landuse_raw))
+names(landuse_raw)<-  gsub("\\)", "", names(landuse_raw))
+names(landuse_raw)<-  gsub("\\(", "_", names(landuse_raw))
+names(landuse_raw)<-  gsub("/", "_", names(landuse_raw))
+names(landuse_raw)<-  gsub(";", "_", names(landuse_raw))
+names(landuse_raw)<-  gsub("-", "_", names(landuse_raw))
+names(landuse_raw)<-  gsub("\\?", "", names(landuse_raw))
+names(landuse_raw)<-  gsub(":", "", names(landuse_raw))
+names(landuse_raw) <- gsub("Sitecode", "SiteID", names(landuse_raw)) #rename siteID so it matches with other sheets
+names(landuse_raw) <- gsub("Farmer_interviewee", "Farmer", names(landuse_raw))
+names(landuse_raw) <- gsub("Farm_name_nr.orbeitelag", "FarmID", names(landuse_raw))
+names(landuse_raw) <- gsub("Typeoflivestock", "Livestock", names(landuse_raw))
+names(landuse_raw) <- gsub("_ifapplicable", "", names(landuse_raw))
+names(landuse_raw) <- gsub("_villsaubreed", "breed", names(landuse_raw))
+names(landuse_raw) <- gsub("Numberofanimals", "FlockSize", names(landuse_raw))
+names(landuse_raw) <- gsub("Surveysitegrazingsurface_ha", "GrazingSurface_ha", names(landuse_raw))
+names(landuse_raw) <- gsub("Currentlivestock_fromdate_year", "LivestockFrom_year", names(landuse_raw))
+names(landuse_raw) <- gsub("Gap_swithoutgrazing_timeperiod", "NoGrazing_period", names(landuse_raw))
+names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year1_currentlivestock_monthsperyear", "YearlyGrazing1_month", names(landuse_raw))
+names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year2_currentlivestock_monthsperyear", "YearlyGrazing2_month", names(landuse_raw))
+names(landuse_raw) <- gsub("_type", "", names(landuse_raw))
+
+# Removal empty columns
+#landuse_raw <- subset(landuse_raw, select = -c(Grazingdensity_perha)) # will be calculated later in the script
+
+#
+## Data cleaning - new R object
+
+landuse_full <- landuse_raw
+
+#
+## Char var land use - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+#table(landuse_full$SiteID) # Unique ID for each site - validated
+
+# Livestock1
+#unique(landuse_full$Livestock1) # villsau should be in sheep category
+landuse_full <- landuse_full |> 
+  mutate(Livestock1 = dplyr::recode(Livestock1, "villsau" = "sheep"))
+#table(landuse_full$Livestock1) # correct number of sites per livestock category - validated
+
+# Livestock2
+#unique(landuse_full$Livestock2) # villsau should be in sheep category
+landuse_full <- landuse_full |> 
+  mutate(Livestock2 = dplyr::recode(Livestock2, "villsau" = "sheep"))
+
+# Cowbreed
+#unique(landuse_full$Cowbreed)
+
+#
+## Numeric var land use - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- landuse_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # All good
+
+# Flock size adults
+hist(landuse_full$FlockSize1_adults) # wide range but most farms under 50 animals - one farm over 150 animals
+landuse_full[landuse_full$FlockSize1_adults>150,] # IS4 + one NA?
+landuse_full[is.na(landuse_full$FlockSize1_adults),] # US6
 
 
 #### SAMPLING AREA 20X20 ####
@@ -225,6 +340,7 @@ str(area20x20_raw) # All good, date should be reformatted
 #
 ## Name & character cleaning sampling area
 
+# R friendly variable names
 names(area20x20_raw)<-gsub("%", "percent", names(area20x20_raw)) # remove percent signs from names
 names(area20x20_raw)<-gsub("&", "_", names(area20x20_raw)) # remove &
 names(area20x20_raw)<-gsub("\\(", "", names(area20x20_raw)) # remove (
@@ -309,21 +425,12 @@ hist(area20x20_full$percentBryophytes) # need to check again sites with weird he
 #hist(area20x20_full$percentLichen) # one site over 10%
 #area20x20_full[area20x20_full$percentLichen>15,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
 
-#hist(area20x20_full$percentBryophytes)
+#
+## Calculation new variables
 
-#Char var 20x20
-#unique(area20x20_full$Recording_date)#see all possible values
-#table(area20x20_full$SiteID)# no site name appears twice :-)
-#unique(area20x20_full$Aspect)# a bit of a mess.
-
-#Heat Load Index
+# Heat Load Index
 area20x20_full <- area20x20_full |> 
   mutate(HLI = cos(AspectDegree-225)*tan(General_slope))
 #hist(area20x20_full$HLI) # 3 outliers: one under 200, two over 100
 #area20x20_full[area20x20_full$HLI>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
 #area20x20_full[area20x20_full$HLI<0,] #OS6 -> 11 degree slope with NE exposition
-
-#Last check -> 45 sites
-#area20x20_full <- subset(area20x20_full, !SiteID=="UC1")
-#unique(area20x20_full$SiteID)
-sort(table(area20x20_full$SiteID))
