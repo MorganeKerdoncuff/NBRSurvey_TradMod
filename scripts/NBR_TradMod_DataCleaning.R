@@ -295,10 +295,11 @@ test <- landuse_full |>
   ) |>  
   transpose() # All good
 
-# Flock size adults - missing value
+# Flock size adults - missing values
 #landuse_full[is.na(landuse_full$FlockSize1_adults),] # some farmers would not or could not respond to our interview. The missing value were therefore taken from another series of interviews made in 2018
 landuse_full <- landuse_full |> 
   mutate(FlockSize1_adults = ifelse(SiteID == "IC2", 37, FlockSize1_adults)) |> 
+  mutate(Cowbreed = ifelse(SiteID == "IC2", "norsk rødt fe", Cowbreed)) |> 
   mutate(FlockSize1_adults = ifelse(SiteID == "UC1", 13, FlockSize1_adults)) |> 
   mutate(FlockSize1_adults = ifelse(SiteID == "US1", 4, FlockSize1_adults)) |> 
   mutate(FlockSize1_adults = ifelse(SiteID == "US4", 66, FlockSize1_adults)) |> 
@@ -310,9 +311,19 @@ landuse_full <- landuse_full |>
 hist(landuse_full$FlockSize1_adults) # wide range but most farms under 50 animals - one farm over 150 animals
 landuse_full[landuse_full$FlockSize1_adults>150,] # IS4 over 150 animals + US6 as NA
 
-# flock size young
+# Flock size young - missing values
+landuse_full <- landuse_full |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "IC2", 17, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "UC1", 13, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "US1", 10, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "US4", 63, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "IS5", 181, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "OS7", 14, FlockSize1_young)) |> 
+  mutate(FlockSize1_young = ifelse(SiteID == "IG3", 135, FlockSize1_young)) # no information for US6
+
+# Flock size young - distribution
 hist(landuse_full$FlockSize1_young)
-landuse_full[landuse_full$FlockSize1_young>150,] # US3 + 12 farms with no young animals
+landuse_full[landuse_full$FlockSize1_young>150,] # US3 & IS5 + 4 farms with no young animals + US6 as NA
 
 # Total infield surface - inmarksbeite
 #landuse_full[is.na(landuse_full$TotalInfieldSurface),] # All missing values should be outfields/heathland sites - validated
@@ -321,12 +332,29 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 #
 ## New variable - grazing intensity
 
-# Livestock unit - depends on type of livestock and breed (for cows)
-unique(landuse_full$Cowbreed) # Milking cows (norsk rødt fe) are 1 SSU - Beef cattle (Limousin, Aberdeen angus, Highland) are 0.8 LSU - Sheep and goats are 0.1 LSu
+# Livestock unit for adults - depends on type of livestock and breed (for cows)
+#unique(landuse_full$Cowbreed) # Milking cows (norsk rødt fe) are 1 SSU - Beef cattle (Limousin, Aberdeen angus, Highland) are 0.8 LSU - Sheep and goats are 0.1 LSu
 landuse_full <- landuse_full |> 
-  mutate(LSU_ind = ifelse(Cowbreed == "norsk rødt fe", 1,
-                          ifelse(Livestock1 == "cow", 0.8, 0.1)))
-hist(landuse_full$LSU_ind) # does not work !!
+  mutate(LSU_adultind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.1,
+                               ifelse(Cowbreed == "norsk rødt fe", 1, 0.8)))
+#hist(landuse_full$LSU_adultind) # validated
+
+# Livestock unit for young - half for goats and sheep (0.05), young cows on field (0.7)
+landuse_full <- landuse_full |> 
+  mutate(LSU_youngind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.05, 0.7))
+#hist(landuse_full$LSU_youngind) # validated
+
+# Grazing intensity over the year
+landuse_full <- landuse_full |>  
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
+  mutate(Grazingdensity_perha = ifelse(
+    Livestock1 == "goat" & Municipality_old == "Osterøy", 
+    (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/(TotalInfieldSurface*(12/YearlyGrazing1_month)), 
+    (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)
+    )
+hist(landuse_full$Grazingdensity_perha)
+landuse_full[is.na(landuse_full$Grazingdensity_perha),] #OG3, OG2 and OG5 as NAs
+
 
 #### SAMPLING AREA 20X20 ####
 
