@@ -325,9 +325,20 @@ landuse_full <- landuse_full |>
 hist(landuse_full$FlockSize1_young)
 landuse_full[landuse_full$FlockSize1_young>150,] # US3 & IS5 + 4 farms with no young animals + US6 as NA
 
-# Total infield surface - inmarksbeite
+# Grazing surface
+#landuse_full[is.na(landuse_full$GrazingSurface_ha),] # No missing value - validated
+#hist(landuse_full$GrazingSurface_ha) # big range, one outlier over 1000 ha
+#landuse_full[landuse_full$GrazingSurface_ha>1000,] # UG2 in the mountain -> extended area which serves for several farmers
+
+# Total infield surface - missing values & distribution
 #landuse_full[is.na(landuse_full$TotalInfieldSurface),] # All missing values should be outfields/heathland sites - validated
 hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
+
+# Date since the current livestock has been grazing
+landuse_full[is.na(landuse_full$LivestockFrom_year),] # 7 missing values from farmers who did not reply the survey
+hist(landuse_full$LivestockFrom_year) # ranges from 1920 to 2020
+
+#
 
 #
 ## New variable - grazing intensity
@@ -344,16 +355,16 @@ landuse_full <- landuse_full |>
   mutate(LSU_youngind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.05, 0.7))
 #hist(landuse_full$LSU_youngind) # validated
 
-# Grazing intensity over the year
+# Grazing intensity over the year - two goat flocks in Osterøy were known to be moved to summer farm (outfield)
 landuse_full <- landuse_full |>  
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
   mutate(Grazingdensity_perha = ifelse(
     Livestock1 == "goat" & Municipality_old == "Osterøy", 
-    (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/(TotalInfieldSurface*(12/YearlyGrazing1_month)), 
+    ((FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)*(YearlyGrazing1_month/12), 
     (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)
     )
 hist(landuse_full$Grazingdensity_perha)
-landuse_full[is.na(landuse_full$Grazingdensity_perha),] #OG3, OG2 and OG5 as NAs
+landuse_full[is.na(landuse_full$Grazingdensity_perha),]
 
 
 #### SAMPLING AREA 20X20 ####

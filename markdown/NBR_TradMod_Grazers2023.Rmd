@@ -5,3 +5,80 @@ date: "2023-01-24"
 output:
   html_document: default
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# INTRODUCTION
+By 2050, food demand is expected to increase between 30% and 62% depending on climate change impact (van Dijk et al., 2021).
+Even if Western countries are already exceeding their needs of meat to a level which affects human health, meat consumption per capita is still projected to increase by 3% (Alexandratos and Bruinsma, 2012).
+There have been several calls for efficient strategies to increase food production accordingly (ref), but following the Green Revolution and its subsequent intensification of agricultural practices in a highly urbanized Europe (ref), there is limited area availability to extend farmlands.
+In this context, increasing food availability, or reducing the diet gap (West et al., 2014), instead of raw production could serve a better purpose, especially when only 40% of the crops in Western countries are used for food production (Foley et al., 2011).
+Waste in the animal product chain is even more big, as on average 89% of the global mass of crops for animal feed is lost (Cassidy et al., 2013).
+Also high biodiversity loss (11% by 2040) risk if trends of agricultural intensification continues, but which could be reduced by national & global optimisation (Egli et al., 2018).
+There is therefore a real interest into switching from grain-fed to pasture-fed animals, but to invest this path there would be the need to reverse or at least stabilise the current trend of pasture decline which is particularly severe in Europe, with more than half of the total area which was lost in the last 60 years (FAO, 2022).  
+Yet pastures are important reservoirs of biodiversity...
+Efficiently relocalizing agricultural production to ensure food security, development of circular economy and preservation of cultural landscapes is one of the pillars of the UNESCO Man and Biosphere program (ref).
+Biosphere Reserves are areas of experimentation for sustainable development and use of natural resources, so they offer appropriate ground to reinvest the lost agricultural ground.
+
+- Food production vs growing population - UN goals
+- Localization/local production: adapted to native systems while still being productive
+- UNESCO Biosphere reserve
+- Nordhordland Biosphere Reserve: diversity of grazing, topographical particularities
+- Lots of studies on grazing intensity impact on biodiversity
+- Comparison regular grazing & mixed grazing
+- Add-on: comparison different grazers type -> do they provide something different, shaping the landscape?
+
+# MAIN QUESTION
+What is the main driver of plant and arthropod diversity and community composition in small-scale grazing systems?
+Three categories: broad-scale environmental variables (landscape matrix, heat load index, elevation, bedrock) vs grazing management (standardized grazing intensity, current grazing animal, +1-2) and in-field ecological conditions (Soil bulk density or soil penetration, soil nutrient P, soil type, mean vegetation height for arthropod)
+
+# MATERIAL AND METHOD
+
+## Grazing management
+
+Information on the grazing management were collected from the farmers with interviews conducted from October 2021 to January 2022 (See questionnaire in Appendix).
+The questions mainly related to the field, but due to rotational grazing management it is hard to isolate one field from the other grazing areas.
+Some farmers could not or did not want to reply to our survey.
+We completed the missing values with a similar survey which was conducted in 2018.
+The elements we considered were:
+
+- The type of livestock (cow, sheep or goat) which has been grazing the site for at least the past 5 years. There was no mixed-grazing in the fields we selected.
+- The size of the flock, including adults and young.
+- The number of months the animals stayed on the field
+- The total size of the infields
+- The size of the field we sampled
+
+To estimate the standardised grazing intensity per ha per year on the field, we should have followed the following formula:
+Grazing intensity on the field = (number of adults * standard livestock unit + number of young * standard livestock unit)/(field surface * (12/number of months on the field))
+Two difficulties here.
+Due to rotational grazing management, the period of grazing is not that accurate throughout the years.
+Also the flock can also be separated by the farmer and spread into different fields.
+Due to missing replies from farmers and the absence of equivalent data in the previous study, we did not have the period of grazing for all sites.
+We therefore decided to estimate an average grazing intensity across all grazing fields for each farm.
+The formula is as following:
+Average grazing intensity on infields = (number of adults * standard livestock unit + number of young * standard livestock unit)/(total grazing area of the farm)
+This total grazing area was retrieved from Gårdskart.no, which maps agricultural properties across Norway (NIBIO).
+We considered infields but also surrounding unclassified areas which were known from the farmer and/or the field to be grazed.
+In two sites, the goats were sent in the summer farms in the mountains for several months in the year.
+This was recurring and well described by the farmer.
+For these two sites only we therefore decided to keep the first formula.
+
+## Heat Load Index
+
+The Heat Load Index is a proxy to assess the heat intensity a site receives from the sunlight.
+It is calculated from the aspect and the angle of the slope (Parker, 1988).
+The equation is corrected for northern hemisphere where southwest facing slopes receive the highest solar heat load due to delayed ground heating.
+[insert equation here]
+The slope angle was collected on site with a clinometer, with the observer standing at the top and looking down to another observer standing at the bottom.
+The aspect not being consistently recorded on the field, it was collected afterwards with spatial data.
+The Digital Elevation Model files were collected from GeoNorge (link).
+An aspect map in degree azimuth was generated in QGIS software (version 3.12.2) from which the site aspect values were individually retrieved.
+
+## Landscape matrix
+
+
+# RESULTS
+
+# DISCUSSION
