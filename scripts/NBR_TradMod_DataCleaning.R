@@ -274,6 +274,49 @@ landuse_full <- landuse_full |>
 #unique(landuse_full$Livestock2) # villsau should be in sheep category
 landuse_full <- landuse_full |> 
   mutate(Livestock2 = dplyr::recode(Livestock2, "villsau" = "sheep"))
+#table(landuse_full$Livestock2) # Only 5 farmers with another livestock -> not to be included in the analysis
+
+# Period without grazing
+#unique(landuse_full$NoGrazing_period) # NAs ?
+#landuse_full[is.na(landuse_full$NoGrazing_period),] # 8 NAs, including the 6 farmers who did not respond to the survey
+#table(landuse_full$NoGrazing_period) # Only 7 sites with potential grazing interruption, in a quite hectic way (some 2-3 years, other 10 years), 30 sites with no interruption -> not to be included into the analysis, but interesting for the material and methods
+#landuse_full[landuse_full$NoGrazing_period != "no",] # Interruption are on OS1, IG1, IS2, OS5, OS7, OC2 and OS3
+
+# If the animals are kept inside or outside at night
+#unique(landuse_full$Inside_outsideatnight) # some NAs
+#landuse_full[is.na(landuse_full$Inside_outsideatnight),] #18 sites with missing values -> not to be included in the analysis
+
+# Farmer impression of grazing pressure on the site
+#unique(landuse_full$Impressionofgrazingpressureonsurveysite) # NAs
+#landuse_full[is.na(landuse_full$Impressionofgrazingpressureonsurveysite),] # 31 missing values -> not to be included in the analysis
+
+# Former livestock (1), before the current livestock
+#unique(landuse_full$Formerlivestock1) # NAs + villsau should be sheep category
+landuse_full <- landuse_full |> 
+  mutate(Formerlivestock1 = dplyr::recode(Formerlivestock1, "villsau" = "sheep"))
+#table(landuse_full$Formerlivestock1) # 11 former cows, 13 former sheep, 2 former horse and 1 "other"
+#landuse_full[is.na(landuse_full$Formerlivestock1),] # 18 missing values, including the 6 farmers which did not reply the survey -> 12 with no former livestock known -> could be used in the analysis?
+
+# Former livestock (2), before livestock (1)
+#unique(landuse_full$Formerlivestock2) # NAs + villsau should be sheep category
+landuse_full <- landuse_full |> 
+  mutate(Formerlivestock2 = dplyr::recode(Formerlivestock2, "villsau" = "sheep"))
+#table(landuse_full$Formerlivestock2) # 5 former cows, 2 former sheep, 2 former horse
+#landuse_full[is.na(landuse_full$Formerlivestock2),] # 36 missing values -> not to be included in the analysis
+
+# Former livestock (3), before livestock (2)
+#unique(landuse_full$Formerlivestock3) # NAs
+#table(landuse_full$Formerlivestock3) # 1 former cows, 1 other
+#landuse_full[is.na(landuse_full$Formerlivestock3),] # 43 missing values -> not to be included in the analysis
+
+# Former livestock (1) grazing period
+#unique(landuse_full$Formerlivestock1_timeperiod) # quite hectic, need to be transformed into how many years the former livestock has grazed -> not to be included in the analysis
+
+# Type of management or soil treatment used in the past 10 years
+unique(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years) # NAs
+landuse_full[is.na(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years),] # 12 missing values, including the 6 farmers who did not respond to the survey
+table(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years) # 20 sites with no treatments -> good to specify in the Material and Methods, but not too be included in the analysis
+landuse_full[landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years != "none",] # 6 sites -> OC1, OV1, OV2, IS1, IV1, UG1
 
 #
 ## Numeric var land use - Check min/max, distribution and potential outliers
@@ -335,10 +378,14 @@ landuse_full[landuse_full$FlockSize1_young>150,] # US3 & IS5 + 4 farms with no y
 hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 
 # Date since the current livestock has been grazing
-landuse_full[is.na(landuse_full$LivestockFrom_year),] # 7 missing values from farmers who did not reply the survey
-hist(landuse_full$LivestockFrom_year) # ranges from 1920 to 2020
+#landuse_full[is.na(landuse_full$LivestockFrom_year),] # 7 missing values from farmers who did not reply the survey
+#hist(landuse_full$LivestockFrom_year) # ranges from 1920 to 2020, but ! not equivalent to no grazing, neither to grazing with another animal -> too hectic, not to be included in the analysis
 
-#
+# How many months main livestock graze on site during the year
+landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
+hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
+
+
 
 #
 ## New variable - grazing intensity

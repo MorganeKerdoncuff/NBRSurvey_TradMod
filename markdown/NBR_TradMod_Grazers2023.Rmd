@@ -38,6 +38,8 @@ Three categories: broad-scale environmental variables (landscape matrix, heat lo
 
 ## Grazing management
 
+### Farmer interview
+
 Information on the grazing management were collected from the farmers with interviews conducted from October 2021 to January 2022 (See questionnaire in Appendix).
 The questions mainly related to the field, but due to rotational grazing management it is hard to isolate one field from the other grazing areas.
 Some farmers could not or did not want to reply to our survey.
@@ -49,6 +51,19 @@ The elements we considered were:
 - The number of months the animals stayed on the field
 - The total size of the infields
 - The size of the field we sampled
+
+### Sites criteria
+
+The fields should have been grazed for the past 10 years, and the current livestock should have been grazing for the past 5 years.
+These conditions were respected: all farmers, except two, have had the same flock for the past 5 years.
+For the two exceptions (OC2 from 2018 and OS4 from 2020) though the same type livestock was grazing before for at least 5 years.
+Most sites also have been grazed without interruption since the farmer has known it.
+Grazing interruptions happened for the following sites: OS1 (5 years from 2006 to 2011), IG1 (20 years between 1983 and 2003), IS2 (6 years between 1980 and 1986), OC2 (2 years from 2016 to 2018) and OS3 (3 years from 2012 and 2015).
+Active soil and/or field management apart from grazing (mowing, pesticides) should also be limited.
+This condition was also mostly respected, as only 3 sites had field treatment. !! wait for the whole cleaning.
+
+
+### Grazing intensity
 
 To estimate the standardised grazing intensity per ha per year on the field, we should have followed the following formula:
 Grazing intensity on the field = (number of adults * standard livestock unit + number of young * standard livestock unit)/(field surface * (12/number of months on the field))
