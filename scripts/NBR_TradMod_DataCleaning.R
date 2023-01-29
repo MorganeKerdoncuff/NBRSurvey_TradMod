@@ -248,7 +248,23 @@ names(landuse_raw) <- gsub("Currentlivestock_fromdate_year", "LivestockFrom_year
 names(landuse_raw) <- gsub("Gap_swithoutgrazing_timeperiod", "NoGrazing_period", names(landuse_raw))
 names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year1_currentlivestock_monthsperyear", "YearlyGrazing1_month", names(landuse_raw))
 names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year2_currentlivestock_monthsperyear", "YearlyGrazing2_month", names(landuse_raw))
+names(landuse_raw) <- gsub("Impressionofgrazingpressureonsurveysite", "FarmerImpression_GrazingPressure", names(landuse_raw))
 names(landuse_raw) <- gsub("_type", "", names(landuse_raw))
+names(landuse_raw) <- gsub("_Ifseveral", "", names(landuse_raw))
+names(landuse_raw) <- gsub("Type_soffarmmanagement_soiltreatmentusedthelast10years", "FieldManagement1", names(landuse_raw))
+names(landuse_raw) <- gsub("1...34", "2", names(landuse_raw))
+names(landuse_raw) <- gsub("1...35", "3", names(landuse_raw))
+names(landuse_raw) <- gsub("frequencyoffertilizing", "_freq", names(landuse_raw))
+names(landuse_raw) <- gsub("frequency", "_freq", names(landuse_raw))
+names(landuse_raw) <- gsub("type", "_type", names(landuse_raw))
+names(landuse_raw) <- gsub("amount_vol_m3", "_volm3", names(landuse_raw))
+names(landuse_raw) <- gsub("Artificialfertilizer", "ArtificialFert", names(landuse_raw))
+names(landuse_raw) <- gsub("Artificialfertiliser", "ArtificialFert", names(landuse_raw))
+names(landuse_raw) <- gsub("Art.fertilizer", "ArtificialFert", names(landuse_raw))
+names(landuse_raw) <- gsub("amount_mass_kg", "_masskg", names(landuse_raw))
+names(landuse_raw) <- gsub("season", "_season", names(landuse_raw))
+names(landuse_raw) <- gsub("Shell_sand_lime", "ShellSandLime", names(landuse_raw))
+
 
 # Removal empty columns
 #landuse_raw <- subset(landuse_raw, select = -c(Grazingdensity_perha)) # will be calculated later in the script
@@ -313,10 +329,22 @@ landuse_full <- landuse_full |>
 #unique(landuse_full$Formerlivestock1_timeperiod) # quite hectic, need to be transformed into how many years the former livestock has grazed -> not to be included in the analysis
 
 # Type of management or soil treatment used in the past 10 years
-unique(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years) # NAs
-landuse_full[is.na(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years),] # 12 missing values, including the 6 farmers who did not respond to the survey
-table(landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years) # 20 sites with no treatments -> good to specify in the Material and Methods, but not too be included in the analysis
-landuse_full[landuse_full$Type_soffarmmanagement_soiltreatmentusedthelast10years != "none",] # 6 sites -> OC1, OV1, OV2, IS1, IV1, UG1
+unique(landuse_full$FieldManagement1) # NAs
+#unique(landuse_full$FieldManagement2)
+#unique(landuse_full$FieldManagement3)
+#landuse_full[is.na(landuse_full$FieldManagement1),] # 6 missing values -> farmers who did not reply to the survey
+#landuse_full[is.na(landuse_full$FieldManagement2),] # 36 missing values
+#landuse_full[is.na(landuse_full$FieldManagement3),] # 41 missing values
+table(landuse_full$FieldManagement1) # 10 sites with no treatments at all, 21 with at least fertilization
+landuse_full[landuse_full$FieldManagement1 == "none",] # 4 mountain sites (US2, US3, US5, US6), 3 coastal heathlands (OS1, IS2, OS5), 3 grasslands (IG1, IG2, IS3)
+#landuse_full[landuse_full$FieldManagement1 == "burning",] # 3 coastal heathlands only treatment (OV1, OV2, OS7) -> validated
+#landuse_full[landuse_full$FieldManagement1 == "mulching",] # 1 grassland (OS3) only treatment -> validated
+#landuse_full[landuse_full$FieldManagement1 == "sitka spruce removal",] # 1 coastal heathland only treatment (OS9) -> validated
+#landuse_full[landuse_full$FieldManagement1 == "tree cutting",] # 1 mountain site only treatment (UG1), 1 mountain site with grass cutting also (UG2) -> validated
+landuse_full[landuse_full$FieldManagement1 == "herbicides",] # 1 grassland (OS5) only treatment
+table(landuse_full$FieldManagement2) # 9 sites with at least 2 treatments
+table(landuse_full$FieldManagement3) # 4 sites with 3 treatments
+
 
 #
 ## Numeric var land use - Check min/max, distribution and potential outliers

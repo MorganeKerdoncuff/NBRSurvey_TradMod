@@ -60,7 +60,10 @@ For the two exceptions (OC2 from 2018 and OS4 from 2020) though the same type li
 Most sites also have been grazed without interruption since the farmer has known it.
 Grazing interruptions happened for the following sites: OS1 (5 years from 2006 to 2011), IG1 (20 years between 1983 and 2003), IS2 (6 years between 1980 and 1986), OC2 (2 years from 2016 to 2018) and OS3 (3 years from 2012 and 2015).
 Active soil and/or field management apart from grazing (mowing, pesticides) should also be limited.
-This condition was also mostly respected, as only 3 sites had field treatment. !! wait for the whole cleaning.
+
+- 3 sites have no treatments at all (IG1, IG2, IS3)
+- 1 site only have mulching every year (OS3)
+- 1 site only have tree cutting 
 
 
 ### Grazing intensity
