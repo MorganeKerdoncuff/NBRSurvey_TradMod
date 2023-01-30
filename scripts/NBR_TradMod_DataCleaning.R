@@ -328,23 +328,66 @@ landuse_full <- landuse_full |>
 # Former livestock (1) grazing period
 #unique(landuse_full$Formerlivestock1_timeperiod) # quite hectic, need to be transformed into how many years the former livestock has grazed -> not to be included in the analysis
 
-# Type of management or soil treatment used in the past 10 years
+# Management or soil treatment used in the past 10 years
 unique(landuse_full$FieldManagement1) # NAs
 #unique(landuse_full$FieldManagement2)
 #unique(landuse_full$FieldManagement3)
 #landuse_full[is.na(landuse_full$FieldManagement1),] # 6 missing values -> farmers who did not reply to the survey
 #landuse_full[is.na(landuse_full$FieldManagement2),] # 36 missing values
 #landuse_full[is.na(landuse_full$FieldManagement3),] # 41 missing values
-table(landuse_full$FieldManagement1) # 10 sites with no treatments at all, 21 with at least fertilization
-landuse_full[landuse_full$FieldManagement1 == "none",] # 4 mountain sites (US2, US3, US5, US6), 3 coastal heathlands (OS1, IS2, OS5), 3 grasslands (IG1, IG2, IS3)
-#landuse_full[landuse_full$FieldManagement1 == "burning",] # 3 coastal heathlands only treatment (OV1, OV2, OS7) -> validated
-#landuse_full[landuse_full$FieldManagement1 == "mulching",] # 1 grassland (OS3) only treatment -> validated
-#landuse_full[landuse_full$FieldManagement1 == "sitka spruce removal",] # 1 coastal heathland only treatment (OS9) -> validated
-#landuse_full[landuse_full$FieldManagement1 == "tree cutting",] # 1 mountain site only treatment (UG1), 1 mountain site with grass cutting also (UG2) -> validated
-landuse_full[landuse_full$FieldManagement1 == "herbicides",] # 1 grassland (OS5) only treatment
-table(landuse_full$FieldManagement2) # 9 sites with at least 2 treatments
-table(landuse_full$FieldManagement3) # 4 sites with 3 treatments
+table(landuse_full$FieldManagement1) # 9 sites with no treatments at all, 21 with at least fertilization
+table(landuse_full$FieldManagement2) # 8 sites with at least 2 treatments
+table(landuse_full$FieldManagement3) # 3 sites with 3 treatments
 
+# Sites with no treatment
+#subset(landuse_full, FieldManagement1 == "none") # 4 mountain sites (US2, US3, US5, US6), 2 coastal heathlands (IS2, OS5), 3 grasslands (IG1, IG2, IS3)
+
+# Sites with burning
+#subset(landuse_full, FieldManagement1 == "burning") # 3 coastal heathlands only treatment (OV1, OV2, OS7) -> validated
+#subset(landuse_full, FieldManagement3 == "burning") # 1 grassland (IS1), with also mulching and fertilisation -> validated
+
+# Sites with tree cutting
+#subset(landuse_full, FieldManagement1 == "sitka spruce removal") # 1 coastal heathland only treatment (OS9) -> validated
+#subset(landuse_full, FieldManagement1 == "tree cutting") # 1 mountain site only treatment (UG1), 1 mountain site with also grass cutting (UG2) -> validated
+
+# Sites with herbicide
+#subset(landuse_full, FieldManagement1 == "herbicides") # 1 grassland (OS5) with also tree cutting as second treatment
+#subset(landuse_full, FieldManagement3 == "herbicides") # 1 grassland (OC2)
+
+# Sites with mulching
+#subset(landuse_full, FieldManagement1 == "mulching") # 2 grassland (OS3, OS1) only treatment -> validated
+#subset(landuse_full, FieldManagement2 == "mulching") # 6 grasslands (OC1, IS1, IV1, IC5, OS4, OC2) with mulching + fertilization. OC2 also has herbicides.
+
+# Frequency of mulching
+#table(landuse_full$Mulching_freq) # 8 sites with mulching
+#subset(landuse_full, Mulching_freq == "every year") # 3 sites with annual mulching (IS1, OS4, OS3) -> validated
+#subset(landuse_full, Mulching_freq == "sometimes") # 5 sites with occasional mulching (OC1, OS1, IV1, IC5, OC2) -> validated
+
+# Types of fertilization
+#unique(landuse_full$Fertilizing_type1)
+#unique(landuse_full$Fertilizing_type2)
+#unique(landuse_full$Fertilizing_type3) # 3 types of fertilization: artificial fertilizer, organic (manure) and inorganic (shell-sand/lime)
+#table(landuse_full$Fertilizing_type3) # 5 sites with 3 types of fertilization
+#subset(landuse_full, Fertilizing_type3 != is.na(Fertilizing_type3)) # 5 grassland sites (IC1, OC3, IC4, IC5, OC2)
+#table(landuse_full$Fertilizing_type2) # 11-5 = 6 sites with 2 types of fertilization
+filter(landuse_full, Fertilizing_type2 != is.na(Fertilizing_type2) & Fertilizing_type3 == is.na(Fertilizing_type3)) # 5 grasslands (OC1, IS1, OC4, OG6, OC5) and 1 coastal heathland (OS8)
+
+table(landuse_full$Fertilizing_type1) # 21-11 = 10 sites with only 1 type of fertilization
+subset(landuse_full, Fertilizing_type1 != is.na(Fertilizing_type1)) # 
+
+# Frequency of manure
+#unique(landuse_full$Manure_freq) # possibilities are "yearly" or "occasionally"
+#subset(landuse_full, Manure_freq == "every year") # 9 grasslands (OC1, IC1, IS1, OC3, OC4, OG6, IC4, IC5, OC5) with annual manure
+#subset(landuse_full, Manure_freq == "sometimes") # 1 grassland (OC2) and 1 heathland (OS8) with occasional manure
+
+# Frequency of artificial fertilization
+#unique(landuse_full$ArtificialFert_freq) # possibilities are "yearly" or "occasionally"
+#subset(landuse_full, ArtificialFert_freq == "every year") # 15 grasslands (OC1, OS2, IC1, OG3, IC3, OC3, OC4, OG2, OG4, IC4, IC5, OC5, OS6, OC2, IS4) with annual fertilization with artificial fertiliser
+#subset(landuse_full, ArtificialFert_freq == "sometimes") # 3 grasslands (OC2, OG6, IV1) and 1 heathland (OS8) with occasional fertilization with artificial fertiliser
+
+# Frequency of inorganic fertilization with shell-sand/lime
+#unique(landuse_full$ShellSandLime_freq) # possibilities are "occasionally" only
+#subset(landuse_full, ShellSandLime_freq == "sometimes") # 7 grassland (IC1, OG3, IC3, OC3, IC4, IC5, OC2)
 
 #
 ## Numeric var land use - Check min/max, distribution and potential outliers
@@ -412,8 +455,6 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 # How many months main livestock graze on site during the year
 landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
 hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
-
-
 
 #
 ## New variable - grazing intensity
