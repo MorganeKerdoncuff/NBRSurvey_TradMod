@@ -66,6 +66,7 @@ names(siteinfo_raw) <- gsub("%", "percent", names(siteinfo_raw))
 names(siteinfo_raw) <- gsub(" ", "", names(siteinfo_raw)) 
 names(siteinfo_raw) <-  gsub("\\(", "_", names(siteinfo_raw))
 names(siteinfo_raw) <-  gsub("\\)", "", names(siteinfo_raw))
+names(siteinfo_raw) <- gsub("Comments", "Comments_siteinfo", names(siteinfo_raw))
 
 # Removal empty columns
 #siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # remove empty variables, which will be included in another dataset
@@ -264,7 +265,7 @@ names(landuse_raw) <- gsub("Art.fertilizer", "ArtificialFert", names(landuse_raw
 names(landuse_raw) <- gsub("amount_mass_kg", "_masskg", names(landuse_raw))
 names(landuse_raw) <- gsub("season", "_season", names(landuse_raw))
 names(landuse_raw) <- gsub("Shell_sand_lime", "ShellSandLime", names(landuse_raw))
-
+names(landuse_raw) <- gsub("Comments", "Comments_landuse", names(landuse_raw))
 
 # Removal empty columns
 #landuse_raw <- subset(landuse_raw, select = -c(Grazingdensity_perha)) # will be calculated later in the script
@@ -637,7 +638,8 @@ str(area20x20_raw) # All good, date should be reformatted
 names(area20x20_raw)<-gsub("%", "percent", names(area20x20_raw)) # remove percent signs from names
 names(area20x20_raw)<-gsub("&", "_", names(area20x20_raw)) # remove &
 names(area20x20_raw)<-gsub("\\(", "", names(area20x20_raw)) # remove (
-names(area20x20_raw)<-gsub("\\)", "", names(area20x20_raw)) # remove &
+names(area20x20_raw)<-gsub("\\)", "", names(area20x20_raw)) # remove )
+names(area20x20_raw) <- gsub("Comments", "Comments_area20x20", names(area20x20_raw))
 
 #
 ## Sampling date standardisation
@@ -778,11 +780,12 @@ str(soilcover_raw) # Date should be reformatted, plotID renamed as sampleID and 
 ## Name & character cleaning sampling area
 
 # R friendly variable names
-names(soilcover_raw)<-gsub("Site", "SiteID", names(soilcover_raw)) # rename in SiteID so it matches with other files
-names(soilcover_raw)<-gsub("PlotID", "SampleID", names(soilcover_raw)) # Rename plotID as sampleID
-names(soilcover_raw)<-gsub("Date", "Recording_date", names(soilcover_raw)) # Rename so it matches with other files
-names(soilcover_raw)<-gsub("\\(", "", names(soilcover_raw)) # remove (
-names(soilcover_raw)<-gsub("\\)", "", names(soilcover_raw)) # remove &
+names(soilcover_raw) <-gsub ("Site", "SiteID", names(soilcover_raw)) # rename in SiteID so it matches with other files
+names(soilcover_raw)<- gsub ("PlotID", "SampleID", names(soilcover_raw)) # Rename plotID as sampleID
+names(soilcover_raw)<- gsub ("Date", "Recording_date", names(soilcover_raw)) # Rename so it matches with other files
+names(soilcover_raw)<- gsub ("\\(", "", names(soilcover_raw)) # remove (
+names(soilcover_raw)<- gsub ("\\)", "", names(soilcover_raw)) # remove )
+names(soilcover_raw) <- gsub("Comments", "Comments_soilcover", names(soilcover_raw))
 soilcover_raw$PlotID <- substr(soilcover_raw$SampleID, 1,6) #create PlotID column
 
 #
@@ -900,4 +903,167 @@ filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> v
 # Vegetation species richness - NA + Distribution
 #soilcover_full[is.na(soilcover_full$Plant_species_richness),] # No NA
 #hist(soilcover_full$Plant_species_richness) # Samples range from 0 to 35 species with Normal distribution -> validated
+
+
+#### Soil penetration quadrat ####
+
+## Description
+
+## List of variables
+
+# [1] Field identification code for data collection
+# [2] Date of data collection
+# [3] Sample identification code
+# [4] Stick height remaining above the ground on the left side of the quadrat (cm)
+# [5] Stick height which penetrated the ground on the left side of the quadrat (cm) -> calculated in Excel
+# [6] If the stick hit a rock on the left side of the quadrat Y/N
+# [7] Stick height remaining above the ground on the right side of the quadrat (cm)
+# [8] Stick height which penetrated the ground on the right side of the quadrat (cm) -> calculated in Excel
+# [9] If the stick hit a rock on the left side of the quadrat Y/N
+# [10] Stick total length (cm) - the stick would wear out along with repetitive use, so its length would decrease over time
+# [11] Comments
+
+#
+## Summary - Check table size, list of variables, variable types (num/chr)
+
+str(soilpene_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+
+#
+## Name & character cleaning
+
+# R friendly variable names
+names(soilpene_raw) <- gsub("Site", "SiteID", names(soilpene_raw)) # rename in SiteID so it matches with other files
+names(soilpene_raw) <- gsub("PlotID", "SampleID", names(soilpene_raw)) # Rename plotID as sampleID
+names(soilpene_raw) <- gsub("Date", "Recording_date", names(soilpene_raw)) # Rename so it matches with other files
+names(soilpene_raw) <- gsub("\\(", "", names(soilpene_raw)) # remove (
+names(soilpene_raw) <- gsub("\\)", "", names(soilpene_raw)) # remove )
+names(soilpene_raw) <- gsub("Comments", "Comments_soilpene", names(soilpene_raw))
+soilpene_raw$PlotID <- substr(soilpene_raw$SampleID, 1,6) #create PlotID column
+
+#
+## Sampling date standardisation
+
+soilpene_raw$Recording_date <- as.POSIXct(soilpene_raw$Recording_date, format = "%d.%m.%Y")
+
+#
+## Data cleaning - New R object
+
+soilpene_full <- soilpene_raw
+
+#
+## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+#table(soilpene_full$SiteID) # 12 samples per site - validated
+
+# Plot ID
+#table(soilpene_full$PlotID) # 4 samples per plot - validated
+
+# Sample ID
+#soilpene_full[duplicated(soilpene_full$SampleID),] # Unique ID for sample - validated
+
+# If rock hit on the left or right
+#unique(soilpene_full$Left_rock_hit) # only Y & N -> validated
+#unique(soilpene_full$Right_rock_hit) # only Y & N -> validated
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- soilpene_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # no visible outlier, no penetration or standing part above stick full length
+
+# Left standing height
+#soilpene_full[is.na(soilpene_full$Left_standing_part_cm),] # No NA
+#hist(soilpene_full$Left_standing_part_cm) # Heights range from 28 to 42 cm in a normal distribution -> validated
+
+# Left penetration height
+#soilpene_full[is.na(soilpene_full$Left_PT_cm),] # No NA
+#hist(soilpene_full$Left_PT_cm) # Heights range from 0 to 14 cm in a normal distribution -> validated
+
+# Right standing height
+#soilpene_full[is.na(soilpene_full$Right_standing_part_cm),] # No NA
+#hist(soilpene_full$Right_standing_part_cm) # Heights range from 25 to 45 cm in a normal distribution -> validated
+
+# Right penetration height
+#soilpene_full[is.na(soilpene_full$Right_PT_cm),] # No NA
+#hist(soilpene_full$Right_PT_cm) # Heights range from 0 to 16 cm in a normal distribution -> validated
+
+# Total stick length
+#soilpene_full[is.na(soilpene_full$Stick_height),] # No NA
+#hist(soilpene_full$Stick_height) # Heights range from 42.7 to 43.4 cm -> validated
+
+
+#### Soil bulk density - quadrats ####
+
+## Description
+
+## List of variables
+
+# [1] Sample identification code
+# [2] Field identification code for data collection
+# [3] Plot identification code
+# [4] Height of the soil core (cm)
+# [5] Volume of the soil core before correction for holes or slopes (cm3) -> not to be used in the analysis
+# [6] Volume of the soil core manually corrected for holes and slopes if applicable (cm3) -> not to be used in the analysis
+# [7] Best estimation of the volume of the soil core, with correction for holes or slopes if needed (cm3)
+# [8] Core weight (including soil + PVC core + cheesecloth) on fresh soil, before water saturation (g)
+# [9] Core weight (including soil + PVC core + cheesecloth) after water saturation (g)
+# [10] Core weight (including soil + PVC core + cheesecloth) after 24h of drying (g)
+# [11] Core weight (including soil + PVC core + cheesecloth) after 48h of drying (g)
+# [12] Core weight (including soil + PVC core + cheesecloth) after drying at 105C in oven (g)
+# [13] Weight of the cheesecloth (g)
+# [14] Weight of the PVC core with the cheesecloth (g)
+# [15] Bulk density calculated from the non-corrected volumes -> not to be used in the analysis
+# [16] Bulk density calculated for the corrected volumes only -> not to be used in the analysis
+# [17] Bulk density calculated from the best volume estimation
+# [18] Weight of percentage of soil moisture (g)
+# [19] Volume of percentage of soil moisture (cm3) -> calculated from the BD
+# [20] Percentage of soil porosity -> calculated from the BD
+# [21] Percentage of WFPS
+# [22] Period without grazing management on the field
+# [23] Comments during the lab processing of the soil
+# [24] Other comments
+# [25] If the samples are concerned by scale calibration issue
+# [26] Who performed the task
+
+#
+## Summary - Check table size, list of variables, variable types (num/chr)
+
+str(soilbulk_raw) # missing sample ID, plotID to be reformated
+
+#
+## Name & character cleaning
+
+# R friendly variable names
+names(soilpene_raw) <- gsub("Site", "SiteID", names(soilpene_raw)) # rename in SiteID so it matches with other files
+names(soilpene_raw) <- gsub("PlotID", "SampleID", names(soilpene_raw)) # Rename plotID as sampleID
+names(soilpene_raw) <- gsub("Date", "Recording_date", names(soilpene_raw)) # Rename so it matches with other files
+names(soilpene_raw) <- gsub("\\(", "", names(soilpene_raw)) # remove (
+names(soilpene_raw) <- gsub("\\)", "", names(soilpene_raw)) # remove )
+names(soilpene_raw) <- gsub("Comments", "Comments_soilpene", names(soilpene_raw))
+soilpene_raw$PlotID <- substr(soilpene_raw$SampleID, 1,6) #create PlotID column
+
+#
+## Sampling date standardisation
+
+soilpene_raw$Recording_date <- as.POSIXct(soilpene_raw$Recording_date, format = "%d.%m.%Y")
+
+#
+## Data cleaning - New R object
+
+soilpene_full <- soilpene_raw
 
