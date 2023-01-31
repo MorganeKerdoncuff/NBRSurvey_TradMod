@@ -20,7 +20,7 @@ landuse_raw <- read_excel(path = "data/NBR_FarmerSurvey.xlsx", sheet="Farms Info
 #farmer_raw <- read_excel(path = "data/NBR_FarmRepertoire.xlsx") #Farm management data from farmer interview med Margit, at site level
 landscape_raw <- read_excel(path = "data/NBR_LandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
 area20x20_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="20mX20m") #Sampling area description, vegetation cover at the site level
-vgcover_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilCover") #Vegetation cover at the quadrat (subplot) level
+soilcover_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilCover") #Vegetation cover at the quadrat (subplot) level
 soilpene_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilPenetration") #Penetration rate in the soil, at subplot level (two collection per subplot)
 soilbulk_raw <- read_excel(path = "data/NBR_RawBD2019-2020.xlsx", na="NA") #Soil bulk density, at subplot level (three samples per subplot)
 soilmeso_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="Mesofauna") #Height of mesofauna soil core, at subplot level
@@ -370,20 +370,19 @@ table(landuse_full$FieldManagement3) # 3 sites with 3 treatments
 #table(landuse_full$Fertilizing_type3) # 5 sites with 3 types of fertilization
 #subset(landuse_full, Fertilizing_type3 != is.na(Fertilizing_type3)) # 5 grassland sites (IC1, OC3, IC4, IC5, OC2)
 #table(landuse_full$Fertilizing_type2) # 11-5 = 6 sites with 2 types of fertilization
-filter(landuse_full, Fertilizing_type2 != is.na(Fertilizing_type2) & Fertilizing_type3 == is.na(Fertilizing_type3)) # 5 grasslands (OC1, IS1, OC4, OG6, OC5) and 1 coastal heathland (OS8)
-
-table(landuse_full$Fertilizing_type1) # 21-11 = 10 sites with only 1 type of fertilization
-subset(landuse_full, Fertilizing_type1 != is.na(Fertilizing_type1)) # 
+#filter(landuse_full, !is.na(Fertilizing_type2) & is.na(Fertilizing_type3)) # 6 grasslands (OC1, IS1, OC4, OG6, OC5, OS8)
+#table(landuse_full$Fertilizing_type1) # 21-11 = 10 sites with only 1 type of fertilization
+#filter(landuse_full, !is.na(Fertilizing_type1) & is.na(Fertilizing_type2)) # 10 grasslands (OG1, OS2, IV1, OG3, IC3, OG2, OG4, OS4, OS6, IS4)
 
 # Frequency of manure
 #unique(landuse_full$Manure_freq) # possibilities are "yearly" or "occasionally"
 #subset(landuse_full, Manure_freq == "every year") # 9 grasslands (OC1, IC1, IS1, OC3, OC4, OG6, IC4, IC5, OC5) with annual manure
-#subset(landuse_full, Manure_freq == "sometimes") # 1 grassland (OC2) and 1 heathland (OS8) with occasional manure
+#subset(landuse_full, Manure_freq == "sometimes") # 2 grasslands (OC2, OS8) with occasional manure
 
 # Frequency of artificial fertilization
 #unique(landuse_full$ArtificialFert_freq) # possibilities are "yearly" or "occasionally"
 #subset(landuse_full, ArtificialFert_freq == "every year") # 15 grasslands (OC1, OS2, IC1, OG3, IC3, OC3, OC4, OG2, OG4, IC4, IC5, OC5, OS6, OC2, IS4) with annual fertilization with artificial fertiliser
-#subset(landuse_full, ArtificialFert_freq == "sometimes") # 3 grasslands (OC2, OG6, IV1) and 1 heathland (OS8) with occasional fertilization with artificial fertiliser
+#subset(landuse_full, ArtificialFert_freq == "sometimes") # 4 grasslands (OC2, OG6, IV1, OS8) with occasional fertilization with artificial fertiliser
 
 # Frequency of inorganic fertilization with shell-sand/lime
 #unique(landuse_full$ShellSandLime_freq) # possibilities are "occasionally" only
@@ -483,7 +482,121 @@ hist(landuse_full$Grazingdensity_perha)
 landuse_full[is.na(landuse_full$Grazingdensity_perha),]
 
 
+#### LANDSCAPE MATRIX ####
+
+## Description
+
+## List of variables
+
+# [1] Field identification code for data collection
+# [2] Area cover of fully cultivated land within 1 km buffer zone around the field
+# [3] Area cover of partially cultivated land within 1 km buffer zone around the field
+# [4] Area cover of grazed infields within 1 km buffer zone around the field
+# [5] Area cover of productive forest within 1 km buffer zone around the field
+# [6] Area cover of unproductive forest within 1 km buffer zone around the field
+# [7] Area cover of wetland within 1 km buffer zone around the field
+# [8] Area cover of outfield within 1 km buffer zone around the field
+# [9] Area cover of freshwater within 1 km buffer zone around the field
+# [10] Area cover of infrastructure within 1 km buffer zone around the field
+# [11] Area cover of sea within 1 km buffer zone around the field
+
+#
+## Summary landscape - Check table size, list of variables, variable types (num/chr)
+
+#str(landscape_raw) # All good
+
+#
+## Data cleaning - new R object
+
+landscape_full <- landscape_raw
+
+#
+## Char var land use - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+#table(landscape_full$SiteID) # Unique ID for each site & only grassland sites
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- landscape_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # no visible outlier, no data over 100%
+
+# Fully cultivated land
+#landscape_full[is.na(landscape_full$FullyCultivatedLand_percent),] # No NA
+#hist(landscape_full$FullyCultivatedLand_percent) # Range between 0 and 20%, no outlier
+#filter(landscape_full, FullyCultivatedLand_percent == 0) # No field without cultivated land around
+
+# Partially cultivated land
+#landscape_full[is.na(landscape_full$SuperficiallyCultivatedLand_percent),] # No NA
+#hist(landscape_full$SuperficiallyCultivatedLand_percent) # Range between 0 and 20%, no outlier
+#filter(landscape_full, SuperficiallyCultivatedLand_percent == 0) # No field without Partially land around
+
+# Grazed infield
+#landscape_full[is.na(landscape_full$Infield_percent),] # No NA
+#hist(landscape_full$Infield_percent) # Range between 0 and 35%, no outlier
+#filter(landscape_full, Infield_percent == 0) # No field without infield around
+
+# Productive forest
+#landscape_full[is.na(landscape_full$ProductiveForest_percent),] # No NA
+#hist(landscape_full$ProductiveForest_percent) # Range between 0 and 70%, no outlier
+#filter(landscape_full, ProductiveForest_percent == 0) # No field without productive forest around
+
+# Unproductive forest
+#landscape_full[is.na(landscape_full$NonProductiveForest_percent),] # No NA
+#hist(landscape_full$NonProductiveForest_percent) # Range between 0 and 25%, no outlier
+#filter(landscape_full, ProductiveForest_percent == 0) # No field without unproductive forest around
+
+# Wetlands
+#landscape_full[is.na(landscape_full$Wetland_percent),] # No NA
+#hist(landscape_full$Wetland_percent) # Range between 0 and 20%, no outlier
+#filter(landscape_full, Wetland_percent == 0) # 1 site without wetland around (IG3)
+
+# Outfield
+#landscape_full[is.na(landscape_full$Outfield_percent),] # No NA
+#hist(landscape_full$Outfield_percent) # Range between 0 and 45%, no outlier
+#filter(landscape_full, Outfield_percent == 0) # No field without outfield around
+
+# Freshwater
+#landscape_full[is.na(landscape_full$Freshwater_percent),] # No NA
+#hist(landscape_full$Freshwater_percent) # Range between 0 and 16%, no outlier
+#filter(landscape_full, Freshwater_percent == 0) # No field without freshwater around
+
+# Infrastructure
+#landscape_full[is.na(landscape_full$Infrastructure_percent),] # No NA
+#hist(landscape_full$Infrastructure_percent) # Range between 0 and 25%, no outlier
+#filter(landscape_full, Infrastructure_percent == 0) # No field without infrastructure around
+
+# Sea
+#landscape_full[is.na(landscape_full$Sea_percent),] # No NA
+#hist(landscape_full$Sea_percent) # Range between 0 and 70%, no outlier
+#filter(landscape_full, Sea_percent == 0) # 11 fields without sea (ocean or fjord) around
+
+#
+## New variables - sum of cultivated land, infield & outfield, forest
+landscape_full <- landscape_full |> 
+  mutate(TotCultivatedLand_percent = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
+  mutate(TotInfieldOutfield_percent = Infield_percent + Outfield_percent) |> 
+  mutate(TotForest_percent = ProductiveForest_percent + NonProductiveForest_percent)
+
+
 #### SAMPLING AREA 20X20 ####
+
+## Description
 
 ## List of variables
 
@@ -552,8 +665,20 @@ area20x20_full <- area20x20_full |>
 ## Numeric var sampling area - Check min/max, distribution and potential outliers
 
 # Check min/max
-test <- area20x20_full |> 
-  summarise(tibble(across(where(is.numeric), ~min(.x, na.rm = TRUE), .names = "min_{.col}"),across(where(is.numeric), ~max(.x, na.rm = TRUE), .names = "max_{.col}"))) |> 
+test <- area20x20_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
   transpose() # potential outliers are max herbs 97% and max lichens 20%
 
 # Distribution elevation max
@@ -614,3 +739,165 @@ area20x20_full <- area20x20_full |>
 #hist(area20x20_full$HLI) # 3 outliers: one under 200, two over 100
 #area20x20_full[area20x20_full$HLI>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
 #area20x20_full[area20x20_full$HLI<0,] #OS6 -> 11 degree slope with NE exposition
+
+
+#### Soil cover quadrats ####
+
+## Description
+
+## List of variables
+
+# [1] Field identification code for data collection
+# [2] Date of data collection
+# [3] Sample identification code
+# [4] Percent cover of bare soil in the quadrat
+# [5] Percent cover of exposed rock in the quadrat
+# [6] Percent cover of litter in the quadrat
+# [7] Percent cover of dead wood in the quadrat
+# [8] Percent cover of bryophytes in the quadrat
+# [9] Percent cover of lichens in the quadrat
+# [10] Percent cover of vascular plants in the quadrat
+# [11] Percent cover of blossom in the quadrat
+# [12] Species in blossom (1)
+# [13] Species in blossom (2)
+# [14] Species in blossom (3)
+# [15] Species in blossom (4)
+# [16] Species in blossom (5)
+# [17] Percent cover of dung in the quadrat
+# [18] Vegetation mean height in the quadrat, in cm
+# [19] Vegetation max height in the quadrat, in cm
+# [20] Plant species richness in the quadrat
+# [21] Comments
+
+#
+## Summary sampling area - Check table size, list of variables, variable types (num/chr)
+
+str(soilcover_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+
+#
+## Name & character cleaning sampling area
+
+# R friendly variable names
+names(soilcover_raw)<-gsub("Site", "SiteID", names(soilcover_raw)) # rename in SiteID so it matches with other files
+names(soilcover_raw)<-gsub("PlotID", "SampleID", names(soilcover_raw)) # Rename plotID as sampleID
+names(soilcover_raw)<-gsub("Date", "Recording_date", names(soilcover_raw)) # Rename so it matches with other files
+names(soilcover_raw)<-gsub("\\(", "", names(soilcover_raw)) # remove (
+names(soilcover_raw)<-gsub("\\)", "", names(soilcover_raw)) # remove &
+soilcover_raw$PlotID <- substr(soilcover_raw$SampleID, 1,6) #create PlotID column
+
+#
+## Sampling date standardisation
+
+soilcover_raw$Recording_date <- as.POSIXct(soilcover_raw$Recording_date, format = "%d.%m.%Y")
+
+#
+## Data cleaning - New R object
+
+soilcover_full <- soilcover_raw
+
+#
+## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+#table(soilcover_full$SiteID) # 15 samples per site - validated
+
+# Plot ID
+#table(soilcover_full$PlotID) # 5 samples per plot - validated
+
+# Sample ID
+#soilcover_full[duplicated(soilcover_full$SampleID),] # Unique ID for sample - validated
+
+# Blossom sp1
+#table(soilcover_full$Blossom_sp1) # two latin names for Cirsium palustre + "Alchemilla millefolium" either Achillea millefolium or Alchemilla vulgaris
+soilcover_full <- soilcover_full |> 
+  mutate(Blossom_sp1 = dplyr::recode(Blossom_sp1, "Cirsium palustris" = "Cirsium palustre"))
+#filter(soilcover_full, Blossom_sp1 == "Alchemilla millefolium") # IS1-P3-N3 -> check on field sheet -> species is Achillea millefolium
+soilcover_full <- soilcover_full |> 
+  mutate(Blossom_sp1 = dplyr::recode(Blossom_sp1, "Alchemilla millefolium" = "Achillea millefolium"))
+
+# Blossom sp2
+#table(soilcover_full$Blossom_sp2) # Bad ID Leontodon saxatile, should be Leontodon autumnalis
+soilcover_full <- soilcover_full |> 
+  mutate(Blossom_sp2 = dplyr::recode(Blossom_sp2, "Leontodon saxatile" = "Leontodon autumnalis"))
+
+# Blossom sp3
+#table(soilcover_full$Blossom_sp3) # All good
+
+# Blossom sp4
+#table(soilcover_full$Blossom_sp4) # All good
+
+# Blossom sp5
+#table(soilcover_full$Blossom_sp5) # All good
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- soilcover_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # no visible outlier (maybe lichen at 80%?), no percentage above 100%
+
+# Bare soil - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Bare_soil),] # No NA
+#hist(soilcover_full$Bare_soil) # Samples range from 0 to 40% -> check the maximum
+#filter(soilcover_full, Bare_soil>30) # Two samples on OV1, recently burnt coastal heathland -> validated
+
+# Rocks - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Rocks),] # No NA
+#hist(soilcover_full$Rocks) # Samples range from 0 to 8% -> validated
+
+# Litter - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Litter),] # No NA
+#hist(soilcover_full$Litter) # Samples range from 0 to 60% -> check above 30%
+#filter(soilcover_full, Litter>30) # Samples either from OV1, recently burnt coastal heathland, or mountain sites (US2, UG1) -> validated
+
+# Dead wood - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Dead_wood),] # No NA
+#hist(soilcover_full$Dead_wood) # Samples range from 0 to 10% -> validated
+
+# Bryophytes - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Bryophytes),] # No NA
+#hist(soilcover_full$Bryophytes) # Samples range from 0 to 100% -> validated
+
+# Lichen - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Lichen),] # No NA
+#hist(soilcover_full$Lichen) # Samples range from 0 to 80%% -> check outliers above 40%
+filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> validated from the field sheet
+
+# Vascular - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Vascular),] # No NA
+#hist(soilcover_full$Vascular) # Samples range from 0 to 100% -> validated
+
+# Blossom cover - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Blossom_cover),] # No NA
+#hist(soilcover_full$Blossom_cover) # Samples range from 0 to 15% -> validated
+
+# Dung cover - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Dung),] # No NA
+#hist(soilcover_full$Dung) # Samples range from 0 to 15% -> check maximum
+#filter(soilcover_full, Dung>10) # Samples from cow site (IC1) -> validated
+
+# Vegetation maximum height - NA + Distribution
+#soilcover_full[is.na(soilcover_full$VG_max_height_cm),] # No NA
+#hist(soilcover_full$VG_max_height_cm) # Samples range from 0 to 160 cm with normal distribution -> validated
+
+# Vegetation mean height - NA + Distribution
+#soilcover_full[is.na(soilcover_full$VG_mean_height_cm),] # No NA
+#hist(soilcover_full$VG_mean_height_cm) # Samples range from 0 to 90 cm with Poisson distribution -> validated
+
+# Vegetation species richness - NA + Distribution
+#soilcover_full[is.na(soilcover_full$Plant_species_richness),] # No NA
+#hist(soilcover_full$Plant_species_richness) # Samples range from 0 to 35 species with Normal distribution -> validated
+

@@ -68,11 +68,11 @@ Active soil and/or field management apart from grazing (mowing, pesticides) shou
 - 3 sites with annual mulching (IS1, OS3, OS4). Mulching is the only treatment for OS3.
 - 5 sites with occasional mulching (OC1, OS1, IV1, IC5, OC2). Mulching is the only treatment for OS1.
 - 5 sites with 3 types of fertilization (IC1, OC3, IC4, IC5, OC2)
-- 5 sites with 2 types of fertilization (OC1, IS1, OC4, OG6, OC5)
-- x sites with only 1 type of fertilization
-- 1 site with occasional manure fertilization (OC2)
+- 6 sites with 2 types of fertilization (OC1, IS1, OC4, OG6, OC5, OS8)
+- 10 sites with only 1 type of fertilization (OG1, OS2, IV1, OG3, IC3, OG2, OG4, OS4, OS6, IS4)
+- 2 sites with occasional manure fertilization (OC2, OS8)
 - 9 sites with annual manure fertilization (OC1, IC1, IS1, OC3, OC4, OG6, IC4, IC5, OC5)
-- 3 sites with occasional fertilization with artificial fertilizer (OG1, IV1, OG6)
+- 4 sites with occasional fertilization with artificial fertilizer (OG1, IV1, OG6, OS8)
 - 15 sites with annual fertilization with artificial fertilizer (OC1, OS2, IC1, OG3, IC3, OC3, OC4, OG2, OG4, IC4, IC5, OC5, OS6, OC2, IS4)
 - 7 sites with occasional fertilization with shell/sand/lime (IC1, OG3, IC3, OC3, IC4, IC5, OC2)
 
