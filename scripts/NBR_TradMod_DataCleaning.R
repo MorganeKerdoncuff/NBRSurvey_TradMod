@@ -1125,7 +1125,7 @@ hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 
 #hist(soilbulk_full$WDRY) # Weights range from 20 to 140 g in a normal distribution -> very low weights likely to be linked to low volumes
 
 # Percent water loss in 24h
-soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same two NAs -> validated
 hist(soilbulk_full$percent_Waterloss24h) # % range from -20% to 40%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Percent water loss in 48h
@@ -1148,4 +1148,11 @@ filter(soilbulk_full, CoreVol<400 & !is.na(CoreVol)) # 690 or 46% samples unfit
 filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #138 samples with water loss 24h negative
 filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #84 samples with water loss 48h negative
 
+# Selection data with min 350 cm3 soil volume and positive water loss
+soilbulk_full <- subset(soilbulk_full, CoreVol>350)
+soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
+soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
+
+# Check new number of replicates per site
+sort(table(soilbulk_full$SiteID)) # 2 sites with less than 20 replicates (OS5, OC3)
 
