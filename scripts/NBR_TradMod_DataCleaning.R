@@ -1016,7 +1016,7 @@ test <- soilpene_full |>
 # [1] Sample identification code
 # [2] Field identification code for data collection
 # [3] Plot identification code
-# [4] Height of the soil core (cm)
+# [4] Height of the core fully completed with soil (cm)
 # [5] Volume of the soil core before correction for holes or slopes (cm3) -> not to be used in the analysis
 # [6] Volume of the soil core manually corrected for holes and slopes if applicable (cm3) -> not to be used in the analysis
 # [7] Best estimation of the volume of the soil core, with correction for holes or slopes if needed (cm3)
@@ -1027,18 +1027,19 @@ test <- soilpene_full |>
 # [12] Core weight (including soil + PVC core + cheesecloth) after drying at 105C in oven (g)
 # [13] Weight of the cheesecloth (g)
 # [14] Weight of the PVC core with the cheesecloth (g)
-# [15] Bulk density calculated from the non-corrected volumes -> not to be used in the analysis
-# [16] Bulk density calculated for the corrected volumes only -> not to be used in the analysis
-# [17] Bulk density calculated from the best volume estimation
-# [18] Weight of percentage of soil moisture (g)
-# [19] Volume of percentage of soil moisture (cm3) -> calculated from the BD
-# [20] Percentage of soil porosity -> calculated from the BD
-# [21] Percentage of WFPS
-# [22] Period without grazing management on the field
-# [23] Comments during the lab processing of the soil
-# [24] Other comments
-# [25] If the samples are concerned by scale calibration issue
-# [26] Who performed the task
+# [15] Percentage of water loss over 24h -> calculated from W0 and W24
+# [16] Percentage of water loss over 48h -> calculated from W0 and W48
+# [17] Bulk density calculated from the non-corrected volumes -> not to be used in the analysis
+# [18] Bulk density calculated for the corrected volumes only -> not to be used in the analysis
+# [19] Bulk density calculated from the best volume estimation
+# [20] Weight of percentage of soil moisture (g)
+# [21] Volume of percentage of soil moisture (cm3) -> calculated from the BD
+# [22] Percentage of soil porosity -> calculated from the BD
+# [23] Percentage of WFPS
+# [24] Comments during the lab processing of the soil
+# [25] Other comments
+# [26] If the samples are concerned by scale calibration issue
+# [27] Who performed the task
 
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
@@ -1049,21 +1050,102 @@ str(soilbulk_raw) # missing sample ID, plotID to be reformated
 ## Name & character cleaning
 
 # R friendly variable names
-names(soilpene_raw) <- gsub("Site", "SiteID", names(soilpene_raw)) # rename in SiteID so it matches with other files
-names(soilpene_raw) <- gsub("PlotID", "SampleID", names(soilpene_raw)) # Rename plotID as sampleID
-names(soilpene_raw) <- gsub("Date", "Recording_date", names(soilpene_raw)) # Rename so it matches with other files
-names(soilpene_raw) <- gsub("\\(", "", names(soilpene_raw)) # remove (
-names(soilpene_raw) <- gsub("\\)", "", names(soilpene_raw)) # remove )
-names(soilpene_raw) <- gsub("Comments", "Comments_soilpene", names(soilpene_raw))
-soilpene_raw$PlotID <- substr(soilpene_raw$SampleID, 1,6) #create PlotID column
+names(soilbulk_raw) <- gsub("\\(", "", names(soilbulk_raw)) # remove (
+names(soilbulk_raw) <- gsub("\\)", "", names(soilbulk_raw)) # remove )
+names(soilbulk_raw) <- gsub(" ", "", names(soilbulk_raw)) # remove spaces
+names(soilbulk_raw) <- gsub("Site", "SiteID", names(soilbulk_raw)) # rename in SiteID so it matches with other files
+names(soilbulk_raw) <- gsub("cm", "_cm", names(soilbulk_raw))
+names(soilbulk_raw) <- gsub("%", "percent_", names(soilbulk_raw))
+names(soilbulk_raw) <- gsub("Comments_processing", "CommentsProcessing_soilbulk", names(soilbulk_raw))
+names(soilbulk_raw) <- gsub("Other_comments", "OtherComments_soilbulk", names(soilbulk_raw))
 
-#
-## Sampling date standardisation
-
-soilpene_raw$Recording_date <- as.POSIXct(soilpene_raw$Recording_date, format = "%d.%m.%Y")
+# New ID variables
+soilbulk_raw$PlotID <- substr(soilbulk_raw$BDcoreID, 1,6) # recreate PlotID column
+soilbulk_raw$SampleID <- substr(soilbulk_raw$BDcoreID, 1,9) # recreate SampleID column
 
 #
 ## Data cleaning - New R object
 
-soilpene_full <- soilpene_raw
+soilbulk_full <- soilbulk_raw
+
+#
+## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+#table(soilbulk_full$SiteID) # 36 samples per site - validated
+
+# Plot ID
+#table(soilbulk_full$PlotID) # 12 samples per plot - validated
+
+# Bulk density core ID
+#soilbulk_full[duplicated(soilbulk_full$BDcoreID),] # Unique ID for core - validated
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- soilbulk_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # min core volume quite low, negative values for water loss 24h and 48h, negative BD
+
+# Best estimation soil core volume
+#soilbulk_full[is.na(soilbulk_full$CoreVol),] # two NA in IS1 & OG1 -> check datasheet -> lab incident, the 2 cores were discarded
+hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
+
+# W0 - Weight of fresh soil before saturation
+#soilbulk_full[is.na(soilbulk_full$W0g),] # same two NAs -> validated
+#hist(soilbulk_full$W0g) # Weights range from 50 to 180 g in a normal distribution -> very low weights likely to be linked to low volumes
+
+# WSAT - Soil weight after water saturation
+#soilbulk_full[is.na(soilbulk_full$WSAT),] # same two NAs -> validated
+#hist(soilbulk_full$WSAT) # Weights range from 60 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
+
+# W24H - Soil weight after 24h of drying
+#soilbulk_full[is.na(soilbulk_full$W24H),] # same two NAs -> validated
+#hist(soilbulk_full$W24H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes, not so much difference compared to WSAT
+
+# W48H - Soil weight after 48h of drying
+#soilbulk_full[is.na(soilbulk_full$W48H),] # same two NAs -> validated
+#hist(soilbulk_full$W48H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
+
+# WDRY - Soil weight after over at 105C
+#soilbulk_full[is.na(soilbulk_full$WDRY),] # same two NAs -> validated
+#hist(soilbulk_full$WDRY) # Weights range from 20 to 140 g in a normal distribution -> very low weights likely to be linked to low volumes
+
+# Percent water loss in 24h
+soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same two NAs -> validated
+hist(soilbulk_full$percent_Waterloss24h) # % range from -20% to 40%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+
+# Percent water loss in 48h
+#soilbulk_full[is.na(soilbulk_full$percent_Waterloss48h),] # same two NAs -> validated
+hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 60%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+
+# Bulk density
+#soilbulk_full[is.na(soilbulk_full$BD),] # same two NAs -> validated
+hist(soilbulk_full$BD) # % range from -0.1% to 0.4%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+
+#
+## Data filtering
+
+# Min soil core volume
+filter(soilbulk_full, CoreVol<350 & !is.na(CoreVol)) # 136 or 9% samples unfit
+filter(soilbulk_full, CoreVol<380 & !is.na(CoreVol)) # 366 or 25% samples unfit
+filter(soilbulk_full, CoreVol<400 & !is.na(CoreVol)) # 690 or 46% samples unfit
+
+# Negative water loss values
+filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #138 samples with water loss 24h negative
+filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #84 samples with water loss 48h negative
+
 
