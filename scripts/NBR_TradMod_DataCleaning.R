@@ -1136,23 +1136,74 @@ hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 60%, main betwee
 #soilbulk_full[is.na(soilbulk_full$BD),] # same two NAs -> validated
 hist(soilbulk_full$BD) # % range from -0.1% to 0.4%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
+# Soil moisture in percentage weight
+#soilbulk_full[is.na(soilbulk_full$Weightpercent_Soilmoisture),] # same two NAs -> validated
+hist(soilbulk_full$Weightpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+
+# Soil moisture in percentage volume
+#soilbulk_full[is.na(soilbulk_full$Volpercent_Soilmoisture),] # same two NAs -> validated
+hist(soilbulk_full$Volpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+
+# Soil porosity
+#soilbulk_full[is.na(soilbulk_full$percent_Soilporosity),] # same two NAs -> validated
+hist(soilbulk_full$percent_Soilporosity) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+
+# WFPS
+#soilbulk_full[is.na(soilbulk_full$percent_WFPS),] # same two NAs -> validated
+hist(soilbulk_full$percent_WFPS) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+
 #
 ## Data filtering
 
 # Min soil core volume
-filter(soilbulk_full, CoreVol<350 & !is.na(CoreVol)) # 136 or 9% samples unfit
-filter(soilbulk_full, CoreVol<380 & !is.na(CoreVol)) # 366 or 25% samples unfit
-filter(soilbulk_full, CoreVol<400 & !is.na(CoreVol)) # 690 or 46% samples unfit
+#filter(soilbulk_full, CoreVol<350 & !is.na(CoreVol)) # 136 or 9% samples unfit
+#filter(soilbulk_full, CoreVol<380 & !is.na(CoreVol)) # 366 or 25% samples unfit
+#filter(soilbulk_full, CoreVol<400 & !is.na(CoreVol)) # 690 or 46% samples unfit
 
 # Negative water loss values
-filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #138 samples with water loss 24h negative
-filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #84 samples with water loss 48h negative
+#filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #138 samples with water loss 24h negative
+#filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #84 samples with water loss 48h negative
 
 # Selection data with min 350 cm3 soil volume and positive water loss
 soilbulk_full <- subset(soilbulk_full, CoreVol>350)
 soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
 soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
 
-# Check new number of replicates per site
-sort(table(soilbulk_full$SiteID)) # 2 sites with less than 20 replicates (OS5, OC3)
+# Check new variable distribution - water loss 24h
+#hist(soilbulk_full$percent_Waterloss24h) # still some extreme values over 20%
+#filter(soilbulk_full, percent_Waterloss24h>20) # 8 cores with more than 20% over 24h
+# 2 cores from UC1, which is excluded from the analysis -> should be removed
+# 2 cores from OC3, concerned with scale issue (lots of negative values which are already removed). Water loss between 0-24 and 24-48 not coherent -> should be removed
+# 2 cores from OC2, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same plot (W48h>W24h for P1-D1_2) -> should be removed
+# 1 cores from OC5, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same site -> should be removed
+# 1 core from OG6, not concerned by scale issue. High value coherent with other samples from same plot -> to be kept
+soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20 | BDcoreID == "OG6-P2-D4_2")
 
+# Check new variable distribution - water loss 48h
+#hist(soilbulk_full$percent_Waterloss48h) # still some extreme values over 30%
+#filter(soilbulk_full, percent_Waterloss48h>30) # 2 cores with more than 30% over 48h
+# 1 core from OG6, same one than with more than 20% reduction in 24h -> to be kept
+# 1 core from IS3, with P3 concerned with scale issue. Water loss ~60%, completely incoherent with other samples from same plot -> to be removed
+soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h<40)
+
+# Check new variable distribution - bulk density
+#hist(soilbulk_full$BD) # no negative values anymore, quite nice normal distribution -> validated
+
+# Check new variable distribution - soil moisture in percent weight
+#hist(soilbulk_full$Weightpercent_Soilmoisture) # still some negative and extreme values (100%)
+#filter(soilbulk_full, Weightpercent_Soilmoisture<20) # 8 cores with less than 20% soil moisture
+# 4 cores from OC2, concerned with scale issue. 2 negative values, 2 other very low not coherent with other samples from the plot -> to be removed
+# 1 core from OC4, concerned with scale issue -> weight loss after 24h almost 0, value not coherent with other samples from the plot -> to be removed
+# 3 cores from OG4, concerned with scale issue -> values are coherent within the plot and relatively close to what is find in other plots (30%-40%) -> to be kept
+soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture>20 | SiteID == "OG4")
+#filter(soilbulk_full, Weightpercent_Soilmoisture>90) # 1 core from IS3, with P3 concerned with scale issue. Incoherent with other samples from same plot -> to be removed
+soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90) # Distribution a bit hectic
+
+# Check new variable distribution - soil moisture in percent volume
+#hist(soilbulk_full$Volpercent_Soilmoisture) # still some very low values, but no extremes, nice normal distribution
+
+# Check new variable distribution - WFPS
+#hist(soilbulk_full$percent_WFPS) # no extremes, nice normal distribution
+
+# Check new number of replicates per site
+#sort(table(soilbulk_full$SiteID)) # 3 sites with less than 20 replicates (OS5, OC3, OC2) -> validated
