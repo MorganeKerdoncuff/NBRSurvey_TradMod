@@ -16,20 +16,21 @@ library(lubridate) #standard date data
 #### DATA LOADING ####
 
 siteinfo_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SiteInfo") # Farm information, field location and habitat type
-landuse_raw <- read_excel(path = "data/NBR_FarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
-#farmer_raw <- read_excel(path = "data/NBR_FarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
-landscape_raw <- read_excel(path = "data/NBR_LandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
+landuse_raw <- read_excel(path = "data/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
+#farmer_raw <- read_excel(path = "data/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
+landscape_raw <- read_excel(path = "data/NBR_RawLandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
 area20x20_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
 soilcover_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
 soilpene_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
-soilbulk_raw <- read_excel(path = "data/NBR_RawBD2019-2020.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
+soilbulk_raw <- read_excel(path = "data/NBR_RawBD.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
 soilmeso_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="Mesofauna") # Height of mesofauna soil core, at subplot level
-chem2019 <- read.csv("data/SoilChemistry_NBR2019.txt", sep=";") # 2019 Soil chemistry data from Eurofins, at plot level
-chem2020 <- read.csv("data/SoilChemistry_NBR2020.txt", sep=";") # 2020 soil chemistry data from Eurofins, at plot level
-chem2020_DM <- read_excel(path = "data/SoilChemistry_NBR2020bis.xls") # 2020 complementary soil chemistry data from Eurofins, at plot level
+chem2019 <- read.csv("data/NBR_RawSoilChemistry2019.txt", sep=";") # 2019 Soil chemistry data from Eurofins, at plot level
+chem2020 <- read.csv("data/NBR_RawSoilChemistry2020.txt", sep=";") # 2020 soil chemistry data from Eurofins, at plot level
+chem2020_DM <- read_excel(path = "data/NBR_RawSoilChemistry2020bis.txt.xls") # 2020 complementary soil chemistry data from Eurofins, at plot level
 poo_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="Poo", na="NA") # poo data at subplot (quadrat) level
 vege_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="PlantRichness") # plant community data, at species level
-arthro_raw <- read_excel(path = "data/NBR_RawArthro2019-2020.xlsx", na="NA") # arthropod community data, at family level
+arthro_main <- read_excel(path = "data/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
+arthro_sup <- read_excel(path = "data/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
 
 
 #### SITE INFO ####
@@ -1478,3 +1479,83 @@ vege_full <- vege_full |>
 #sort(table(vege_full$Species)) #no doubletons remaining
 
 # from 676 to 673 variables -> 3 quadrats removed?
+
+
+#### Beetle families community ####
+
+## Description
+
+# Arthropod community table, with families/orders as columns and pitfall traps as rows
+
+#
+## Summary - Check table size, list of variables, variable types (num/chr)
+
+#str(arthro_main) # Sampling period a bit messy
+#str(arthro_sup) # Need to check Latin names for families
+
+#
+## Character cleaning, Common ID and correct Latin names for merging
+
+# Character cleaning
+names(arthro_sup) <- gsub(" ", "", names(arthro_sup))
+names(arthro_main) <- gsub("-", "", names(arthro_main))
+
+# Common ID
+names(arthro_main) <- gsub("Site", "SiteID", names(arthro_main))
+names(arthro_main) <- gsub("Pitfall_ID", "SampleID", names(arthro_main))
+names(arthro_sup) <- gsub("Site", "SiteID", names(arthro_sup))
+names(arthro_sup) <- gsub("PitfallID", "SampleID", names(arthro_sup))
+names(arthro_sup) <- gsub("Samplingperiod", "Sampling_period", names(arthro_sup))
+
+# Latin names
+names(arthro_main) <- gsub("Scarabidae", "Scarabaeidae", names(arthro_main)) #rename families
+names(arthro_main) <- gsub("Ptilidae", "Ptiliidae", names(arthro_main)) #rename families
+names(arthro_sup) <- gsub("Curculinoideae", "Curculionidae", names(arthro_sup)) #rename families
+names(arthro_sup) <- gsub("Chysomelidae", "Chrysomelidae", names(arthro_sup)) #rename families
+
+# Binding main and complementary tables
+arthro_raw <- full_join(arthro_main, arthro_sup)
+
+#
+## Summary sampling area - Check table size, list of variables, variable types (num/chr)
+
+#str(arthro_raw) # all good except from period of sampling which has messy format - also missing plotID
+arthro_raw$PlotID <- substr(arthro_raw$SampleID, 1, 6) #arrange plot ID to match other files
+
+#
+## Data cleaning - New R object + removal variables redundant with other dataset
+
+arthro_full <- subset(arthro_raw, select = -c(Year, Habitat, Livestock, Storage))
+
+#
+## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+length(table(arthro_full$SiteID)) #39 sites, missing 6
+table(arthro_full$SiteID) # 12 samples per site - sites missing are OV1, US3, US4, UG1, UG2, UC1
+
+# Plot ID
+#table(arthro_full$PlotID) # 4 samples per plot - validated
+
+# Bulk density core ID
+#arthro_full[duplicated(arthro_full$SampleID),] # Unique ID for core - validated
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- arthro_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # no obvious outliers, some loners
