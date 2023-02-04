@@ -1468,21 +1468,13 @@ vege_raw <- vege_raw |>
 vege_full <- vege_raw
 
 # Remove full NA rows
-vege_full <- na.omit(vege_full)
+vege_full <- vege_full[rowSums(is.na(vege_full)) != ncol(vege_full), ] #remove full NA rows
 
 # Aggregate repetitions
-vege_raw <- vege_raw %>% 
-  group_by(Species) %>% 
-  summarise_if(is.numeric, sum, na.rm = TRUE) %>% 
+vege_full <- vege_full |>  
+  group_by(Species) |> 
+  summarise_if(is.numeric, sum, na.rm = TRUE) |>  
   distinct()
-#sort(table(Vege_bis$Species)) #no doubletons remaining
+#sort(table(vege_full$Species)) #no doubletons remaining
 
-#Prepare table for vegan (sites rows, species columns)
-VegeRawAll <- Vege_Pre %>% 
-  pivot_longer(cols = c(-Species), names_to = "SampleID", values_to = "Abundance") %>%
-  mutate(PlotID = substr(SampleID, 1, 6)) %>% 
-  group_by(PlotID, Species) %>% 
-  summarise(MeanVG = mean(Abundance)) %>% #mean cover per plot
-  filter(MeanVG>0) %>% 
-  mutate(SiteID = substr(PlotID, 1, 3))
-VegeRawMean <- as.data.frame(VegeRawAll) #we transformed in a data frame because we had a nested table brought by "group_by" that we could not get rid of
+# from 676 to 673 variables -> 3 quadrats removed?
