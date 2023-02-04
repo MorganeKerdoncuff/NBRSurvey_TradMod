@@ -1439,3 +1439,50 @@ hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 2
 
 # OC2-P1 outlier in several parameter -> farmer fertilizes in spring and summmer, maybe samples taken on a chunk
 soilchem_full <- subset(soilchem_full, !PlotID == "OC2-P1")
+
+
+#### Plant species community ####
+
+## Description
+
+# Plant community table, with species as rows and quadrats as columns.
+
+#
+## Check species names
+
+#table(vege_raw$Species) # several name repetitions + some unknown species
+
+# Correction latin name
+vege_raw <- vege_raw |>  
+  mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |> 
+  mutate(Species = dplyr::recode(Species, "Polytrichiastrum" = "Polytrichastrum")) |> 
+  mutate(Species = dplyr::recode(Species, "Polytrichum juniperirinum" = "Polytrichum juniperinum")) |> 
+  mutate(Species = dplyr::recode(Species, "Rhacomitrium" = "Racomitrium")) |> 
+  mutate(Species = dplyr::recode(Species, "Kystkransmose" = "Rhytidiadelphus loreus")) |> 
+  mutate(Species = dplyr::recode(Species, "Sphagunm" = "Sphagnum"))
+
+#
+## Data cleaning and manipulation
+
+# New R object
+vege_full <- vege_raw
+
+# Remove full NA rows
+vege_full <- na.omit(vege_full)
+
+# Aggregate repetitions
+vege_raw <- vege_raw %>% 
+  group_by(Species) %>% 
+  summarise_if(is.numeric, sum, na.rm = TRUE) %>% 
+  distinct()
+#sort(table(Vege_bis$Species)) #no doubletons remaining
+
+#Prepare table for vegan (sites rows, species columns)
+VegeRawAll <- Vege_Pre %>% 
+  pivot_longer(cols = c(-Species), names_to = "SampleID", values_to = "Abundance") %>%
+  mutate(PlotID = substr(SampleID, 1, 6)) %>% 
+  group_by(PlotID, Species) %>% 
+  summarise(MeanVG = mean(Abundance)) %>% #mean cover per plot
+  filter(MeanVG>0) %>% 
+  mutate(SiteID = substr(PlotID, 1, 3))
+VegeRawMean <- as.data.frame(VegeRawAll) #we transformed in a data frame because we had a nested table brought by "group_by" that we could not get rid of

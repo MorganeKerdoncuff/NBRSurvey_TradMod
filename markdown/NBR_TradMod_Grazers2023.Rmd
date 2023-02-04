@@ -122,6 +122,19 @@ After data filtering, all sites had at least 15 replicates.
 
 ### Soil chemistry
 
+One soil core of x cm diameter and 12 cm depth were sampled in each destructive subplot, for a total of 12 cores per site.
+Cores from 2019 were sieved and merged in the lab, and 0.5 L was sent to Eurofins for chemistry analysis.
+For each plot in 2020, 3 cores out of 4 were sieved and merged, and 0.5 L of the mix was sent to Eurofins.
+The remaining core was used for mesofauna sorting which is not shown in this paper.
+Results from the lab showed then the plot level.
+The current analysis being led at the site level, we used the average of the plot values (3 replicates).
+There was one exception (OC2) where one of the sample showed an extreme content of calcium.
+This sample was put aside and we kept only two replicates for this site.
+Chemistry analysis included the following:
+
+- Loss of ignition
+- Nitrogen content
+- Phosphorous content
 
 
 # RESULTS
