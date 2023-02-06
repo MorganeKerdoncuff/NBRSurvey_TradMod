@@ -6,7 +6,7 @@
 #Funding
 #Place
 
-####Package loading####
+#### PACKAGE LOADING ####
 
 library(tidyverse) #R language
 library(readxl) #read xl files
@@ -20,7 +20,7 @@ landuse_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet=
 #farmer_raw <- read_excel(path = "data/rawdata/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
 landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
 area20x20_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
-soilcover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
+groundcover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
 soilpene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
 soilbulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
 soilmeso_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofauna") # Height of mesofauna soil core, at subplot level
@@ -752,7 +752,7 @@ write_csv(area20x20_full, "data/cleandata/NBR_FullArea20x20.csv")
 
 
 
-#### Soil cover quadrats ####
+#### Ground cover quadrats ####
 
 ## Description
 
@@ -783,69 +783,69 @@ write_csv(area20x20_full, "data/cleandata/NBR_FullArea20x20.csv")
 #
 ## Summary sampling area - Check table size, list of variables, variable types (num/chr)
 
-#str(soilcover_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+#str(groundcover_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
 
 #
 ## Name & character cleaning sampling area
 
 # R friendly variable names
-names(soilcover_raw) <-gsub ("Site", "SiteID", names(soilcover_raw)) # rename in SiteID so it matches with other files
-names(soilcover_raw)<- gsub ("PlotID", "SampleID", names(soilcover_raw)) # Rename plotID as sampleID
-names(soilcover_raw)<- gsub ("Date", "Recording_date", names(soilcover_raw)) # Rename so it matches with other files
-names(soilcover_raw)<- gsub ("\\(", "", names(soilcover_raw)) # remove (
-names(soilcover_raw)<- gsub ("\\)", "", names(soilcover_raw)) # remove )
-names(soilcover_raw) <- gsub("Comments", "Comments_soilcover", names(soilcover_raw))
-soilcover_raw$PlotID <- substr(soilcover_raw$SampleID, 1,6) #create PlotID column
+names(groundcover_raw) <-gsub ("Site", "SiteID", names(groundcover_raw)) # rename in SiteID so it matches with other files
+names(groundcover_raw)<- gsub ("PlotID", "SampleID", names(groundcover_raw)) # Rename plotID as sampleID
+names(groundcover_raw)<- gsub ("Date", "Recording_date", names(groundcover_raw)) # Rename so it matches with other files
+names(groundcover_raw)<- gsub ("\\(", "", names(groundcover_raw)) # remove (
+names(groundcover_raw)<- gsub ("\\)", "", names(groundcover_raw)) # remove )
+names(groundcover_raw) <- gsub("Comments", "Comments_soilcover", names(groundcover_raw))
+groundcover_raw$PlotID <- substr(groundcover_raw$SampleID, 1,6) #create PlotID column
 
 #
 ## Sampling date standardisation
 
-soilcover_raw$Recording_date <- as.POSIXct(soilcover_raw$Recording_date, format = "%d.%m.%Y")
+groundcover_raw$Recording_date <- as.POSIXct(groundcover_raw$Recording_date, format = "%d.%m.%Y")
 
 #
 ## Data cleaning - New R object
 
-soilcover_full <- soilcover_raw
+groundcover_full <- groundcover_raw
 
 #
 ## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
 
 # Site ID
-#table(soilcover_full$SiteID) # 15 samples per site - validated
+#table(groundcover_full$SiteID) # 15 samples per site - validated
 
 # Plot ID
-#table(soilcover_full$PlotID) # 5 samples per plot - validated
+#table(groundcover_full$PlotID) # 5 samples per plot - validated
 
 # Sample ID
-#soilcover_full[duplicated(soilcover_full$SampleID),] # Unique ID for sample - validated
+#groundcover_full[duplicated(groundcover_full$SampleID),] # Unique ID for sample - validated
 
 # Blossom sp1
-#table(soilcover_full$Blossom_sp1) # two latin names for Cirsium palustre + "Alchemilla millefolium" either Achillea millefolium or Alchemilla vulgaris
-soilcover_full <- soilcover_full |> 
+#table(groundcover_full$Blossom_sp1) # two latin names for Cirsium palustre + "Alchemilla millefolium" either Achillea millefolium or Alchemilla vulgaris
+groundcover_full <- groundcover_full |> 
   mutate(Blossom_sp1 = dplyr::recode(Blossom_sp1, "Cirsium palustris" = "Cirsium palustre"))
-#filter(soilcover_full, Blossom_sp1 == "Alchemilla millefolium") # IS1-P3-N3 -> check on field sheet -> species is Achillea millefolium
-soilcover_full <- soilcover_full |> 
+#filter(groundcover_full, Blossom_sp1 == "Alchemilla millefolium") # IS1-P3-N3 -> check on field sheet -> species is Achillea millefolium
+groundcover_full <- groundcover_full |> 
   mutate(Blossom_sp1 = dplyr::recode(Blossom_sp1, "Alchemilla millefolium" = "Achillea millefolium"))
 
 # Blossom sp2
-#table(soilcover_full$Blossom_sp2) # Bad ID Leontodon saxatile, should be Leontodon autumnalis
-soilcover_full <- soilcover_full |> 
+#table(groundcover_full$Blossom_sp2) # Bad ID Leontodon saxatile, should be Leontodon autumnalis
+groundcover_full <- groundcover_full |> 
   mutate(Blossom_sp2 = dplyr::recode(Blossom_sp2, "Leontodon saxatile" = "Leontodon autumnalis"))
 
 # Blossom sp3
-#table(soilcover_full$Blossom_sp3) # All good
+#table(groundcover_full$Blossom_sp3) # All good
 
 # Blossom sp4
-#table(soilcover_full$Blossom_sp4) # All good
+#table(groundcover_full$Blossom_sp4) # All good
 
 # Blossom sp5
-#table(soilcover_full$Blossom_sp5) # All good
+#table(groundcover_full$Blossom_sp5) # All good
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
 
 # Check min/max
-test <- soilcover_full |>  
+test <- groundcover_full |>  
   summarise(
     tibble(
       across(
@@ -862,61 +862,61 @@ test <- soilcover_full |>
   transpose() # no visible outlier (maybe lichen at 80%?), no percentage above 100%
 
 # Bare soil - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Bare_soil),] # No NA
-#hist(soilcover_full$Bare_soil) # Samples range from 0 to 40% -> check the maximum
-#filter(soilcover_full, Bare_soil>30) # Two samples on OV1, recently burnt coastal heathland -> validated
+#groundcover_full[is.na(groundcover_full$Bare_soil),] # No NA
+#hist(groundcover_full$Bare_soil) # Samples range from 0 to 40% -> check the maximum
+#filter(groundcover_full, Bare_soil>30) # Two samples on OV1, recently burnt coastal heathland -> validated
 
 # Rocks - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Rocks),] # No NA
-#hist(soilcover_full$Rocks) # Samples range from 0 to 8% -> validated
+#groundcover_full[is.na(groundcover_full$Rocks),] # No NA
+#hist(groundcover_full$Rocks) # Samples range from 0 to 8% -> validated
 
 # Litter - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Litter),] # No NA
-#hist(soilcover_full$Litter) # Samples range from 0 to 60% -> check above 30%
-#filter(soilcover_full, Litter>30) # Samples either from OV1, recently burnt coastal heathland, or mountain sites (US2, UG1) -> validated
+#groundcover_full[is.na(groundcover_full$Litter),] # No NA
+#hist(groundcover_full$Litter) # Samples range from 0 to 60% -> check above 30%
+#filter(groundcover_full, Litter>30) # Samples either from OV1, recently burnt coastal heathland, or mountain sites (US2, UG1) -> validated
 
 # Dead wood - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Dead_wood),] # No NA
-#hist(soilcover_full$Dead_wood) # Samples range from 0 to 10% -> validated
+#groundcover_full[is.na(groundcover_full$Dead_wood),] # No NA
+#hist(groundcover_full$Dead_wood) # Samples range from 0 to 10% -> validated
 
 # Bryophytes - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Bryophytes),] # No NA
-#hist(soilcover_full$Bryophytes) # Samples range from 0 to 100% -> validated
+#groundcover_full[is.na(groundcover_full$Bryophytes),] # No NA
+#hist(groundcover_full$Bryophytes) # Samples range from 0 to 100% -> validated
 
 # Lichen - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Lichen),] # No NA
-#hist(soilcover_full$Lichen) # Samples range from 0 to 80%% -> check outliers above 40%
-#filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> validated from the field sheet
+#groundcover_full[is.na(groundcover_full$Lichen),] # No NA
+#hist(groundcover_full$Lichen) # Samples range from 0 to 80%% -> check outliers above 40%
+#filter(groundcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> validated from the field sheet
 
 # Vascular - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Vascular),] # No NA
-#hist(soilcover_full$Vascular) # Samples range from 0 to 100% -> validated
+#groundcover_full[is.na(groundcover_full$Vascular),] # No NA
+#hist(groundcover_full$Vascular) # Samples range from 0 to 100% -> validated
 
 # Blossom cover - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Blossom_cover),] # No NA
-#hist(soilcover_full$Blossom_cover) # Samples range from 0 to 15% -> validated
+#groundcover_full[is.na(groundcover_full$Blossom_cover),] # No NA
+#hist(groundcover_full$Blossom_cover) # Samples range from 0 to 15% -> validated
 
 # Dung cover - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Dung),] # No NA
-#hist(soilcover_full$Dung) # Samples range from 0 to 15% -> check maximum
-#filter(soilcover_full, Dung>10) # Samples from cow site (IC1) -> validated
+#groundcover_full[is.na(groundcover_full$Dung),] # No NA
+#hist(groundcover_full$Dung) # Samples range from 0 to 15% -> check maximum
+#filter(groundcover_full, Dung>10) # Samples from cow site (IC1) -> validated
 
 # Vegetation maximum height - NA + Distribution
-#soilcover_full[is.na(soilcover_full$VG_max_height_cm),] # No NA
-#hist(soilcover_full$VG_max_height_cm) # Samples range from 0 to 160 cm with normal distribution -> validated
+#groundcover_full[is.na(groundcover_full$VG_max_height_cm),] # No NA
+#hist(groundcover_full$VG_max_height_cm) # Samples range from 0 to 160 cm with normal distribution -> validated
 
 # Vegetation mean height - NA + Distribution
-#soilcover_full[is.na(soilcover_full$VG_mean_height_cm),] # No NA
-#hist(soilcover_full$VG_mean_height_cm) # Samples range from 0 to 90 cm with Poisson distribution -> validated
+#groundcover_full[is.na(groundcover_full$VG_mean_height_cm),] # No NA
+#hist(groundcover_full$VG_mean_height_cm) # Samples range from 0 to 90 cm with Poisson distribution -> validated
 
 # Vegetation species richness - NA + Distribution
-#soilcover_full[is.na(soilcover_full$Plant_species_richness),] # No NA
-#hist(soilcover_full$Plant_species_richness) # Samples range from 0 to 35 species with Normal distribution -> validated
+#groundcover_full[is.na(groundcover_full$Plant_species_richness),] # No NA
+#hist(groundcover_full$Plant_species_richness) # Samples range from 0 to 35 species with Normal distribution -> validated
 
 
 ## Export clean data in new excel file
 
-write_csv(soilcover_full, "data/cleandata/NBR_FullSoilCover.csv")
+write_csv(groundcover_full, "data/cleandata/NBR_FullGroundCover.csv")
 
 
 
@@ -935,8 +935,9 @@ write_csv(soilcover_full, "data/cleandata/NBR_FullSoilCover.csv")
 # [7] Stick height remaining above the ground on the right side of the quadrat (cm)
 # [8] Stick height which penetrated the ground on the right side of the quadrat (cm) -> calculated in Excel
 # [9] If the stick hit a rock on the left side of the quadrat Y/N
-# [10] Stick total length (cm) - the stick would wear out along with repetitive use, so its length would decrease over time
-# [11] Comments
+# [10] Average soil penetration for quadrat (mean left and right)
+# [11] Stick total length (cm) - the stick would wear out along with repetitive use, so its length would decrease over time
+# [12] Comments
 
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
@@ -1510,6 +1511,13 @@ vege_full <- vege_full |>
 #sort(table(vege_full$Species)) #no doubletons remaining
 
 # from 676 to 673 variables -> 3 quadrats removed?
+
+#
+## Table formatting for vegan (long table)
+vege_full <- vege_full |> 
+  pivot_longer(cols = c(-Species), names_to = "SampleID", values_to = "Abundance") |> 
+  mutate(PlotID = substr(SampleID, 1, 6)) |>
+  mutate(SiteID = substr(SampleID, 1, 3))
 
 
 ## Export clean data in new excel file
