@@ -15,22 +15,22 @@ library(lubridate) #standard date data
 
 #### DATA LOADING ####
 
-siteinfo_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SiteInfo") # Farm information, field location and habitat type
-landuse_raw <- read_excel(path = "data/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
-#farmer_raw <- read_excel(path = "data/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
-landscape_raw <- read_excel(path = "data/NBR_RawLandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
-area20x20_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
-soilcover_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
-soilpene_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
-soilbulk_raw <- read_excel(path = "data/NBR_RawBD.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
-soilmeso_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="Mesofauna") # Height of mesofauna soil core, at subplot level
-chem2019 <- read.csv("data/NBR_RawSoilChemistry2019.txt", sep=";") # 2019 Soil chemistry data from Eurofins, at plot level
-chem2020 <- read.csv("data/NBR_RawSoilChemistry2020.txt", sep=";") # 2020 soil chemistry data from Eurofins, at plot level
-chem2020_DM <- read_excel(path = "data/NBR_RawSoilChemistry2020bis.txt.xls") # 2020 complementary soil chemistry data from Eurofins, at plot level
-poo_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="Poo", na="NA") # poo data at subplot (quadrat) level
-vege_raw <- read_excel(path = "data/NBR_RawAll.xlsx", sheet="PlantRichness") # plant community data, at species level
-arthro_main <- read_excel(path = "data/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
-arthro_sup <- read_excel(path = "data/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
+siteinfo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo") # Farm information, field location and habitat type
+landuse_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
+#farmer_raw <- read_excel(path = "data/rawdata/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
+landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
+area20x20_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
+soilcover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
+soilpene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
+soilbulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
+soilmeso_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofauna") # Height of mesofauna soil core, at subplot level
+chem2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";") # 2019 Soil chemistry data from Eurofins, at plot level
+chem2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";") # 2020 soil chemistry data from Eurofins, at plot level
+chem2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls") # 2020 complementary soil chemistry data from Eurofins, at plot level
+poo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA") # poo data at subplot (quadrat) level
+vege_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichness") # plant community data, at species level
+arthro_main <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
+arthro_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
 
 
 #### SITE INFO ####
@@ -47,18 +47,17 @@ arthro_sup <- read_excel(path = "data/NBR_RawArthroSup.xlsx", na="NA") # complem
 # [6] Geographical location of the field, municipality
 # [7] Geolocation of the field, X-coordinate - CRS EPSG 25832
 # [8] Geolocation of the field, y-coordinate - CRS EPSG 25832
-# [9] Name of the farmer !! Privacy !!?
-# [10] Current grazing livestock, at least for the last 5 years
-# [11] Size of the livestock flock - column empty, data collected in another file
-# [12] Size of the grazing area - column empty, data collected in another file
-# [13] Y/N if the animal was seen on site during the collection
-# [14] Poo weight collected on 10% of the sampling area (g) - proxy of grazing intensity on site
-# [15] Comments
+# [9] Current grazing livestock, at least for the last 5 years
+# [10] Size of the livestock flock - column empty, data collected in another file
+# [11] Size of the grazing area - column empty, data collected in another file
+# [12] Y/N if the animal was seen on site during the collection
+# [13] Poo weight collected on 10% of the sampling area (g) - proxy of grazing intensity on site
+# [14] Comments
 
 #
 ## Summary site info - Check table size, list of variables, variable types (num/chr)
 
-str(siteinfo_raw) # All good
+#str(siteinfo_raw) # All good
 
 #
 ## Name & character cleaning
@@ -74,9 +73,9 @@ names(siteinfo_raw) <- gsub("Comments", "Comments_siteinfo", names(siteinfo_raw)
 #siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # remove empty variables, which will be included in another dataset
 
 #
-## Data cleaning - new R object
+## Data cleaning - new R object with removal empty columns or variables redundant with other datasets
 
-siteinfo_full <- siteinfo_raw
+siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface))
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
@@ -108,7 +107,7 @@ test <- siteinfo_full |>
 #table(siteinfo_full$SiteID) # Unique ID for each site - validated
 
 # Ecological zones
-unique(siteinfo_full$NiBioEcologicalZone) # Three categories for ecological zone - validated
+#unique(siteinfo_full$NiBioEcologicalZone) # Three categories for ecological zone - validated
 # Homogeneous character writing - removing capital letters for common nouns
 siteinfo_full <- siteinfo_full |> 
   mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Coastal" = "coastal")) |> 
@@ -124,14 +123,6 @@ siteinfo_full <- siteinfo_full |>
 siteinfo_full <- siteinfo_full |> 
   mutate(Municipality = ifelse(SiteID == "US2", "Masfjorden", Municipality)) # Replace NA by municipality name
 #unique(siteinfo_full$Municipality) # NA in Municipality replaced - validated
-
-# Farmers
-#unique(siteinfo_full$Farmer) # Missing two full names and one NA
-#siteinfo_full[is.na(siteinfo_full$Farmer),] # NA identified - UC1, farmer same as for US1
-siteinfo_full <- siteinfo_full |> 
-  mutate(Farmer = ifelse(SiteID == "UC1", "Hans Magne Haukeland", Farmer)) |> 
-  mutate(Farmer = dplyr::recode(Farmer, "Tormod" = "Tormod Magnesen")) |> 
-  mutate(Farmer = dplyr::recode(Farmer, "Dan" = "Ole Mathias Lygren")) # Full farmer names - validated
 
 # Livestock
 #unique(siteinfo_full$Type_livestock) # Villsau should be within sheep category
@@ -155,8 +146,10 @@ siteinfo_full <- siteinfo_full |>
 
 #unique(siteinfo_full$Animal_on_site)
 
-#
-## Geological information # Aborted as raw data were incorrect
+
+## Export clean data in new excel file
+
+write_csv(siteinfo_full, "data/cleandata/NBR_FullSiteInfo.csv")
 
 
 #### FIELD MANAGEMENT ####
@@ -169,62 +162,60 @@ siteinfo_full <- siteinfo_full |>
 # [2] Geographical location of the field, hamlet
 # [3] Geographical location of the field, postcode
 # [4] Geographical location of the field, municipality (both former and current classification)
-# [5] Name of the farmer
-# [6] Date of the interview with the farmer
-# [7] Site productivity - infield high productivity, outfield low productivity
-# [8] National identification number of the farm
-# [9] Main livestock, currently grazing in the field - ! rotational grazing management
-# [10] Other livestock, grazing in other fields - ! rotational grazing management
-# [11] Name of cow breed
-# [12] Name of goat breed
-# [13] Name of sheep breed
-# [14] Number of adult animals in the main livestock
-# [15] Number of young animals in the main livestock
-# [16] Number of adult animals in other livestock
-# [17] Number of young animals in other livestock
-# [18] Size of the field containing the sampling area (ha) ! rotational grazing management
-# [19] FROM GÅRDSKSART - Total grazing area of the farm (ha) ! rotational grazing management
-# [20] Grazing density on the field - not collected, empty column
-# [21] Period since the farmer has had the current livestock
-# [22] Period without grazing management on the field
-# [23] Number of months the main livestock grazes in the field in a year
-# [24] Number of months other livestock graze in the field in a year ! rotational grazing
-# [25] If the animals are kept inside or outside at night
-# [26] Farmer impression of grazing pressure on the site
-# [27] Former livestock which used to graze in the field (1)
-# [28] Former livestock which used to graze in the field (2)
-# [29] Former livestock which used to graze in the field (3)
-# [30] Former livestock grazing period (1)
-# [31] Former livestock grazing period (2)
-# [32] Former livestock grazing period (3)
-# [33] Type of farm management during the past 10 years (1)
-# [34] Type of farm management during the past 10 years (2)
-# [35] Type of farm management during the past 10 years (3)
-# [36] If applicable, frequency of grass cutting
-# [37] If applicable, frequency of mulching
-# [38] If applicable, frequency of fertilization with manure
-# [39] If applicable, type of manure used
-# [40] If applicable, volume of manure used (m3)
-# [41] If applicable, in which season the manure is used
-# [42] If applicable, frequency of fertilization with artificial fertilizer
-# [43] If applicable, weight of artificial fertilizer used (kg)
-# [44] If applicable, in which season the artificial fertilizer is used
-# [45] If applicable, frequency of fertilization with shell-sand/lime
-# [46] If applicable, weight of shell-sand/limer used (kg)
-# [47] If applicable, in which season the shell-sand/lime is used
-# [48] If applicable, last time the field was sowed
-# [49] If applicable, last time the field was plowed
-# [50] If applicable, last time the field was drained
-# [51] Type of land use prior to grazing
-# [52] If applicable, type of production prior to grazing (1)
-# [53] If applicable, type of production prior to grazing (2)
-# [54] Time period of land use type prior to grazing
-# [55] Comments
+# [5] Date of the interview with the farmer
+# [6] Site productivity - infield high productivity, outfield low productivity
+# [7] Main livestock, currently grazing in the field - ! rotational grazing management
+# [8] Other livestock, grazing in other fields - ! rotational grazing management
+# [9] Name of cow breed
+# [10] Name of goat breed
+# [11] Name of sheep breed
+# [12] Number of adult animals in the main livestock
+# [13] Number of young animals in the main livestock
+# [14] Number of adult animals in other livestock
+# [15] Number of young animals in other livestock
+# [16] Size of the field containing the sampling area (ha) ! rotational grazing management
+# [17] FROM GÅRDSKSART - Total grazing area of the farm (ha) ! rotational grazing management
+# [18] Grazing density on the field - not collected, empty column
+# [19] Period since the farmer has had the current livestock
+# [20] Period without grazing management on the field
+# [21] Number of months the main livestock grazes in the field in a year
+# [22] Number of months other livestock graze in the field in a year ! rotational grazing
+# [23] If the animals are kept inside or outside at night
+# [24] Farmer impression of grazing pressure on the site
+# [25] Former livestock which used to graze in the field (1)
+# [26] Former livestock which used to graze in the field (2)
+# [27] Former livestock which used to graze in the field (3)
+# [28] Former livestock grazing period (1)
+# [29] Former livestock grazing period (2)
+# [30] Former livestock grazing period (3)
+# [31] Type of farm management during the past 10 years (1)
+# [32] Type of farm management during the past 10 years (2)
+# [33] Type of farm management during the past 10 years (3)
+# [34] If applicable, frequency of grass cutting
+# [35] If applicable, frequency of mulching
+# [36] If applicable, frequency of fertilization with manure
+# [37] If applicable, type of manure used
+# [38] If applicable, volume of manure used (m3)
+# [39] If applicable, in which season the manure is used
+# [40] If applicable, frequency of fertilization with artificial fertilizer
+# [41] If applicable, weight of artificial fertilizer used (kg)
+# [42] If applicable, in which season the artificial fertilizer is used
+# [43] If applicable, frequency of fertilization with shell-sand/lime
+# [44] If applicable, weight of shell-sand/limer used (kg)
+# [45] If applicable, in which season the shell-sand/lime is used
+# [46] If applicable, last time the field was sowed
+# [47] If applicable, last time the field was plowed
+# [48] If applicable, last time the field was drained
+# [49] Type of land use prior to grazing
+# [50] If applicable, type of production prior to grazing (1)
+# [51] If applicable, type of production prior to grazing (2)
+# [52] Time period of land use type prior to grazing
+# [53] Comments
 
 #
 ## Summary land use - Check table size, list of variables, variable types (num/chr)
 
-str(landuse_raw) # All good
+#str(landuse_raw) # All good
 
 #
 ## Name & character cleaning land use
@@ -239,8 +230,6 @@ names(landuse_raw)<-  gsub("-", "_", names(landuse_raw))
 names(landuse_raw)<-  gsub("\\?", "", names(landuse_raw))
 names(landuse_raw)<-  gsub(":", "", names(landuse_raw))
 names(landuse_raw) <- gsub("Sitecode", "SiteID", names(landuse_raw)) #rename siteID so it matches with other sheets
-names(landuse_raw) <- gsub("Farmer_interviewee", "Farmer", names(landuse_raw))
-names(landuse_raw) <- gsub("Farm_name_nr.orbeitelag", "FarmID", names(landuse_raw))
 names(landuse_raw) <- gsub("Typeoflivestock", "Livestock", names(landuse_raw))
 names(landuse_raw) <- gsub("_ifapplicable", "", names(landuse_raw))
 names(landuse_raw) <- gsub("_villsaubreed", "breed", names(landuse_raw))
@@ -338,9 +327,9 @@ unique(landuse_full$FieldManagement1) # NAs
 #landuse_full[is.na(landuse_full$FieldManagement1),] # 6 missing values -> farmers who did not reply to the survey
 #landuse_full[is.na(landuse_full$FieldManagement2),] # 36 missing values
 #landuse_full[is.na(landuse_full$FieldManagement3),] # 41 missing values
-table(landuse_full$FieldManagement1) # 9 sites with no treatments at all, 21 with at least fertilization
-table(landuse_full$FieldManagement2) # 8 sites with at least 2 treatments
-table(landuse_full$FieldManagement3) # 3 sites with 3 treatments
+#table(landuse_full$FieldManagement1) # 9 sites with no treatments at all, 21 with at least fertilization
+#table(landuse_full$FieldManagement2) # 8 sites with at least 2 treatments
+#table(landuse_full$FieldManagement3) # 3 sites with 3 treatments
 
 # Sites with no treatment
 #subset(landuse_full, FieldManagement1 == "none") # 4 mountain sites (US2, US3, US5, US6), 2 coastal heathlands (IS2, OS5), 3 grasslands (IG1, IG2, IS3)
@@ -424,8 +413,8 @@ landuse_full <- landuse_full |>
   mutate(FlockSize1_adults = ifelse(SiteID == "IG3", 109, FlockSize1_adults)) # no information for US6
 
 # Flock size adults - distribution
-hist(landuse_full$FlockSize1_adults) # wide range but most farms under 50 animals - one farm over 150 animals
-landuse_full[landuse_full$FlockSize1_adults>150,] # IS4 over 150 animals + US6 as NA
+#hist(landuse_full$FlockSize1_adults) # wide range but most farms under 50 animals - one farm over 150 animals
+#landuse_full[landuse_full$FlockSize1_adults>150,] # IS4 over 150 animals + US6 as NA
 
 # Flock size young - missing values
 landuse_full <- landuse_full |> 
@@ -438,8 +427,8 @@ landuse_full <- landuse_full |>
   mutate(FlockSize1_young = ifelse(SiteID == "IG3", 135, FlockSize1_young)) # no information for US6
 
 # Flock size young - distribution
-hist(landuse_full$FlockSize1_young)
-landuse_full[landuse_full$FlockSize1_young>150,] # US3 & IS5 + 4 farms with no young animals + US6 as NA
+#hist(landuse_full$FlockSize1_young)
+#landuse_full[landuse_full$FlockSize1_young>150,] # US3 & IS5 + 4 farms with no young animals + US6 as NA
 
 # Grazing surface
 #landuse_full[is.na(landuse_full$GrazingSurface_ha),] # No missing value - validated
@@ -455,8 +444,8 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 #hist(landuse_full$LivestockFrom_year) # ranges from 1920 to 2020, but ! not equivalent to no grazing, neither to grazing with another animal -> too hectic, not to be included in the analysis
 
 # How many months main livestock graze on site during the year
-landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
-hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
+#landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
+#hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
 
 #
 ## New variable - grazing intensity
@@ -481,8 +470,14 @@ landuse_full <- landuse_full |>
     ((FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)*(YearlyGrazing1_month/12), 
     (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)
     )
-hist(landuse_full$Grazingdensity_perha)
-landuse_full[is.na(landuse_full$Grazingdensity_perha),]
+#hist(landuse_full$Grazingdensity_perha) # Range from 0 to 0.6, no visible outlier
+#landuse_full[is.na(landuse_full$Grazingdensity_perha),] # US6 as NA
+
+
+## Export clean data in new excel file
+
+write_csv(landuse_full, "data/cleandata/NBR_FullLanduse.csv")
+
 
 
 #### LANDSCAPE MATRIX ####
@@ -597,6 +592,12 @@ landscape_full <- landscape_full |>
   mutate(TotForest_percent = ProductiveForest_percent + NonProductiveForest_percent)
 
 
+## Export clean data in new excel file
+
+write_csv(landscape_full, "data/cleandata/NBR_FullLandscape.csv")
+
+
+
 #### SAMPLING AREA 20X20 ####
 
 ## Description
@@ -631,7 +632,7 @@ landscape_full <- landscape_full |>
 #
 ## Summary sampling area - Check table size, list of variables, variable types (num/chr)
 
-str(area20x20_raw) # All good, date should be reformatted
+#str(area20x20_raw) # All good, date should be reformatted
 
 #
 ## Name & character cleaning sampling area
@@ -745,6 +746,12 @@ area20x20_full <- area20x20_full |>
 #area20x20_full[area20x20_full$HLI<0,] #OS6 -> 11 degree slope with NE exposition
 
 
+## Export clean data in new excel file
+
+write_csv(area20x20_full, "data/cleandata/NBR_FullArea20x20.csv")
+
+
+
 #### Soil cover quadrats ####
 
 ## Description
@@ -776,7 +783,7 @@ area20x20_full <- area20x20_full |>
 #
 ## Summary sampling area - Check table size, list of variables, variable types (num/chr)
 
-str(soilcover_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+#str(soilcover_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
 
 #
 ## Name & character cleaning sampling area
@@ -879,7 +886,7 @@ test <- soilcover_full |>
 # Lichen - NA + Distribution
 #soilcover_full[is.na(soilcover_full$Lichen),] # No NA
 #hist(soilcover_full$Lichen) # Samples range from 0 to 80%% -> check outliers above 40%
-filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> validated from the field sheet
+#filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> validated from the field sheet
 
 # Vascular - NA + Distribution
 #soilcover_full[is.na(soilcover_full$Vascular),] # No NA
@@ -907,6 +914,12 @@ filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> v
 #hist(soilcover_full$Plant_species_richness) # Samples range from 0 to 35 species with Normal distribution -> validated
 
 
+## Export clean data in new excel file
+
+write_csv(soilcover_full, "data/cleandata/NBR_FullSoilCover.csv")
+
+
+
 #### Soil penetration quadrat ####
 
 ## Description
@@ -928,7 +941,7 @@ filter(soilcover_full, Lichen>40) # 1 sample from mountain site (US1-P1-N5) -> v
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
 
-str(soilpene_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+#str(soilpene_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
 
 #
 ## Name & character cleaning
@@ -1009,6 +1022,12 @@ test <- soilpene_full |>
 #hist(soilpene_full$Stick_height) # Heights range from 42.7 to 43.4 cm -> validated
 
 
+## Export clean data in new excel file
+
+write_csv(soilpene_full, "data/cleandata/NBR_FullSoilPene.csv")
+
+
+
 #### Soil bulk density - quadrats ####
 
 ## Description
@@ -1046,7 +1065,7 @@ test <- soilpene_full |>
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
 
-str(soilbulk_raw) # missing sample ID, plotID to be reformated
+#str(soilbulk_raw) # missing sample ID, plotID to be reformated
 
 #
 ## Name & character cleaning
@@ -1104,7 +1123,7 @@ test <- soilbulk_full |>
 
 # Best estimation soil core volume
 #soilbulk_full[is.na(soilbulk_full$CoreVol),] # two NA in IS1 & OG1 -> check datasheet -> lab incident, the 2 cores were discarded
-hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
+#hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
 
 # W0 - Weight of fresh soil before saturation
 #soilbulk_full[is.na(soilbulk_full$W0g),] # same two NAs -> validated
@@ -1128,31 +1147,31 @@ hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 
 
 # Percent water loss in 24h
 #soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same two NAs -> validated
-hist(soilbulk_full$percent_Waterloss24h) # % range from -20% to 40%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$percent_Waterloss24h) # % range from -20% to 40%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Percent water loss in 48h
 #soilbulk_full[is.na(soilbulk_full$percent_Waterloss48h),] # same two NAs -> validated
-hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 60%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 60%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Bulk density
 #soilbulk_full[is.na(soilbulk_full$BD),] # same two NAs -> validated
-hist(soilbulk_full$BD) # % range from -0.1% to 0.4%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$BD) # % range from -0.1% to 0.4%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Soil moisture in percentage weight
 #soilbulk_full[is.na(soilbulk_full$Weightpercent_Soilmoisture),] # same two NAs -> validated
-hist(soilbulk_full$Weightpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$Weightpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Soil moisture in percentage volume
 #soilbulk_full[is.na(soilbulk_full$Volpercent_Soilmoisture),] # same two NAs -> validated
-hist(soilbulk_full$Volpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$Volpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 # Soil porosity
 #soilbulk_full[is.na(soilbulk_full$percent_Soilporosity),] # same two NAs -> validated
-hist(soilbulk_full$percent_Soilporosity) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$percent_Soilporosity) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 # WFPS
 #soilbulk_full[is.na(soilbulk_full$percent_WFPS),] # same two NAs -> validated
-hist(soilbulk_full$percent_WFPS) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$percent_WFPS) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 #
 ## Data filtering
@@ -1209,6 +1228,12 @@ soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90) # Distribu
 
 # Check new number of replicates per site
 #sort(table(soilbulk_full$SiteID)) # 3 sites with less than 20 replicates (OS5, OC3, OC2) -> validated
+
+
+## Export clean data in new excel file
+
+write_csv(soilbulk_full, "data/cleandata/NBR_FullSoilBulk.csv")
+
 
 
 #### Soil chemistry ####
@@ -1383,11 +1408,11 @@ test <- soilchem_full |>
 
 # LOI
 #soilchem_full[is.na(soilchem_full$LOI),] # no NA
-hist(soilchem_full$LOI) # range from 0 to 90 -> very wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
+#hist(soilchem_full$LOI) # range from 0 to 90 -> very wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
 
 # Soil density
 #soilchem_full[is.na(soilchem_full$SoilDensity_kg.L),] # no NA
-hist(soilchem_full$SoilDensity_kg.L) # range from 0 to 1.4 -> quite wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
+#hist(soilchem_full$SoilDensity_kg.L) # range from 0 to 1.4 -> quite wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
 
 # Percent of humus in dry matter
 #soilchem_full[is.na(soilchem_full$Humus_percentDM),] # no NA
@@ -1417,13 +1442,13 @@ hist(soilchem_full$SoilDensity_kg.L) # range from 0 to 1.4 -> quite wide, but in
 
 # Calcium
 #soilchem_full[is.na(soilchem_full$Ca.Al_mg.100g),] # no NA
-hist(soilchem_full$Ca.Al_mg.100g) # range from 0 to 1000, one clear outlier
+#hist(soilchem_full$Ca.Al_mg.100g) # range from 0 to 1000, one clear outlier
 #filter(soilchem_full, Ca.Al_mg.100g>1000) # OC2-P1, not coherent with other samples -> to be removed
 #filter(soilchem_full, Ca.Al_mg.100g>200) # 2 plots from same site (IC5) over 200 mg/100g
 
 # Sodium
 #soilchem_full[is.na(soilchem_full$Na.Al_mg.100g),] # no NA
-hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 20
+#hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 20
 #filter(soilchem_full, Na.Al_mg.100g>20) # OC2-P1, same as Calcium -> to be removed
 #filter(soilchem_full, Na.Al_mg.100g>12) # IS4-P3 & IS5-P2 -> coherent with rest of the samples
 
@@ -1440,6 +1465,12 @@ hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 2
 
 # OC2-P1 outlier in several parameter -> farmer fertilizes in spring and summmer, maybe samples taken on a chunk
 soilchem_full <- subset(soilchem_full, !PlotID == "OC2-P1")
+
+
+## Export clean data in new excel file
+
+write_csv(soilchem_full, "data/cleandata/NBR_FullSoilChem.csv")
+
 
 
 #### Plant species community ####
@@ -1479,6 +1510,12 @@ vege_full <- vege_full |>
 #sort(table(vege_full$Species)) #no doubletons remaining
 
 # from 676 to 673 variables -> 3 quadrats removed?
+
+
+## Export clean data in new excel file
+
+write_csv(vege_full, "data/cleandata/NBR_FullPlantComm.csv")
+
 
 
 #### Beetle families community ####
@@ -1559,3 +1596,31 @@ test <- arthro_full |>
     )
   ) |>  
   transpose() # no obvious outliers, some loners
+
+# Tot Beetle
+#arthro_full[is.na(arthro_full$Beetle),] # 9 NAs -> pitfall traps crushed in OC5 (5), OC4 (1), IC5 (1) or water overloaded in US2 (2)
+#hist(arthro_full$Beetle) # Poisson distribution, skewed.
+
+# Distribution of beetle families
+#hist(arthro_full$Staphylinidae) # Poisson, skewed from 0 to over 1000
+#hist(arthro_full$Carabidae) # Poisson, skewed from 0 to 15
+#hist(arthro_full$Hydrophilidae) # Poisson, skewed, from 0 to 130
+#hist(arthro_full$Scarabaeidae) # Poisson, skewed, from 0 to 35
+#hist(arthro_full$Ptiliidae) # Poisson, skewed from 0 to 400
+#hist(arthro_full$Curculionidae) # Low abundance (from 1 to 4), but 50 samples have at least one
+#hist(arthro_full$Elateridae) # Low abundance (from 1 to 4), but 50 samples have at least one
+#hist(arthro_full$Leiodidae) # Only two loners -> not to be taken in account in the analysis
+#hist(arthro_full$Rhizophagidae) # Only two loners -> not to be taken in account in the analysis
+#hist(arthro_full$Silphidae) # Poisson, skewed from 0 to 35
+#hist(arthro_full$Histeridae) # Very low abundance (10 pitfall traps with 1-2) -> not to be taken in account
+#hist(arthro_full$Geotrupidae) # Low abundance (from 1 to 3), but 20 samples have at least one
+#hist(arthro_full$Chrysomelidae) # Only four loners -> not to be taken in account
+#hist(arthro_full$Dascillidae) # Only one loner -> not to be taken in account
+#hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
+
+
+## Export clean data in new excel file
+
+write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
+
+
