@@ -99,16 +99,39 @@ soilpene_grass <- soilpene_grass |>
 # Plant community - current at quadrat level -> summary by average
 vege_grass <- vege_grass |> 
   group_by(SiteID, Species) |> 
-  summarise(PlantSp_Cover = mean(Abundance))
+  summarise(PlantSp_cover = mean(Abundance))
 
 # Beetle community - current at pitfall level -> summary by sum only main families
 arthro_grass <- arthro_grass |> 
   group_by(SiteID, BeetleFamilies) |> 
-  summarise(BeetleFam_Abundance = sum(BeetleFam_Abundance, na.rm = TRUE))
+  summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE))
 
 #
 ## Transformation community data
 
 # Data distribution
-hist(vege_grass$PlantSp_Cover) # Poisson, highly skewed -> should ren\move rare species
+hist(vege_grass$PlantSp_Cover) # Poisson, highly skewed -> should remove rare species
 hist(arthro_grass$BeetleFam_Abundance) # Poisson, highly skewed
+
+# Removal rare plant species with total mean cover across sites under 0.5% -> from 275 to 88 species
+vege_grass <- vege_grass |> 
+  pivot_wider(names_from = Species, values_from = PlantSp_cover) |>  
+  select_if(negate(function(col) is.numeric(col) && sum(col) < 0.5)) |> 
+  pivot_longer(cols = c(-SiteID), names_to = "PlantSp", values_to = "PlantSp_cover")
+
+# Removal rare beetle families (determined in data cleaning script)
+arthro_grass <- arthro_grass |> 
+  pivot_wider(names_from = BeetleFamilies, values_from = BeetleFam_abundance)
+arthro_grass <- subset(arthro_grass, select = c(SiteID, Carabidae, Staphylinidae, Hydrophilidae, Ptiliidae, Scarabaeidae, Curculionidae, Elateridae))
+arthro_grass <- arthro_grass |>  
+  pivot_longer(cols = c(-SiteID), names_to = "BeetleFam", values_to = "BeetleFam_abundance")
+
+# Log transformation
+vege_grass <- vege_grass |> 
+  mutate(PlantSp_logcover = log1p(PlantSp_cover))
+arthro_grass <- arthro_grass |> 
+  mutate(BeetleFam_logabundance = log1p(BeetleFam_abundance))
+
+# Contingency tables
+continvege_grass <- xtabs(formula = PlantSp_logcover ~ SiteID + PlantSp, data = vege_grass)
+continbeetle_grass <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFam, data = arthro_grass)

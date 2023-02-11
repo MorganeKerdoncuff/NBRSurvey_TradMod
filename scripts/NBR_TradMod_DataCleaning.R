@@ -1638,11 +1638,11 @@ arthro_full <- arthro_full |>
   pivot_longer(
     cols = c(Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae),
     names_to = "BeetleFamilies", 
-    values_to = "BeetleFam_Abundance") |> 
+    values_to = "BeetleFam_abundance") |> 
   pivot_longer(
     cols = c(Beetle, Spider, Diptera, Hemiptera, Opilion, Worm, Slug, Snail, Cloporte, Millipoda, Orthoptera, Hymenoptera),
     names_to = "Orders", 
-    values_to = "Order_Abundance") |>
+    values_to = "Order_abundance") |>
   mutate(PlotID = substr(SampleID, 1, 6)) |>
   mutate(SiteID = substr(SampleID, 1, 3))
 
