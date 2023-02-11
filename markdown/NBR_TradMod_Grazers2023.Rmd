@@ -94,7 +94,7 @@ In two sites, the goats were sent in the summer farms in the mountains for sever
 This was recurring and well described by the farmer.
 For these two sites only we therefore decided to keep the first formula.
 
-## Topography
+## Fjord topography
 
 ### Heat Load Index
 
@@ -106,6 +106,10 @@ The slope angle was collected on site with a clinometer, with the observer stand
 The aspect not being consistently recorded on the field, it was collected afterwards with spatial data.
 The Digital Elevation Model files were collected from GeoNorge (link).
 An aspect map in degree azimuth was generated in QGIS software (version 3.12.2) from which the site aspect values were individually retrieved.
+
+### Distance to sea
+
+We measured the distance between the field and the closer fjord on Norge i bilder.
 
 ## Landscape matrix
 
@@ -119,6 +123,10 @@ Bulk density estimation being less accurate on low soil volumes, we discarded co
 A scale dysfunction issues affected some of our sites during the processing of the soil.
 Negative or extreme water loss values were removed.
 After data filtering, all sites had at least 15 replicates.
+
+### Soil penetration
+
+Complementary of bulk density, indicative of soil compaction & root density.
 
 ### Soil chemistry
 

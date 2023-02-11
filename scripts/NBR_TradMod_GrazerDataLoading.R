@@ -49,7 +49,7 @@ vege_grass <- filter(vege_full, SiteID %in% siteinfo_grass$SiteID)
 arthro_grass <- filter(arthro_full, SiteID %in% siteinfo_grass$SiteID)
 
 #
-## Summarise data at site level -> should be 30 observations
+## Summarise data at site level -> should be 30 observations for non community data
 
 # Site info - validated
 
@@ -99,20 +99,16 @@ soilpene_grass <- soilpene_grass |>
 # Plant community - current at quadrat level -> summary by average
 vege_grass <- vege_grass |> 
   group_by(SiteID, Species) |> 
-  summarise(MeanCover = mean(Abundance))
-
+  summarise(PlantSp_Cover = mean(Abundance))
 
 # Beetle community - current at pitfall level -> summary by sum only main families
 arthro_grass <- arthro_grass |> 
-  group_by(SiteID) |> 
-  summarise(Staphylinidae = sum(Staphylinidae, na.rm = TRUE),
-            Hydrophilidae = sum(Hydrophilidae, na.rm = TRUE),
-            Ptiliidae = sum(Ptiliidae, na.rm = TRUE),
-            Carabidae = sum(Carabidae, na.rm = TRUE),
-            Scarabaeidae = sum(Scarabaeidae, na.rm = TRUE),
-            Silphidae = sum(Silphidae, na.rm = TRUE))
-arthro_grass <- pivot_longer(
-  arthro_grass,
-  cols = c(-SiteID), 
-  names_to = "Families", 
-  values_to = "Abundance")
+  group_by(SiteID, BeetleFamilies) |> 
+  summarise(BeetleFam_Abundance = sum(BeetleFam_Abundance, na.rm = TRUE))
+
+#
+## Transformation community data
+
+# Data distribution
+hist(vege_grass$PlantSp_Cover) # Poisson, highly skewed -> should ren\move rare species
+hist(arthro_grass$BeetleFam_Abundance) # Poisson, highly skewed

@@ -618,16 +618,17 @@ write_csv(landscape_full, "data/cleandata/NBR_FullLandscape.csv")
 # [12] Estimated slope from the highest to the lowest point of the sampling area (degree)
 # [13] Aspect of the sampling area - cardinal direction
 # [14] Aspect of the sampling area - azimuth degree
-# [15] Estimated percentage cover of exposed rock in the sampling area
-# [16] Estimated percentage cover of mud in the sampling area
-# [17] Estimated percentage cover of trees and shrubs over 1 m in the sampling area
-# [18] Estimated percentage cover of shrubs under 1 m in the sampling area
-# [19] Estimated percentage cover of herbs in the sampling area
-# [20] Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area
-# [21] Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area
-# [22] Estimated percentage cover of ferns in the sampling area
-# [23] Estimated percentage cover of lichens in the sampling area
-# [24] Comments
+# [15] Distance to sea, either ocean or fjord (m)
+# [16] Estimated percentage cover of exposed rock in the sampling area
+# [17] Estimated percentage cover of mud in the sampling area
+# [18] Estimated percentage cover of trees and shrubs over 1 m in the sampling area
+# [19] Estimated percentage cover of shrubs under 1 m in the sampling area
+# [20] Estimated percentage cover of herbs in the sampling area
+# [21] Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area
+# [22] Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area
+# [23] Estimated percentage cover of ferns in the sampling area
+# [24] Estimated percentage cover of lichens in the sampling area
+# [25] Comments
 
 #
 ## Summary sampling area - Check table size, list of variables, variable types (num/chr)
@@ -694,6 +695,11 @@ test <- area20x20_full |>
 
 # Distribution aspect degree
 #hist(area20x20_full$AspectDegree) # Aspect covers all spectrum (0 to 360), no outliers - validated
+
+# Distribution distance to sea
+#area20x20_full[is.na(area20x20_full$DistanceToSea_m),] # 9 NA, corresponding to upland sites -> validated
+#hist(area20x20_full$DistanceToSea_m) # One outlier, above 10 km distance
+#filter(area20x20_full, DistanceToSea_m>10000) # IG3 in Modalen
 
 # Distribution rock cover
 #hist(area20x20_full$percentRock) # Some sites over 7%, check their location + 3 NAs
@@ -1625,6 +1631,20 @@ test <- arthro_full |>
 #hist(arthro_full$Chrysomelidae) # Only four loners -> not to be taken in account
 #hist(arthro_full$Dascillidae) # Only one loner -> not to be taken in account
 #hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
+
+#
+## Table formatting for vegan (long table)
+arthro_full <- arthro_full |> 
+  pivot_longer(
+    cols = c(Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae),
+    names_to = "BeetleFamilies", 
+    values_to = "BeetleFam_Abundance") |> 
+  pivot_longer(
+    cols = c(Beetle, Spider, Diptera, Hemiptera, Opilion, Worm, Slug, Snail, Cloporte, Millipoda, Orthoptera, Hymenoptera),
+    names_to = "Orders", 
+    values_to = "Order_Abundance") |>
+  mutate(PlotID = substr(SampleID, 1, 6)) |>
+  mutate(SiteID = substr(SampleID, 1, 3))
 
 
 ## Export clean data in new excel file
