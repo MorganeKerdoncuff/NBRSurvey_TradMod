@@ -110,8 +110,8 @@ arthro_grass <- arthro_grass |>
 ## Transformation community data
 
 # Data distribution
-hist(vege_grass$PlantSp_Cover) # Poisson, highly skewed -> should remove rare species
-hist(arthro_grass$BeetleFam_Abundance) # Poisson, highly skewed
+hist(vege_grass$PlantSp_cover) # Poisson, highly skewed -> should remove rare species
+hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
 # Removal rare plant species with total mean cover across sites under 0.5% -> from 275 to 88 species
 vege_grass <- vege_grass |> 
@@ -133,5 +133,146 @@ arthro_grass <- arthro_grass |>
   mutate(BeetleFam_logabundance = log1p(BeetleFam_abundance))
 
 # Contingency tables
-continvege_grass <- xtabs(formula = PlantSp_logcover ~ SiteID + PlantSp, data = vege_grass)
-continbeetle_grass <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFam, data = arthro_grass)
+contin_vege <- xtabs(formula = PlantSp_logcover ~ SiteID + PlantSp, data = vege_grass)
+contin_beetle <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFam, data = arthro_grass)
+
+#
+## Creation fjord system matrix
+
+# Desired variables
+## Elevation (num), from area 20x20
+## Slope angle (num), from area 20x20
+## Aspect angle (num), from area 20x20
+## Distance to sea (num), from area 20x20
+
+# Selection variables
+fjordsys <- subset(area20x20_grass, select = c(SiteID, Elevation_max, General_slope, AspectDegree, DistanceToSea_m))
+
+# Contingency table
+fjordsys <- fjordsys |> 
+  pivot_longer(
+    cols = c(Elevation_max, General_slope, AspectDegree, DistanceToSea_m),
+    names_to = "Factors",
+    values_to = "Values")
+contin_fjordsys <- xtabs(formula = Values ~ SiteID + Factors, data = fjordsys)
+
+# Data scaling
+contin_fjordsys <- scale(contin_fjordsys)
+
+#
+## Creation landscape matrix
+
+# Desired variables
+## Sum forest area (num), from landscape
+## Sum cultivated area (num), from landscape
+## Sum infield area (num), from landscape
+## Sum outfield area (num), from landscape
+## Sum wetland area (num), from landscape
+
+# New variables - sum of cultivated land & forest
+landscape_grass <- landscape_grass |> 
+  mutate(TotCultivatedLand_percent = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
+  mutate(TotForest_percent = ProductiveForest_percent + NonProductiveForest_percent)
+
+# Selection variables
+landscape <- subset(landscape_grass, select = c(SiteID, TotCultivatedLand_percent, TotForest_percent, Infield_percent, Outfield_percent, Wetland_percent))
+
+# Contingency table
+landscape <- landscape |> 
+  pivot_longer(
+    cols = c(TotCultivatedLand_percent, TotForest_percent, Infield_percent, Outfield_percent, Wetland_percent),
+    names_to = "Factors",
+    values_to = "Values")
+contin_landscape <- xtabs(formula = Values ~ SiteID + Factors, data = landscape)
+
+# Data scaling
+contin_landscape <- scale(contin_landscape)
+
+#
+## Creation grazing management matrix
+
+# Desired variables
+## Type of livestock (char), from landuse
+## Number of adult animals (num), from landuse
+## Grazing surface of the collected field (num), from landuse
+## Total infield surface (num), from landuse
+## Standardised grazing density, from landuse
+
+# Dummy numeric for original character variables
+landuse_grass <- landuse_grass |> 
+  mutate(Sheep = ifelse(Livestock1 == "sheep",1,0)) |> 
+  mutate(Cow = ifelse(Livestock1 == "cow", 1,0))
+
+# Selection variables
+grazing <- subset(landuse_grass, select = c(SiteID, Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, Grazingdensity_perha))
+
+# Contingency table
+grazing <- grazing |> 
+  pivot_longer(
+    cols = c(Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, Grazingdensity_perha),
+    names_to = "Factors",
+    values_to = "Values")
+contin_grazing <- xtabs(formula = Values ~ SiteID + Factors, data = grazing)
+
+# Data scaling
+contin_grazing <- scale(contin_grazing)
+
+#
+## Creation plant local environment matrix
+
+# Desired variables
+## Bulk density (num), from soilbulk
+## Moisture content (num), from soilbulk
+## Penetration rate (num), from soilpene
+## LOI (num), from soilchem
+## Nitrogen content (num), from soilchem
+## Phosphorous content (num), from soilchem
+## pH (num), from soilchem
+## Humus content (num), from soilchem
+
+# Selection variables
+plantenvi <- purrr::reduce(list(soilbulk_grass, soilpene_grass, soilchem_grass), dplyr::left_join)
+plantenvi <- subset(plantenvi, select = -c(MeanPotassium, MeanSodium))
+
+# Contingency table
+plantenvi <- plantenvi |> 
+  pivot_longer(
+    cols = c(MeanBD, MeanMoisture, MeanPT, MeanLOI, MeanHumus, MeanpH, MeanPhosphorus, MeanNitrogen),
+    names_to = "Factors",
+    values_to = "Values")
+contin_plantenvi <- xtabs(formula = Values ~ SiteID + Factors, data = plantenvi)
+
+# Data scaling
+contin_plantenvi <- scale(contin_plantenvi)
+
+#
+## Creation beetle local environment matrix
+
+# Desired variables
+## Exposed ground (bare soil + rock) cover (num), from groundcover
+## Litter cover (num), from groundcover
+## Mean vegetation height (num), from groundcover
+## Mean vegetation richness (num), from groundcover
+## Bulk density (num), from soilbulk
+## Moisture content (num), from soilbulk
+## Humus content (num), from soilchem
+
+# Selection variables
+beetlenvi <- purrr::reduce(list(groundcover_grass, soilbulk_grass, soilchem_grass), dplyr::left_join)
+beetlenvi <- beetlenvi |> 
+  mutate(MeanExposedGround = MeanBareSoil + MeanRocks)
+beetlenvi <- subset(beetlenvi, select = c(SiteID, MeanExposedGround, MeanLitter, MeanHeight, MeanRichness, MeanBD, MeanMoisture, MeanHumus))
+
+# Contingency beetlenvi
+beetlenvi <- beetlenvi |> 
+  pivot_longer(
+    cols = c(MeanExposedGround, MeanLitter, MeanHeight, MeanRichness, MeanBD, MeanMoisture, MeanHumus),
+    names_to = "Factors",
+    values_to = "Values")
+contin_beetlenvi <- xtabs(formula = Values ~ SiteID + Factors, data = beetlenvi)
+
+# Data scaling
+contin_beetlenvi <- scale(contin_beetlenvi)
+
+#
+## Check variable colinearity

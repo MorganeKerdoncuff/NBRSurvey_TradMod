@@ -584,13 +584,6 @@ test <- landscape_full |>
 #hist(landscape_full$Sea_percent) # Range between 0 and 70%, no outlier
 #filter(landscape_full, Sea_percent == 0) # 11 fields without sea (ocean or fjord) around
 
-#
-## New variables - sum of cultivated land, infield & outfield, forest
-landscape_full <- landscape_full |> 
-  mutate(TotCultivatedLand_percent = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
-  mutate(TotInfieldOutfield_percent = Infield_percent + Outfield_percent) |> 
-  mutate(TotForest_percent = ProductiveForest_percent + NonProductiveForest_percent)
-
 
 ## Export clean data in new excel file
 
