@@ -144,6 +144,15 @@ Chemistry analysis included the following:
 - Nitrogen content
 - Phosphorous content
 
+## Exploratory analaysis
+
+### Variable colinearity
+
+We checked for variables with a correlation coefficient over 0.7.
+When it was possible, we kept the variable with the highest rate of replication within the site.
+If the number of replicates was similar, then we chosed according to ecological significance.
+For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
+
 
 # RESULTS
 
