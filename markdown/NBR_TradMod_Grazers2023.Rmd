@@ -144,7 +144,12 @@ Chemistry analysis included the following:
 - Nitrogen content
 - Phosphorous content
 
-## Exploratory analaysis
+## Canonical correlation analaysis
+
+
+### Variable selection
+The canonical correlation cannot be done for a matrix with the number of variables exceeding the number of observations.
+Therefore the plant community dataset was shrunk down from 275 to 29 species, by keeping species which total mean cover across all sites was above 15%.
 
 ### Variable colinearity
 
@@ -153,6 +158,10 @@ When it was possible, we kept the variable with the highest rate of replication 
 If the number of replicates was similar, then we chosed according to ecological significance.
 For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
 
+### Linear relationships between variables
+We plotted DCA and PCA residuals respectively for plant species and beetle families against each variable.
+A straight line close to the x-axis means a linear relationship.
+The linearity of the relationship was tested by the Tukey test.
 
 # RESULTS
 
