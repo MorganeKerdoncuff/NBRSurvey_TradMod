@@ -1,0 +1,92 @@
+---
+title: "Traditional small-scale grazing systems drive grassland diversity in nordic fjords."
+format: html
+author:
+  - name: Morgane Kerdoncuff
+    orcid:
+    email: morgane.kerdoncuf@uib.no
+    affiliations:
+      - Department of Biological Sciences, University of Bergen, Norway
+      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
+  - name: Amy Elizabeth Eycott
+    orcid:
+    affiliations: Faculty of Biosciences and Aquaculture, Nord University, Norway
+  - name: Inger Elisabeth Måren
+    orcid:
+    affiliations:
+      - University of Bergen, Norway
+      - UNESCO Chair on Sustainable Heritage and Environmental Management, University of Bergen, Norway
+      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
+  - name: Adam Klimes
+    orcid:
+    affiliations: Department of Biological Sciences, University of Bergen, Norway
+date: today
+bibliography: NBR_survey.bib
+execute: 
+  echo: false
+---
+
+<!-- comment -->
+
+# ABSTRACT
+
+# INTRODUCTION
+
+# MATERIAL AND METHODS
+
+## Study area
+
+The UNESCO Nordhordland Biosphere Reserve is located in Western Norway. 
+Its main geomorphological feature is the fjord landscape, the deepest arm reaching x km inland. 
+The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). 
+There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. 
+The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. 
+The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+
+## Study sites
+
+We sampled 30 grassland fields across the municipalities of Alver and Austrheim (@fig-sitemap).
+![sitemap](NBR_GrazersMap.png){#fig-sitemap}
+
+
+## Data collection
+
+## Data analysis
+
+# RESULTS
+
+# DISCUSSION
+
+# CONCLUSION
+
+# ACKNOWLEDGEMENTS
+
+# STATEMENTS AND DECLARATIONS
+
+## FUNDING
+
+## AUTHOR CONTRIBUTION
+
+-   Conceptualization, A.E.E., M.K.;
+-   Methodology, A.E.E., M.K.;
+-   Validation, I.E.M, A.E.E., A.K., M.K.;
+-   Formal analysis, M.K., A.E.E., A.K.;
+-   Data collection, M.K., A.E.E.;
+-   Writing - original draft preparation, M.K.;
+-   Writing - review and editing, I.E.M, A.E.E., A.K.;
+-   Visualization, M.K.;
+-   Supervision, I.E.M., A.E.E.;
+-   Project administration, I.E.M.;
+-   Funding acquisition, I.E.M.
+
+All authors have read and agreed to the final version of the manuscript.
+
+## CONSENT TO PUBLISH
+
+All authors have given consent to publish.
+
+## COMPETING INTERESTS
+
+The authors declare no competing interests.
+
+## DATA AVAILABILITY
