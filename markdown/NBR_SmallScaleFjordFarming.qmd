@@ -26,6 +26,11 @@ execute:
   echo: false
 ---
 
+```{r ScriptSource}
+#| include: false
+source("NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
+```
+
 <!-- comment -->
 
 # ABSTRACT
@@ -36,18 +41,20 @@ execute:
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve is located in Western Norway. 
-Its main geomorphological feature is the fjord landscape, the deepest arm reaching x km inland. 
-The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). 
-There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. 
-The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. 
-The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching x km inland. The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
 
 ## Study sites
 
-We sampled 30 grassland fields across the municipalities of Alver and Austrheim (@fig-sitemap).
-![sitemap](NBR_GrazersMap.png){#fig-sitemap}
+We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap).
 
+```{r SiteMap}
+#| label: fig-sitemap
+#| out-width: "491px"
+#| fig-cap: "Study sites location. Colour codes are for livestock types: black for cows, grey for sheep, white for goats."
+#| message: true
+#| warning: true
+knitr::include_graphics("NBR_GrazersMap.png")
+```
 
 ## Data collection
 
