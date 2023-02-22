@@ -244,8 +244,8 @@ names(landuse_raw) <- gsub("Impressionofgrazingpressureonsurveysite", "FarmerImp
 names(landuse_raw) <- gsub("_type", "", names(landuse_raw))
 names(landuse_raw) <- gsub("_Ifseveral", "", names(landuse_raw))
 names(landuse_raw) <- gsub("Type_soffarmmanagement_soiltreatmentusedthelast10years", "FieldManagement1", names(landuse_raw))
-names(landuse_raw) <- gsub("1...34", "2", names(landuse_raw))
-names(landuse_raw) <- gsub("1...35", "3", names(landuse_raw))
+names(landuse_raw) <- gsub("1...32", "2", names(landuse_raw))
+names(landuse_raw) <- gsub("1...33", "3", names(landuse_raw))
 names(landuse_raw) <- gsub("frequencyoffertilizing", "_freq", names(landuse_raw))
 names(landuse_raw) <- gsub("frequency", "_freq", names(landuse_raw))
 names(landuse_raw) <- gsub("type", "_type", names(landuse_raw))
@@ -256,6 +256,8 @@ names(landuse_raw) <- gsub("Art.fertilizer", "ArtificialFert", names(landuse_raw
 names(landuse_raw) <- gsub("amount_mass_kg", "_masskg", names(landuse_raw))
 names(landuse_raw) <- gsub("season", "_season", names(landuse_raw))
 names(landuse_raw) <- gsub("Shell_sand_lime", "ShellSandLime", names(landuse_raw))
+names(landuse_raw) <- gsub("...53", "", names(landuse_raw))
+names(landuse_raw) <- gsub("...54", "2", names(landuse_raw))
 names(landuse_raw) <- gsub("Comments", "Comments_landuse", names(landuse_raw))
 
 # Removal empty columns
@@ -322,8 +324,8 @@ landuse_full <- landuse_full |>
 
 # Management or soil treatment used in the past 10 years
 unique(landuse_full$FieldManagement1) # NAs
-#unique(landuse_full$FieldManagement2)
-#unique(landuse_full$FieldManagement3)
+unique(landuse_full$FieldManagement2)
+unique(landuse_full$FieldManagement3)
 #landuse_full[is.na(landuse_full$FieldManagement1),] # 6 missing values -> farmers who did not reply to the survey
 #landuse_full[is.na(landuse_full$FieldManagement2),] # 36 missing values
 #landuse_full[is.na(landuse_full$FieldManagement3),] # 41 missing values
@@ -379,6 +381,71 @@ unique(landuse_full$FieldManagement1) # NAs
 # Frequency of inorganic fertilization with shell-sand/lime
 #unique(landuse_full$ShellSandLime_freq) # possibilities are "occasionally" only
 #subset(landuse_full, ShellSandLime_freq == "sometimes") # 7 grassland (IC1, OG3, IC3, OC3, IC4, IC5, OC2)
+
+#
+## New variables for field management/treatments for cleaner and standardised output
+
+# Herbicide
+landuse_full <- landuse_full |> 
+  mutate(FM_herbicide = ifelse(
+      FieldManagement1 == "herbicides" |
+        FieldManagement3 == "herbicides",
+      "yes",
+      "no"))
+
+# Tree cutting
+landuse_full <- landuse_full |> 
+  mutate(FM_treecutting = ifelse(
+      FieldManagement1 == "tree cutting" |
+        FieldManagement1 == "sitka spruce removal" |
+        FieldManagement2 == "tree cutting" |
+        FieldManagement3 == "tree cutting",
+      "yes",
+      "no"))
+
+# Burning
+landuse_full <- landuse_full |> 
+  mutate(FM_burning = ifelse(
+      FieldManagement1 == "burning" |
+        FieldManagement3 == "burning",
+      "yes",
+      "no"))
+
+# Mowing
+landuse_full <- landuse_full |> 
+  mutate(FM_mowing = ifelse(FieldManagement2 == "grass cutting", "yes", "no"))
+
+# Mulching
+landuse_full <- landuse_full |> 
+  mutate(FM_mulching = ifelse(
+      Mulching_freq == "every year", "yearly", ifelse(
+        Mulching_freq == "sometimes", "occasionally", "no"
+      )))
+
+# Manure
+landuse_full <- landuse_full |> 
+  mutate(FM_manure = ifelse(
+    Manure_freq == "every year", "yearly", ifelse(
+      Manure_freq == "sometimes", "occasionally", "no"
+  )))
+
+# Artificial fertilizer
+landuse_full <- landuse_full |> 
+  mutate(FM_artificialfert = ifelse(
+    ArtificialFert_freq == "every year", "yearly", ifelse(
+      ArtificialFert_freq == "sometimes", "occasionally", "no"
+    )))
+
+# Shell-sand-lime
+landuse_full <- landuse_full |> 
+  mutate(FM_shellsandlime = ifelse(
+    ShellSandLime_freq == "every year", "yearly", ifelse(
+      ShellSandLime_freq == "sometimes", "occasionally", "no"
+    )))
+
+# Replace NAs by "no"
+landuse_full <- landuse_full |> 
+  mutate_at(vars(starts_with("FM_")), ~replace(., is.na(.), "no"))
 
 #
 ## Numeric var land use - Check min/max, distribution and potential outliers
