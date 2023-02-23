@@ -37,11 +37,17 @@ source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 
 # INTRODUCTION
 
+## Sustainable food production through traditional grazing systems
+
+## Intertwined drivers within small-scale farming systems in a fjord landscape (concept)
+
+## Aim & hypotheses
+
 # MATERIAL AND METHODS
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching [NB] km inland. The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching [**NB**] km inland. The climate is oceanic, characterized by mild temperature (**mean January, mean June**) and high precipitation level (**VALUE**). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
 
 ## Study sites
 
@@ -53,10 +59,41 @@ We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap
 #| fig-cap: "Study sites location. Colour codes are for livestock types: black for cows, grey for sheep, white for goats."
 #| message: true
 #| warning: true
-knitr::include_graphics("NBR_GrazersMap.png")
+knitr::include_graphics("illustrations/NBR_GrazersMap.png")
 ```
 
-Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. The managements excluding grazing or the different treatments applied to the fields are described in Appendix [APPENDIX REF]. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount
+Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. The different treatments applied to the fields (grazing excluded) are described in Appendix [**APPENDIX REF**].
+
+## Conceptual framework
+
+*For Amy and Inger: I gathered everything related to the study concept here for now, but maybe some of this should be moved to the Introduction at some point*
+
+The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity. We first present a summary before describing each set of variables with more details (FIG):
+
+- the **fjord system** encompasses all geomorphological features which define the landscape and are independent of any human influence.
+- the **landscape matrix** gathers the different land covers and uses which surround the field within 1 km2 radius. It is both dependent of the geomorphology and the human activity (forestry, crops, grazing, infrastructures...).
+- the **grazing management** relates to the livestock breeding and to the structure of infield area of the farm. It is likely to be influenced by the landscape topography and the types of available habitats around the farm.
+- the **fine-scale environment** at the sampling area level represents all the ecological parameters which can directly or indirectly influence the local niches. These drivers will be affected by all factors occurring at wider scale.
+
+```{r FjordConcept}
+#| label: fig-fjordconcept
+#| out-width: "800px"
+#| fig-cap: "Natural and anthropogenic categories of drivers of plant and beetle communities in a small-scale farming system within a fjord landscape"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_FjordConcept.png")
+```
+
+
+### The fjord system
+
+
+
+### The landscape matrix
+
+### The grazing management
+
+### The fine-scale environment
 
 ## Data collection
 
@@ -104,7 +141,7 @@ The authors declare no competing interests.
 
 ```{r FarmerdManagement}
 #| label: tbl-farmermanagement
-#| fig-cap: "Field management applied by the farmer for the last 10 years."
+#| tbl-cap: "Field management applied by the farmer for the last 10 years."
 #| message: true
 #| warning: true
 library(gt)
