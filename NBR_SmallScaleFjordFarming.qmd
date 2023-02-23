@@ -45,7 +45,7 @@ The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. It
 
 ## Study sites
 
-We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap).
+We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap) in 2019 and 2020.
 
 ```{r SiteMap}
 #| label: fig-sitemap
@@ -56,7 +56,7 @@ We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap
 knitr::include_graphics("NBR_GrazersMap.png")
 ```
 
-The managements excluding grazing or the different treatments applied to the fields are described in Appendix [APPENDIX REF].
+Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. The managements excluding grazing or the different treatments applied to the fields are described in Appendix [APPENDIX REF]. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount
 
 ## Data collection
 
