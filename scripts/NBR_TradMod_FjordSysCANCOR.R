@@ -16,6 +16,8 @@ library(GGally) # Extension ggplot
 library(car) # Visualisation lm residuals plots
 library(CCA) # Canonical correlation
 library(CCP) # Statistical test canonical correlation
+#library(candisc) # visual representation canonical correlation
+
 
 #### DATA LOADING ####
 
@@ -633,8 +635,8 @@ nvar_grass <- length(select_if(grass, is.numeric))
 # Fjord x landscape
 cancor_fjordxlandscape_grass <- cc(contin_fjordsys, contin_landscape_grass)
 rho_fjordxlandscape_grass <- cancor_fjordxlandscape_grass$cor
-rho_fjordxlandscape_grass # 1st axis correlation 0.78
-p.asym(rho_fjordxlandscape_grass, nobs, nvar_fjordsys, nvar_landscape_grass, tstat = "Hotelling") # 1st dimension significant pval = 1.46.10-4
+rho_fjordxlandscape_grass # 1st axis correlation 0.83 ; 2nd axis correlation 0.7
+p.asym(rho_fjordxlandscape_grass, nobs, nvar_fjordsys, nvar_landscape_grass, tstat = "Hotelling") # 1st dim significant pval = 2.26.10-5 ; 2nd dim significant pval = 1.67.10-2
 plt.cc(cancor_fjordxlandscape_grass, var.label = TRUE)
 
 # Fjord x grazing
@@ -648,14 +650,14 @@ plt.cc(cancor_fjordxgrazing_grass, var.label = TRUE)
 cancor_fjordxlocenvi_grass <- cc(contin_fjordsys, contin_locenvi_vege)
 rho_fjordxlocenvi_grass <- cancor_fjordxlocenvi_grass$cor
 rho_fjordxlocenvi_grass # 1st axis correlation 0.52
-p.asym(rho_fjordxlocenvi_grass, nobs, nvar_fjordsys, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.8
+p.asym(rho_fjordxlocenvi_grass, nobs, nvar_fjordsys, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.72
 plt.cc(cancor_fjordxlocenvi_grass, var.label = TRUE)
 
 # Fjord x grass community
 cancor_fjordxgrass <- cc(contin_fjordsys, contin_grass)
 rho_fjordxgrass <- cancor_fjordxgrass$cor
 rho_fjordxgrass # 1st axis correlation 0.76
-p.asym(rho_fjordxgrass, nobs, nvar_fjordsys, nvar_grass, tstat = "Hotelling") # NS with pval=0.35
+p.asym(rho_fjordxgrass, nobs, nvar_fjordsys, nvar_grass, tstat = "Hotelling") # NS with pval=0.54
 plt.cc(cancor_fjordxgrass, var.label = TRUE)
 
 #
@@ -664,22 +666,22 @@ plt.cc(cancor_fjordxgrass, var.label = TRUE)
 # Landscape x grazing
 cancor_landscapexgrazing_grass <- cc(contin_landscape_grass, contin_grazing_vege)
 rho_landscapexgrazing_grass <- cancor_landscapexgrazing_grass$cor
-rho_landscapexgrazing_grass # 1st axis correlation 0.55
-p.asym(rho_landscapexgrazing_grass, nobs, nvar_landscape_grass, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.76
+rho_landscapexgrazing_grass # 1st axis correlation 0.6
+p.asym(rho_landscapexgrazing_grass, nobs, nvar_landscape_grass, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.44
 plt.cc(cancor_landscapexgrazing_grass, var.label = TRUE)
 
 # Landscape x local environment
 cancor_landscapexlocalenvi_grass <- cc(contin_landscape_grass, contin_locenvi_vege)
 rho_landscapexlocalenvi_grass <- cancor_landscapexlocalenvi_grass$cor
-rho_landscapexlocalenvi_grass # 1st axis correlation 0.43
-p.asym(rho_landscapexlocalenvi_grass, nobs, nvar_landscape_grass, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.84
+rho_landscapexlocalenvi_grass # 1st axis correlation 0.45
+p.asym(rho_landscapexlocalenvi_grass, nobs, nvar_landscape_grass, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.82
 plt.cc(cancor_landscapexlocalenvi_grass, var.label = TRUE)
 
 # Landscape x grass community
 cancor_landscapexgrass <- cc(contin_landscape_grass, contin_grass)
 rho_landscapexgrass <- cancor_landscapexgrass$cor
-rho_landscapexgrass # 1st axis correlation 0.72
-p.asym(rho_landscapexgrass, nobs, nvar_landscape_grass, nvar_grass, tstat = "Hotelling") # NS with pval=0.72
+rho_landscapexgrass # 1st axis correlation 0.71
+p.asym(rho_landscapexgrass, nobs, nvar_landscape_grass, nvar_grass, tstat = "Hotelling") # NS with pval=0.77
 plt.cc(cancor_landscapexgrass, var.label = TRUE)
 
 #
@@ -688,15 +690,15 @@ plt.cc(cancor_landscapexgrass, var.label = TRUE)
 # Grazing x local environment
 cancor_grazingxlocenvi_grass <- cc(contin_grazing_vege, contin_locenvi_vege)
 rho_grazingxlocenvi_grass <- cancor_grazingxlocenvi_grass$cor
-rho_grazingxlocenvi_grass # 1st axis correlation 0.58
-p.asym(rho_grazingxlocenvi_grass, nobs, nvar_grazing_vege, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.66
+rho_grazingxlocenvi_grass # 1st axis correlation 0.59
+p.asym(rho_grazingxlocenvi_grass, nobs, nvar_grazing_vege, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.71
 plt.cc(cancor_grazingxlocenvi_grass, var.label = TRUE)
 
 # Grazing x grass community
 cancor_grazingxgrass <- cc(contin_grazing_vege, contin_grass)
 rho_grazingxgrass <- cancor_grazingxgrass$cor
-rho_grazingxgrass # 1st axis correlation 0.89
-p.asym(rho_grazingxgrass, nobs, nvar_grazing_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval=9.87.10-5
+rho_grazingxgrass # 1st axis correlation 0.89 : 2nd axis correlation 0.87
+p.asym(rho_grazingxgrass, nobs, nvar_grazing_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval = 1.44.10-4 ; 2nd axis significant with pval = 5.34.10-3
 plt.cc(cancor_grazingxgrass, var.label = TRUE)
 
 #
@@ -704,8 +706,8 @@ plt.cc(cancor_grazingxgrass, var.label = TRUE)
 
 cancor_locenvixgrass <- cc(contin_locenvi_vege, contin_grass)
 rho_locenvixgrass <- cancor_locenvixgrass$cor
-rho_locenvixgrass # 1st axis correlation 0.83
-p.asym(rho_locenvixgrass, nobs, nvar_locenvi_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval=6.52.10-3
+rho_locenvixgrass # 1st axis correlation 0.83 ; 2nd axis correlation 0.77
+p.asym(rho_locenvixgrass, nobs, nvar_locenvi_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval=6.52.10-3 ; 2nd axis almost significant with pval = 0.06
 plt.cc(cancor_locenvixgrass, var.label = TRUE)
 
 
@@ -727,29 +729,30 @@ nvar_forb <- length(select_if(forb, is.numeric))
 # Fjord x landscape
 cancor_fjordxlandscape_forb <- cc(contin_fjordsys_forb, contin_landscape_forb)
 rho_fjordxlandscape_forb <- cancor_fjordxlandscape_forb$cor
-rho_fjordxlandscape_forb # 1st axis correlation 0.76
-p.asym(rho_fjordxlandscape_forb, nobs, nvar_fjordsys_forb, nvar_landscape_forb, tstat = "Hotelling") # 1st dimension significant pval = 8.41.10-4
-plt.cc(cancor_fjordxlandscape_forb, var.label = TRUE)
+rho_fjordxlandscape_forb # 1st axis correlation 0.8 ; 2nd axis correlation 0.71 ; 3rd axis correlation 0.59
+p.asym(rho_fjordxlandscape_forb, nobs, nvar_fjordsys_forb, nvar_landscape_forb, tstat = "Hotelling") # 1st dim significant pval = 2.09.10-5 ; 2nd dim significant pval = 3.8.10-4 ; 3rd dim significant pval = 9.17.10-3
+plt.cc(cancor_fjordxlandscape_forb, var.label = TRUE) # dim 1 & 2
+plt.cc(cancor_fjordxlandscape_forb, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
 
 # Fjord x grazing
 cancor_fjordxgrazing_forb <- cc(contin_fjordsys_forb, contin_grazing_vege)
 rho_fjordxgrazing_forb <- cancor_fjordxgrazing_forb$cor
-rho_fjordxgrazing_forb # 1st axis correlation 0.44
-p.asym(rho_fjordxgrazing_forb, nobs, nvar_fjordsys_forb, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.93
+rho_fjordxgrazing_forb # 1st axis correlation 0.53
+p.asym(rho_fjordxgrazing_forb, nobs, nvar_fjordsys_forb, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.84
 plt.cc(cancor_fjordxgrazing_forb, var.label = TRUE)
 
 # Fjord x local environment
 cancor_fjordxlocenvi_forb <- cc(contin_fjordsys_forb, contin_locenvi_vege)
 rho_fjordxlocenvi_forb <- cancor_fjordxlocenvi_forb$cor
-rho_fjordxlocenvi_forb # 1st axis correlation 0.35
-p.asym(rho_fjordxlocenvi_forb, nobs, nvar_fjordsys_forb, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.97
+rho_fjordxlocenvi_forb # 1st axis correlation 0.45
+p.asym(rho_fjordxlocenvi_forb, nobs, nvar_fjordsys_forb, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.86
 plt.cc(cancor_fjordxlocenvi_forb, var.label = TRUE)
 
 # Fjord x forb community
 cancor_fjordxforb <- cc(contin_fjordsys_forb, contin_forb)
 rho_fjordxforb <- cancor_fjordxforb$cor
-rho_fjordxforb # 1st axis correlation 0.53
-p.asym(rho_fjordxforb, nobs, nvar_fjordsys_forb, nvar_forb, tstat = "Hotelling") # NS with pval=0.94
+rho_fjordxforb # 1st axis correlation 0.67
+p.asym(rho_fjordxforb, nobs, nvar_fjordsys_forb, nvar_forb, tstat = "Hotelling") # NS with pval = 0.4
 plt.cc(cancor_fjordxforb, var.label = TRUE)
 
 #
@@ -758,22 +761,22 @@ plt.cc(cancor_fjordxforb, var.label = TRUE)
 # Landscape x grazing
 cancor_landscapexgrazing_forb <- cc(contin_landscape_forb, contin_grazing_vege)
 rho_landscapexgrazing_forb <- cancor_landscapexgrazing_forb$cor
-rho_landscapexgrazing_forb # 1st axis correlation 0.66
-p.asym(rho_landscapexgrazing_forb, nobs, nvar_landscape_forb, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.65
+rho_landscapexgrazing_forb # 1st axis correlation 0.67
+p.asym(rho_landscapexgrazing_forb, nobs, nvar_landscape_forb, nvar_grazing_vege, tstat = "Hotelling") # NS pval = 0.44
 plt.cc(cancor_landscapexgrazing_forb, var.label = TRUE)
 
 # Landscape x local environment
 cancor_landscapexlocalenvi_forb <- cc(contin_landscape_forb, contin_locenvi_vege)
 rho_landscapexlocalenvi_forb <- cancor_landscapexlocalenvi_forb$cor
-rho_landscapexlocalenvi_forb # 1st axis correlation 0.64
-p.asym(rho_landscapexlocalenvi_forb, nobs, nvar_landscape_forb, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.44
+rho_landscapexlocalenvi_forb # 1st axis correlation 0.63
+p.asym(rho_landscapexlocalenvi_forb, nobs, nvar_landscape_forb, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.49
 plt.cc(cancor_landscapexlocalenvi_forb, var.label = TRUE)
 
 # Landscape x forb community
 cancor_landscapexforb <- cc(contin_landscape_forb, contin_forb)
 rho_landscapexforb <- cancor_landscapexforb$cor
-rho_landscapexforb # 1st axis correlation 0.71
-p.asym(rho_landscapexforb, nobs, nvar_landscape_forb, nvar_forb, tstat = "Hotelling") # NS with pval=0.25
+rho_landscapexforb # 1st axis correlation 0.7
+p.asym(rho_landscapexforb, nobs, nvar_landscape_forb, nvar_forb, tstat = "Hotelling") # NS with pval=0.37
 plt.cc(cancor_landscapexforb, var.label = TRUE)
 
 #
@@ -782,15 +785,15 @@ plt.cc(cancor_landscapexforb, var.label = TRUE)
 # Grazing x local environment
 cancor_grazingxlocenvi_forb <- cc(contin_grazing_vege, contin_locenvi_vege)
 rho_grazingxlocenvi_forb <- cancor_grazingxlocenvi_forb$cor
-rho_grazingxlocenvi_forb # 1st axis correlation 0.58
-p.asym(rho_grazingxlocenvi_forb, nobs, nvar_grazing_vege, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.66
+rho_grazingxlocenvi_forb # 1st axis correlation 0.59
+p.asym(rho_grazingxlocenvi_forb, nobs, nvar_grazing_vege, nvar_locenvi_vege, tstat = "Hotelling") # NS pval = 0.71
 plt.cc(cancor_grazingxlocenvi_forb, var.label = TRUE)
 
 # Grazing x forb community
 cancor_grazingxforb <- cc(contin_grazing_vege, contin_forb)
 rho_grazingxforb <- cancor_grazingxforb$cor
-rho_grazingxforb # 1st axis correlation 0.75
-p.asym(rho_grazingxforb, nobs, nvar_grazing_vege, nvar_forb, tstat = "Hotelling") # NS with pval=0.15
+rho_grazingxforb # 1st axis correlation 0.76
+p.asym(rho_grazingxforb, nobs, nvar_grazing_vege, nvar_forb, tstat = "Hotelling") # NS with pval=0.18
 plt.cc(cancor_grazingxforb, var.label = TRUE)
 
 #
@@ -799,7 +802,7 @@ plt.cc(cancor_grazingxforb, var.label = TRUE)
 cancor_locenvixforb <- cc(contin_locenvi_vege, contin_forb)
 rho_locenvixforb <- cancor_locenvixforb$cor
 rho_locenvixforb # 1st axis correlation 0.69
-p.asym(rho_locenvixforb, nobs, nvar_locenvi_vege, nvar_forb, tstat = "Hotelling") # 1st axis significant with pval=0.022
+p.asym(rho_locenvixforb, nobs, nvar_locenvi_vege, nvar_forb, tstat = "Hotelling") # 1st axis significant with pval=0.028
 plt.cc(cancor_locenvixforb, var.label = TRUE)
 
 
@@ -821,9 +824,10 @@ nvar_beetle <- length(select_if(beetle, is.numeric))
 # Fjord x landscape
 cancor_fjordxlandscape_beetle <- cc(contin_fjordsys, contin_landscape_beetle)
 rho_fjordxlandscape_beetle <- cancor_fjordxlandscape_beetle$cor
-rho_fjordxlandscape_beetle # 1st axis correlation 0.73, 2nd axis correlation 0.67
-p.asym(rho_fjordxlandscape_beetle, nobs, nvar_fjordsys, nvar_landscape_beetle, tstat = "Hotelling") # 1st axis significant pval 0.002 ; 2nd axis significant pval 0.028
-plt.cc(cancor_fjordxlandscape_beetle, var.label = TRUE)
+rho_fjordxlandscape_beetle # 1st axis correlation 0.76, 2nd axis 0.72, 3rd axis 0.58
+p.asym(rho_fjordxlandscape_beetle, nobs, nvar_fjordsys, nvar_landscape_beetle, tstat = "Hotelling") # 1st axis significant pval 5.63.10-5 ; 2nd axis significant pval 4.10-4 ; 3rd axis significant pval 2.25.10-2
+plt.cc(cancor_fjordxlandscape_beetle, var.label = TRUE) # dim 1 & 2
+plt.cc(cancor_fjordxlandscape_beetle, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
 
 # Fjord x grazing
 cancor_fjordxgrazing_beetle <- cc(contin_fjordsys, contin_grazing_beetle)
@@ -835,15 +839,15 @@ plt.cc(cancor_fjordxgrazing_beetle, var.label = TRUE)
 # Fjord x local environment
 cancor_fjordxlocenvi_beetle <- cc(contin_fjordsys, contin_locenvi_beetle)
 rho_fjordxlocenvi_beetle <- cancor_fjordxlocenvi_beetle$cor
-rho_fjordxlocenvi_beetle # 1st axis correlation 0.5
-p.asym(rho_fjordxlocenvi_beetle, nobs, nvar_fjordsys, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.65
+rho_fjordxlocenvi_beetle # 1st axis correlation 0.48
+p.asym(rho_fjordxlocenvi_beetle, nobs, nvar_fjordsys, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.87
 plt.cc(cancor_fjordxlocenvi_beetle, var.label = TRUE)
 
 # Fjord x beetle assemblage
 cancor_fjordxbeetle <- cc(contin_fjordsys, contin_beetle)
 rho_fjordxbeetle <- cancor_fjordxbeetle$cor
-rho_fjordxbeetle # 1st axis correlation 0.68
-p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling") # NS pval=0.92
+rho_fjordxbeetle # 1st axis correlation 0.62
+p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling") # NS pval=0.99
 plt.cc(cancor_fjordxbeetle, var.label = TRUE)
 
 #
@@ -852,22 +856,22 @@ plt.cc(cancor_fjordxbeetle, var.label = TRUE)
 # Landscape x grazing
 cancor_landscapexgrazing_beetle <- cc(contin_landscape_beetle, contin_grazing_beetle)
 rho_landscapexgrazing_beetle <- cancor_landscapexgrazing_beetle$cor
-rho_landscapexgrazing_beetle # 1st axis correlation 0.7
-p.asym(rho_landscapexgrazing_beetle, nobs, nvar_landscape_beetle, nvar_grazing_beetle, tstat = "Hotelling") # NS pval=0.34
+rho_landscapexgrazing_beetle # 1st axis correlation 0.69
+p.asym(rho_landscapexgrazing_beetle, nobs, nvar_landscape_beetle, nvar_grazing_beetle, tstat = "Hotelling") # NS pval=0.44
 plt.cc(cancor_landscapexgrazing_beetle, var.label = TRUE)
 
 # Landscape x local environment
 cancor_landscapexlocalenvi_beetle <- cc(contin_landscape_beetle, contin_locenvi_beetle)
 rho_landscapexlocalenvi_beetle <- cancor_landscapexlocalenvi_beetle$cor
-rho_landscapexlocalenvi_beetle # 1st axis correlation 0.48
-p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.74
+rho_landscapexlocalenvi_beetle # 1st axis correlation 0.49
+p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.79
 plt.cc(cancor_landscapexlocalenvi_beetle, var.label = TRUE)
 
 # Landscape x beetle assemblage
 cancor_landscapexbeetle <- cc(contin_landscape_beetle, contin_beetle)
 rho_landscapexbeetle <- cancor_landscapexbeetle$cor
-rho_landscapexbeetle # 1st axis correlation 0.64
-p.asym(rho_landscapexbeetle, nobs, nvar_landscape_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.84
+rho_landscapexbeetle # 1st axis correlation 0.65
+p.asym(rho_landscapexbeetle, nobs, nvar_landscape_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.87
 plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 
 #
@@ -877,23 +881,24 @@ plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 cancor_grazingxlocenvi_beetle <- cc(contin_grazing_beetle, contin_locenvi_beetle)
 rho_grazingxlocenvi_beetle <- cancor_grazingxlocenvi_beetle$cor
 rho_grazingxlocenvi_beetle # 1st axis correlation 0.77
-p.asym(rho_grazingxlocenvi_beetle, nobs, nvar_grazing_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # 1st axis significant with pval=0.048
+p.asym(rho_grazingxlocenvi_beetle, nobs, nvar_grazing_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS with pval=0.094
 plt.cc(cancor_grazingxlocenvi_beetle, var.label = TRUE)
 
 # Grazing x beetle community
 cancor_grazingxbeetle <- cc(contin_grazing_beetle, contin_beetle)
 rho_grazingxbeetle <- cancor_grazingxbeetle$cor
-rho_grazingxbeetle # 1st axis correlation 0.75
-p.asym(rho_grazingxbeetle, nobs, nvar_grazing_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.68
+rho_grazingxbeetle # 1st axis correlation 0.76
+p.asym(rho_grazingxbeetle, nobs, nvar_grazing_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.51
 plt.cc(cancor_grazingxbeetle, var.label = TRUE)
 
 #
 ## Local environment effect
 
 cancor_locenvixbeetle <- cc(contin_locenvi_beetle, contin_beetle)
+VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 rho_locenvixbeetle <- cancor_locenvixbeetle$cor
 rho_locenvixbeetle # 1st axis correlation 0.76
-p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.12
+p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.18
 plt.cc(cancor_locenvixbeetle, var.label = TRUE)
-ggsave("outputs/cancor_locenvixbeetle.png", plot = last_plot())
-
+#VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
+#plot(cancor_locenvixbeetle, which = 1)
