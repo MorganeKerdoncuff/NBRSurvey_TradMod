@@ -28,7 +28,7 @@ execute:
 
 ```{r ScriptSource}
 #| include: false
-source("NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
+source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 ```
 
 <!-- comment -->
@@ -41,7 +41,7 @@ source("NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching x km inland. The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching [NB] km inland. The climate is oceanic, characterized by mild temperature (mean January, mean June) and high precipitation level (). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
 
 ## Study sites
 
@@ -55,6 +55,8 @@ We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap
 #| warning: true
 knitr::include_graphics("NBR_GrazersMap.png")
 ```
+
+The managements excluding grazing or the different treatments applied to the fields are described in Appendix [APPENDIX REF].
 
 ## Data collection
 
@@ -97,3 +99,26 @@ All authors have given consent to publish.
 The authors declare no competing interests.
 
 ## DATA AVAILABILITY
+
+## APPENDIX
+
+```{r FarmerdManagement}
+#| label: tbl-farmermanagement
+#| fig-cap: "Field management applied by the farmer for the last 10 years."
+#| message: true
+#| warning: true
+library(gt)
+farmer_management <- subset(landuse_grass, select = c(SiteID, FM_herbicide, FM_treecutting, FM_burning, FM_mowing, FM_mulching, FM_manure, FM_artificialfert, FM_shellsandlime))
+farmer_management |> 
+  gt() |> 
+  cols_label(SiteID = "Site",
+             FM_herbicide = "Herbicide",
+             FM_treecutting = "Tree cutting",
+             FM_burning = "Burning",
+             FM_mowing = "Mowing",
+             FM_mulching = "Mulching",
+             FM_manure = "Manure",
+             FM_artificialfert = "Artificial fertilizer",
+             FM_shellsandlime = "Shell/sand/lime") |> 
+  tab_spanner(label = "Fertilization", columns = c(FM_manure, FM_artificialfert, FM_shellsandlime))
+```
