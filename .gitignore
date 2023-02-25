@@ -24,3 +24,12 @@ outputs/*
 *.png
 *.pdf
 *.jpeg
+
+# Mardown outputs (exclude html or word docs)
+*.html
+*.docx
+
+# Bibliography (exclude all bibtex files)
+*.bib
+*.json
+NBR_SmallScaleFjordFarming_files/*

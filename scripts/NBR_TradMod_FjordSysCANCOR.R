@@ -700,6 +700,7 @@ rho_grazingxgrass <- cancor_grazingxgrass$cor
 rho_grazingxgrass # 1st axis correlation 0.89 : 2nd axis correlation 0.87
 p.asym(rho_grazingxgrass, nobs, nvar_grazing_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval = 1.44.10-4 ; 2nd axis significant with pval = 5.34.10-3
 plt.cc(cancor_grazingxgrass, var.label = TRUE)
+plt.cc(cancor_grazingxgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
 
 #
 ## Local environment effect
@@ -709,6 +710,8 @@ rho_locenvixgrass <- cancor_locenvixgrass$cor
 rho_locenvixgrass # 1st axis correlation 0.83 ; 2nd axis correlation 0.77
 p.asym(rho_locenvixgrass, nobs, nvar_locenvi_vege, nvar_grass, tstat = "Hotelling") # 1st axis significant with pval=6.52.10-3 ; 2nd axis almost significant with pval = 0.06
 plt.cc(cancor_locenvixgrass, var.label = TRUE)
+plt.cc(cancor_locenvixgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
+
 
 
 #### Canonical correlation analysis forb community ####
@@ -804,6 +807,7 @@ rho_locenvixforb <- cancor_locenvixforb$cor
 rho_locenvixforb # 1st axis correlation 0.69
 p.asym(rho_locenvixforb, nobs, nvar_locenvi_vege, nvar_forb, tstat = "Hotelling") # 1st axis significant with pval=0.028
 plt.cc(cancor_locenvixforb, var.label = TRUE)
+plt.cc(cancor_locenvixforb, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
 
 
 #### Canonical correlation analysis beetle assemblage ####

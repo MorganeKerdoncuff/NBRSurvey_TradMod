@@ -68,7 +68,7 @@ Sites were either grazed by sheep, goats or cows for at least the past 5 years, 
 
 *For Amy and Inger: I gathered everything related to the study concept here for now, but maybe some of this should be moved to the Introduction at some point*
 
-The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity. We first present a summary before describing each set of variables with more details (FIG):
+The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity. We first present a summary before describing each set of variables with more details (@fig-fjordconcept):
 
 - the **fjord system** encompasses all geomorphological features which define the landscape and are independent of any human influence.
 - the **landscape matrix** gathers the different land covers and uses which surround the field within 1 km2 radius. It is both dependent of the geomorphology and the human activity (forestry, crops, grazing, infrastructures...).
@@ -100,6 +100,98 @@ knitr::include_graphics("illustrations/NBR_FjordConcept.png")
 ## Data analysis
 
 # RESULTS
+
+## Main grass species
+
+```{r CANCORgrass}
+#| label: fig-cancorgrass
+#| out-width: "800px"
+#| fig-cap: "Canonical correlation system for the grass community"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_CancorGrass.png")
+```
+
+### Effect of grazing
+
+```{r VR_grazingxgrass12}
+#| label: fig-grazingxgrass12
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the dimensions 1 and 2 from the canonical correlation between the grazing management and the main grass species community"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim12.png")
+```
+
+```{r VR_grazingxgrass23}
+#| label: fig-grazingxgrass23
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the dimensions 2 and 3 from the canonical correlation between the grazing management and the main grass species community"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim23.png")
+```
+
+The total infield surface of the farm drives the first axis (@fig-grazingxgrass12), while the livestock types are opposing themselves (sheep in upper left, cow in lower left). *Lolium perenne* would be associated with farms with a high grazing surface. *Poa trivialis* and *Deschampsia cespitosa* would be associated with cow sites (@fig-grazingxgrass23).
+
+```{r VR_locenvixgrass}
+#| label: fig-locenvixgrass
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the canonical correlation between the fine-scale environment and the main grass species community"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_locenvixgrass.png")
+```
+
+The first axis is driven by the penetration rate on the right and by the pH on the left (@fig-locenvixgrass). *Deschampsia flexuosa* seems associated with soft soils. The second axis is driven by the mean Phosphorus rate. *Lolium perenne* seems associated with rich soils.
+
+## Main forb species
+
+```{r VR_locenvixforb}
+#| label: fig-locenvixforb
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the canonical correlation between the fine-scale environment and the main forb species community"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_locenvixforb.png")
+```
+
+The first axis is also driven by the penetration rate on the right and by the pH on the left (@fig-locenvixforb). *Trifolium repens* seems associated with basic soil. The mean Phosphorus rate is isolated from all the other drivers and all the species on the upper-right corner. Forb species would not be favored by very rich environment.
+
+## Fine-scale environment
+
+```{r VR_grazingxlocenvibeetle}
+#| label: fig-grazingxlocenvibeetle
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the canonical correlation between the grazing management and the fine-scale environment"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_grazingxlocenvi_beetle.png")
+```
+
+First axis non-significant but quite clearly driven by livestock type (@fig-grazingxlocenvibeetle). High bryophyte cover seems associated with sheep and goat grazing.
+
+## Influence of fjord system
+
+```{r VR_fjordxlandscape12}
+#| label: fig-fjordxlandscape12
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the canonical correlation between the fjord system and the landscape matrix"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_fjordxlandscape_beetle_dim12.png")
+```
+
+```{r VR_fjordxlandscape13}
+#| label: fig-fjordxlandscape13
+#| out-width: "800px"
+#| fig-cap: "Visual representation of the canonical correlation between the fjord system and the landscape matrix"
+#| message: true
+#| warning: true
+knitr::include_graphics("outputs/pval_significant/cancor_fjordxlandscape_beetle_dim13.png")
+```
+
+The aspect and the distance to sea are driving the first dimension, the slope drives the second dimension and the elevation drives the third dimension. The forest cover would increase inland, with increasing elevation (@fig-fjordxlandscape12, @fig-fjordxlandscape13). On areas with steep slopes, the most important land use around the field would be infields and cultivated lands.
 
 # DISCUSSION
 
