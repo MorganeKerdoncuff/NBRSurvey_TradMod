@@ -35,6 +35,9 @@ source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 
 # ABSTRACT
 
+We aimed to present an exploratory study of the ecological interactions between grassland communities of dominant grasses, forbs and beetles, and sets of environmental factors which characterize low-intensity farming in Norwegian fjord across scales. We used canonical correlation analysis to determine linear correlations between sets of explanatory and community variables.
+
+
 # INTRODUCTION
 
 ## Sustainable food production through traditional grazing systems
@@ -116,7 +119,7 @@ To accommodate the constraining topography and the limited resources, grazing li
 
 ### The fine-scale environment
 
-- the **soil compaction**:
+- the **soil compaction**: 
 - the **soil nutrients**:
 - the **structural diversity**:
 - the **vegetation cover**:
@@ -141,32 +144,150 @@ Beetles were stored in 70% ethanol and sorted into families in the lab using @du
 
 ### Soil data
 
+*Section under work*
 
+#### Bulk density
+
+Bulk density data needed some adjustments due to field and lab constraints.
+When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low.
+Bulk density estimation being less accurate on low soil volumes, we discarded cores with a best estimated volume of soil under 350 cm3.
+A scale dysfunction issues affected some of our sites during the processing of the soil.
+Negative or extreme water loss values were removed.
+After data filtering, all sites had at least 15 replicates.
+
+#### Soil penetration
+
+In complement of bulk density, rate of penetration -> indicative of soil compaction & root density.
+
+#### Soil chemistry
+
+One soil core of x cm diameter and 12 cm depth were sampled in each destructive subplot, for a total of 12 cores per site.
+Cores from 2019 were sieved and merged in the lab, and 0.5 L was sent to Eurofins for chemistry analysis.
+For each plot in 2020, 3 cores out of 4 were sieved and merged, and 0.5 L of the mix was sent to Eurofins.
+The remaining core was used for mesofauna sorting which is not shown in this paper.
+Results from the lab showed then the plot level.
+The current analysis being led at the site level, we used the average of the plot values (3 replicates).
+There was one exception (OC2) where one of the sample showed an extreme content of calcium.
+This sample was put aside and we kept only two replicates for this site.
+Chemistry analysis included the following:
+
+- Loss of ignition
+- Nitrogen content
+- Phosphorous content
+
+### Topographical and geomorphological data
+
+*Chunk under work*
+
+The slope angle was collected on site with a clinometer, with the observer standing at the top and looking down to another observer standing at the bottom.
+The aspect not being consistently recorded on the field, it was collected afterwards with spatial data.
+The Digital Elevation Model files were collected from GeoNorge (link).
+An aspect map in degree azimuth was generated in QGIS software (version 3.12.2) from which the site aspect values were individually retrieved.
+
+#### Distance to sea
+
+We measured the distance between the field and the closer fjord on Norge i bilder.
+
+
+### Field management data
+
+Information on the grazing management were collected from the farmers with interviews conducted from October 2021 to January 2022 [SURVEY APPENDIX]. Some farmers could not or did not want to reply to our survey, we therefore completed the missing values with a similar interview serie conducted in 2018 [REF TO MARGIT MASTER THESIS].
+
+We asked the farmers for the following elements:
+
+- The type of livestock (cow, sheep or goat) which has been grazing the site for at least the past 5 years. There was no mixed-grazing in the fields we selected.
+- The size of the flock, including adults and young.
+- The number of months the animals stayed on the field
+- The total size of the infields
+- The size of the field we sampled
+
+Other information related to the farm management are available in Supplementary Information (@tbl-farmermanagement).
+
+*Chunk under work*
+To estimate the standardised grazing intensity per ha per year on the field, we should have followed the following formula:
+Grazing intensity on the field = (number of adults * standard livestock unit + number of young * standard livestock unit)/(field surface * (12/number of months on the field))
+Two difficulties here.
+Due to rotational grazing management, the period of grazing is not that accurate throughout the years.
+Also the flock can also be separated by the farmer and spread into different fields.
+Due to missing replies from farmers and the absence of equivalent data in the previous study, we did not have the period of grazing for all sites.
+We therefore decided to estimate an average grazing intensity across all grazing fields for each farm.
+The formula is as following:
+Average grazing intensity on infields = (number of adults * standard livestock unit + number of young * standard livestock unit)/(total grazing area of the farm)
+This total grazing area was retrieved from Gårdskart.no, which maps agricultural properties across Norway (NIBIO).
+We considered infields but also surrounding unclassified areas which were known from the farmer and/or the field to be grazed.
+In two sites, the goats were sent in the summer farms in the mountains for several months in the year.
+This was recurring and well described by the farmer.
+For these two sites only we therefore decided to keep the first formula.
 
 ## Data analysis
 
-### Choice of the method
-
-We aim to present an exploratory study of the ecological interactions Due to our low level of replication, we limited the numbers of variables and thus expect a lack of resolution for some species responses.
+*Section under work*
 
 ### Data standardisation
 
 All data were summarized at the site level. Beetle abundances of all pitfall traps were summed up. For all the other variables (plant community, soil), the site value was calculated as the average of the sample values.
 
+### Variable colinearity
+
+We checked for variables with a correlation coefficient over 0.7.
+When it was possible, we kept the variable with the highest rate of replication within the site.
+If the number of replicates was similar, then we chosed according to ecological significance.
+For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
+
+### Linear relationships between variables
+We plotted DCA and PCA residuals respectively for plant species and beetle families against each variable.
+A straight line close to the x-axis means a linear relationship.
+The linearity of the relationship was tested by the Tukey test.
+
 # RESULTS
+
+*To Amy and Inger: the structure of the results will change. For now it is just easier for me to go step by step*
 
 ## Main grass species
 
 ```{r CANCORgrass}
 #| label: fig-cancorgrass
 #| out-width: "800px"
-#| fig-cap: "Canonical correlation system for the grass community"
+#| fig-cap: "Canonical correlation for the dominant grass community"
 #| message: true
 #| warning: true
 knitr::include_graphics("illustrations/NBR_CancorGrass.png")
 ```
 
-### Effect of grazing
+## Main forb species
+
+```{r CANCORforb}
+#| label: fig-cancorforb
+#| out-width: "800px"
+#| fig-cap: "Canonical correlation for the dominant forb community"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_CancorForb.png")
+```
+
+## Main beetle families
+
+```{r CANCORbeetle}
+#| label: fig-cancorbeetle
+#| out-width: "800px"
+#| fig-cap: "Canonical correlation for the dominant beetle assemblage"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_CancorBeetle.png")
+```
+
+
+## Interpretation canonical correlations
+
+- strong correlation between the fjord topography and the landscape, but the two sets did not show any correlation with lower scales
+- strong correlation between the grazing management and the dominant grass community, but not significant for the forbs or the beetles
+- one weakly supported correlation (p<0.1) between grazing management and the fine-scale environment of the beetle assemblage
+- strong correlation between the fine-scale environment and the dominant grass community, weaker but still significant for the dominant forb community, not significant for the beetle assemblage
+- no set of drivers shows any significant correlation with the beetle assemblage
+
+## Exploration of individual drivers
+
+### Main grass species
 
 ```{r VR_grazingxgrass12}
 #| label: fig-grazingxgrass12
@@ -199,7 +320,7 @@ knitr::include_graphics("outputs/pval_significant/cancor_locenvixgrass.png")
 
 The first axis is driven by the penetration rate on the right and by the pH on the left (@fig-locenvixgrass). *Deschampsia flexuosa* seems associated with soft soils. The second axis is driven by the mean Phosphorus rate. *Lolium perenne* seems associated with rich soils.
 
-## Main forb species
+### Main forb species
 
 ```{r VR_locenvixforb}
 #| label: fig-locenvixforb
@@ -225,7 +346,7 @@ knitr::include_graphics("outputs/pval_significant/cancor_grazingxlocenvi_beetle.
 
 First axis non-significant but quite clearly driven by livestock type (@fig-grazingxlocenvibeetle). High bryophyte cover seems associated with sheep and goat grazing.
 
-## Influence of fjord system
+### Influence of fjord system
 
 ```{r VR_fjordxlandscape12}
 #| label: fig-fjordxlandscape12
@@ -251,7 +372,7 @@ The aspect and the distance to sea are driving the first dimension, the slope dr
 
 ## Landscape effect
 
-As we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species.
+As we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species -> low level of replication, low resolution
 
 
 # CONCLUSION
