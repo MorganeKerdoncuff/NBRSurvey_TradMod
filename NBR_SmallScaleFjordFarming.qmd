@@ -47,11 +47,11 @@ source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching [**NB**] km inland. The climate is oceanic, characterized by mild temperature (**mean January, mean June**) and high precipitation level (**VALUE**). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching \[**NB**\] km inland. The climate is oceanic, characterized by mild temperature (**mean January, mean June**) and high precipitation level (**VALUE**). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
 
 ## Study sites
 
-We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap) in 2019 and 2020.
+We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap).
 
 ```{r SiteMap}
 #| label: fig-sitemap
@@ -62,18 +62,18 @@ We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap
 knitr::include_graphics("illustrations/NBR_GrazersMap.png")
 ```
 
-Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. The different treatments applied to the fields (grazing excluded) are described in Appendix [**APPENDIX REF**].
+Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. To the knowledge of the current farmers, no field was resown and/or plowed since the 1970s. Four sites were drained between 1990 and 2010 (OS1, IC1, OS4, OC3). The different treatments applied to the fields (grazing excluded) are described in Appendix (@tbl-farmermanagement).
 
 ## Conceptual framework
 
 *For Amy and Inger: I gathered everything related to the study concept here for now, but maybe some of this should be moved to the Introduction at some point*
 
-The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity. We first present a summary before describing each set of variables with more details (@fig-fjordconcept):
+The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity. We first present a summary (@fig-fjordconcept) before describing each set of variables with more details:
 
-- the **fjord system** encompasses all geomorphological features which define the landscape and are independent of any human influence.
-- the **landscape matrix** gathers the different land covers and uses which surround the field within 1 km2 radius. It is both dependent of the geomorphology and the human activity (forestry, crops, grazing, infrastructures...).
-- the **grazing management** relates to the livestock breeding and to the structure of infield area of the farm. It is likely to be influenced by the landscape topography and the types of available habitats around the farm.
-- the **fine-scale environment** at the sampling area level represents all the ecological parameters which can directly or indirectly influence the local niches. These drivers will be affected by all factors occurring at wider scale.
+-   the **fjord system** encompasses all geomorphological features which define the landscape and are independent of any human influence.
+-   the **landscape matrix** gathers the different land covers and uses which surround the field within 1 km2 radius. It is both dependent of the topography and the human activity (forestry, crops, grazing, infrastructures...).
+-   the **grazing management** relates to the livestock breeding and to the structure of infield area of the farm. It is likely to be influenced by the landscape topography and the types of available habitats around the farm.
+-   the **fine-scale environment** at the sampling area level represents all the ecological parameters which can directly or indirectly influence the local niches. These drivers will be affected by all factors occurring at wider scale.
 
 ```{r FjordConcept}
 #| label: fig-fjordconcept
@@ -84,20 +84,74 @@ The potential drivers of the plant and beetle community were divided into 4 cate
 knitr::include_graphics("illustrations/NBR_FjordConcept.png")
 ```
 
+*To Amy and Inger: the following section ended up being quite long. One alternative to this description below (which may be more relevant in the thesis core which should be more detailed) would be to make a summary table, with the following columns: 1) The set; 2) The variable; 3) Its effect (key words, a bit same as the figure above); 4) references. What you think would be the best?*
 
 ### The fjord system
 
+The fjords in Western Norway are characterized by undulating topography which grows sharper in the inner fjord area [STILL NEED TO DEFINE THESE AREAS AT SOME POINT?]. The following features can affect plant and beetle assemblages by filtering the *natural* species pool at wider scale [REF]:
 
+- the **elevation**: our study focused on grasslands in the "lowlands", thus the elevation gradient was limited with all of our sites located below 200 m. Yet, even at low level elevation can have an effect on local climate. including temperatures and precipitations [REF].
+- the **slope**: the fjord landscape alternates between hills and dips. The steepness of a slope affects the soil erosion potential as well as the water streaming: a sharp hill will suffer from regular soil renewal and nutrient depletion [REF], while a flat area will store higher water and carbon  content [REF].
+- the **aspect**: South- and East-facing slopes will receive more, and more intensive sunlight than West- and North-facing ones [REF]. The combined aspect and angle determine the heat load received by the slope [REF].
+- the **distance to sea**: fjords are first and foremost defined by the sea arms which enter deeply into the land. These geological formations greatly affect the local climate by constraining wind currents and clouds [REF].
 
 ### The landscape matrix
 
+Land use being greatly constrained by the fjord topography, the agricultural landscape is usually diverse with woodlands and semi-managed outfields mixing with the grazing fields. The different habitat types around the site will affect the species pools and flows:
+
+- the **forest percent cover**: it is common for land owners in the fjord countryside to keep some forested areas for wood supply. The dominant plant species community should not be affected, but phytophagous beetles (e.g. Elateridae) could migrate to neighboring areas [REF].
+- the **wetland percent cover**: the fjords in Western Norway are well-irrigated thanks to a high precipitation level [REF]. Same as for the forest cover, it is likely that the common plant species pool will not be affected, but hydrophilous beetles (e.g. Hydrophilidae, Ptilidae) could be found in surrounding areas.
+- the **cultivated land percent cover**: small-scale farming involves a high variety of food production strategies to adapt to the productivity gradient, with a limited use of agricultural machinery [REF]. Cultivated land are usually represented by fodder crops and orchards, which could influence the dominant pool of forbs in the surrounding grazing fields.
+- the **outfield percent cover**: traditional grazing management in Western Norway revolved around the combined use of low productive outfields (usually heathlands or shrublands) and high productive infields, with biomass taken from the former in summer (e.g. heath mowing or summer grazing), to enrich the latter [REF]. There can be a fine line between outfields and infields, especially closer to the coast. A high cover of outfield would induce an overall lower productivity of the area.
+- the **infield percent cover**: infields correspond to more conventional grazing areas, such as meadows and pastures. In an infield-dominant landscape, we would expect the dominant plant and beetle pools to be relatively stable.
+
 ### The grazing management
+
+To accommodate the constraining topography and the limited resources, grazing like farming practices are very diverse. Grazing is a well-studied habitat pressure which can trigger contrasting responses depending on its intensity and the local context [REF]:
+
+- the **type of livestock**: traditional grazing management in Western Norway used to rely on sheep breeding, but the livestock has been diversified with cow and goat flocks. Each type of livestock has distinct grazing patterns and diet preferences which can affect the plant community [REF]. The type of excretions, which differs a lot between ruminants and other herbivores, is also likely to infuence the dung-beetle assemblage.
+- the **grazing intensity**: productivity being a major limiting factor in fjord areas, grazing systems in Western Norway can be qualified as extensive, even on the most productive infields. However, there will still be a gradient of intensity according to the type of grazer, the number of animals and the grazing area.
+- the **total infield surface**: rotational grazing is an important component of small-scale farming. The farmer divides the area into smaller fields where the livestock stays on shorter periods and rotates regularly during the year. Higher rotational capacity in extensive management system entails a lower grazing intensity.
+- the **size of the field**:
 
 ### The fine-scale environment
 
+- the **soil compaction**:
+- the **soil nutrients**:
+- the **structural diversity**:
+- the **vegetation cover**:
+
 ## Data collection
 
+*For Amy and Inger: a sketch of the sampling design will obviously come*
+
+### Sampling set-up
+
+Ecological data were collected between June and July 2019 and 2020. A sampling area of 20 x 20 m^2^ which was representative of the grazing field was defined on each site. Field edges, wet zones and exposed rocks were avoided. Three plots of 3 x 3 m^2^ were set within the sampling area, with a distance of at least 6 m between each other. The plots were divided into 9 quadrats of 1 m^2^ which were split into two groups, one for non-destructive measurements (5 quadrats) and one for destructive measurements (4 quadrats). All samples from one site except beetles were collected the same day.
+
+### Plant community data
+
+Plant species and percent cover were collected on non-destructive quadrats, for a total of 15 quadrats per site. The identifications were made by the two same observers for both years. The percent cover of the different functional groups and the vegetation mean height were also collected on the same quadrat.
+
+### Beetle community data
+
+Beetle specimens were collected with dung-baited pitfall traps located on the destructive quadrats, for a total of 12 pitfall traps per site. The traps were made of white plastic cups of 750 mL (**DIAMETER**) filled to 1/4 with salted water and a drop of neutral detergent to break water surface tension [REF]. The traps were set into the ground with the edge at the same level as the soil surface and covered with a metal grid with a [**MESH SIZE**] of cm^2^. A ball of fresh cow dung was then placed on the middle of the grid roof in a way that it would leave a substantial empty space around the edge of the cups for the beetles to fall in. The traps were left on site for one full week before being retrieved.
+
+Beetles were stored in 70% ethanol and sorted into families in the lab using @duffBeetlesBritainIreland2012b.
+
+### Soil data
+
+
+
 ## Data analysis
+
+### Choice of the method
+
+We aim to present an exploratory study of the ecological interactions Due to our low level of replication, we limited the numbers of variables and thus expect a lack of resolution for some species responses.
+
+### Data standardisation
+
+All data were summarized at the site level. Beetle abundances of all pitfall traps were summed up. For all the other variables (plant community, soil), the site value was calculated as the average of the sample values.
 
 # RESULTS
 
@@ -194,6 +248,11 @@ knitr::include_graphics("outputs/pval_significant/cancor_fjordxlandscape_beetle_
 The aspect and the distance to sea are driving the first dimension, the slope drives the second dimension and the elevation drives the third dimension. The forest cover would increase inland, with increasing elevation (@fig-fjordxlandscape12, @fig-fjordxlandscape13). On areas with steep slopes, the most important land use around the field would be infields and cultivated lands.
 
 # DISCUSSION
+
+## Landscape effect
+
+As we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species.
+
 
 # CONCLUSION
 
