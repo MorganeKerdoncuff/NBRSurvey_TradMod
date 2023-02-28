@@ -126,7 +126,7 @@ The last filters which apply to the plant and beetle assemblages would be the on
 - the **soil compaction**: soil structure plays a major role in plant root development, and subsequent exchanges within the rhizosphere [REF], and arthropod movements and potential cover against disturbance [REF]. Soil compaction, assessed with the measure of bulk density, usually increases with grazing intensity [REF]. Thick grass root mats can also stiffen the soil [REF], thus an in-field penetration test can provide complementary information to the regular bulk density measurement.
 - the **soil nutrients**: nitrogen and phosphorous are the most studied plant limiting factors in agronomy [REF]. As high concentrations favor competitive fodder species, we can expect a correlation between nutrient load and dominant grass communities.
 - the **structural diversity**: available ecological niches for beetles are highly dependent of the heterogeneity of the aboveground biomass. It can be explained by feeding preferences (e.g. phytophagous) or strategies (e.g. hunters by sight) [REF]. Taller vegetation is usually associated with higher cover and more diverse niche potential [REF]. However the presence of exposed ground
-- the **ground humidity**: 
+- the **ground humidity**: moss + soil moisture
 
 ## Data collection
 
@@ -148,47 +148,30 @@ Beetles were stored in 70% ethanol and sorted into families in the lab using @du
 
 ### Soil compaction data
 
-All data collection related to soil physical properties or chemistry was done in destructive quadrats.
+All data collection related to soil physical properties was done in destructive quadrats.
 
 For the measure of the penetration rate we used a sharp [**MATERIAL?**] stick which would be dropped into the ground from a 1 m height. The drop was made through a plastic tube to ensure the stick direction. The visible standing part of the stick was measured and substracted from the total stick length to obtain the length of penetration into the soil. We performed two penetration tests per quadrat, one on each upper corner (**FIG**), for a total of 24 tests per site. The tip was regularly sharpened and its length remeasured across the field season.
 
-We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density, for a total of 36 cores per site. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores after drying in oven at 105.C, and calculated the bulk density according to the following formula: $BD (g/cm^3) = \frac{Core dry weight (g)}{Core volume (cm^3)}$.
+We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density, for a total of 36 cores per site. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores after drying in oven at 105.C, and calculated the bulk density according to the following formula: $\text{Bulk density }(g/cm^3) = \frac{\text{Core dry weight (g)}}{\text{Core volume }(cm^3)}$.
+**+ soil moisture**
 
-Bulk density data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with a best estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had at least 15 replicates.
+Bulk density data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with an estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had at least 15 replicates.
 
 ### Soil chemistry data
 
-One soil core of x cm diameter and 12 cm depth were sampled in each destructive subplot, for a total of 12 cores per site.
-Cores from 2019 were sieved and merged in the lab, and 0.5 L was sent to Eurofins for chemistry analysis.
-For each plot in 2020, 3 cores out of 4 were sieved and merged, and 0.5 L of the mix was sent to Eurofins.
-The remaining core was used for mesofauna sorting which is not shown in this paper.
-Results from the lab showed then the plot level.
-The current analysis being led at the site level, we used the average of the plot values (3 replicates).
-There was one exception (OC2) where one of the sample showed an extreme content of calcium.
-This sample was put aside and we kept only two replicates for this site.
-Chemistry analysis included the following:
+We collected a supplementary soil core in each destructive quadrat for chemical analyses, for a total of 12 cores per site. We used a [**MATERIAL**] core of [**VALUE**] cm diameter and 12 cm depth which was dug into the ground by rotational movements. The soil was stored at 4.C before lab processing. Cores were sieved and merged at the plot level, and 0.5 L was sent to Eurofins for nitrogen and phosphorous quantitative analyses. Total nitrogen content was determined using the Kjedahl method + [**METHOD PHOSPHOROUS**].
 
-- Loss of ignition
-- Nitrogen content
-- Phosphorous content
+### Topographical data
 
-### Topographical and geomorphological data
+We recorded field slope angle on site with a clinometer, with the observer standing at the highest point and looking down to another observer standing at the lowest point. The mean elevation and the sites coordinates were also collected on the field with a GPS. The aspect degree of the site was determined from geospatial data. An aspect map in degree azimuth of the whole NBR was generated in QGIS (version 3.12.2) from a Digital Elevation Model collected on GeoNorge [**LINK**]. The distance between sites and closest sea bodies was geospatially measured on the map Norge i bilder [**LINK**].
 
-*Chunk under work*
+### Landscape data
 
-The slope angle was collected on site with a clinometer, with the observer standing at the top and looking down to another observer standing at the bottom.
-The aspect not being consistently recorded on the field, it was collected afterwards with spatial data.
-The Digital Elevation Model files were collected from GeoNorge (link).
-An aspect map in degree azimuth was generated in QGIS software (version 3.12.2) from which the site aspect values were individually retrieved.
-
-#### Distance to sea
-
-We measured the distance between the field and the closer fjord on Norge i bilder.
-
+We collected land cover data on the natural information map Norgeskart [**LINK**] provided by the Norwegian Institute of Bioeconomy (NiBIO). Surfaces of land covers including forests, agricultural lands, water bodies and human infrastructures, were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification to limit our number of variables: we combined non-managed and managed forests, as well as fully and partially cultivated lands.
 
 ### Field management data
 
-Information on the grazing management were collected from the farmers with interviews conducted from October 2021 to January 2022 [SURVEY APPENDIX]. Some farmers could not or did not want to reply to our survey, we therefore completed the missing values with a similar interview serie conducted in 2018 [REF TO MARGIT MASTER THESIS].
+Information on the grazing management of each field were collected from the farmers with phone interviews conducted from October 2021 to January 2022 [SURVEY APPENDIX]. Three farmers could not or did not want to reply to our survey. We completed the missing values with data from a similar interview series conducted in 2018 [REF TO MARGIT MASTER THESIS].
 
 We asked the farmers for the following elements:
 
@@ -199,6 +182,11 @@ We asked the farmers for the following elements:
 - The size of the field we sampled
 
 Other information related to the farm management are available in Supplementary Information (@tbl-farmermanagement).
+
+The standard calculation of stocking density is made with the following formula [REF]:
+$$
+\text{Stocking density} = \frac{\text{number of animals}\times{\text{standard livestock unit}}}{\text{surface}\times{\text{grazing period}}}
+$$
 
 *Chunk under work*
 To estimate the standardised grazing intensity per ha per year on the field, we should have followed the following formula:
@@ -228,7 +216,7 @@ All data were summarized at the site level. Beetle abundances of all pitfall tra
 
 We checked for variables with a correlation coefficient over 0.7.
 When it was possible, we kept the variable with the highest rate of replication within the site.
-If the number of replicates was similar, then we chosed according to ecological significance.
+If the number of replicates was similar, then we chose according to ecological significance.
 For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
 
 ### Linear relationships between variables
