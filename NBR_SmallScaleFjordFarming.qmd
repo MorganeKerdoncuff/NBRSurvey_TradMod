@@ -44,6 +44,8 @@ We aimed to present an exploratory study of the ecological interactions between 
 
 ## Intertwined drivers within small-scale farming systems in a fjord landscape (concept)
 
+The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently [REF].
+
 ## Aim & hypotheses
 
 # MATERIAL AND METHODS
@@ -100,7 +102,7 @@ The fjords in Western Norway are characterized by undulating topography which gr
 
 ### The landscape matrix
 
-Land use being greatly constrained by the fjord topography, the agricultural landscape is usually diverse with woodlands and semi-managed outfields mixing with the grazing fields. The different habitat types around the site will affect the species pools and flows:
+Land use being greatly constrained by the fjord topography, the agricultural landscape is usually diverse with woodlands and semi-managed outfields mixing with the grazing fields. The different habitat types around the site will affect the species pools and flows [REF]:
 
 - the **forest percent cover**: it is common for land owners in the fjord countryside to keep some forested areas for wood supply. The dominant plant species community should not be affected, but phytophagous beetles (e.g. Elateridae) could migrate to neighboring areas [REF].
 - the **wetland percent cover**: the fjords in Western Norway are well-irrigated thanks to a high precipitation level [REF]. Same as for the forest cover, it is likely that the common plant species pool will not be affected, but hydrophilous beetles (e.g. Hydrophilidae, Ptilidae) could be found in surrounding areas.
@@ -112,17 +114,19 @@ Land use being greatly constrained by the fjord topography, the agricultural lan
 
 To accommodate the constraining topography and the limited resources, grazing like farming practices are very diverse. Grazing is a well-studied habitat pressure which can trigger contrasting responses depending on its intensity and the local context [REF]:
 
-- the **type of livestock**: traditional grazing management in Western Norway used to rely on sheep breeding, but the livestock has been diversified with cow and goat flocks. Each type of livestock has distinct grazing patterns and diet preferences which can affect the plant community [REF]. The type of excretions, which differs a lot between ruminants and other herbivores, is also likely to infuence the dung-beetle assemblage.
+- the **type of livestock**: traditional grazing management in Western Norway used to rely on sheep breeding, but the livestock has been diversified with cow and goat flocks. Each type of livestock has distinct grazing patterns and diet preferences which can affect the plant community [REF]. The type of excretions, which differs a lot between ruminants and other herbivores, is also likely to influence the dung-beetle assemblage.
 - the **grazing intensity**: productivity being a major limiting factor in fjord areas, grazing systems in Western Norway can be qualified as extensive, even on the most productive infields. However, there will still be a gradient of intensity according to the type of grazer, the number of animals and the grazing area.
 - the **total infield surface**: rotational grazing is an important component of small-scale farming. The farmer divides the area into smaller fields where the livestock stays on shorter periods and rotates regularly during the year. Higher rotational capacity in extensive management system entails a lower grazing intensity.
-- the **size of the field**:
+- the **size of the field**: due to this rotational grazing system on a limiting topography, the size of each individual field can vary a lot between farms and within the same farm. A smaller field will be more sensitive to disturbances and to changes in species flows, and will be more subjected to edge effect [REF].
 
 ### The fine-scale environment
 
-- the **soil compaction**: 
-- the **soil nutrients**:
-- the **structural diversity**:
-- the **vegetation cover**:
+The last filters which apply to the plant and beetle assemblages would be the ones to define their immediate ecological niches, from both above- and below-ground [REF]:
+
+- the **soil compaction**: soil structure plays a major role in plant root development, and subsequent exchanges within the rhizosphere [REF], and arthropod movements and potential cover against disturbance [REF]. Soil compaction, assessed with the measure of bulk density, usually increases with grazing intensity [REF]. Thick grass root mats can also stiffen the soil [REF], thus an in-field penetration test can provide complementary information to the regular bulk density measurement.
+- the **soil nutrients**: nitrogen and phosphorous are the most studied plant limiting factors in agronomy [REF]. As high concentrations favor competitive fodder species, we can expect a correlation between nutrient load and dominant grass communities.
+- the **structural diversity**: available ecological niches for beetles are highly dependent of the heterogeneity of the aboveground biomass. It can be explained by feeding preferences (e.g. phytophagous) or strategies (e.g. hunters by sight) [REF]. Taller vegetation is usually associated with higher cover and more diverse niche potential [REF]. However the presence of exposed ground
+- the **ground humidity**: 
 
 ## Data collection
 
@@ -142,24 +146,17 @@ Beetle specimens were collected with dung-baited pitfall traps located on the de
 
 Beetles were stored in 70% ethanol and sorted into families in the lab using @duffBeetlesBritainIreland2012b.
 
-### Soil data
+### Soil compaction data
 
-*Section under work*
+All data collection related to soil physical properties or chemistry was done in destructive quadrats.
 
-#### Bulk density
+For the measure of the penetration rate we used a sharp [**MATERIAL?**] stick which would be dropped into the ground from a 1 m height. The drop was made through a plastic tube to ensure the stick direction. The visible standing part of the stick was measured and substracted from the total stick length to obtain the length of penetration into the soil. We performed two penetration tests per quadrat, one on each upper corner (**FIG**), for a total of 24 tests per site. The tip was regularly sharpened and its length remeasured across the field season.
 
-Bulk density data needed some adjustments due to field and lab constraints.
-When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low.
-Bulk density estimation being less accurate on low soil volumes, we discarded cores with a best estimated volume of soil under 350 cm3.
-A scale dysfunction issues affected some of our sites during the processing of the soil.
-Negative or extreme water loss values were removed.
-After data filtering, all sites had at least 15 replicates.
+We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density, for a total of 36 cores per site. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores after drying in oven at 105.C, and calculated the bulk density according to the following formula: $BD (g/cm^3) = \frac{Core dry weight (g)}{Core volume (cm^3)}$.
 
-#### Soil penetration
+Bulk density data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with a best estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had at least 15 replicates.
 
-In complement of bulk density, rate of penetration -> indicative of soil compaction & root density.
-
-#### Soil chemistry
+### Soil chemistry data
 
 One soil core of x cm diameter and 12 cm depth were sampled in each destructive subplot, for a total of 12 cores per site.
 Cores from 2019 were sieved and merged in the lab, and 0.5 L was sent to Eurofins for chemistry analysis.
