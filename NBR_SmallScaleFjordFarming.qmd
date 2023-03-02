@@ -115,8 +115,8 @@ Land use being greatly constrained by the fjord topography, the agricultural lan
 To accommodate the constraining topography and the limited resources, grazing like farming practices are very diverse. Grazing is a well-studied habitat pressure which can trigger contrasting responses depending on its intensity and the local context [REF]:
 
 - the **type of livestock**: traditional grazing management in Western Norway used to rely on sheep breeding, but the livestock has been diversified with cow and goat flocks. Each type of livestock has distinct grazing patterns and diet preferences which can affect the plant community [REF]. The type of excretions, which differs a lot between ruminants and other herbivores, is also likely to influence the dung-beetle assemblage.
-- the **grazing intensity**: productivity being a major limiting factor in fjord areas, grazing systems in Western Norway can be qualified as extensive, even on the most productive infields. However, there will still be a gradient of intensity according to the type of grazer, the number of animals and the grazing area.
-- the **total infield surface**: rotational grazing is an important component of small-scale farming. The farmer divides the area into smaller fields where the livestock stays on shorter periods and rotates regularly during the year. Higher rotational capacity in extensive management system entails a lower grazing intensity.
+- the **stocking density**: productivity being a major limiting factor in fjord areas, grazing systems in Western Norway can be qualified as extensive, even on the most productive infields. However, there will still be a gradient of intensity according to the type of grazer, the number of animals and the grazing area.
+- the **farm infield surface**: rotational grazing is an important component of small-scale farming. The farmer divides the area into smaller fields where the livestock stays on shorter periods and rotates regularly during the year. Higher rotational capacity in extensive management system entails a lower grazing intensity.
 - the **size of the field**: due to this rotational grazing system on a limiting topography, the size of each individual field can vary a lot between farms and within the same farm. A smaller field will be more sensitive to disturbances and to changes in species flows, and will be more subjected to edge effect [REF].
 
 ### The fine-scale environment
@@ -124,9 +124,9 @@ To accommodate the constraining topography and the limited resources, grazing li
 The last filters which apply to the plant and beetle assemblages would be the ones to define their immediate ecological niches, from both above- and below-ground [REF]:
 
 - the **soil compaction**: soil structure plays a major role in plant root development, and subsequent exchanges within the rhizosphere [REF], and arthropod movements and potential cover against disturbance [REF]. Soil compaction, assessed with the measure of bulk density, usually increases with grazing intensity [REF]. Thick grass root mats can also stiffen the soil [REF], thus an in-field penetration test can provide complementary information to the regular bulk density measurement.
-- the **soil chemical composition**: nitrogen and phosphorous are the most studied plant limiting factors in agronomy [REF]. As high concentrations favor competitive fodder species, we can expect a correlation between nutrient load and dominant grass communities. Soil pH will affect the availability of nutrients by altering their chemical forms, and can therefore influence the plant species composition (@zelnikPlantSpeciesDiversity2013)
-- the **structural diversity**: available ecological niches for beetles are highly dependent of the heterogeneity of the aboveground biomass. It can be explained by feeding preferences (e.g. phytophagous) or strategies (e.g. hunters by sight) [REF]. Taller vegetation is usually associated with higher cover and more diverse niche potential [REF]. However the presence of exposed ground
-- the **ground humidity**: moss + soil moisture
+- the **soil chemical composition**: nitrogen and phosphorus are the most studied plant limiting factors in agronomy [REF]. As high concentrations favor competitive fodder species, we can expect a correlation between nutrient load and dominant grass communities. Soil pH will affect the availability of nutrients by altering their chemical forms, and can therefore influence the plant species composition (@zelnikPlantSpeciesDiversity2013).
+- the **structural diversity**: available ecological niches for beetles are highly dependent of the heterogeneity of the aboveground biomass. It can be explained by feeding preferences (e.g. phytophagous) or strategies (e.g. hunters by sight) [REF]. Taller vegetation is usually associated with higher cover and more diverse niche potential [REF]. On the other hand, presence of very short vegetation patches or exposed ground will be important niches for some groups [REF].
+- the **soil moisture**: beetles are very sensitive to moisture gradients [REF] and some families such as Hydrophilidae and Ptilidae will be mainly hygrophilous [REF]. The bryophyte layer will help to maintain the ground humidity during the summer season [REF].
 
 ## Data collection
 
@@ -152,14 +152,20 @@ All data collection related to soil physical properties was done in destructive 
 
 For the measure of the penetration rate we used a sharp [**MATERIAL?**] stick which would be dropped into the ground from a 1 m height. The drop was made through a plastic tube to ensure the stick direction. The visible standing part of the stick was measured and substracted from the total stick length to obtain the length of penetration into the soil. We performed two penetration tests per quadrat, one on each upper corner (**FIG**), for a total of 24 tests per site. The tip was regularly sharpened and its length remeasured across the field season.
 
-We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density, for a total of 36 cores per site. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores after drying in oven at 105.C, and calculated the bulk density according to the following formula: $\text{Bulk density }(g/cm^3) = \frac{\text{Core dry weight (g)}}{\text{Core volume }(cm^3)}$.
-**+ soil moisture**
+We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density and the soil moisture. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores before and after drying in oven at 105.C, and calculated the bulk density and the percent soil moisture as following:
+$$
+\text{Bulk density }(g/cm^3) = \frac{\text{Core dry weight (g)}}{\text{Core volume }(cm^3)}
+$$.
 
-Bulk density data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with an estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had at least 15 replicates.
+$$
+\text{Soil moisture (%)} = \frac{\text{Core dry weight (g)}}{\text{Core fresh weight (g)}}
+$$.
+
+Bulk density and soil moisture data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with an estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had between 15 and 36 sample replicates.
 
 ### Soil chemistry data
 
-We collected a supplementary soil core in each destructive quadrat for chemical analyses, for a total of 12 cores per site. We used a [**MATERIAL**] core of [**VALUE**] cm diameter and 12 cm depth which was dug into the ground by rotational movements. The soil was stored at 4.C before lab processing. Cores were sieved and merged at the plot level, and 0.5 L was sent to Eurofins for nitrogen and phosphorous quantitative analyses. Total nitrogen content was determined using the Kjedahl method + [**METHOD PHOSPHOROUS**].
+We collected a supplementary soil core in each destructive quadrat for chemical analyses, for a total of 12 cores per site. We used a [**MATERIAL**] core of [**VALUE**] cm diameter and 12 cm depth which was dug into the ground by rotational movements. The soil was stored at 4.C before lab processing. Cores were sieved and merged at the plot level, and 0.5 L was sent to Eurofins for nitrogen and phosphorus quantitative analyses. Total nitrogen content and available phosphorus were determined by using modified Kjeldahl method (NS-EN 13654-1:2890) and ammonium lactate extraction method [REF “Rapport 6/92” by T. Kroghstad] respectively. 
 
 ### Topographical data
 
@@ -189,8 +195,6 @@ $$
 $$
 
 *Chunk under work*
-To estimate the standardised grazing intensity per ha per year on the field, we should have followed the following formula:
-Grazing intensity on the field = (number of adults * standard livestock unit + number of young * standard livestock unit)/(field surface * (12/number of months on the field))
 Two difficulties here.
 Due to rotational grazing management, the period of grazing is not that accurate throughout the years.
 Also the flock can also be separated by the farmer and spread into different fields.
@@ -303,7 +307,7 @@ The total infield surface of the farm drives the first axis (@fig-grazingxgrass1
 knitr::include_graphics("outputs/pval_significant/cancor_locenvixgrass.png")
 ```
 
-The first axis is driven by the penetration rate on the right and by the pH on the left (@fig-locenvixgrass). *Deschampsia flexuosa* seems associated with soft soils. The second axis is driven by the mean Phosphorus rate. *Lolium perenne* seems associated with rich soils.
+The first axis is driven by the penetration rate on the right and by the pH on the left (@fig-locenvixgrass). *Deschampsia flexuosa* seems associated with soft soils. The second axis is driven by the mean phosphorus rate. *Lolium perenne* seems associated with rich soils.
 
 ### Main forb species
 
@@ -316,20 +320,20 @@ The first axis is driven by the penetration rate on the right and by the pH on t
 knitr::include_graphics("outputs/pval_significant/cancor_locenvixforb.png")
 ```
 
-The first axis is also driven by the penetration rate on the right and by the pH on the left (@fig-locenvixforb). *Trifolium repens* seems associated with basic soil. The mean Phosphorus rate is isolated from all the other drivers and all the species on the upper-right corner. Forb species would not be favored by very rich environment.
+The first axis is also driven by the penetration rate on the right and by the pH on the left (@fig-locenvixforb). *Trifolium repens* seems associated with basic soil. The mean phosphorus rate is isolated from all the other drivers and all the species on the upper-right corner. Forb species would not be favored by very rich environment.
 
-## Fine-scale environment
+## Main beetle families
 
-```{r VR_grazingxlocenvibeetle}
-#| label: fig-grazingxlocenvibeetle
+```{r VR_locenvixbeetle}
+#| label: fig-locenvixbeetle
 #| out-width: "800px"
-#| fig-cap: "Visual representation of the canonical correlation between the grazing management and the fine-scale environment"
+#| fig-cap: "Visual representation of the canonical correlation between the fine-scale environment and the main beetle families community"
 #| message: true
 #| warning: true
-knitr::include_graphics("outputs/pval_significant/cancor_grazingxlocenvi_beetle.png")
+knitr::include_graphics("outputs/pval_significant/cancor_locenvixbeetle.png")
 ```
 
-First axis non-significant but quite clearly driven by livestock type (@fig-grazingxlocenvibeetle). High bryophyte cover seems associated with sheep and goat grazing.
+First axis significant driven by the penetration rate (@fig-locenvixbeetle). Curculionidae and Elateridae are located at the other side of the axis.
 
 ### Influence of fjord system
 

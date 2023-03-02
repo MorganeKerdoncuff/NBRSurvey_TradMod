@@ -299,10 +299,10 @@ locenvi_vege <- subset(locenvi_vege, !SiteID == "IG3")
 ## Humus content (num), from soilchem
 
 # Selection variables & scaling
-locenvi_beetle <- purrr::reduce(list(groundcover_grass, soilbulk_grass, soilchem_grass), dplyr::left_join)
+locenvi_beetle <- purrr::reduce(list(groundcover_grass, soilbulk_grass, soilpene_grass, soilchem_grass), dplyr::left_join)
 locenvi_beetle <- locenvi_beetle |> 
   mutate(MeanExposedGround = MeanBareSoil + MeanRocks)
-locenvi_beetle <- subset(locenvi_beetle, select = c(SiteID, MeanExposedGround, MeanLitter, MeanBryo, MeanHeight, MeanRichness, MeanBD, MeanMoisture, MeanHumus))
+locenvi_beetle <- subset(locenvi_beetle, select = c(SiteID, MeanExposedGround, MeanLitter, MeanBryo, MeanHeight, MeanBD, MeanPT, MeanMoisture, MeanHumus))
 locenvi_beetle <- locenvi_beetle |> 
   mutate(across(where(is.numeric), scale))
 
@@ -465,6 +465,7 @@ residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle)) # Tukey=-1.
 #residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle)) # Tukey=-0.88 ; p=0.38 -> validated
 #residualPlots(lm(BeetlePCA1~Grazingdensity_perha, data = allvar_beetle)) # Tukey=0.31 ; p=0.76 -> validated
 #residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle)) # Tukey=-0.6 ; p=0.55 -> validated
+#residualPlots(lm(BeetlePCA1~MeanPT, data = allvar_beetle)) # Tukey=0.82 ; p=0.41 -> validated
 residualPlots(lm(BeetlePCA1~MeanExposedGround, data = allvar_beetle)) # Tukey=-2.28 ; p=0.023 -> rejected (one outlier? -> not really after verification)
 residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # Tukey=-2.06 ; p=0.039 -> rejected (one outlier? -> not really after verification)
 #residualPlots(lm(BeetlePCA1~MeanBryo, data = allvar_beetle)) # Tukey=-0.66 ; p=0.51 -> validated
@@ -552,7 +553,7 @@ contin_locenvi_vege <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi
 # Local environment - beetle
 locenvi_long_beetle <- locenvi_beetle |> 
   pivot_longer(
-    cols = c(MeanHeight, MeanRichness, MeanBD, MeanBryo),
+    cols = c(MeanHeight, MeanPT, MeanBD, MeanBryo),
     names_to = "Factors",
     values_to = "Values")
 contin_locenvi_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi_long_beetle)
