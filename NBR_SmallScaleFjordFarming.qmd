@@ -232,6 +232,37 @@ The linearity of the relationship was tested by the Tukey test.
 
 *To Amy and Inger: the structure of the results will change. For now it is just easier for me to go step by step*
 
+## Communities compositon
+
+Main grass species:
+
+- Agrostis capillaris
+- Festuca rubra
+- Holcus lanatus
+- Poa pratensis
+- Deschampsia cespitosa
+- Anthoxantum odoratum
+- Lolium perenne
+- Deschampsia flexuosa
+- Poa trivialis
+
+Main forb species:
+
+- Trifolium repens
+- Rumex acetosa
+- Galium saxatile
+- Potentilla erecta
+- Ranunculus repens
+- Achillea millefolium
+
+Main beetle families
+
+- Carabidae
+- Staphylinidae
+- Hydrophilidae
+- Ptiliidae
+- Scarabaeidae
+
 ## Main grass species
 
 ```{r CANCORgrass}

@@ -185,7 +185,7 @@ forb <- as.data.frame(forb)
 # Removal rare beetle families (determined in data cleaning script)
 arthro_grass <- arthro_grass |> 
   pivot_wider(names_from = BeetleFamilies, values_from = BeetleFam_abundance)
-arthro_grass <- subset(arthro_grass, select = c(SiteID, Carabidae, Staphylinidae, Hydrophilidae, Ptiliidae, Scarabaeidae, Curculionidae, Elateridae))
+arthro_grass <- subset(arthro_grass, select = c(SiteID, Carabidae, Staphylinidae, Hydrophilidae, Ptiliidae, Scarabaeidae))
 arthro_grass <- arthro_grass |>  
   pivot_longer(cols = c(-SiteID), names_to = "BeetleFam", values_to = "BeetleFam_abundance")
 
@@ -199,6 +199,7 @@ arthro_grass <- subset(arthro_grass, !SiteID == "IG3")
 # Contingency table and wide table
 contin_beetle <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFam, data = arthro_grass)
 beetle <- pivot_wider(arthro_grass, names_from = BeetleFam, values_from = BeetleFam_logabundance)
+beetle <- subset(beetle, select = -c(BeetleFam_abundance))
 beetle <- as.data.frame(beetle)
 
 #
@@ -847,15 +848,15 @@ plt.cc(cancor_fjordxgrazing_beetle, var.label = TRUE)
 # Fjord x local environment
 cancor_fjordxlocenvi_beetle <- cc(contin_fjordsys, contin_locenvi_beetle)
 rho_fjordxlocenvi_beetle <- cancor_fjordxlocenvi_beetle$cor
-rho_fjordxlocenvi_beetle # 1st axis correlation 0.48
-p.asym(rho_fjordxlocenvi_beetle, nobs, nvar_fjordsys, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.87
+rho_fjordxlocenvi_beetle # 1st axis correlation 0.47
+p.asym(rho_fjordxlocenvi_beetle, nobs, nvar_fjordsys, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.88
 plt.cc(cancor_fjordxlocenvi_beetle, var.label = TRUE)
 
 # Fjord x beetle assemblage
 cancor_fjordxbeetle <- cc(contin_fjordsys, contin_beetle)
 rho_fjordxbeetle <- cancor_fjordxbeetle$cor
-rho_fjordxbeetle # 1st axis correlation 0.62
-p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling") # NS pval=0.99
+rho_fjordxbeetle # 1st axis correlation 0.44
+p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling") # NS pval=0.98
 plt.cc(cancor_fjordxbeetle, var.label = TRUE)
 
 #
@@ -871,15 +872,15 @@ plt.cc(cancor_landscapexgrazing_beetle, var.label = TRUE)
 # Landscape x local environment
 cancor_landscapexlocalenvi_beetle <- cc(contin_landscape_beetle, contin_locenvi_beetle)
 rho_landscapexlocalenvi_beetle <- cancor_landscapexlocalenvi_beetle$cor
-rho_landscapexlocalenvi_beetle # 1st axis correlation 0.49
-p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.79
+rho_landscapexlocalenvi_beetle # 1st axis correlation 0.58
+p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS pval=0.41
 plt.cc(cancor_landscapexlocalenvi_beetle, var.label = TRUE)
 
 # Landscape x beetle assemblage
 cancor_landscapexbeetle <- cc(contin_landscape_beetle, contin_beetle)
 rho_landscapexbeetle <- cancor_landscapexbeetle$cor
-rho_landscapexbeetle # 1st axis correlation 0.65
-p.asym(rho_landscapexbeetle, nobs, nvar_landscape_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.87
+rho_landscapexbeetle # 1st axis correlation 0.56
+p.asym(rho_landscapexbeetle, nobs, nvar_landscape_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.53
 plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 
 #
@@ -888,14 +889,14 @@ plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 # Grazing x local environment
 cancor_grazingxlocenvi_beetle <- cc(contin_grazing_beetle, contin_locenvi_beetle)
 rho_grazingxlocenvi_beetle <- cancor_grazingxlocenvi_beetle$cor
-rho_grazingxlocenvi_beetle # 1st axis correlation 0.77
-p.asym(rho_grazingxlocenvi_beetle, nobs, nvar_grazing_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS with pval=0.094
+rho_grazingxlocenvi_beetle # 1st axis correlation 0.74
+p.asym(rho_grazingxlocenvi_beetle, nobs, nvar_grazing_beetle, nvar_locenvi_beetle, tstat = "Hotelling") # NS with pval=0.26
 plt.cc(cancor_grazingxlocenvi_beetle, var.label = TRUE)
 
 # Grazing x beetle community
 cancor_grazingxbeetle <- cc(contin_grazing_beetle, contin_beetle)
 rho_grazingxbeetle <- cancor_grazingxbeetle$cor
-rho_grazingxbeetle # 1st axis correlation 0.76
+rho_grazingxbeetle # 1st axis correlation 0.74
 p.asym(rho_grazingxbeetle, nobs, nvar_grazing_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.51
 plt.cc(cancor_grazingxbeetle, var.label = TRUE)
 
@@ -905,8 +906,8 @@ plt.cc(cancor_grazingxbeetle, var.label = TRUE)
 cancor_locenvixbeetle <- cc(contin_locenvi_beetle, contin_beetle)
 VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 rho_locenvixbeetle <- cancor_locenvixbeetle$cor
-rho_locenvixbeetle # 1st axis correlation 0.76
-p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hotelling") # NS pval=0.18
+rho_locenvixbeetle # 1st axis correlation 0.70
+p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hotelling") # 1st axis significant pval=0.026
 plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 #VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 #plot(cancor_locenvixbeetle, which = 1)
