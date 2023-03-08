@@ -46,6 +46,8 @@ We aimed to present an exploratory study of the ecological interactions between 
 
 The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently [REF].
 
+Topographical characteristics and soil quality have been shown to be drivers of plant community composition in managed grasslands, but overall variation explained for species composition quite low, especially compared to species diversity (@klimekPlantSpeciesRichness2007a)
+
 ## Aim & hypotheses
 
 # MATERIAL AND METHODS
@@ -68,6 +70,8 @@ knitr::include_graphics("illustrations/NBR_GrazersMap.png")
 ```
 
 Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. To the knowledge of the current farmers, no field was resown and/or plowed since the 1970s. Four sites were drained between 1990 and 2010 (OS1, IC1, OS4, OC3). The different treatments applied to the fields (grazing excluded) are described in Appendix (@tbl-farmermanagement).
+
++ PHYTOSOCIOLOGICAL DESCRIPTION GRASSLANDS?
 
 ## Conceptual framework
 
@@ -96,7 +100,7 @@ knitr::include_graphics("illustrations/NBR_FjordConcept.png")
 The fjords in Western Norway are characterized by undulating topography which grows sharper in the inner fjord area [STILL NEED TO DEFINE THESE AREAS AT SOME POINT?]. The following features can affect plant and beetle assemblages by filtering the *natural* species pool at wider scale [REF]:
 
 - the **elevation**: our study focused on grasslands in the "lowlands", thus the elevation gradient was limited with all of our sites located below 200 m. Yet, even at low level elevation can have an effect on local climate. including temperatures and precipitations [REF].
-- the **slope**: the fjord landscape alternates between hills and dips. The steepness of a slope affects the soil erosion potential as well as the water streaming: a sharp hill will suffer from regular soil renewal and nutrient depletion [REF], while a flat area will store higher water and carbon  content [REF].
+- the **slope**: the fjord landscape alternates between hills and dips. The steepness of a slope affects the soil erosion potential as well as the water streaming: a sharp hill will suffer from regular soil renewal and nutrient depletion (@klimekPlantSpeciesRichness2007a), while a flat area will store higher water and carbon  content [REF].
 - the **aspect**: South- and East-facing slopes will receive more, and more intensive sunlight than West- and North-facing ones [REF]. The combined aspect and angle determine the heat load received by the slope [REF].
 - the **distance to sea**: fjords are first and foremost defined by the sea arms which enter deeply into the land. These geological formations greatly affect the local climate by constraining wind currents and clouds [REF].
 
@@ -171,6 +175,8 @@ We collected a supplementary soil core in each destructive quadrat for chemical 
 
 We recorded field slope angle on site with a clinometer, with the observer standing at the highest point and looking down to another observer standing at the lowest point. The mean elevation and the sites coordinates were also collected on the field with a GPS. The aspect degree of the site was determined from geospatial data. An aspect map in degree azimuth of the whole NBR was generated in QGIS (version 3.12.2) from a Digital Elevation Model collected on GeoNorge [**LINK**]. The distance between sites and closest sea bodies was geospatially measured on the map Norge i bilder [**LINK**].
 
+*! NEED CELL SIZE FOR DIGITAL ELEVATION MODEL*
+
 ### Landscape data
 
 We collected land cover data on the natural information map Norgeskart [**LINK**] provided by the Norwegian Institute of Bioeconomy (NiBIO). Surfaces of land covers including forests, agricultural lands, water bodies and human infrastructures, were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification to limit our number of variables: we combined non-managed and managed forests, as well as fully and partially cultivated lands.
@@ -224,9 +230,14 @@ If the number of replicates was similar, then we chose according to ecological s
 For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
 
 ### Linear relationships between variables
+
 We plotted DCA and PCA residuals respectively for plant species and beetle families against each variable.
 A straight line close to the x-axis means a linear relationship.
 The linearity of the relationship was tested by the Tukey test.
+
+### Descriptive statistics?
+
+*Should I make a table with mean, sd, min & max of each variables?*
 
 # RESULTS
 
@@ -394,10 +405,13 @@ The aspect and the distance to sea are driving the first dimension, the slope dr
 
 - For the landscape: as we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species -> low level of replication, low resolution
 - influence of broad-scale variables smaller if not invisible at small extent and grain (@siefertScaleDependenceVegetationenvironment2012)
+- strong effect of slope on meadows composition compared to pastures, where elevational gradient is substantially smaller (@klimekPlantSpeciesRichness2007a)
 
 ## Fine-scale effect
 
 - Edaphic parameters main drivers of plant species composition (@siefertScaleDependenceVegetationenvironment2012), especially pH (@zelnikPlantSpeciesDiversity2013).
+- Nitrogen fertilization: grasslands with *Stellaria media*, *Poa annua* & *Poa trivialis* positively correlated, while *Ranunculus acris*, *Trifolium pratense* and *Rumex acetosa* negatively correlated (@klimekPlantSpeciesRichness2007a)
+
 
 # CONCLUSION
 
