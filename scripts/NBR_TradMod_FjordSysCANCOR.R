@@ -182,24 +182,26 @@ forb <- as.data.frame(forb)
 
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
-# Removal rare beetle families (determined in data cleaning script)
-arthro_grass <- arthro_grass |> 
-  pivot_wider(names_from = BeetleFamilies, values_from = BeetleFam_abundance)
-arthro_grass <- subset(arthro_grass, select = c(SiteID, Carabidae, Staphylinidae, Hydrophilidae, Ptiliidae, Scarabaeidae))
-arthro_grass <- arthro_grass |>  
-  pivot_longer(cols = c(-SiteID), names_to = "BeetleFam", values_to = "BeetleFam_abundance")
+# Selection main dung beetle families
+beetle <- subset(arthro_grass,
+                 BeetleFamilies == "Carabidae" |
+                   BeetleFamilies == "Staphylinidae" |
+                   BeetleFamilies == "Hydrophilidae" |
+                   BeetleFamilies == "Ptiliidae" |
+                   BeetleFamilies == "Scarabaeidae")
 
 # Log transformation
-arthro_grass <- arthro_grass |> 
+beetle <- beetle |> 
   mutate(BeetleFam_logabundance = log1p(BeetleFam_abundance))
 
 # Removal IG3 outlier
-arthro_grass <- subset(arthro_grass, !SiteID == "IG3")
+beetle <- subset(beetle, !SiteID == "IG3")
 
 # Contingency table and wide table
-contin_beetle <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFam, data = arthro_grass)
-beetle <- pivot_wider(arthro_grass, names_from = BeetleFam, values_from = BeetleFam_logabundance)
+contin_beetle <- xtabs(formula = BeetleFam_logabundance ~ SiteID + BeetleFamilies, data = beetle)
 beetle <- subset(beetle, select = -c(BeetleFam_abundance))
+beetle <- beetle |> 
+  pivot_wider(names_from = BeetleFamilies, values_from = BeetleFam_logabundance)
 beetle <- as.data.frame(beetle)
 
 #
@@ -369,11 +371,15 @@ locenvi_beetle <- subset(locenvi_beetle, select = -c(MeanMoisture, MeanHumus))
 # Ordination community data
 DCA_grass <- decorana(contin_grass)
 DCA_grass # Axis length of 2.3 -> keep DCA
+plot(DCA_grass)
 DCA_forb <- decorana(contin_forb)
 DCA_forb # Axis length of 3.4 -> keep DCA
+plot(DCA_forb)
 DCA_beetle <- decorana(contin_beetle)
 DCA_beetle # Axis length under 1 -> run PCA
 PCA_beetle <- prcomp(contin_beetle)
+PCA_beetle
+biplot(PCA_beetle)
 
 # Extraction grass species scores from DCA
 scores_grass <- as.data.frame(scores(DCA_grass, choices = c(1,2), display = "sites"))
@@ -911,3 +917,41 @@ p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hote
 plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 #VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 #plot(cancor_locenvixbeetle, which = 1)
+
+
+#### Redundancy analysis on significant results ####
+
+#
+## Fjord x landscape
+
+rda_fjordxlandscape <- rda(subset(landscape, select = -c(SiteID)) ~ Elevation_max + General_slope + AspectDegree + DistanceToSea_m, data = fjordsys)
+#summary(rda_fjordxlandscape)
+plot(rda_fjordxlandscape)
+
+#
+## Grazing management x grass
+
+rda_grazingxgrass <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(grazing_vege, select = -c(SiteID)))
+#summary(rda_grazingxgrass)
+plot(rda_grazingxgrass)
+
+#
+## Fine-scale environment x grass
+
+rda_locenvixgrass <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
+#summary(rda_locenvixgrass)
+plot(rda_locenvixgrass)
+
+#
+## Fine-scale environment x forb
+
+rda_locenvixforb <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
+#summary(rda_locenvixforb)
+plot(rda_locenvixforb)
+
+#
+## Fine-scale environment x beetle
+
+rda_locenvixbeetle <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
+#summary(rda_locenvixbeetle)
+plot(rda_locenvixbeetle)
