@@ -42,11 +42,12 @@ We aimed to present an exploratory study of the ecological interactions between 
 
 ## Sustainable food production through traditional grazing systems
 
+- Even small conventional intensification steps, such as low artificial fertilizer use, can negatively affect species richness without systematically increase yield (@beckmannConventionalLandUse2019). Though this is context-dependent, we can consider that within our survey area we do have a gradient of intensity (ref to SI table with land use data)
+
 ## Intertwined drivers within small-scale farming systems in a fjord landscape (concept)
 
-The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently [REF].
-
-Topographical characteristics and soil quality have been shown to be drivers of plant community composition in managed grasslands, but overall variation explained for species composition quite low, especially compared to species diversity (@klimekPlantSpeciesRichness2007a)
+- The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently [REF].
+- Topographical characteristics and soil quality have been shown to be drivers of plant community composition in managed grasslands, but overall variation explained for species composition quite low, especially compared to species diversity (@klimekPlantSpeciesRichness2007a)
 
 ## Aim & hypotheses
 
