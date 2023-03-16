@@ -42,24 +42,31 @@ We aimed to present an exploratory study of the ecological interactions between 
 
 ## Sustainable food production through traditional grazing systems
 
-When facing the upcoming challenge regarding global food security (@kastnerGlobalChangesDiets2012; @vandijkMetaanalysisProjectedGlobal2021), the temptation to dive into the multiplication of crops has already received some warnings (@foleySolutionsCultivatedPlanet2011, @hunterAgriculture2050Recalibrating2017). Not only the current issue revolves more around optimizing food availability by reducing waste and changing diets rather than increasing food production (@cassidyRedefiningAgriculturalYields2013; @kastnerGlobalChangesDiets2012; @westLeveragePointsImproving2014), but conventional cropping systems have now reached limitations which are particularly visible in European countries: keeping on the intensification track would sacrifice the agro-ecosystems of high conservation values (@haladaWhichHabitatsEuropean2011; @jongmanHomogenisationFragmentationEuropean2002) without providing such a substantial increase in productivity (@garibaldiFarmingApproachesGreater2017; @jeanneretIncreaseFoodProduction2021).
+Following the calls for a more sustainable use of the land [REF], small-scale grazing systems are slowly regaining public interest [REF].
 
+1. Sustainable use of land
 - Conventional systems are often justified to be more productive, yet the trade-off between farm profitability and crop yield has yet to be established (@garibaldiFarmingApproachesGreater2017)
 - The food productivity does not seem related to share of semi-natural habitats in Europe, including Norway (@jeanneretIncreaseFoodProduction2021). Meaning that a full transition into crop systems, if ever possible, would sacrifice biodiversity of the agricultural landscape for only a limited gain of production.
-- *[Trends semi-natural habitats]*
-- Area cover of meadows and pastures have been globally decreasing for the past decades, but this decrease has been particularly sharp in Europe, which lost 56% of its grazing lands between 1961 and 2020 (@FAODATA)
-- European agricultural landscape has already suffered loss of biological and cultural diversity through habitat fragmentation and homogenization (@jongmanHomogenisationFragmentationEuropean2002)
-- The primary function of agriculture (food production) of European cultural landscapes has declined in favour of other roles to match demands for recreation and nature conservation (@vosTrendsEuropeanCultural1999)
-- Northern meadows and Fennoscandian pastures fully dependent on agricultural management
-(@haladaWhichHabitatsEuropean2011)
-- All remaining high nature conservation value grasslands in Europe associated with low-intensity livestock systems (@bignalLowIntensityFarmingSystems1996)
-- Traditional farming systems adapted to local environment instead of more recent trends (@bignalLowIntensityFarmingSystems1996; @jongmanHomogenisationFragmentationEuropean2002)
-Principles of traditional systems (@plieningerTraditionalLanduseNature2006):
+- Land use intensification leads to landscape homogenisation as it is not dictated anymore by environmental conditions but instead by market and technological progresses [@jongmanHomogenisationFragmentationEuropean2002]
+
+3. Small-scale grazing systems
+- Traditional farming systems adapted to local environment instead of more recent trends [@bignalLowIntensityFarmingSystems1996; @jongmanHomogenisationFragmentationEuropean2002]
+Principles of traditional systems [@plieningerTraditionalLanduseNature2006]:
   -	Multiple use: risk minimisation through polyculture & interaction between public, common & private land-use
   -	Rotational use: spatial & temporal differentiation
   -	Recycling between outputs & inputs
   -	Low-energy economy: scarcity of energy & transport resources
   -	Spatial fuzziness: different land-use structures & processes intertwined
+  
+4. Trends & biodiversity
+- Area cover of meadows and pastures have been globally decreasing for the past decades, but this decrease has been particularly sharp in Europe, which lost 56% of its grazing lands between 1961 and 2020 [@FAODATA]
+- European agricultural landscape has already suffered loss of biological and cultural diversity through habitat fragmentation and homogenization [@jongmanHomogenisationFragmentationEuropean2002]
+- The primary function of agriculture (food production) of European cultural landscapes has declined in favour of other roles to match demands for recreation and nature conservation [@vosTrendsEuropeanCultural1999]
+- Northern meadows and Fennoscandian pastures fully dependent on agricultural management
+[@haladaWhichHabitatsEuropean2011]
+- All remaining high nature conservation value grasslands in Europe associated with low-intensity livestock systems (@bignalLowIntensityFarmingSystems1996)
+
+5. Norwegian fjord system
 
 
 ## Intertwined drivers within small-scale farming systems in a fjord landscape (concept)
@@ -168,7 +175,7 @@ We recorded field slope angle on site with a clinometer, with the observer stand
 
 ### Landscape data
 
-We collected land cover data on the natural information map Norgeskart [**LINK**] provided by the Norwegian Institute of Bioeconomy (NiBIO). Surfaces of land covers including forests, agricultural lands, water bodies and human infrastructures, were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification to limit our number of variables: we combined non-managed and managed forests, as well as fully and partially cultivated lands.
+We collected land cover data on the natural information map Kilden [**LINK**] provided by the Norwegian Institute of Bioeconomy (NiBIO). Surfaces of land covers including forests, agricultural lands, water bodies and human infrastructures, were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification to limit our number of variables: we combined non-managed and managed forests, as well as fully and partially cultivated lands.
 
 ### Field management data
 
@@ -309,6 +316,33 @@ knitr::include_graphics("illustrations/NBR_CancorBeetle.png")
 
 ### Main grass species
 
+<!-- ```{r VR_grazingxgrass12} -->
+<!-- #| label: fig-grazingxgrass12 -->
+<!-- #| out-width: "800px" -->
+<!-- #| fig-cap: "Visual representation of the dimensions 1 and 2 from the canonical correlation between the grazing management and the main grass species community" -->
+<!-- #| message: true -->
+<!-- #| warning: true -->
+<!-- knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim12.png") -->
+<!-- ``` -->
+
+<!-- ```{r VR_grazingxgrass23} -->
+<!-- #| label: fig-grazingxgrass23 -->
+<!-- #| out-width: "800px" -->
+<!-- #| fig-cap: "Visual representation of the dimensions 2 and 3 from the canonical correlation between the grazing management and the main grass species community" -->
+<!-- #| message: true -->
+<!-- #| warning: true -->
+<!-- knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim23.png") -->
+<!-- ``` -->
+
+```{r VR_RDAgrazingxgrass}
+#| label: fig-RDAgrazingxgrass
+#| fig-cap: "Visual representation of the redundancy analysis between the grazing management and the main grass species communities"
+#| message: true
+#| warning: true
+p <- plot(rda_grazingxgrass)
+p
+```
+
 ```{r VR_grazingxgrass12}
 #| label: fig-grazingxgrass12
 #| out-width: "800px"
@@ -318,16 +352,17 @@ knitr::include_graphics("illustrations/NBR_CancorBeetle.png")
 knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim12.png")
 ```
 
-```{r VR_grazingxgrass23}
-#| label: fig-grazingxgrass23
-#| out-width: "800px"
-#| fig-cap: "Visual representation of the dimensions 2 and 3 from the canonical correlation between the grazing management and the main grass species community"
-#| message: true
-#| warning: true
-knitr::include_graphics("outputs/pval_significant/cancor_grazingxgrass_dim23.png")
-```
 
 The total infield surface of the farm drives the first axis (@fig-grazingxgrass12), while the livestock types are opposing themselves (sheep in upper left, cow in lower left). *Lolium perenne* would be associated with farms with a high grazing surface. *Poa trivialis* and *Deschampsia cespitosa* would be associated with cow sites (@fig-grazingxgrass23).
+
+```{r VR_RDAlocenvixgrass}
+#| label: fig-RDAlocenvixgrass
+#| fig-cap: "Visual representation of the redundancy analysis between the fine-scale environment and the main grass species communities"
+#| message: true
+#| warning: true
+p <- plot(rda_locenvixgrass)
+p
+```
 
 ```{r VR_locenvixgrass}
 #| label: fig-locenvixgrass
@@ -342,6 +377,15 @@ The first axis is driven by the penetration rate on the right and by the pH on t
 
 ### Main forb species
 
+```{r VR_RDAlocenvixforb}
+#| label: fig-RDAlocenvixforb
+#| fig-cap: "Visual representation of the redundancy analysis between the fine-scale environment and the main forb species communities"
+#| message: true
+#| warning: true
+p <- plot(rda_locenvixforb)
+p
+```
+
 ```{r VR_locenvixforb}
 #| label: fig-locenvixforb
 #| out-width: "800px"
@@ -354,6 +398,15 @@ knitr::include_graphics("outputs/pval_significant/cancor_locenvixforb.png")
 The first axis is also driven by the penetration rate on the right and by the pH on the left (@fig-locenvixforb). *Trifolium repens* seems associated with basic soil. The mean phosphorus rate is isolated from all the other drivers and all the species on the upper-right corner. Forb species would not be favored by very rich environment.
 
 ## Main beetle families
+
+```{r VR_RDAlocenvixbeetle}
+#| label: fig-RDAlocenvixbeetle
+#| fig-cap: "Visual representation of the redundancy analysis between the fine-scale environment and the main beetle species communities"
+#| message: true
+#| warning: true
+p <- plot(rda_locenvixbeetle)
+p
+```
 
 ```{r VR_locenvixbeetle}
 #| label: fig-locenvixbeetle
