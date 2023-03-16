@@ -931,27 +931,100 @@ plot(rda_fjordxlandscape)
 #
 ## Grazing management x grass
 
-rda_grazingxgrass <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(grazing_vege, select = -c(SiteID)))
-#summary(rda_grazingxgrass)
+# Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "hellinger")
+
+# Redundancy analysis
+rda_grazingxgrass <- rda(hellinger_grass ~ ., data = subset(grazing_vege, select = -c(SiteID)))
+summary(rda_grazingxgrass)
 plot(rda_grazingxgrass)
+
+# Total variance explained by RDA
+RsquareAdj(rda_grazingxgrass)
+
+# Global RDA significance by permutation
+anova.cca(rda_grazingxgrass) # RDA model non significant
+
+# Individual axis significance
+anova.cca(rda_grazingxgrass, by = "axis")
+
+# Individual term significance
+anova.cca(rda_grazingxgrass, by = "term")
+
+# Residual variation using Kaiser-Guttman criterion
+rda_grazingxgrass$CA$eig[rda_grazingxgrass$CA$eig > mean(rda_grazingxgrass$CA$eig)]
 
 #
 ## Fine-scale environment x grass
 
-rda_locenvixgrass <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
-#summary(rda_locenvixgrass)
+# Redundancy analysis
+rda_locenvixgrass <- rda(hellinger_grass ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
+summary(rda_locenvixgrass)
 plot(rda_locenvixgrass)
+
+# Total variance explained by RDA
+RsquareAdj(rda_locenvixgrass)
+
+# Global RDA significance by permutation
+anova.cca(rda_locenvixgrass) # RDA model significant
+
+# Individual axis significance
+anova.cca(rda_locenvixgrass, by = "axis") # 1st axis significant
+
+# Individual term significance
+anova.cca(rda_locenvixgrass, by = "term") # Mean PT and mean phosphorus significant
+
+# Residual variation using Kaiser-Guttman criterion
+rda_locenvixgrass$CA$eig[rda_locenvixgrass$CA$eig > mean(rda_locenvixgrass$CA$eig)]
 
 #
 ## Fine-scale environment x forb
 
-rda_locenvixforb <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
-#summary(rda_locenvixforb)
+# Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "hellinger")
+
+# Redundancy analysis
+rda_locenvixforb <- rda(hellinger_forb ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
+summary(rda_locenvixforb)
 plot(rda_locenvixforb)
+
+# Total variance explained by RDA
+RsquareAdj(rda_locenvixforb)
+
+# Global RDA significance by permutation
+anova.cca(rda_locenvixforb) # RDA model significant
+
+# Individual axis significance
+anova.cca(rda_locenvixforb, by = "axis") # 1st axis significant
+
+# Individual term significance
+anova.cca(rda_locenvixforb, by = "term") # Mean PT significant
+
+# Residual variation using Kaiser-Guttman criterion
+rda_locenvixforb$CA$eig[rda_locenvixforb$CA$eig > mean(rda_locenvixforb$CA$eig)]
 
 #
 ## Fine-scale environment x beetle
 
-rda_locenvixbeetle <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
-#summary(rda_locenvixbeetle)
+# Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
+
+# Redundancy analysis
+rda_locenvixbeetle <- rda(hellinger_beetle ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
+summary(rda_locenvixbeetle)
 plot(rda_locenvixbeetle)
+
+# Total variance explained by RDA
+RsquareAdj(rda_locenvixbeetle)
+
+# Global RDA significance by permutation
+anova.cca(rda_locenvixbeetle) # RDA model significant
+
+# Individual axis significance
+anova.cca(rda_locenvixbeetle, by = "axis") # 1st axis significant
+
+# Individual term significance
+anova.cca(rda_locenvixbeetle, by = "term") # Mean BD significant & mean PT almost significant
+
+# Residual variation using Kaiser-Guttman criterion
+rda_locenvixbeetle$CA$eig[rda_locenvixbeetle$CA$eig > mean(rda_locenvixbeetle$CA$eig)]
