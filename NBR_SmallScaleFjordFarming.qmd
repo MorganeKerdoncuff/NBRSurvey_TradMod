@@ -45,8 +45,8 @@ We aimed to present an exploratory study of the ecological interactions between 
 Following the calls for a more sustainable use of the land [REF], small-scale grazing systems are slowly regaining public interest [REF].
 
 1. Sustainable use of land
-- Conventional systems are often justified to be more productive, yet the trade-off between farm profitability and crop yield has yet to be established (@garibaldiFarmingApproachesGreater2017)
-- The food productivity does not seem related to share of semi-natural habitats in Europe, including Norway (@jeanneretIncreaseFoodProduction2021). Meaning that a full transition into crop systems, if ever possible, would sacrifice biodiversity of the agricultural landscape for only a limited gain of production.
+- Conventional systems are often justified to be more productive, yet the trade-off between farm profitability and crop yield has yet to be established [@garibaldiFarmingApproachesGreater2017]
+- The food productivity does not seem related to share of semi-natural habitats in Europe, including Norway [@jeanneretIncreaseFoodProduction2021]. Meaning that a full transition into crop systems, if ever possible, would sacrifice biodiversity of the agricultural landscape for only a limited gain of production.
 - Land use intensification leads to landscape homogenisation as it is not dictated anymore by environmental conditions but instead by market and technological progresses [@jongmanHomogenisationFragmentationEuropean2002]
 
 3. Small-scale grazing systems
@@ -64,7 +64,7 @@ Principles of traditional systems [@plieningerTraditionalLanduseNature2006]:
 - The primary function of agriculture (food production) of European cultural landscapes has declined in favour of other roles to match demands for recreation and nature conservation [@vosTrendsEuropeanCultural1999]
 - Northern meadows and Fennoscandian pastures fully dependent on agricultural management
 [@haladaWhichHabitatsEuropean2011]
-- All remaining high nature conservation value grasslands in Europe associated with low-intensity livestock systems (@bignalLowIntensityFarmingSystems1996)
+- All remaining high nature conservation value grasslands in Europe associated with low-intensity livestock systems [@bignalLowIntensityFarmingSystems1996]
 
 5. Norwegian fjord system
 
@@ -126,6 +126,44 @@ The potential drivers of the plant and beetle community were divided into 4 cate
 #| warning: true
 knitr::include_graphics("illustrations/NBR_FjordConcept.png")
 ```
+### The fjord system
+
+The fjords in Western Norway are characterized by undulating topography which grows sharper in the inner fjord area [STILL NEED TO DEFINE THESE AREAS AT SOME POINT?]. The following features can affect plant and beetle assemblages by filtering the *natural* species pool at wider scale:
+
+- the **elevation**: our study focused on grasslands in the "lowlands", thus the elevation gradient was limited with all of our sites located below 200 m. Yet, even at low level elevation can have an effect on local climate. including temperatures and precipitations [@zelnikPlantSpeciesDiversity2013].
+- the **annual precipitations**:
+- the **mean temperature of the warmer month**:
+- the **distance to sea**: fjords are first and foremost defined by the sea arms which enter deeply into the land. These geological formations greatly affect the local climate by constraining wind currents and clouds [REF].
+
+### The landscape matrix
+
+Land use being greatly constrained by the fjord topography, the agricultural landscape is usually diverse with woodlands and semi-managed outfields mixing with the grazing fields. The different habitat types around the site will affect the species pools and flows [REF]:
+
+- the **forest percent cover**: it is common for land owners in the fjord countryside to keep some forested areas for wood supply. The dominant assemblages should not be affected in case of limited forest surface cover, but a landscape mainly dominated by forest may affect the species pools of the fields.
+- the **wetland percent cover**: the fjords in Western Norway are well-irrigated thanks to a high precipitation level [REF]. Same as for the forest cover, it is likely that the common plant species pool will not be affected, but hygrophilous beetles (e.g. Hydrophilidae, Ptilidae) could be found in surrounding areas.
+- the **cultivated land percent cover**: small-scale farming involves a high variety of food production strategies to adapt to the productivity gradient, with a limited use of agricultural machinery [REF]. Cultivated land are usually represented by fodder crops and orchards, which could influence the dominant pool of forbs in the surrounding grazing fields.
+- the **outfield percent cover**: traditional grazing management in Western Norway revolved around the combined use of low productive outfields (usually heathlands or shrublands) and high productive infields, with biomass taken from the former in summer (e.g. heath mowing or summer grazing), to enrich the latter [REF]. There can be a fine line between outfields and infields, especially closer to the coast. A high cover of outfield would induce an overall lower productivity of the area.
+- the **infield percent cover**: infields correspond to more conventional grazing areas, such as meadows and pastures. In an infield-dominant landscape, we would expect the dominant plant and beetle pools to be relatively stable.
+
+### The grazing management
+
+To accommodate the constraining topography and the limited resources, grazing like farming practices are very diverse. Grazing is a well-studied habitat pressure which can trigger contrasting responses depending on its intensity and the local context [REF]:
+
+- the **type of livestock**: traditional grazing management in Western Norway used to rely on sheep breeding, but the livestock has been diversified with cow and goat flocks. Each type of livestock has distinct grazing patterns and diet preferences which can affect the plant community [REF]. The type of excretions, which differs a lot between ruminants and other herbivores, is also likely to influence the dung-beetle assemblage.
+- the **stocking density**: productivity being a major limiting factor in fjord areas, grazing systems in Western Norway can be qualified as extensive, even on the most productive infields. However, there will still be a gradient of intensity according to the type of grazer, the number of animals and the grazing area.
+- the **farm infield surface**: rotational grazing is an important component of small-scale farming. The farmer divides the area into smaller fields where the livestock stays on shorter periods and rotates regularly during the year. Higher rotational capacity in extensive management system entails a lower grazing intensity.
+- the **size of the field**: due to this rotational grazing system on a limiting topography, the size of each individual field can vary a lot between farms and within the same farm. A smaller field will be more sensitive to disturbances and to changes in species flows, and will be more subjected to edge effect [REF].
+
+### The fine-scale environment
+
+The last filters which apply to the plant and beetle assemblages would be the ones to define their immediate ecological niches, from both above- and below-ground [REF]:
+
+- the **slope**: the fjord landscape alternates between hills and dips. The steepness of a slope affects the soil erosion potential as well as the water streaming: a sharp hill will suffer from regular soil renewal and nutrient depletion, while a flat area will store higher water and carbon  content [@klimekPlantSpeciesRichness2007a; @zelnikPlantSpeciesDiversity2013].
+- the **aspect**: South- and East-facing slopes will receive more, and more intensive sunlight than West- and North-facing ones. The combined aspect and angle determine the heat load received by the slope [REF].
+- the **soil compaction**: soil structure plays a major role in plant root development, and subsequent exchanges within the rhizosphere [REF], and arthropod movements and potential cover against disturbance [REF]. Soil compaction, assessed with the measure of bulk density, usually increases with grazing intensity [REF]. Thick grass root mats can also stiffen the soil [REF], thus an in-field penetration test can provide complementary information to the regular bulk density measurement.
+- the **soil chemical composition**: nitrogen and phosphorus are the most studied plant limiting factors in agronomy [REF]. As high concentrations favor competitive fodder species, we can expect a correlation between nutrient load and dominant grass communities. Soil pH will affect the availability of nutrients by altering their chemical forms, and can therefore influence the plant species composition [@zelnikPlantSpeciesDiversity2013].
+- the **structural diversity**: available ecological niches for beetles are highly dependent of the heterogeneity of the aboveground biomass. It can be explained by feeding preferences (e.g. phytophagous) or strategies (e.g. hunters by sight) [REF]. Taller vegetation is usually associated with higher cover and more diverse niche potential [REF]. On the other hand, presence of very short vegetation patches or exposed ground will be important niches for some groups [REF].
+- the **soil moisture**: beetles are very sensitive to moisture gradients [REF] and some families such as Hydrophilidae and Ptilidae will be mainly hygrophilous [REF]. The bryophyte layer will help to maintain the ground humidity during the summer season [REF].
 
 
 ## Data collection
@@ -446,13 +484,13 @@ The aspect and the distance to sea are driving the first dimension, the slope dr
 ## No correlation between broad-scale variables and community compositions
 
 - For the landscape: as we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species -> low level of replication, low resolution
-- influence of broad-scale variables smaller if not invisible at small extent and grain (@siefertScaleDependenceVegetationenvironment2012)
-- strong effect of slope on meadows composition compared to pastures, where elevational gradient is substantially smaller (@klimekPlantSpeciesRichness2007a)
+- influence of broad-scale variables smaller if not invisible at small extent and grain [@siefertScaleDependenceVegetationenvironment2012]
+- strong effect of slope on meadows composition compared to pastures, where elevational gradient is substantially smaller [@klimekPlantSpeciesRichness2007a]
 
 ## Fine-scale effect
 
-- Edaphic parameters main drivers of plant species composition (@siefertScaleDependenceVegetationenvironment2012), especially pH (@zelnikPlantSpeciesDiversity2013).
-- Nitrogen fertilization: grasslands with *Stellaria media*, *Poa annua* & *Poa trivialis* positively correlated, while *Ranunculus acris*, *Trifolium pratense* and *Rumex acetosa* negatively correlated (@klimekPlantSpeciesRichness2007a)
+- Edaphic parameters main drivers of plant species composition [@siefertScaleDependenceVegetationenvironment2012], especially pH [@zelnikPlantSpeciesDiversity2013].
+- Nitrogen fertilization: grasslands with *Stellaria media*, *Poa annua* & *Poa trivialis* positively correlated, while *Ranunculus acris*, *Trifolium pratense* and *Rumex acetosa* negatively correlated [@klimekPlantSpeciesRichness2007a]
 
 
 # CONCLUSION
