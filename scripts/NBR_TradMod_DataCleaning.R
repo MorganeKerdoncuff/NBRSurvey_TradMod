@@ -443,7 +443,17 @@ landuse_full <- landuse_full |>
       ShellSandLime_freq == "sometimes", "occasionally", "no"
     )))
 
-# Replace NAs by "no"
+# Replace NAs by "no" in summary management columns only
+landuse_full <- landuse_full |> 
+  mutate_at(vars(starts_with("FM_")) & filter(
+                   SiteID != "IC2" |
+                SiteID != "US1" |
+                SiteID != "US2" |
+                SiteID != "US4" |
+                SiteID != "IS5" |
+                SiteID != "IG3"),
+            ~replace(is.na(.), "no"))
+
 landuse_full <- landuse_full |> 
   mutate_at(vars(starts_with("FM_")), ~replace(., is.na(.), "no"))
 
