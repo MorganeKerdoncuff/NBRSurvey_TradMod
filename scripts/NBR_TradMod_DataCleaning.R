@@ -1703,6 +1703,16 @@ test <- arthro_full |>
 #hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
 
 #
+## Table formatting for vegan beetle only (long table)
+beetle_full <- arthro_full |> 
+  pivot_longer(
+    cols = c(Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae),
+    names_to = "BeetleFamilies", 
+    values_to = "BeetleFam_abundance") |> 
+  mutate(PlotID = substr(SampleID, 1, 6)) |>
+  mutate(SiteID = substr(SampleID, 1, 3))
+
+#
 ## Table formatting for vegan (long table)
 arthro_full <- arthro_full |> 
   pivot_longer(
@@ -1719,6 +1729,7 @@ arthro_full <- arthro_full |>
 
 ## Export clean data in new excel file
 
+write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
 write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
 
 
