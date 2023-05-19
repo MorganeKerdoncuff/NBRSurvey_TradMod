@@ -1704,7 +1704,8 @@ test <- arthro_full |>
 
 #
 ## Table formatting for vegan beetle only (long table)
-beetle_full <- arthro_full |> 
+beetle_full <- subset(arthro_full, select = c(SiteID, SampleID, Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae))
+beetle_full <- beetle_full |> 
   pivot_longer(
     cols = c(Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae),
     names_to = "BeetleFamilies", 

@@ -30,7 +30,7 @@ soilbulk_full <- read.csv("data/cleandata/NBR_FullSoilBulk.csv", sep=",") # Clea
 soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clean soil chemistry data
 soilpene_full <- read.csv("data/cleandata/NBR_FullSoilPene.csv", sep=",") # Clean soil bulk density data
 vege_full <- read.csv("data/cleandata/NBR_FullPlantComm.csv", sep=",") # Clean plant community data
-arthro_full <- read.csv("data/cleandata/NBR_FullArtComm.csv", sep=",") # Clean arthropod community data
+beetle_full <- read.csv("data/cleandata/NBR_FullBeetleComm.csv", sep=",") # Clean arthropod community data
 
 
 #### DATA PREPARATION ####
@@ -52,7 +52,7 @@ soilbulk_grass <- filter(soilbulk_full, SiteID %in% siteinfo_grass$SiteID)
 soilchem_grass <- filter(soilchem_full, SiteID %in% siteinfo_grass$SiteID)
 soilpene_grass <- filter(soilpene_full, SiteID %in% siteinfo_grass$SiteID)
 vege_grass <- filter(vege_full, SiteID %in% siteinfo_grass$SiteID)
-arthro_grass <- filter(arthro_full, SiteID %in% siteinfo_grass$SiteID)
+beetle_grass <- filter(beetle_full, SiteID %in% siteinfo_grass$SiteID)
 
 #
 ## Summarise data at site level -> should be 30 observations for non community data
@@ -108,7 +108,7 @@ vege_grass <- vege_grass |>
   summarise(PlantSp_cover = mean(Abundance))
 
 # Beetle community - current at pitfall level -> summary by sum only main families
-arthro_grass <- arthro_grass |> 
+beetle_grass <- beetle_grass |> 
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE))
 
@@ -183,7 +183,7 @@ forb <- as.data.frame(forb)
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
 # Selection main dung beetle families
-beetle <- subset(arthro_grass,
+beetle <- subset(beetle_grass,
                  BeetleFamilies == "Carabidae" |
                    BeetleFamilies == "Staphylinidae" |
                    BeetleFamilies == "Hydrophilidae" |
