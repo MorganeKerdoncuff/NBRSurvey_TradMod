@@ -21,6 +21,7 @@ data/*
 
 #figures & output (excludes all figure files)
 outputs/*
+outreach/*
 *.png
 *.pdf
 *.jpeg
