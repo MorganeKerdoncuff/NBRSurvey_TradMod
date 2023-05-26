@@ -13,6 +13,8 @@ library(purrr) # Data manipulation: function "reduce" to bind several tables at 
 library(ggplot2) # Visual representation
 library(GGally) # Extension ggplot
 library(xlsx) #read & turn into xl
+library(vegan) # Species richness
+library(tibble) # row names to columns
 
 
 #### DATA LOADING ####
@@ -67,41 +69,184 @@ vege_outreach <- vege_outreach |>
   summarise(PlantSp_cover = mean(Abundance))
 
 # Beetle abundance
-arthro_outreach <- arthro_outreach %>% 
+beetle_outreach <- beetle_outreach %>% 
   group_by(SiteID, BeetleFamilies) %>% 
   summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE))
+
+#
+## Plant species richness
+
+vege_outreach <- vege_full |> 
+  group_by(SiteID, Species) |> 
+  summarise(PlantSp_cover = mean(Abundance))
+  
+vege_contin <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = vege_outreach)
+speciesrichness <- specnumber(vege_contin)
+speciesrichness <- as.data.frame(speciesrichness)
+speciesrichness <- tibble::rownames_to_column(speciesrichness, "SiteID")
 
 #  
 ## Summary dataset for GIS mapping
 
-Map_All <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, VGrichness_outreach, soilbulk_outreach, soilchem_outreach), dplyr::left_join)
+Map_All <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, VGrichness_outreach, speciesrichness, soilbulk_outreach, soilchem_outreach), dplyr::left_join)
 
-#Replace NA by zeros -> needed for QGIS, otherwise it treats the layer as character and does not want to apply a graduated aesthetics
+#
+## Boxplot plant species richness against animal for all habitats
+
+# Total plant richness on site
+totsrxanimal <- ggplot(Map_All, aes(x = as.factor(Type_livestock), y = speciesrichness, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species") +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        legend.position = "none")
+totsrxanimal
+
+# Mean plant richness per square meter
+meansrxanimal <- ggplot(Map_All, aes(x = as.factor(Type_livestock), y = MeanPlantRichness, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Mean number of species per square meter") +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        legend.position = "none")
+meansrxanimal
+
+#
+## Boxplot plant species richness against animal for grassland only
+
+# Total plant richness on grassland site
+grass_totsrxanimal <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = speciesrichness, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        legend.position = "none")
+grass_totsrxanimal
+ggsave("outreach/grass_totsrxanimal.png", plot = grass_totsrxanimal, width = 15, height = 17, units = "cm")
+
+# Mean plant richness per square meter in grasslands
+grass_meansrxanimal <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = MeanPlantRichness, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Mean number of species per square meter\n") +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        legend.position = "none")
+grass_meansrxanimal
+ggsave("outreach/grass_meansrxanimal.png", plot = grass_meansrxanimal, width = 15, height = 17, units = "cm")
+
+# Replace NA by zeros -> needed for QGIS, otherwise it treats the layer as character and does not want to apply a graduated aesthetics
 Map_All[is.na(Map_All)] <- 0
 
-#csv for QGIS map -> should write a new script !
-write.csv(Map_All, file = "NBRenv_AttributeTable.csv")
+# csv for QGIS map -> should write a new script !
+write.csv(Map_All, file = "outreach/NBRenv_AttributeTable.csv")
 
 
 #### Plant composition ####
 
-vege_outreach <- vege_full |> 
+# vege_outreach <- vege_full |> 
+#   group_by(SiteID, Species) |> 
+#   summarise(PlantSp_cover = mean(Abundance)) |> 
+#   filter(SiteID == "US6") |>
+#   filter(PlantSp_cover>0) |> 
+#   arrange(desc(PlantSp_cover))
+# summary(vege_outreach)
+
+#
+## Species trends against gradients
+
+# Plant vegetation table
+mainvgsp <- subset(vege_full,
+                Species == "Agrostis capillaris" |
+                  Species == "Festuca rubra" | 
+                  Species == "Holcus lanatus" | 
+                  Species == "Poa pratensis" | 
+                  Species == "Deschampsia cespitosa" | 
+                  Species == "Anthoxantum odoratum" | 
+                  Species == "Lolium perenne" | 
+                  Species == "Deschampsia flexuosa" |
+                  Species == "Poa trivialis" |
+                  Species == "Trifolium repens" |
+                  Species == "Rumex acetosa" |
+                  Species == "Galium saxatile" |
+                  Species == "Potentilla erecta" |
+                  Species == "Ranunculus repens" |
+                  Species == "Achillea millefolium")
+mainvgsp <- mainvgsp |> 
   group_by(SiteID, Species) |> 
-  summarise(PlantSp_cover = mean(Abundance)) |> 
-  filter(SiteID == "IC3") |>
-  filter(PlantSp_cover>0) |> 
-  arrange(desc(PlantSp_cover))
-summary(vege_outreach)
+  summarise(Abundance = mean(Abundance)) #|> 
+  #pivot_wider(names_from = Species, values_from = Abundance)
+mainvgsp <- left_join(mainvgsp, Map_All)
+mainvgsp <- filter(mainvgsp, Habitat == "permanent grassland")
+
+# Agrostis capillaris
+Agcap <- ggplot(filter(mainvgsp, Species == "Agrostis capillaris"), aes(x = pH, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+Agcap
+
+# Festuca rubra
+FesRu <- ggplot(filter(mainvgsp, Species == "Festuca rubra"), aes(x = pH, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+FesRu
+
+# Holcus lanatus
+HolLa <- ggplot(filter(mainvgsp, Species == "Holcus lanatus"), aes(x = pH, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+HolLa
+
+# Lolium perenne
+Loper <- ggplot(filter(mainvgsp, Species == "Lolium perenne"), aes(x = P.Al_mg.100g, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+Loper
+
+# Deschampsia flexuosa
+Desflex <- ggplot(filter(mainvgsp, Species == "Deschampsia flexuosa"), aes(x = P.Al_mg.100g, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+Desflex
+
+# Galium saxatile
+Galsax <- ggplot(filter(mainvgsp, Species == "Galium saxatile"), aes(x = P.Al_mg.100g, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+Galsax
+
+# Trifolium repens
+Trirep <- ggplot(filter(mainvgsp, Species == "Trifolium repens"), aes(x = TotalN_percentDM, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+Trirep
 
 #### Beetle composition ####
 
 beetle_outreach <- beetle_full |> 
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE)) |> 
-  filter(SiteID == "IC1") |> 
+  filter(SiteID == "US6") |> 
   arrange(desc(BeetleFam_abundance))
 #head(beetle_outreach)
 sum(beetle_outreach$BeetleFam_abundance)
+
+
 
 #### Soil analysis violins ####
 
