@@ -29,6 +29,7 @@ soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clea
 soilpene_full <- read.csv("data/cleandata/NBR_FullSoilPene.csv", sep=",") # Clean soil bulk density data
 vege_full <- read.csv("data/cleandata/NBR_FullPlantComm.csv", sep=",") # Clean plant community data
 beetle_full <- read.csv("data/cleandata/NBR_FullBeetleComm.csv", sep=",") # Clean arthropod community data
+mesobio_full <- read.csv("data/cleandata/NBR_FullMesobio.csv", sep=",") # Clean mesofauna community data
 
 
 #### DATA PREPARATION ####
@@ -61,7 +62,7 @@ soilbulk_outreach <- soilbulk_outreach %>%
 # Soil chemistry
 soilchem_outreach <- soilchem_outreach %>%
   group_by(SiteID) %>% 
-  summarise(LOI = mean(LOI), pH = mean(pH), P.Al_mg.100g = mean(P.Al_mg.100g), K.Al_mg.100g = mean(K.Al_mg.100g), Mg.Al_mg.100g = mean(Mg.Al_mg.100g), Ca.Al_mg.100g = mean(Ca.Al_mg.100g), Na.Al_mg.100g = mean(Na.Al_mg.100g), TotalN_percentDM = mean(TotalN_percentDM)) #missing OV1 (Oygarden) and UC1
+  summarise(LOI = mean(LOI), pH = mean(pH), P = mean(P.Al_mg.100g), K = mean(K.Al_mg.100g), Mg = mean(Mg.Al_mg.100g), Ca = mean(Ca.Al_mg.100g), Na = mean(Na.Al_mg.100g), TotN = mean(TotalN_percentDM)) #missing OV1 (Oygarden) and UC1
 
 # Plant abundance cover
 vege_outreach <- vege_outreach |> 
@@ -72,6 +73,11 @@ vege_outreach <- vege_outreach |>
 beetle_outreach <- beetle_outreach %>% 
   group_by(SiteID, BeetleFamilies) %>% 
   summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE))
+
+# Mesofauna
+mesobio_outreach <- mesobio_full |> 
+  group_by(SiteID) |> 
+  summarise(MeanAcari = mean(Acari), MeanCollembola = mean(Collembola))
 
 #
 ## Plant species richness
@@ -88,16 +94,25 @@ speciesrichness <- tibble::rownames_to_column(speciesrichness, "SiteID")
 #  
 ## Summary dataset for GIS mapping
 
-Map_All <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, VGrichness_outreach, speciesrichness, soilbulk_outreach, soilchem_outreach), dplyr::left_join)
+Map_All <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, landscape_full, VGrichness_outreach, speciesrichness, soilbulk_outreach, soilchem_outreach, beetle_outreach), dplyr::left_join)
+
+
+### Species richness ####
 
 #
 ## Boxplot plant species richness against animal for all habitats
+
+Map_All <- Map_All |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "cow" = "ku")) |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "sheep" = "sau")) |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "goat" = "geit")) 
+  
 
 # Total plant richness on site
 totsrxanimal <- ggplot(Map_All, aes(x = as.factor(Type_livestock), y = speciesrichness, fill = Type_livestock)) +
   geom_boxplot(alpha = 0.3) +
   scale_fill_grey(start = 0.1, end = 0.9) +
-  ylab("Total number of species") +
+  ylab("Antall artar\n") +
   theme_bw() +
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
@@ -124,7 +139,7 @@ meansrxanimal
 grass_totsrxanimal <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = speciesrichness, fill = Type_livestock)) +
   geom_boxplot(alpha = 0.3) +
   scale_fill_grey(start = 0.1, end = 0.9) +
-  ylab("Total number of species\n") +
+  ylab("Antall artar\n") +
   theme_bw() +
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
@@ -150,6 +165,32 @@ grass_meansrxanimal <- ggplot(filter(Map_All, Habitat == "permanent grassland"),
 grass_meansrxanimal
 ggsave("outreach/grass_meansrxanimal.png", plot = grass_meansrxanimal, width = 15, height = 17, units = "cm")
 
+#
+## Boxplot beetle family richness against animal for grassland only
+
+beetle_outreach <- beetle_full %>% 
+  group_by(SiteID, BeetleFamilies) %>% 
+  summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE)) |> 
+  pivot_wider(names_from = BeetleFamilies, values_from = BeetleFam_abundance)
+beetle_outreach <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, beetle_outreach, landuse_full, landscape_full), dplyr::left_join)
+
+# Total beetle x animals
+beetlexanimal <- ggplot(filter(beetle_outreach, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = Ptiliidae, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,500) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 20),
+        axis.text = element_text(size = 20),
+        legend.position = "none")
+beetlexanimal
+#ggsave("outreach/beetle_totsrxanimal.png", plot = beetle_totsrxanimal, width = 15, height = 17, units = "cm")
+
+
 # Replace NA by zeros -> needed for QGIS, otherwise it treats the layer as character and does not want to apply a graduated aesthetics
 Map_All[is.na(Map_All)] <- 0
 
@@ -157,15 +198,45 @@ Map_All[is.na(Map_All)] <- 0
 write.csv(Map_All, file = "outreach/NBRenv_AttributeTable.csv")
 
 
+#### Fjord x landscape ####
+
+# Make table
+FjoLand <- purrr::reduce(list(siteinfo_full, area20x20_full, landscape_full), dplyr::left_join)
+
+# Trend Forest x elevation
+ElevForest <- ggplot(filter(FjoLand, Habitat == "permanent grassland"), aes(x = Elevation_max, y = ProductiveForest_percent)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+ElevForest
+
+# Trend Infield x elevation
+ElevInfield <- ggplot(filter(FjoLand, Habitat == "permanent grassland"), aes(x = Elevation_max, y = Infield_percent)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+ElevInfield
+
+# Trend Outfield x elevation
+ElevOutfield <- ggplot(filter(FjoLand, Habitat == "permanent grassland"), aes(x = Elevation_max, y = Outfield_percent)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+ElevOutfield
+
+# Trend freshwater x elevation
+ElevWetland <- ggplot(filter(FjoLand, Habitat == "permanent grassland"), aes(x = Elevation_max, y = Freshwater_percent)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+ElevWetland
+
 #### Plant composition ####
 
-# vege_outreach <- vege_full |> 
-#   group_by(SiteID, Species) |> 
-#   summarise(PlantSp_cover = mean(Abundance)) |> 
-#   filter(SiteID == "US6") |>
-#   filter(PlantSp_cover>0) |> 
-#   arrange(desc(PlantSp_cover))
-# summary(vege_outreach)
+vege_outreach <- vege_full |>
+  group_by(Species) |>
+  summarise(PlantSp_cover = mean(Abundance)) |>
+  #filter(SiteID == "US6") |>
+  filter(PlantSp_cover>0) |>
+  arrange(desc(PlantSp_cover))
+summary(vege_outreach)
+head(vege_outreach)
 
 #
 ## Species trends against gradients
@@ -174,19 +245,10 @@ write.csv(Map_All, file = "outreach/NBRenv_AttributeTable.csv")
 mainvgsp <- subset(vege_full,
                 Species == "Agrostis capillaris" |
                   Species == "Festuca rubra" | 
-                  Species == "Holcus lanatus" | 
-                  Species == "Poa pratensis" | 
-                  Species == "Deschampsia cespitosa" | 
-                  Species == "Anthoxantum odoratum" | 
-                  Species == "Lolium perenne" | 
-                  Species == "Deschampsia flexuosa" |
-                  Species == "Poa trivialis" |
+                  Species == "Holcus lanatus" |
                   Species == "Trifolium repens" |
-                  Species == "Rumex acetosa" |
-                  Species == "Galium saxatile" |
-                  Species == "Potentilla erecta" |
-                  Species == "Ranunculus repens" |
-                  Species == "Achillea millefolium")
+                  Species == "Rhytidiadelphus squarrosus"
+              )
 mainvgsp <- mainvgsp |> 
   group_by(SiteID, Species) |> 
   summarise(Abundance = mean(Abundance)) #|> 
@@ -195,56 +257,95 @@ mainvgsp <- left_join(mainvgsp, Map_All)
 mainvgsp <- filter(mainvgsp, Habitat == "permanent grassland")
 
 # Agrostis capillaris
-Agcap <- ggplot(filter(mainvgsp, Species == "Agrostis capillaris"), aes(x = pH, y = Abundance)) +
+Agcap <- ggplot(filter(mainvgsp, Species == "Agrostis capillaris"), aes(x = ProductiveForest_percent, y = Abundance)) +
   geom_point() +
   stat_smooth(method = "lm")
 Agcap
 
 # Festuca rubra
-FesRu <- ggplot(filter(mainvgsp, Species == "Festuca rubra"), aes(x = pH, y = Abundance)) +
+FesRu <- ggplot(filter(mainvgsp, Species == "Festuca rubra"), aes(x = Infield_percent, y = Abundance)) +
   geom_point() +
   stat_smooth(method = "lm")
 FesRu
 
 # Holcus lanatus
-HolLa <- ggplot(filter(mainvgsp, Species == "Holcus lanatus"), aes(x = pH, y = Abundance)) +
+HolLa <- ggplot(filter(mainvgsp, Species == "Holcus lanatus"), aes(x = Outfield_percent, y = Abundance)) +
   geom_point() +
   stat_smooth(method = "lm")
 HolLa
 
-# Lolium perenne
-Loper <- ggplot(filter(mainvgsp, Species == "Lolium perenne"), aes(x = P.Al_mg.100g, y = Abundance)) +
-  geom_point() +
-  stat_smooth(method = "lm")
-Loper
-
-# Deschampsia flexuosa
-Desflex <- ggplot(filter(mainvgsp, Species == "Deschampsia flexuosa"), aes(x = P.Al_mg.100g, y = Abundance)) +
-  geom_point() +
-  stat_smooth(method = "lm")
-Desflex
-
-# Galium saxatile
-Galsax <- ggplot(filter(mainvgsp, Species == "Galium saxatile"), aes(x = P.Al_mg.100g, y = Abundance)) +
-  geom_point() +
-  stat_smooth(method = "lm")
-Galsax
-
 # Trifolium repens
-Trirep <- ggplot(filter(mainvgsp, Species == "Trifolium repens"), aes(x = TotalN_percentDM, y = Abundance)) +
+trirep <- ggplot(filter(mainvgsp, Species == "Trifolium repens"), aes(x = ProductiveForest_percent, y = Abundance)) +
   geom_point() +
   stat_smooth(method = "lm")
-Trirep
+trirep
+
+
+# Rhytidiadelphus sq
+rhysq <- ggplot(filter(mainvgsp, Species == "Rhytidiadelphus squarrosus"), aes(x = ProductiveForest_percent, y = Abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+rhysq
+
 
 #### Beetle composition ####
 
+# Dataset
 beetle_outreach <- beetle_full |> 
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE)) |> 
-  filter(SiteID == "US6") |> 
+  #filter(SiteID == "US6") |> 
   arrange(desc(BeetleFam_abundance))
 #head(beetle_outreach)
-sum(beetle_outreach$BeetleFam_abundance)
+#sum(beetle_outreach$BeetleFam_abundance)
+beetle_outreach <- left_join(beetle_outreach, soilchem_outreach)
+
+# Staph
+staph <- ggplot(filter(beetle_outreach, BeetleFamilies == "Staphylinidae"), aes(x = TotN, y = BeetleFam_abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+staph
+
+# Hydro
+hydro <- ggplot(filter(beetle_outreach, BeetleFamilies == "Hydrophilidae"), aes(x = TotN, y = BeetleFam_abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+hydro
+
+# Ptili
+ptili <- ggplot(filter(beetle_outreach, BeetleFamilies == "Ptiliidae"), aes(x = TotN, y = BeetleFam_abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+ptili
+
+# Scara
+scara <- ggplot(filter(beetle_outreach, BeetleFamilies == "Scarabaeidae"), aes(x = TotN, y = BeetleFam_abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+scara
+
+# Carab
+carab <- ggplot(filter(beetle_outreach, BeetleFamilies == "Carabidae"), aes(x = pH, y = BeetleFam_abundance)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+carab
+
+
+#### Soil mesofauna ####
+
+mesobio_outreach <- left_join(mesobio_outreach, soilchem_outreach)
+
+# Acari
+acari <- ggplot(mesobio_outreach, aes(x = P, y = MeanAcari)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+acari
+
+# Collembola
+collemb <- ggplot(mesobio_outreach, aes(x = P, y = MeanCollembola)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+collemb
 
 
 
@@ -399,7 +500,8 @@ PlotN_all <- subset(soilchem_outreach, select = c(NITROGEN)) %>%
 ViolinN_all <- ggplot(PlotN_all, aes(x=Variables, y=Rates, fill=Variables)) +
   geom_violin(width=1, size=0.2) +
   scale_fill_grey() +
-  geom_hline(yintercept=0.55, color="chartreuse3", size=5) +
+  geom_hline(yintercept=mean(PlotN_all$Rates), color="chartreuse3", size=5) +
+  #geom_hline(yintercept=median(PlotN_all$Rates), color="cornflowerblue", size=5) +
   #scale_color_viridis(discrete=TRUE) +
   theme(
     legend.position="none",
@@ -420,7 +522,8 @@ PlotpH_all <- subset(soilchem_outreach, select = c(pH)) %>%
   gather(key = "Variables", value = "Rates")
 ViolinpH_all <- ggplot(PlotpH_all, aes(x=Variables, y=Rates, fill=Variables)) +
   geom_violin(width=1, size=0.2) +
-  geom_hline(yintercept=5.1, color="chartreuse3", size=5) +
+  geom_hline(yintercept=mean(PlotpH_all$Rates), color="chartreuse3", size=5) +
+  #geom_hline(yintercept=median(PlotpH_all$Rates), color="cornflowerblue", size=5) +
   scale_fill_grey() +
   #scale_color_viridis(discrete=TRUE) +
   theme(
@@ -443,7 +546,8 @@ PlotP_all <- subset(soilchem_outreach, select = c(FOSFOR)) %>%
 ViolinP_all <- ggplot(PlotP_all, aes(x=Variables, y=Rates, fill=Variables)) +
   geom_violin(width=1, size=0.2) +
   scale_fill_grey() +
-  geom_hline(yintercept=2.75, color="chartreuse3", size=5) +
+  geom_hline(yintercept=mean(PlotP_all$Rates), color="chartreuse3", size=5) +
+  #geom_hline(yintercept=median(PlotP_all$Rates), color="cornflowerblue", size=5) +
   #scale_color_viridis(discrete=TRUE) +
   theme(
     legend.position="none",
@@ -465,7 +569,8 @@ PlotMg_all <- subset(soilchem_outreach, select = c(MAGNESIUM)) %>%
 ViolinMg_all <- ggplot(PlotMg_all, aes(x=Variables, y=Rates, fill=Variables)) +
   geom_violin(width=1, size=0.2) +
   scale_fill_grey() +
-  geom_hline(yintercept=15.5, color="chartreuse3", size=5) +
+  geom_hline(yintercept=mean(PlotMg_all$Rates), color="chartreuse3", size=5) +
+  #geom_hline(yintercept=median(PlotMg_all$Rates), color="cornflowerblue", size=5) +
   #scale_color_viridis(discrete=TRUE) +
   theme(
     legend.position="none",
@@ -487,7 +592,8 @@ PlotLOI_all <- subset(soilchem_outreach, select = c(GLØDETAP)) %>%
 ViolinLOI_all <- ggplot(PlotLOI_all, aes(x=Variables, y=Rates, fill=Variables)) +
   geom_violin(width=1, size=0.2) +
   scale_fill_grey() +
-  geom_hline(yintercept=32.05, color="chartreuse3", size=5) +
+  geom_hline(yintercept=mean(PlotLOI_all$Rates), color="chartreuse3", size=5) +
+  #geom_hline(yintercept=median(PlotLOI_all$Rates), color="cornflowerblue", size=5) +
   #scale_color_viridis(discrete=TRUE) +
   theme(
     legend.position="none",
