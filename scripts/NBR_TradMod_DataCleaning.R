@@ -31,6 +31,7 @@ poo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA
 vege_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichness") # plant community data, at species level
 arthro_main <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
 arthro_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
+mesobio_raw <- read_excel(path = "data/rawdata/NBR_RawMesobio.xlsx", na="NA")
 
 
 #### SITE INFO ####
@@ -1732,5 +1733,73 @@ arthro_full <- arthro_full |>
 
 write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
 write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
+
+
+
+#### Mesofauna abundance data ####
+
+## Description
+
+## List of variables
+
+# [1] Name of the counter
+# [2] Sample ID
+# [3] Acari abundance
+# [4] Collembola abundance
+# [5] Site ID
+# [6] Other observer ?
+
+
+#
+## Summary - Check table size, list of variables, variable types (num/chr)
+
+#str(mesobio_raw) # RAS
+
+#
+## Character cleaning, Common ID and correct Latin names for merging
+
+# Common ID
+names(mesobio_raw) <- gsub("Sample_name_on_pot", "SampleID", names(mesobio_raw))
+
+#
+## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+table(mesobio_raw$SiteID) # Missing IG3, OG2, OG3, OG5; IC3; tous les OC
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- mesobio_raw |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # All good
+
+# Check distribution of quantitative variable
+hist(mesobio_raw$Acari) # Poisson distribution
+hist(mesobio_raw$Collembola) # Poisson distribution
+
+#
+## Extract survey data only
+
+mesobio_full <- mesobio_raw |> 
+  filter(SiteID != "OY")
+
+#
+## Export clean data in new excel file
+
+write_csv(mesobio_full, "data/cleandata/NBR_FullMesobio.csv")
 
 
