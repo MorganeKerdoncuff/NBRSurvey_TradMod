@@ -1,0 +1,31 @@
+---
+title: "Grazing in Nordhordland UNESCO Biosphere Reserve"
+format: html
+author:
+  - name: Morgane Kerdoncuff
+execute: 
+  echo: false
+---
+
+The Nordhordland UNESCO Biosphere Reserve offers an optimal playground to study sustainable food production in Western Norway. Our research investigated the relationship between biodiversity, ecosystem services and livestock systems across the Biosphere Reserve.
+
+# Why grasslands are important
+
+Our grasslands are the results of traditional grazing management which has shaped the landscape of Nordhordland. Small-scale grazing systems are main drivers of the economical, cultural and ecological values of the Biosphere Reserve. Grasses provide all-year round fodder for the livestock and flowers supply nectar for a wide range of pollinators. Grasslands are reservoirs of biodiversity, hosting many species of plants, insects and birds. Some of these species, such as *sp* and *sp*, are "grassland specialists", meaning that they can only live in this habitat. Last but not least, blooming grasslands offer a stunning panorama that makes locals proud of their region and tourists happy to visit.
+
+# The grazing cycle
+
+```{r GrazingCycle}
+#| label: fig-grazingcycle
+#| out-width: "800px"
+#| fig-cap: "Cycle of nutrients and energy through livestock grazing"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/GrazingCycleProcessesLQ.png")
+```
+
+What happens in the grazing fields is mainly dependent of the domestic grazer. The animal removes biomass from the ground by feeding on the plants. After digestion, superfluous nutrients are rejected through the pee and the dung. The dung is slowly decomposed by coprophagous insects, which help to release the nutrients into the soil. Most well-known coprophagous insects are the so-called *dung beetles*, such as skarabider, but also some species of vasskjær and åtselbiller. A healthy soil is not compacted, so the mesofauna and the microorganisms have enough space and oxygen to recycle the nutrients. Once recycled, the nutrients are good to be taken by the plant roots and will make the grasses and forbs grow, on which the animal will feed.
+
+# How the animal influence the grassland
+
+When animals feed on the vegetation, they select the most palatable species for themselves. Cows, sheep and goats have different preferences, even if they can share a common diet: cows will select grasses and will graze at higher level from the ground; sheep will eat more forbs and will graze at ground level; goats will browse on shrubs and can aim for high parts of the plant. From these behaviours alone, a field can look completely different whether it is grazed by cows, sheep or goats.
