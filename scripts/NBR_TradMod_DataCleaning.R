@@ -11,7 +11,10 @@
 library(tidyverse) #R language
 library(readxl) #read xl files
 library(lubridate) #standard date data
-
+#library(raster) # work with raster files -> soon outdated, replaced by terra
+#library(rgdal) # work with raster files -> soon outdated
+library(terra) # work with raster files
+library(purrr) # merging several files at the same time
 
 #### DATA LOADING ####
 
@@ -1728,7 +1731,7 @@ arthro_full <- arthro_full |>
   mutate(PlotID = substr(SampleID, 1, 6)) |>
   mutate(SiteID = substr(SampleID, 1, 3))
 
-
+#
 ## Export clean data in new excel file
 
 write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
@@ -1802,4 +1805,160 @@ mesobio_full <- mesobio_raw |>
 
 write_csv(mesobio_full, "data/cleandata/NBR_FullMesobio.csv")
 
+
+#### Climate data ####
+
+#
+## Description
+
+# Import and transformation of daily temperature and precipitation data from MET into yearly averages
+# Type of data - 1 km x 1km
+# Variables
+## Daily precipitation
+## Daily maximum temperature
+## Daily minimum temperature
+
+#
+## Prepare coordinates
+
+# Subset from site info file + simplification col names
+sitecoord <- subset(siteinfo_full, select = c(SiteID, EPSG.25832_X, EPSG.25832_Y))
+names(sitecoord) <- gsub("EPSG.25832_X", "Xsite", names(sitecoord))
+names(sitecoord) <- gsub("EPSG.25832_Y", "Ysite", names(sitecoord))
+
+# Create column id which will allow binding with raster analysis results
+sitecoord <- sitecoord |> 
+  mutate(ID = 1:n()) |> 
+  select(ID, everything())
+
+#
+## Precipitation data
+
+# Make function
+
+# Import tiff files according to year
+preci_list2010 <- list.files(path = "./data/precipitationraster", pattern= '2010.*\\.tif$', all.files=TRUE, full.names=TRUE) # pattern equal to : contains exactly '2010', then 0 or x characters, then exactly '.tif' and nothing after
+preci_list2011 <- list.files(path = "./data/precipitationraster", pattern= '2011.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2012 <- list.files(path = "./data/precipitationraster", pattern= '2012.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2013 <- list.files(path = "./data/precipitationraster", pattern= '2013.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2014 <- list.files(path = "./data/precipitationraster", pattern= '2014.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2015 <- list.files(path = "./data/precipitationraster", pattern= '2015.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2016 <- list.files(path = "./data/precipitationraster", pattern= '2016.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2017 <- list.files(path = "./data/precipitationraster", pattern= '2017.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2018 <- list.files(path = "./data/precipitationraster", pattern= '2018.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2019 <- list.files(path = "./data/precipitationraster", pattern= '2019.*\\.tif$', all.files=TRUE, full.names=TRUE)
+preci_list2020 <- list.files(path = "./data/precipitationraster", pattern= '2020.*\\.tif$', all.files=TRUE, full.names=TRUE)
+
+# Import raster files within one object
+#preci_daily2010 <- stack(preci_list2010) # base raster, slower
+preci_daily2010 <- terra::rast(preci_list2010) #faster, but needs following terra method and not standard raster
+preci_daily2011 <- terra::rast(preci_list2011)
+preci_daily2012 <- terra::rast(preci_list2012)
+preci_daily2013 <- terra::rast(preci_list2013)
+preci_daily2014 <- terra::rast(preci_list2014)
+preci_daily2015 <- terra::rast(preci_list2015)
+preci_daily2016 <- terra::rast(preci_list2016)
+preci_daily2017 <- terra::rast(preci_list2017)
+preci_daily2018 <- terra::rast(preci_list2018)
+preci_daily2019 <- terra::rast(preci_list2019)
+preci_daily2020 <- terra::rast(preci_list2020)
+
+# Calculate yearly value
+preci_yearly2010 <- terra::app(preci_daily2010, sum, NA.RM = TRUE)
+#preci_mean2010 <- calc(preci_daily2010, mean, NA.RM = TRUE)
+#plot(preci_yearly2010)
+preci_yearly2011 <- terra::app(preci_daily2011, sum, NA.RM = TRUE)
+preci_yearly2012 <- terra::app(preci_daily2012, sum, NA.RM = TRUE)
+preci_yearly2013 <- terra::app(preci_daily2013, sum, NA.RM = TRUE)
+preci_yearly2014 <- terra::app(preci_daily2014, sum, NA.RM = TRUE)
+preci_yearly2015 <- terra::app(preci_daily2015, sum, NA.RM = TRUE)
+preci_yearly2016 <- terra::app(preci_daily2016, sum, NA.RM = TRUE)
+preci_yearly2017 <- terra::app(preci_daily2017, sum, NA.RM = TRUE)
+preci_yearly2018 <- terra::app(preci_daily2018, sum, NA.RM = TRUE)
+preci_yearly2019 <- terra::app(preci_daily2019, sum, NA.RM = TRUE)
+preci_yearly2020 <- terra::app(preci_daily2020, sum, NA.RM = TRUE)
+
+# Check if all sites covered
+#precipitation2010 <- as.data.frame(terra::extract(preci_yearly2010, subset(siteinfo_full, select = c(EPSG.25832_X, EPSG.25832_Y))))
+
+# Fill missing cell with average from closest cells
+fullpreci_yearly2010 <- terra::focal(preci_yearly2010, w=7, fun = "mean", na.policy = "only")
+#plot(fullpreci_yearly2010)
+fullpreci_yearly2011 <- terra::focal(preci_yearly2011, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2012 <- terra::focal(preci_yearly2012, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2013 <- terra::focal(preci_yearly2013, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2014 <- terra::focal(preci_yearly2014, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2015 <- terra::focal(preci_yearly2015, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2016 <- terra::focal(preci_yearly2016, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2017 <- terra::focal(preci_yearly2017, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2018 <- terra::focal(preci_yearly2018, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2019 <- terra::focal(preci_yearly2019, w=7, fun = "mean", na.policy = "only")
+fullpreci_yearly2020 <- terra::focal(preci_yearly2020, w=7, fun = "mean", na.policy = "only")
+
+# Average annual precipitation from 2010 to 2020
+list_allpreci_yearly <- terra::as.list(fullpreci_yearly2010, fullpreci_yearly2011, fullpreci_yearly2012, fullpreci_yearly2013, fullpreci_yearly2014, fullpreci_yearly2015, fullpreci_yearly2016, fullpreci_yearly2017, fullpreci_yearly2018, fullpreci_yearly2019, fullpreci_yearly2020)
+allpreci_yearly <- terra::rast(list_allpreci_yearly)
+averagepreci <- terra::app(allpreci_yearly, mean, NA.RM = TRUE)
+
+# Extract yearly values for NBR site coordinates
+precipitation <- as.data.frame(terra::extract(averagepreci, subset(sitecoord, select = c(Xsite, Ysite))))
+names(precipitation) <- gsub("mean", "annualprecipitation", names(precipitation))
+
+#
+## Max temperature data
+
+# Import tiff files according to July month
+maxtemp_listJuly <- list.files(path = "./data/maxtempraster", pattern= '_07_.*\\.tif$', all.files=TRUE, full.names=TRUE)
+
+# Import raster files within one object
+maxtemp_dailyJuly <- terra::rast(maxtemp_listJuly)
+
+# Calculate mean
+maxtemp_meanJuly <- terra::app(maxtemp_dailyJuly, mean, NA.RM = TRUE)
+plot(maxtemp_meanJuly)
+
+# Fill missing cell with average from closest cells
+fullmaxtemp_meanJuly <- terra::focal(maxtemp_meanJuly, w=7, fun = "mean", na.policy = "only")
+plot(fullmaxtemp_meanJuly)
+
+# Extract mean values for NBR site coordinates
+maxtempjuly <- as.data.frame(terra::extract(fullmaxtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
+names(maxtempjuly) <- gsub("focal_mean", "maxtemp_July", names(maxtempjuly))
+
+#
+## Min temperature data
+
+# Import tiff files according to January month
+mintemp_listJan <- list.files(path = "./data/mintempraster", pattern= '_01_.*\\.tif$', all.files=TRUE, full.names=TRUE)
+
+# Import raster files within one object
+mintemp_dailyJan <- terra::rast(mintemp_listJan)
+
+# Calculate mean
+mintemp_meanJan <- terra::app(mintemp_dailyJan, mean, NA.RM = TRUE)
+plot(mintemp_meanJan)
+
+# Fill missing cell with average from closest cells
+fullmintemp_meanJan <- terra::focal(mintemp_meanJan, w=7, fun = "mean", na.policy = "only")
+plot(fullmintemp_meanJan)
+
+# Extract mean values for NBR site coordinates
+mintempJan <- as.data.frame(terra::extract(fullmintemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
+names(mintempJan) <- gsub("focal_mean", "mintemp_Jan", names(mintempJan))
+
+#
+## Preparation final dataset
+
+# Merging all climate results
+climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintempJan), dplyr::left_join)
+
+# Rescaling - original data at 0.1 scale - temp conversion to C
+climate_full <- climate_full |> 
+  mutate(annualprecipitation = annualprecipitation/10,
+         maxtemp_July = maxtemp_July/100-273.15,
+         mintemp_Jan = mintemp_Jan/100-273.15)
+
+# Clean data + export in csv
+climate_full <- subset(climate_full, select = -c(ID, id, Xsite, Ysite))
+write_csv(climate_full, "data/cleandata/NBR_FullClimate.csv")
 
