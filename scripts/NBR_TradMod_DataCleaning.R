@@ -1828,8 +1828,8 @@ names(sitecoord) <- gsub("EPSG.25832_Y", "Ysite", names(sitecoord))
 
 # Create column id which will allow binding with raster analysis results
 sitecoord <- sitecoord |> 
-  mutate(ID = 1:n()) |> 
-  select(ID, everything())
+  mutate(ID = 1:n()) #|> 
+  #select(ID, everything())
 
 #
 ## Precipitation data
@@ -1902,7 +1902,7 @@ averagepreci <- terra::app(allpreci_yearly, mean, NA.RM = TRUE)
 
 # Extract yearly values for NBR site coordinates
 precipitation <- as.data.frame(terra::extract(averagepreci, subset(sitecoord, select = c(Xsite, Ysite))))
-names(precipitation) <- gsub("mean", "annualprecipitation", names(precipitation))
+names(precipitation) <- gsub("mean", "AnnualPrecipitation", names(precipitation))
 
 #
 ## Max temperature data
@@ -1923,7 +1923,7 @@ plot(fullmaxtemp_meanJuly)
 
 # Extract mean values for NBR site coordinates
 maxtempjuly <- as.data.frame(terra::extract(fullmaxtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
-names(maxtempjuly) <- gsub("focal_mean", "maxtemp_July", names(maxtempjuly))
+names(maxtempjuly) <- gsub("focal_mean", "MaxTempJuly", names(maxtempjuly))
 
 #
 ## Min temperature data
@@ -1944,7 +1944,7 @@ plot(fullmintemp_meanJan)
 
 # Extract mean values for NBR site coordinates
 mintempJan <- as.data.frame(terra::extract(fullmintemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
-names(mintempJan) <- gsub("focal_mean", "mintemp_Jan", names(mintempJan))
+names(mintempJan) <- gsub("focal_mean", "MinTempJan", names(mintempJan))
 
 #
 ## Preparation final dataset
@@ -1954,11 +1954,11 @@ climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintem
 
 # Rescaling - original data at 0.1 scale - temp conversion to C
 climate_full <- climate_full |> 
-  mutate(annualprecipitation = annualprecipitation/10,
-         maxtemp_July = maxtemp_July/100-273.15,
-         mintemp_Jan = mintemp_Jan/100-273.15)
+  mutate(annualprecipitation = AnnualPrecipitation/10,
+         MaxTempJuly = MaxTempJuly/100-273.15,
+         MinTempJan = MinTempJan/100-273.15)
 
 # Clean data + export in csv
-climate_full <- subset(climate_full, select = -c(ID, id, Xsite, Ysite))
+climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
 write_csv(climate_full, "data/cleandata/NBR_FullClimate.csv")
 
