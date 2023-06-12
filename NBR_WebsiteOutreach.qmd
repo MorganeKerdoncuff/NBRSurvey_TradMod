@@ -1,17 +1,19 @@
 ---
-title: "Grazing in Nordhordland UNESCO Biosphere Reserve"
-format: html
+title: "Domestic grazers in Nordhordland UNESCO Biosphere Reserve"
+format: docx
 author:
   - name: Morgane Kerdoncuff
 execute: 
   echo: false
 ---
 
-The Nordhordland UNESCO Biosphere Reserve offers an optimal playground to study sustainable food production in Western Norway. Our research investigated the relationship between biodiversity, ecosystem services and livestock systems across the Biosphere Reserve.
+<!-- The Nordhordland UNESCO Biosphere Reserve offers a great playground to study sustainable food production in Western Norway. Our research investigated the relationship between biodiversity, ecosystem services and livestock systems across the Biosphere Reserve. -->
+In our research, we investigated the relationship between domestic grazers and biodiversity in grazing fields of the Nordhordland UNESCO Biosphere Reserve. What is the difference between sheep, cows and goats, and how it affects the plants, insects and soil of the fields?
 
-# Why grasslands are important
+# Why grazing fields are important?
 
-Our grasslands are the results of traditional grazing management which has shaped the landscape of Nordhordland. Small-scale grazing systems are main drivers of the economical, cultural and ecological values of the Biosphere Reserve. Grasses provide all-year round fodder for the livestock and flowers supply nectar for a wide range of pollinators. Grasslands are reservoirs of biodiversity, hosting many species of plants, insects and birds. Some of these species, such as *sp* and *sp*, are "grassland specialists", meaning that they can only live in this habitat. Last but not least, blooming grasslands offer a stunning panorama that makes locals proud of their region and tourists happy to visit.
+Our grazing fields are the results of traditional grazing management which has shaped the landscape of Nordhordland. Small-scale grazing systems are main drivers of the economical, cultural and ecological values of the Biosphere Reserve. Grasses provide all-year round fodder for the livestock and flowers supply nectar for a wide range of pollinators. Grasslands are reservoirs of biodiversity, hosting many species of plants, insects and birds, and offer a stunning panorama that makes locals proud of their region and tourists happy to visit.
+<!-- Some of these species, such as *sp* and *sp*, are "grassland specialists", meaning that they can only live in this habitat. -->
 
 # The grazing cycle
 
@@ -24,8 +26,81 @@ Our grasslands are the results of traditional grazing management which has shape
 knitr::include_graphics("illustrations/GrazingCycleProcessesLQ.png")
 ```
 
-What happens in the grazing fields is mainly dependent of the domestic grazer. The animal removes biomass from the ground by feeding on the plants. After digestion, superfluous nutrients are rejected through the pee and the dung. The dung is slowly decomposed by coprophagous insects, which help to release the nutrients into the soil. Most well-known coprophagous insects are the so-called *dung beetles*, such as skarabider, but also some species of vasskjær and åtselbiller. A healthy soil is not compacted, so the mesofauna and the microorganisms have enough space and oxygen to recycle the nutrients. Once recycled, the nutrients are good to be taken by the plant roots and will make the grasses and forbs grow, on which the animal will feed.
+What happens in the grazing fields is mainly dependent of the domestic grazer. The animal removes biomass from the ground by feeding on the plants. When animals feed on the vegetation, they select the most palatable species for themselves. Cows, sheep and goats have different preferences, even if they can share a common diet: cows will select grasses and will graze at higher level from the ground; sheep will eat more forbs and will graze at ground level; goats will browse on shrubs and can aim for high parts of the plant.
 
-# How the animal influence the grassland
+After digestion, superfluous nutrients are rejected through the pee and the dung. The dung is slowly decomposed by coprophagous insects, which help to release the nutrients into the soil. Most well-known coprophagous insects are the so-called *dung beetles*. A healthy soil is not compacted, so the mesofauna and the microorganisms have enough space and oxygen to recycle the nutrients. Once recycled, the nutrients are good to be taken by the plant roots and will make the grasses and forbs grow, on which the animal will feed.
+<!-- From these behaviours alone, a field can look completely different whether it is grazed by cows, sheep or goats. -->
 
-When animals feed on the vegetation, they select the most palatable species for themselves. Cows, sheep and goats have different preferences, even if they can share a common diet: cows will select grasses and will graze at higher level from the ground; sheep will eat more forbs and will graze at ground level; goats will browse on shrubs and can aim for high parts of the plant. From these behaviours alone, a field can look completely different whether it is grazed by cows, sheep or goats.
+# What makes Nordhordland grazing fields special?
+
+The farms of the Nordhordland Biosphere Reserve are nested within the fjord, and farmers have learnt to adapt their management to this distinctive environment. On the coast and in the mountains, the soil is poorer and the vegetation, mainly made of heath, is less nutritious. Only traditional breeds, such as gammelnorsksau, can graze all year round in these outfields. On the coast, farmers combine sheep grazing with rotational prescribed burning to rejuvenate the heath and make it more palatable for the animals. In the mountains, the alpine heaths are used for summer farming and local goat cheese production. In-between the coast and the mountains, the hilly fjord region is more productive thanks to deeper and richer soil. It is in this area that we find most infields with many different grazers, such as cows, goats, sheep and even lamas!
+
+Because of this diversity of environments, livestock and management practices, every field in the Nordhordland Biosphere Reserve is unique! This ecological diversity has never been documented before, while it would represent very valuable data for the managers of the Biosphere Reserve and for the farmers themselves. This is the task we decided to take upon!
+
+<!-- ```{r GrazingFjord} -->
+<!-- #| label: fig-grazingfjord -->
+<!-- #| out-width: "800px" -->
+<!-- #| fig-cap: "Grazing in the fjord" -->
+<!-- #| message: true -->
+<!-- #| warning: true -->
+<!-- knitr::include_graphics("illustrations/NBR_SimplifiedFjordConcept.png") -->
+<!-- ``` -->
+
+# The results of our Nordhordland field ecological survey
+
+```{r MapSites}
+#| label: fig-mapsites
+#| out-width: "800px"
+#| fig-cap: "Location of the fields we surveyed"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_OutreachGrazersMap.png")
+```
+
+In summer 2019 and 2020, we visited 45 fields across the Nordhordland Biosphere Reserve. We collected many samples of different kinds: we looked at the plant species, the dung beetle groups, the soil compaction, the soil fauna and the soil nutrients. We also interviewed the farmers about their management practices.
+<!-- and we collected additional climatic and topographical data to characterise the field's surroundings. -->
+
+## Fields grazed by cows
+
+Fields grazed by cows were the most productive: there are where we found higher concentrations of nitrogen and phosphorus in the soil. Nitrogen and phosphorus are important nutrients for the plants to grow. They are called "limiting factors", as they are both absolutely essential for plant growth and they are not interchangeable. It means that if there is a high concentration of nitrogen in a field but a low concentration of phosphorus, the productivity will be low and the surplus of nitrogen will be lost with water streaming at the first rain.
+
+Grasslands grazed by cows were also the ones with the highest proportion of grasses. Grasses are usually dominant in productive fields with nutrient-rich soils. They are the most nutritional fodder for domestic livestock, but not all grasses have the same fodder values. For example, engrapp and engkvein are good food for the animals, unlike sølvbunke and raudsvingel. Some highly nutritious species such as raigras do not grow naturally on grasslands, so they need to be sown by the farmer.
+
+## Fields grazed by sheep
+
+We visited many different fields grazed by sheep, including coastal heathlands, grasslands in the fjord and subalpine heathlands. If outfields were obviously less-productive than infields, they were on the other hand more species-rich. In heathlands we find a lot of different mosses, which are important for maintaining the soil water balance. Heath also provides good food resource for wild pollinators, such as bumblebees, and for honeybees, which allow local honey production on the coast.
+
+Infields grazed by sheep had the highest abundance of dung beetles. Most well-known dung beetles are skarabider, but in reality other beetle groups also participate. Skarabider are good for decomposing big chunks of dung, but smaller beetles, such as vasskjær and fjørvingar, are needed to decompose fine dung matters. Therefore, for an optimal recycling of nutrients, it is not only necessary to have many dung beetles but they should also belong to different groups.
+
+## Fields grazed by goats
+
+Fields grazed by goats had on average the highest number of plant species. Goats have a very diverse diet as they can feed on almost all types of fodder, such as grasses, forbs or shrubs. That is why farmers often put them on mixed fields to prevent shrub or tree encroachment. Goats are also very handy to access remote areas, so they would graze less intensively the flat and more accessible part of the infields than sheep or cows.
+
+Fields grazed by goats were also the ones with the highest abundance of soil fauna. Soil is a quite complex system, where bacteria and small bugs need enough space and oxygen to interact with nutrients and plant roots. The more compact is the soil, the more difficult it will be for the fauna to survive and move freely. The most well-known decomposers are earthworms, but in the same way as skarabider for the dung, they are mostly good for decomposing big chunks of organic matter. To decompose fine elements, smaller animals such as spretthaler or midd are needed.
+
+```{r FunctionSpecies}
+#| label: fig-functionspecies
+#| out-width: "800px"
+#| fig-cap: "Biodiversity found in the fields of the Nordhordland Biosphere Reserve"
+#| message: true
+#| warning: true
+knitr::include_graphics("illustrations/NBR_OutreachSpecies.png")
+```
+
+
+# Conclusion
+
+Thanks to the diversity livestock and farming practices, each grazing field contributes to the ecological uniqueness of the Nordhordland Biosphere Reserve. Our research also showed the importance of investigating all ends of the grazing cycle to assess the influence of the different animals. All types of livestock are interesting for both farmers and nature in their own ways. Mixed livestock systems therefore look like the most optimal farming strategy in Nordhordland.
+
+<!-- The plants and insects living in the fields are also highly dependent on what is belowground. As shown by the grazing cycle, soil health is very important for field productivity.  Therefore, it is sensitive not only to environmental conditions but also to the farmer management. -->
+
+
+<!-- Results: -->
+<!-- - cows have different composition than sheep and goats -> more grasses -->
+<!-- - sites on outer fjord area with higher forage value -->
+<!-- - in grasslands, sites grazed by goats have on average more different species -->
+<!-- - for sheep grazing, heathland are more species-rich than grasslands -->
+<!-- - sheep with more beetles compared to other animals -->
+<!-- - mesofauna overall more abundant in permanent grasslands -->
+<!-- - mesofauna overall more abundant with goats -->
+<!-- - cows with higher nitrogen, phosphorus -->

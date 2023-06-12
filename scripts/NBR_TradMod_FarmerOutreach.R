@@ -20,6 +20,7 @@ library(tibble) # row names to columns
 #### DATA LOADING ####
 
 siteinfo_full <- read.csv("data/cleandata/NBR_FullSiteInfo.csv", sep=",") # Clean site info data
+climate_full <- read.csv("data/cleandata/NBR_FullClimate.csv", sep=",") # Clean climate data
 landscape_full <- read.csv("data/cleandata/NBR_FullLandscape.csv", sep=",") # Clean landscape matrix data
 landuse_full <- read.csv("data/cleandata/NBR_FullLanduse.csv", sep=",") # Clean field management data
 area20x20_full <- read.csv("data/cleandata/NBR_FullArea20x20.csv", sep=",") # Clean sampling area 20mx20m data
@@ -38,6 +39,7 @@ mesobio_full <- read.csv("data/cleandata/NBR_FullMesobio.csv", sep=",") # Clean 
 ## Variables extraction
 
 siteinfo_outreach <- subset(siteinfo_full, select = c(SiteID, Type_livestock, Habitat, EPSG.25832_X, EPSG.25832_Y))
+climate_outreach <- climate_full
 area20x20_outreach <- subset(area20x20_full, select = c(SiteID, Elevation_max))
 VGrichness_outreach <- subset(groundcover_full, select = c(SiteID, Plant_species_richness))
 soilbulk_outreach <- subset(soilbulk_full, select = c(SiteID, BD))
@@ -94,7 +96,7 @@ speciesrichness <- tibble::rownames_to_column(speciesrichness, "SiteID")
 #  
 ## Summary dataset for GIS mapping
 
-Map_All <- purrr::reduce(list(siteinfo_outreach, area20x20_outreach, landscape_full, VGrichness_outreach, speciesrichness, soilbulk_outreach, soilchem_outreach, beetle_outreach), dplyr::left_join)
+Map_All <- purrr::reduce(list(siteinfo_outreach, climate_outreach, area20x20_outreach, landscape_full, VGrichness_outreach, speciesrichness, soilbulk_outreach, soilchem_outreach, beetle_outreach, mesobio_outreach), dplyr::left_join)
 
 
 ### Species richness ####
@@ -133,6 +135,23 @@ meansrxanimal <- ggplot(Map_All, aes(x = as.factor(Type_livestock), y = MeanPlan
 meansrxanimal
 
 #
+## Boxplot plant species richness against habitat for sheep only
+
+# Total plant richness on heathland site
+sheep_totsrxhabitat <- ggplot(filter(Map_All, Type_livestock == "sau"), aes(x = as.factor(Habitat), y = speciesrichness, fill = Habitat)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Antall artar\n") +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 10),
+        axis.text = element_text(size = 10),
+        legend.position = "none")
+sheep_totsrxhabitat
+
+#
 ## Boxplot plant species richness against animal for grassland only
 
 # Total plant richness on grassland site
@@ -165,8 +184,10 @@ grass_meansrxanimal <- ggplot(filter(Map_All, Habitat == "permanent grassland"),
 grass_meansrxanimal
 ggsave("outreach/grass_meansrxanimal.png", plot = grass_meansrxanimal, width = 15, height = 17, units = "cm")
 
+
+
 #
-## Boxplot beetle family richness against animal for grassland only
+## Boxplot beetle abundance against animal for grassland only
 
 beetle_outreach <- beetle_full %>% 
   group_by(SiteID, BeetleFamilies) %>% 
@@ -179,7 +200,7 @@ beetlexanimal <- ggplot(filter(beetle_outreach, Habitat == "permanent grassland"
   geom_boxplot(alpha = 0.3) +
   scale_fill_grey(start = 0.1, end = 0.9) +
   ylab("Total number of species\n") +
-  #ylim(0,500) +
+  ylim(0,1000) +
   theme_bw() +
   theme(panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
@@ -190,6 +211,119 @@ beetlexanimal <- ggplot(filter(beetle_outreach, Habitat == "permanent grassland"
 beetlexanimal
 #ggsave("outreach/beetle_totsrxanimal.png", plot = beetle_totsrxanimal, width = 15, height = 17, units = "cm")
 
+#
+## Boxplot mesofauna abundance in sheep fields against habitat
+
+# Springtails
+springtailxhabitat <- ggplot(filter(Map_All, Type_livestock == "sau"), aes(x = as.factor(Habitat), y = MeanCollembola, fill = Habitat)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+springtailxhabitat
+
+# Acari
+acarixhabitat <- ggplot(filter(Map_All, Type_livestock == "sau"), aes(x = as.factor(Habitat), y = MeanAcari, fill = Habitat)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+acarixhabitat
+
+#
+## Boxplot mesofauna abundance in grasslands against animal
+
+# Springtails
+springtailxlivestock <- ggplot(filter(Map_All, SiteID == "IC1"| SiteID == "IC2"| SiteID == "IG1"| SiteID == "IG2"| SiteID == "IS1"| SiteID == "IS2"), aes(x = as.factor(Type_livestock), y = MeanCollembola, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+springtailxlivestock
+
+# Acari
+acarixlivestock <- ggplot(filter(Map_All, SiteID == "IC1"| SiteID == "IC2"| SiteID == "IG1"| SiteID == "IG2"| SiteID == "IS1"| SiteID == "IS2"), aes(x = as.factor(Type_livestock), y = MeanAcari, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+acarixlivestock
+
+#
+## Boxplot nutrients in grasslands against animal
+
+# Nitrogen
+nitrogenxlivestock <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = TotN, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+nitrogenxlivestock
+
+# Phosphorus
+phosphorusxlivestock <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = P, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+phosphorusxlivestock
+
+# Mean bulk density
+BDxlivestock <- ggplot(filter(Map_All, Habitat == "permanent grassland"), aes(x = as.factor(Type_livestock), y = MeanBulkDensity, fill = Type_livestock)) +
+  geom_boxplot(alpha = 0.3) +
+  scale_fill_grey(start = 0.1, end = 0.9) +
+  #ylab("Total number of species\n") +
+  #ylim(0,1000) +
+  theme_bw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.title.x = element_blank(),
+        #axis.title.y = element_text(size = 20),
+        #axis.text = element_text(size = 20),
+        legend.position = "none")
+BDxlivestock
 
 # Replace NA by zeros -> needed for QGIS, otherwise it treats the layer as character and does not want to apply a graduated aesthetics
 Map_All[is.na(Map_All)] <- 0
@@ -377,6 +511,54 @@ alpineheath <- siteinfo_outreach |>
 soilchem_grassland <- filter(soilchem_outreach, SiteID %in% grassland$SiteID)
 soilchem_coastalheath <- filter(soilchem_outreach, SiteID %in% coastalheath$SiteID)
 soilchem_alpineheath <- filter(soilchem_outreach, SiteID %in% alpineheath$SiteID)
+
+#
+## Bulk density
+
+# All sites
+PlotBD_all <- subset(Map_All, select = c(MeanBulkDensity)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinBD_all <- ggplot(PlotBD_all, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotBD_all$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinBD_all
+ggsave("outreach/NBRFarms_BDall.png", ViolinBD_all, bg = "transparent", width = 18, height = 6, units = "cm")
+
+# GrasslandsOnly
+PlotBD_grassland <- subset(filter(Map_All, Habitat == "permanent grassland"), select = c(MeanBulkDensity)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinBD_grassland <- ggplot(PlotBD_grassland, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotBD_grassland$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinBD_grassland
+ggsave("outreach/NBRFarms_BDgrassland.png", ViolinBD_grassland, bg = "transparent", width = 18, height = 6, units = "cm")
+
 
 #
 ## Infields violins
