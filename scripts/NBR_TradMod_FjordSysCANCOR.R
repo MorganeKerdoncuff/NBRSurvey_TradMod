@@ -114,7 +114,7 @@ vege_grass <- vege_grass |>
 # Beetle community - current at pitfall level -> summary by sum only main families
 beetle_grass <- beetle_grass |> 
   group_by(SiteID, BeetleFamilies) |> 
-  summarise(BeetleFam_abundance = sum(BeetleFam_abundance, na.rm = TRUE))
+  summarise(BeetleFam_abundance = mean(BeetleFam_abundance, na.rm = TRUE))
 
 #
 ## Transformation plant community data
@@ -306,7 +306,6 @@ locenvi_vege <- subset(locenvi_vege, !SiteID == "IG3")
 ## Exposed ground (bare soil + rock) cover (num), from groundcover
 ## Litter cover (num), from groundcover
 ## Mean vegetation height (num), from groundcover
-## Mean vegetation richness (num), from groundcover
 ## Bulk density (num), from soilbulk
 ## Moisture content (num), from soilbulk
 ## Humus content (num), from soilchem
@@ -347,7 +346,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 #paircor_fjordsys # no colinearity between variables, one outlier on distance to sea
 pairs(select_if(fjordsys, is.numeric),
       upper.panel = panel.cor,
-      lower.panel = panel.smooth) # high colinearity between max temp and mean temp
+      lower.panel = panel.smooth) # high colinearity between max temp and min temp
 
 # Landscape variables
 #paircor_landscape <- ggpairs(select_if(landscape, is.numeric))
@@ -387,7 +386,7 @@ DCA_forb <- decorana(contin_forb)
 DCA_forb # Axis length of 3.4 -> keep DCA
 plot(DCA_forb)
 DCA_beetle <- decorana(contin_beetle)
-DCA_beetle # Axis length under 1 -> run PCA
+DCA_beetle # Axis length at 1 -> run PCA
 PCA_beetle <- prcomp(contin_beetle)
 PCA_beetle
 biplot(PCA_beetle)
@@ -469,41 +468,40 @@ residualPlots(lm(ForbDCA1~FlockSize1_adults, data = allvar_forb)) # Tukey=-2.38 
 #residualPlots(lm(ForbDCA1~MeanPhosphorus, data = allvar_forb)) # Tukey=1.18 ; p=0.07 -> a bit tight
 
 # Residuals LM for beetles
-#residualPlots(lm(BeetlePCA1~Elevation_max, data = allvar_beetle)) # Tukey=1.14 ; p=0.25 -> validated
-#residualPlots(lm(BeetlePCA1~General_slope, data = allvar_beetle)) # Tukey=-0.57 ; p=0.57 -> validated
-#residualPlots(lm(BeetlePCA1~AspectDegree, data = allvar_beetle)) # Tukey=-0.61 ; p=0.54 -> validated
-#residualPlots(lm(BeetlePCA1~DistanceToSea_m, data = allvar_beetle)) # Tukey=0.66 ; p=0.51 -> validated
-#residualPlots(lm(BeetlePCA1~AnnualPrecipitation, data = allvar_beetle)) # Tukey=-1.45 ; p=0.16 -> validated
+#residualPlots(lm(BeetlePCA1~Elevation_max, data = allvar_beetle)) # Tukey=-0.78 ; p=0.44 -> validated
+#residualPlots(lm(BeetlePCA1~General_slope, data = allvar_beetle)) # Tukey=0.76 ; p=0.45 -> validated
+#residualPlots(lm(BeetlePCA1~AspectDegree, data = allvar_beetle)) # Tukey=0.31 ; p=0.75 -> validated
+#residualPlots(lm(BeetlePCA1~DistanceToSea_m, data = allvar_beetle)) # Tukey=0.57 ; p=0.57 -> validated
+#residualPlots(lm(BeetlePCA1~AnnualPrecipitation, data = allvar_beetle)) # Tukey=-1.34 ; p=0.18 -> validated
 #residualPlots(lm(BeetlePCA1~MaxTempJuly, data = allvar_beetle)) # Tukey=0.99 ; p=0.33 -> validated
 #residualPlots(lm(BeetlePCA1~HLI, data = allvar_beetle)) # Tukey=0.96 ; p=0.34 -> validated
-#residualPlots(lm(BeetlePCA1~TotCultivatedLand_percent, data = allvar_beetle)) # Tukey=0.35 ; p=0.73 -> validated
-#residualPlots(lm(BeetlePCA1~TotForest_percent, data = allvar_beetle)) # Tukey=0.15 ; p=0.88 -> validated
-#residualPlots(lm(BeetlePCA1~Infield_percent, data = allvar_beetle)) # Tukey=0.26 ; p=0.8 -> validated
-residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle)) # Tukey=-1.94 ; p=0.052 -> a bit tight
-#residualPlots(lm(BeetlePCA1~Wetland_percent, data = allvar_beetle)) # Tukey=0.71 ; p=0.48 -> validated
+#residualPlots(lm(BeetlePCA1~TotCultivatedLand_percent, data = allvar_beetle)) # Tukey=-0.22 ; p=0.83 -> validated
+#residualPlots(lm(BeetlePCA1~TotForest_percent, data = allvar_beetle)) # Tukey=-0.36 ; p=0.72 -> validated
+#residualPlots(lm(BeetlePCA1~Infield_percent, data = allvar_beetle)) # Tukey=-0.26 ; p=0.8 -> validated
+#residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle)) # Tukey=1.6 ; p=0.12 -> validated
+#residualPlots(lm(BeetlePCA1~Wetland_percent, data = allvar_beetle)) # Tukey=-0.09 ; p=0.93 -> validated
 #residualPlots(lm(BeetlePCA1~Sheep, data = allvar_beetle)) # binary, cannot be checked
 #residualPlots(lm(BeetlePCA1~Cow, data = allvar_beetle)) # binary, cannot be checked
 #residualPlots(lm(BeetlePCA1~Goat, data = allvar_beetle)) # binary, cannot be checked
-#residualPlots(lm(BeetlePCA1~FlockSize1_adults, data = allvar_beetle)) # Tukey=0.82 ; p=0.41 -> validated
-#residualPlots(lm(BeetlePCA1~GrazingSurface_ha, data = allvar_beetle)) # Tukey=0.87 ; p=0.39 -> validated
-#residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle)) # Tukey=-0.88 ; p=0.38 -> validated
-#residualPlots(lm(BeetlePCA1~Grazingdensity_perha, data = allvar_beetle)) # Tukey=0.31 ; p=0.76 -> validated
-#residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle)) # Tukey=-0.6 ; p=0.55 -> validated
-#residualPlots(lm(BeetlePCA1~MeanPT, data = allvar_beetle)) # Tukey=0.82 ; p=0.41 -> validated
-residualPlots(lm(BeetlePCA1~MeanExposedGround, data = allvar_beetle)) # Tukey=-2.28 ; p=0.023 -> rejected (one outlier? -> not really after verification)
-residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # Tukey=-2.06 ; p=0.039 -> rejected (one outlier? -> not really after verification)
-#residualPlots(lm(BeetlePCA1~MeanBryo, data = allvar_beetle)) # Tukey=-0.66 ; p=0.51 -> validated
-#residualPlots(lm(BeetlePCA1~MeanHeight, data = allvar_beetle)) # Tukey=0.21 ; p=0.83 -> validated
-#residualPlots(lm(BeetlePCA1~MeanRichness, data = allvar_beetle)) # Tukey=0.34 ; p=0.73 -> validated
+#residualPlots(lm(BeetlePCA1~FlockSize1_adults, data = allvar_beetle)) # Tukey=-0.88 ; p=0.38 -> validated
+#residualPlots(lm(BeetlePCA1~GrazingSurface_ha, data = allvar_beetle)) # Tukey=-0.67 ; p=0.51 -> validated
+#residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle)) # Tukey=0.65 ; p=0.52 -> validated
+#residualPlots(lm(BeetlePCA1~Grazingdensity_perha, data = allvar_beetle)) # Tukey=-0.19 ; p=0.85 -> validated
+#residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle)) # Tukey=0.83 ; p=0.41 -> validated
+#residualPlots(lm(BeetlePCA1~MeanPT, data = allvar_beetle)) # Tukey=-1.02 ; p=0.3 -> validated
+residualPlots(lm(BeetlePCA1~MeanExposedGround, data = allvar_beetle)) # Tukey=1.26 ; p=0.21 -> validated but gradient not well distributed
+residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # Tukey=1.83 ; p=0.067 -> a bit tight (one outlier? -> not really after verification)
+#residualPlots(lm(BeetlePCA1~MeanBryo, data = allvar_beetle)) # Tukey=0.79 ; p=0.44 -> validated
+#residualPlots(lm(BeetlePCA1~MeanHeight, data = allvar_beetle)) # Tukey=-0.17 ; p=0.86 -> validated
 
 # Removal variables with non-linear relationships with residuals
 landscape_grass <- subset(landscape, select = -c(Wetland_percent)) # linear relationship rejected
-landscape_beetle <- subset(landscape, select = -c(Outfield_percent)) # very tight on linear relationship assumption
+landscape_beetle <- landscape
 grazing_vege <- subset(grazing, select = -c(FlockSize1_adults)) # linear relationship rejected for both grass & forb
 #locenvi vege validated for grass but not for forb -> two subsets
 locenvi_grass <- locenvi_vege
 locenvi_forb <- subset(locenvi_vege, select = -c(AspectDegree))
-locenvi_beetle <- subset(locenvi_beetle, select = -c(MeanExposedGround, MeanLitter)) # linear relationship rejected
+locenvi_beetle <- subset(locenvi_beetle, select = -c(MeanExposedGround, MeanLitter)) # linear relationship rejected & residuals not well-distributed
 
 
 #### Canonical correlation preparation ####
@@ -538,7 +536,7 @@ contin_landscape_forb <- xtabs(formula = Values ~ SiteID + Factors, data = lands
 # Landscape matrix - beetle
 landscape_long_beetle <- landscape_beetle |> 
   pivot_longer(
-    cols = c(TotCultivatedLand_percent, TotForest_percent, Infield_percent, Wetland_percent),
+    cols = c(TotCultivatedLand_percent, TotForest_percent, Infield_percent, Outfield_percent, Wetland_percent),
     names_to = "Factors",
     values_to = "Values")
 contin_landscape_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = landscape_long_beetle)
@@ -907,10 +905,12 @@ cancor_fjordxlandscape_beetle <- cc(contin_fjordsys, contin_landscape_beetle)
 rho_fjordxlandscape_beetle <- cancor_fjordxlandscape_beetle$cor
 rho_fjordxlandscape_beetle 
 # 1st axis correlation 0.79
-# 2nd axis correlation 0.71
+# 2nd axis correlation 0.75
+# 3rd axis correlation 0.55
 p.asym(rho_fjordxlandscape_beetle, nobs, nvar_fjordsys, nvar_landscape_beetle, tstat = "Hotelling") 
-# 1st dim significant - stat 2,72 - df1 16 - df2 78 - pval 2.03.10-4
-# 2nd dim significant - stat 1.11 - df1 9 - df2 86 - pval 8.98-3
+# 1st dim significant - stat 3.45 - df1 20 - df2 74 - pval 1.48.10-4
+# 2nd dim significant - stat 1.77 - df1 12 - df2 82 - pval 1.48-3
+# 3rd dim marginally significant - stat 0.5 - df1 6 - df2 90 - pval 0.093
 plt.cc(cancor_fjordxlandscape_beetle, var.label = TRUE) # dim 1 & 2
 plt.cc(cancor_fjordxlandscape_beetle, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
 
@@ -938,7 +938,7 @@ rho_fjordxbeetle <- cancor_fjordxbeetle$cor
 rho_fjordxbeetle 
 # 1st axis correlation 0.69
 p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling") 
-# 1st dim NS - stat 1.34 - df1 20 - df2 74 - pval 0.25
+# 1st dim NS - stat 1.44 - df1 20 - df2 74 - pval 0.18
 plt.cc(cancor_fjordxbeetle, var.label = TRUE)
 
 #
@@ -950,25 +950,25 @@ rho_landscapexgrazing_beetle <- cancor_landscapexgrazing_beetle$cor
 rho_landscapexgrazing_beetle 
 # 1st axis correlation 0.69
 p.asym(rho_landscapexgrazing_beetle, nobs, nvar_landscape_beetle, nvar_grazing_beetle, tstat = "Hotelling") 
-# 1st dim NS - stat 1.41 - df1 24 - df2 70 - pval 0.44
+# 1st dim NS - stat 1.96 - df1 30 - df2 82 - pval 0.39
 plt.cc(cancor_landscapexgrazing_beetle, var.label = TRUE)
 
 # Landscape x local environment
 cancor_landscapexlocalenvi_beetle <- cc(contin_landscape_beetle, contin_locenvi_beetle)
 rho_landscapexlocalenvi_beetle <- cancor_landscapexlocalenvi_beetle$cor
 rho_landscapexlocalenvi_beetle 
-# 1st axis correlation 0.78
+# 1st axis correlation 0.79
 p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape_beetle, nvar_locenvi_beetle, tstat = "Hotelling") 
-# 1st dim significant - stat 2,57 - df1 24 - df2 70 - pval 0.023
+# 1st dim marginally significant - stat 2.68 - df1 30 - df2 82 - pval 0.091
 plt.cc(cancor_landscapexlocalenvi_beetle, var.label = TRUE)
 
 # Landscape x beetle assemblage
 cancor_landscapexbeetle <- cc(contin_landscape_beetle, contin_beetle)
 rho_landscapexbeetle <- cancor_landscapexbeetle$cor
 rho_landscapexbeetle 
-# 1st axis correlation 0.57
+# 1st axis correlation 0.68
 p.asym(rho_landscapexbeetle, nobs, nvar_landscape_beetle, nvar_beetle, tstat = "Hotelling") 
-# 1st dim NS - stat 1.06 - df1 20 - df2 74 - pval 0.49
+# 1st dim NS - stat 1.65 - df1 25 - df2 87 - pval 0.31
 plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 
 #
@@ -987,9 +987,9 @@ plt.cc(cancor_grazingxlocenvi_beetle, var.label = TRUE)
 cancor_grazingxbeetle <- cc(contin_grazing_beetle, contin_beetle)
 rho_grazingxbeetle <- cancor_grazingxbeetle$cor
 rho_grazingxbeetle 
-# 1st axis correlation 0.73
+# 1st axis correlation 0.67
 p.asym(rho_grazingxbeetle, nobs, nvar_grazing_beetle, nvar_beetle, tstat = "Hotelling") 
-# 1st dim NS - stat 1.88 - df1 30 - df2 82 - pval 0.45
+# 1st dim NS - stat 1.4 - df1 30 - df2 82 - pval 0.79
 plt.cc(cancor_grazingxbeetle, var.label = TRUE)
 
 #
@@ -999,9 +999,9 @@ cancor_locenvixbeetle <- cc(contin_locenvi_beetle, contin_beetle)
 VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 rho_locenvixbeetle <- cancor_locenvixbeetle$cor
 rho_locenvixbeetle 
-# 1st axis correlation 0.72
+# 1st axis correlation 0.73
 p.asym(rho_locenvixbeetle, nobs, nvar_locenvi_beetle, nvar_beetle, tstat = "Hotelling") 
-# 1st dim NS - stat 2.39 - df1 30 - df2 82 - pval 0.17
+# 1st dim NS - stat 2.42 - df1 30 - df2 82 - pval 0.16
 plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 #VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 #plot(cancor_locenvixbeetle, which = 1)
