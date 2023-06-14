@@ -43,7 +43,7 @@ climate_outreach <- climate_full
 area20x20_outreach <- subset(area20x20_full, select = c(SiteID, Elevation_max))
 VGrichness_outreach <- subset(groundcover_full, select = c(SiteID, Plant_species_richness))
 soilbulk_outreach <- subset(soilbulk_full, select = c(SiteID, BD))
-soilchem_outreach <- subset(soilchem_full, select = c(SiteID, LOI, pH, P.Al_mg.100g, K.Al_mg.100g, Mg.Al_mg.100g, Ca.Al_mg.100g, Na.Al_mg.100g, TotalN_percentDM))
+soilchem_outreach <- subset(soilchem_full, select = c(SiteID, LOI, pH, P.Al_mg.100g, K.Al_mg.100g, Mg.Al_mg.100g, Ca.Al_mg.100g, Na.Al_mg.100g, TotalN_percentDM, SoilDensity_kg.L, Humus_percentDM))
 vege_outreach <- subset(vege_full, select = c(SiteID, Species, Abundance))
 beetle_outreach <- subset(beetle_full, select = c(SiteID, BeetleFamilies, BeetleFam_abundance))
 
@@ -64,7 +64,7 @@ soilbulk_outreach <- soilbulk_outreach %>%
 # Soil chemistry
 soilchem_outreach <- soilchem_outreach %>%
   group_by(SiteID) %>% 
-  summarise(LOI = mean(LOI), pH = mean(pH), P = mean(P.Al_mg.100g), K = mean(K.Al_mg.100g), Mg = mean(Mg.Al_mg.100g), Ca = mean(Ca.Al_mg.100g), Na = mean(Na.Al_mg.100g), TotN = mean(TotalN_percentDM)) #missing OV1 (Oygarden) and UC1
+  summarise(LOI = mean(LOI), pH = mean(pH), P = mean(P.Al_mg.100g), K = mean(K.Al_mg.100g), Mg = mean(Mg.Al_mg.100g), Ca = mean(Ca.Al_mg.100g), Na = mean(Na.Al_mg.100g), TotN = mean(TotalN_percentDM), JORDTETTLEIK = mean(SoilDensity_kg.L), HUMUS = mean(Humus_percentDM)) #missing OV1 (Oygarden) and UC1
 
 # Plant abundance cover
 vege_outreach <- vege_outreach |> 
@@ -537,7 +537,7 @@ ViolinBD_all <- ggplot(PlotBD_all, aes(x=Variables, y=Rates, fill=Variables)) +
 ViolinBD_all
 ggsave("outreach/NBRFarms_BDall.png", ViolinBD_all, bg = "transparent", width = 18, height = 6, units = "cm")
 
-# GrasslandsOnly
+# Grasslands only
 PlotBD_grassland <- subset(filter(Map_All, Habitat == "permanent grassland"), select = c(MeanBulkDensity)) %>% 
   gather(key = "Variables", value = "Rates")
 ViolinBD_grassland <- ggplot(PlotBD_grassland, aes(x=Variables, y=Rates, fill=Variables)) +
@@ -557,6 +557,100 @@ ViolinBD_grassland <- ggplot(PlotBD_grassland, aes(x=Variables, y=Rates, fill=Va
   ) +
   coord_flip()
 ViolinBD_grassland
+ggsave("outreach/NBRFarms_BDgrassland.png", ViolinBD_grassland, bg = "transparent", width = 18, height = 6, units = "cm")
+
+#
+## Soil density
+
+# All sites
+PlotSD_all <- subset(soilchem_outreach, select = c(JORDTETTLEIK)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinSD_all <- ggplot(PlotSD_all, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotSD_all$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinSD_all
+ggsave("outreach/NBRFarms_BDall.png", ViolinBD_all, bg = "transparent", width = 18, height = 6, units = "cm")
+
+# Grasslands only
+PlotSD_grassland <- subset(filter(Map_All, Habitat == "permanent grassland"), select = c(JORDTETTLEIK)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinSD_grassland <- ggplot(PlotSD_grassland, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotSD_grassland$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinSD_grassland
+ggsave("outreach/NBRFarms_BDgrassland.png", ViolinBD_grassland, bg = "transparent", width = 18, height = 6, units = "cm")
+
+#
+## Humus content
+
+# All sites
+PlotHumus_all <- subset(soilchem_outreach, select = c(HUMUS)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinHumus_all <- ggplot(PlotHumus_all, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotHumus_all$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinHumus_all
+ggsave("outreach/NBRFarms_Humusall.png", ViolinHumus_all, bg = "transparent", width = 18.5, height = 6, units = "cm")
+
+# Grasslands only
+PlotSD_grassland <- subset(filter(Map_All, Habitat == "permanent grassland"), select = c(JORDTETTLEIK)) %>% 
+  gather(key = "Variables", value = "Rates")
+ViolinSD_grassland <- ggplot(PlotSD_grassland, aes(x=Variables, y=Rates, fill=Variables)) +
+  geom_violin(width=1, size=0.2) +
+  scale_fill_grey() +
+  geom_hline(yintercept=mean(PlotSD_grassland$Rates), color="chartreuse3", size=5) +
+  #scale_color_viridis(discrete=TRUE) +
+  theme(
+    legend.position="none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text = element_text(size = 18),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "transparent",colour = NA),
+    plot.background = element_rect(fill = "transparent",colour = NA)
+  ) +
+  coord_flip()
+ViolinSD_grassland
 ggsave("outreach/NBRFarms_BDgrassland.png", ViolinBD_grassland, bg = "transparent", width = 18, height = 6, units = "cm")
 
 
