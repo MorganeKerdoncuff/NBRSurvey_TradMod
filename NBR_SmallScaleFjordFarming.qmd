@@ -11,15 +11,15 @@ author:
   - name: Amy Elizabeth Eycott
     orcid:
     affiliations: Faculty of Biosciences and Aquaculture, Nord University, Norway
+  - name: Adam Klimes
+    orcid:
+    affiliations: Department of Biological Sciences, University of Bergen, Norway
   - name: Inger Elisabeth Måren
     orcid:
     affiliations:
       - University of Bergen, Norway
       - UNESCO Chair on Sustainable Heritage and Environmental Management, University of Bergen, Norway
       - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
-  - name: Adam Klimes
-    orcid:
-    affiliations: Department of Biological Sciences, University of Bergen, Norway
 date: today
 bibliography: NBR_survey.bib
 execute: 
@@ -99,7 +99,7 @@ Principles of traditional systems [@plieningerTraditionalLanduseNature2006]:
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching \[**NB**\] km inland. The climate is oceanic, characterized by mild temperature (**mean January, mean June**) and high precipitation level (**VALUE**). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
+The UNESCO Nordhordland Biosphere Reserve (NBR) is located in Western Norway. Its main geomorphological feature is the fjord landscape, the deepest arm reaching 205 km inland. The climate is oceanic, characterized by mild temperature (**mean January, mean June**) and high precipitation level (between 1300 and 3000 mm annually). There are both temperature and precipitation west-east gradients [@kalandNordhordlandBiopshereReserve2018]. The coastal region buffers the climate seasonal cycle while temperature annual variation increases inland. The precipitation gradient is greatly affected by the topography: the mean annual precipitation is twice as much in higher elevation compared to the flat coastal areas.
 
 ## Study sites
 
@@ -114,7 +114,7 @@ We sampled 29 grassland fields across the Southern part of the NBR (@fig-sitemap
 knitr::include_graphics("illustrations/NBR_GrazersMap.png")
 ```
 
-Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. To the knowledge of the current farmers, no field was resown and/or plowed since the 1970s. Four sites were drained between 1990 and 2010 (OS1, IC1, OS4, OC3). The different treatments applied to the fields (grazing excluded) are described in Appendix (@tbl-farmermanagement).
+Sites were either grazed by sheep, goats or cows for at least the past 5 years, and have been under grazing management for at least the past decade. Grasslands were chosen to be representative of small-scale farming system in Western Norway, with low-intensity grazing and limited amount of inputs. To the knowledge of the current farmers, no field was resown and/or plowed since the 1970s. Four sites were drained between 1990 and 2010 (OS1, IC1, OS4, OC3). The different treatments applied to the fields (grazing excluded) are described in Appendix (@tbl-farmermanagement).
 
 + PHYTOSOCIOLOGICAL DESCRIPTION GRASSLANDS?
 
@@ -143,7 +143,8 @@ The fjords in Western Norway are characterized by undulating topography which gr
 
 - the **elevation**: our study focused on grasslands in the "lowlands", thus the elevation gradient was limited with all of our sites located below 200 m. Yet, even at low level elevation can have an effect on local climate. including temperatures and precipitations [@zelnikPlantSpeciesDiversity2013].
 - the **annual precipitations**:
-- the **mean temperature of the warmer month**:
+- the **average maximal temperature of the warmer month**:
+- the **average minimal temperatue of the coldest month**:
 - the **distance to sea**: fjords are first and foremost defined by the sea arms which enter deeply into the land. These geological formations greatly affect the local climate by constraining wind currents and clouds [REF].
 
 ### The landscape matrix
@@ -183,15 +184,15 @@ The last filters which apply to the plant and beetle assemblages would be the on
 
 ### Sampling set-up
 
-Ecological data were collected between June and July 2019 and 2020. A sampling area of 20 x 20 m^2^ which was representative of the grazing field was defined on each site. Field edges, wet zones and exposed rocks were avoided. Three plots of 3 x 3 m^2^ were set within the sampling area, with a distance of at least 6 m between each other. The plots were divided into 9 quadrats of 1 m^2^ which were split into two groups, one for non-destructive measurements (5 quadrats) and one for destructive measurements (4 quadrats). All samples from one site except beetles were collected the same day.
+Ecological data were collected in June and July 2019 and 2020. A sampling area of 20 x 20 m^2^ which was representative of the grazing field was defined on each site. Field edges, wet zones and exposed rocks were avoided. Three plots of 3 x 3 m^2^ were set within the sampling area, with a distance of at least 6 m between each other. The plots were divided into 9 quadrats of 1 m^2^ which were split into two groups, one for non-destructive measurements (5 quadrats) and one for destructive measurements (4 quadrats). All samples from one site except beetles were collected the same day.
 
 ### Plant community data
 
-Plant species and percent cover were collected on non-destructive quadrats, for a total of 15 quadrats per site. The identifications were made by the two same observers for both years. The percent cover of the different functional groups and the vegetation mean height were also collected on the same quadrat.
+Plant species and percent cover were collected on non-destructive quadrats, for a total of 15 quadrats per site. The identifications were made with the Nordic flora [@mossbergGyldendalsStoreNordiske2018] by the two same observers for both years. For each quadrat, the percent cover of the different functional groups and the vegetation mean height were also estimated.
 
 ### Beetle community data
 
-Beetle specimens were collected with dung-baited pitfall traps located on the destructive quadrats, for a total of 12 pitfall traps per site. The traps were made of white plastic cups of 750 mL (**DIAMETER**) filled to 1/4 with salted water and a drop of neutral detergent to break water surface tension [REF]. The traps were set into the ground with the edge at the same level as the soil surface and covered with a metal grid with a [**MESH SIZE**] of cm^2^. A ball of fresh cow dung was then placed on the middle of the grid roof in a way that it would leave a substantial empty space around the edge of the cups for the beetles to fall in. The traps were left on site for one full week before being retrieved.
+Beetle specimens were collected with dung-baited pitfall traps located on the destructive quadrats, for a total of 12 pitfall traps per site. The traps were made of white plastic cups of 750 mL (**DIAMETER**) filled to 1/4 with salted water and a drop of neutral detergent to break water surface tension [REF]. The traps were set into the ground with the edge at the same level as the soil surface and covered with a metal grid with a [**MESH SIZE**] of cm^2^. A ball of cow dung, previously frozen, was then placed on the middle of the grid roof in a way that it would leave at least 3 cm of empty space around the edge of the cups for the beetles to fall in. The traps were left on site for one full week before retrieval.
 
 Beetles were stored in 70% ethanol and sorted into families in the lab using @duffBeetlesBritainIreland2012b.
 
@@ -199,7 +200,7 @@ Beetles were stored in 70% ethanol and sorted into families in the lab using @du
 
 All data collection related to soil physical properties was done in destructive quadrats.
 
-For the measure of the penetration rate we used a sharp [**MATERIAL?**] stick which would be dropped into the ground from a 1 m height. The drop was made through a plastic tube to ensure the stick direction. The visible standing part of the stick was measured and substracted from the total stick length to obtain the length of penetration into the soil. We performed two penetration tests per quadrat, one on each upper corner (**FIG**), for a total of 24 tests per site. The tip was regularly sharpened and its length remeasured across the field season.
+We measured the penetration rate with a sharpened metal rod of [**weight+length+diam**] that we dropped vertically from 1 m above ground and through a plastic tube to ensure the stick direction. The visible standing part of the stick was measured and substracted from the total stick length to obtain the length of penetration into the soil. We performed two penetration tests per quadrat, one on each upper corner (**FIG**), for a total of 24 tests per site. The tip was regularly sharpened and its length remeasured across the field season. The difference in length between the start and the end of the two sampling seasons was 0.7 cm
 
 We sampled three soil cores of [**MEASURES**] in each quadrat for the measure of the bulk density and the soil moisture. Cores were made of PVC tubes which edges have been sharpened. Prior to sinking the cores into the soil with a light hammer, the surrounding root mat was cut with a knife to limit soil disturbance during the sampling. Cores were covered with plastic foil and stored at 6.C before processing in the lab. [**QUICK DEFINITION OF BD**] The actual soil volume of each core was checked and corrected if necessary prior to weight measurements. We weighted the cores before and after drying in oven at 105.C, and calculated the bulk density and the percent soil moisture as following:
 $$
@@ -210,33 +211,28 @@ $$
 \text{Soil moisture (%)} = \frac{\text{Core dry weight (g)}}{\text{Core fresh weight (g)}}
 $$.
 
-Bulk density and soil moisture data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high roots density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with an estimated volume of soil under 350 cm^3^. A scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had between 15 and 36 sample replicates.
+Bulk density and soil moisture data needed some adjustments due to field and lab constraints. When field sampling was poorly performed because of high root density, high sand rate or steep slope, the core volume actually filled with soil could be very low. Bulk density estimation being less accurate on low soil volumes, we discarded cores with an estimated volume of soil under 350 cm^3^. A weighing scale dysfunction issues also affected some of our samples during soil weighing. Negative or extreme values were removed. After data filtering, all sites had between 15 and 36 sample replicates.
 
 ### Soil chemistry data
 
-We collected a supplementary soil core in each destructive quadrat for chemical analyses, for a total of 12 cores per site. We used a [**MATERIAL**] core of [**VALUE**] cm diameter and 12 cm depth which was dug into the ground by rotational movements. The soil was stored at 4.C before lab processing. Cores were sieved and merged at the plot level, and 0.5 L was sent to Eurofins for nitrogen and phosphorus quantitative analyses. Total nitrogen content and available phosphorus were determined by using modified Kjeldahl method (NS-EN 13654-1:2890) and ammonium lactate extraction method [REF “Rapport 6/92” by T. Kroghstad] respectively. 
+We collected a supplementary soil core in each destructive quadrat for chemical analyses, for a total of 12 cores per site. We used a stainless steel cylindrical core of [**VALUE**] cm diameter and 12 cm depth which was dug into the ground by rotational movements. The soil was stored at 4.C before lab processing. Cores were sieved and merged at the plot level, and 0.5 L was sent to a certified analysis laboratory for nitrogen and phosphorus quantitative analyses. Total nitrogen content and available phosphorus were determined by using modified Kjeldahl method (NS-EN 13654-1:2890) [@bremnerDeterminationNitrogenSoil1960] and ammonium lactate extraction method [@brayDeterminationTotalOrganic1945] respectively.
 
 ### Topographical data
 
-We recorded field slope angle on site with a clinometer, with the observer standing at the highest point and looking down to another observer standing at the lowest point. The mean elevation and the sites coordinates were also collected on the field with a GPS. The aspect degree of the site was determined from geospatial data. An aspect map in degree azimuth of the whole NBR was generated in QGIS (version 3.12.2) from a Digital Elevation Model collected on GeoNorge [**LINK**]. The distance between sites and closest sea bodies was geospatially measured on the map Norge i bilder [**LINK**].
-
-*! NEED CELL SIZE FOR DIGITAL ELEVATION MODEL*
+We recorded field slope angle on site with a compass clinometer, with the observer standing at the highest point and looking down to another observer standing at the lowest point. The mean elevation and the sites coordinates were also collected on the field with a GPS. The aspect degree of the site was determined from geospatial data. An aspect map in degree azimuth of the whole NBR region was generated in QGIS (version 3.12.2) from a Digital Elevation Model with cell size of 10 x 10 m collected on GeoNorge (https://kartkatalog.geonorge.no). The distance between sites and closest sea or fjord bodies was geospatially measured on the map Norge i bilder (https://norgeibilder.no/).
 
 ### Landscape data
 
-We collected land cover data on the natural information map Kilden [**LINK**] provided by the Norwegian Institute of Bioeconomy (NiBIO). Surfaces of land covers including forests, agricultural lands, water bodies and human infrastructures, were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification to limit our number of variables: we combined non-managed and managed forests, as well as fully and partially cultivated lands.
+We collected land cover data on the natural information map Kilden (https://kilden.nibio.no) provided by the Norwegian Institute of Bioeconomy (NiBIO). Proportions of land cover were retrieved for a buffer zone of 1 km^2^ radius around each field. We simplified the area classification by merging some of the categories to limit our number of variables. The final classification encompassed the following categories: forest area, including managed and non-managed; cultivated area, including fully and partially; infield area; outfield area; wetland area.
+
+### Climate data
+
+Average annual precipitations, July maximum temperatures and January minimum temperatures were calculated from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGriddedKmClimate2016]. For sites non covered by the grid, values were determined from neighbourhood calculation with the R package *terra* (v. 1.7.29) [@hijmansTerraSpatialData2023].
 
 ### Field management data
 
-Information on the grazing management of each field were collected from the farmers with phone interviews conducted from October 2021 to January 2022 [**SURVEY APPENDIX**]. Three farmers could not or did not want to reply to our survey. We completed the missing values with data from a similar interview series conducted in 2018 [**REF TO MARGIT MASTER THESIS**].
-
-We asked the farmers for the following elements:
-
-- The type of livestock (cow, sheep or goat) which has been grazing the site for at least the past 5 years. There was no mixed-grazing in the fields we selected.
-- The size of the flock, including adults and young.
-- The number of months the animals stayed on the field
-- The total size of the infields
-- The size of the field we sampled
+Information on the grazing management of each field were collected from the farmers with phone interviews conducted from October 2021 to January 2022 [**SURVEY APPENDIX**]. Three farmers could not or did not want to reply to our survey. We completed the missing values with data from a similar interview series conducted in 2018 [**REF TO MARGIT MASTER THESIS**]. We asked the farmers for the following elements: the type of livestock (cow, sheep or goat) which has been grazing the site for at least the past 5 years; the size of the flock, including adults and young; the number of months the animals stayed on the field; the total surface area of the infields grazed by the animals; the size of the grazing field we selected.
+<!-- There was no mixed-grazing in the fields we selected. -->
 
 Other information related to the farm management are available in Supplementary Information (@tbl-farmermanagement).
 
@@ -244,45 +240,83 @@ The standard calculation of stocking density is made with the following formula 
 $$
 \text{Stocking density} = \frac{\text{number of animals}\times{\text{standard livestock unit}}}{\text{surface}\times{\text{grazing period}}}
 $$
+However, estimating stocking density for small-scale grazing systems is not as straightforward as for conventional grazing, mainly because of rotational management. Most farmers move their livestock all year round across different fields according to their productivity or state at some point in time, without following a recurring schedule. Due to this strategy, most farmers could not give us accurate estimations on the average time period the livestock spent on the specific field we selected. This information was not available either in the 2018 survey. Therefore, we decided to arrange the stocking density formula to estimate an average stocking density for the farms total infield area over a whole year.
 
-*Chunk under work*
-Two difficulties here.
-Due to rotational grazing management, the period of grazing is not that accurate throughout the years.
-Also the flock can also be separated by the farmer and spread into different fields.
-Due to missing replies from farmers and the absence of equivalent data in the previous study, we did not have the period of grazing for all sites.
-We therefore decided to estimate an average grazing intensity across all grazing fields for each farm.
-The formula is as following:
-Average grazing intensity on infields = (number of adults * standard livestock unit + number of young * standard livestock unit)/(total grazing area of the farm)
-This total grazing area was retrieved from Gårdskart.no, which maps agricultural properties across Norway (NIBIO).
-We considered infields but also surrounding unclassified areas which were known from the farmer and/or the field to be grazed.
-In two sites, the goats were sent in the summer farms in the mountains for several months in the year.
-This was recurring and well described by the farmer.
-For these two sites only we therefore decided to keep the first formula.
+$$
+\text{Average stocking density} = \frac{\text{number of adults}\times{\text{standard livestock unit}} + \text{number of young animals}\times{\text{young animal livestock unit}} }{\text{total infield area of the farm}}
+$$
+Young animals (1 year old or less) were included in our calculation. As there is no standard livestock unit for young sheep and goats, we estimated it as half the value of adult sheep and goats. The total grazing area was retrieved from the NIBIO map of agricultural properties (https://gardskart.nibio.no/). We gathered in this category areas classified as infields (*inmark*), but also unclassified surrounding areas which were known as grazing fields from the farmer and/or from field pictures. Two farms (IG1 and IG2) had their livestock moved to summer farms every year. In these cases, average stocking density was calculated for the time period when animals were in the lowlands.
+
+### Summary table
+
+| Variable set                                    | Variable                            | Effect                                                  | Included in grass model | Included in forb model | Included in beetle model | References                                                           |
+|-------------------------------------------------|-------------------------------------|---------------------------------------------------------|-------------------------|------------------------|--------------------------|----------------------------------------------------------------------|
+| Fjord system                                    | Elevation                           | Local climate, temperature, precipitations              | YES                     | YES                    | YES                      | [@zelnikPlantSpeciesDiversity2013]                                   |
+|                                                 | Annual precipitations               | Local climate                                           | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Average maximum July temperature    | Local climate                                           | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Average minimum January temperature | Local climate                                           | NO◦                     | NO◦                    | NO◦                      |                                                                      |
+|                                                 | Distance to sea                     | Local climate, wind, precipitations                     | YES                     | YES                    | YES                      |                                                                      |
+| Landscape within 1 km radius around the   field | Forest proportion                   | Plant seed flow, phytophagous beetle flow               | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Wetland proportion                  | Hygrophilous beetle flow                                | NO*                     | YES                    | YES                      |                                                                      |
+|                                                 | Cultivated land proportion          | Forb seed flow, productivity                            | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Outfield proportion                 | Forb seed flow, grass seed flow, productivity           | YES                     | YES                    | NO*                      |                                                                      |
+|                                                 | Infield proportion                  | Forb seed reservoir, grass seed reservoir, productivity | YES                     | YES                    | YES                      |                                                                      |
+| Grazing management                              | Type of livestock                   | Grazing patterns, fodder selection, dung type           | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Size of livestock flock             | Grazing intensity, grazing rotations, grazing patterns  | NO*                     | NO*                    | YES                      |                                                                      |
+|                                                 | Stocking density                    | Grazing intensity                                       | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Farm infield area                   | Grazing intensity, grazing rotations                    | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Field size                          | Grazing intensity, grazing patterns                     | YES                     | YES                    | YES                      |                                                                      |
+| Fine-scale environment                          | Slope                               | Water streaming, erosion, heat load                     | YES                     | YES                    | YES                      | [@klimekPlantSpeciesRichness2007a; @zelnikPlantSpeciesDiversity2013] |
+|                                                 | Aspect                              | Heat load                                               | YES                     | NO*                    | YES                      |                                                                      |
+|                                                 | Bulk density                        | Soil compaction                                         | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Penetration rate                    | Soil compaction, root density                           | YES                     | YES                    | YES                      |                                                                      |
+|                                                 | Loss of ignition                    | Plant nutrient uptake, soil compaction                  | NO◦                     | NO◦                    | NO                       |                                                                      |
+|                                                 | Nitrogen content                    | Plant nutrients                                         | NO◦                     | NO◦                    | NO                       | [@zelnikPlantSpeciesDiversity2013]                                   |
+|                                                 | Phophorus content                   | Plant nutrients                                         | YES                     | YES                    | NO                       | [@zelnikPlantSpeciesDiversity2013]                                   |
+|                                                 | pH                                  | Plant nutrients                                         | YES                     | YES                    | NO                       |                                                                      |
+|                                                 | Humus content                       | Soil moisture, plant nutrients                          | NO◦                     | NO◦                    | NO◦                      |                                                                      |
+|                                                 | Soil moisture                       | Soil moisture, hygrophilous beetle niche                | NO◦                     | NO◦                    | NO◦                      |                                                                      |
+|                                                 | Bryophyte cover                     | Soil moisture, hygrophilous beetle niche                | NO                      | NO                     | YES                      |                                                                      |
+|                                                 | Litter cover                        | Soil moisture, litter-dwelling beetle niche             | NO                      | NO                     | NO*                      |                                                                      |
+|                                                 | Exposed ground cover                | Structural diversity, sun-loving beetle niche           | NO                      | NO                     | NO*                      |                                                                      |
+|                                                 | Mean vegetation height              | Structural diversity                                    | NO                      | NO                     | YES                      |                                                                      |
 
 ## Data analysis
 
-*Section under work*
+All statistical and ordination analyses were performed on R (v.4.3.0) with R-Studio (v.2023.03.1+446) [@rcoreteamLanguageEnvironmentStatistical2022]. The canonical correlation analysis and the related statistical were made with the packages CCA [*ref*] and CCP [*ref*]. All data with in-field replication were summarized at the site level, by sum for beetle captures and by average for all other variables.
 
-### Data standardisation
+[selection plant & beetle data]
 
-All data were summarized at the site level. Beetle abundances of all pitfall traps were summed up. For all the other variables (plant community, soil), the site value was calculated as the average of the sample values.
+We investigated the relationships between sets of drivers and community data with Canonical Correlation Analysis [@hotellingRelationsTwoSets1992]. 
 
-### Variable colinearity
+### Data preparation and verification assumptions
 
-We checked for variables with a correlation coefficient over 0.7.
-When it was possible, we kept the variable with the highest rate of replication within the site.
-If the number of replicates was similar, then we chose according to ecological significance.
-For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82).
+#### Selection plant species and beetle families
 
-### Linear relationships between variables
+#### Data transformation
 
-We plotted DCA and PCA residuals respectively for plant species and beetle families against each variable.
-A straight line close to the x-axis means a linear relationship.
-The linearity of the relationship was tested by the Tukey test.
+- livestock qualitative into dummy quantitative
+- data scaling
 
-### Descriptive statistics?
+#### Verification for non-colinearity
 
-*Should I make a table with mean, sd, min & max of each variables?*
+Prior to analysis, we verified for the non-colinearity of variables within driver sets with paired plots: when two variables had a correlation coefficient equal to or over 0.8 [**REF**], if applicable only the one with the highest in-site replication was kept, if not the choice was made according to ecological significance. Variables rejected because of colinearity are indicated in [**table**].
+<!-- For soil data, bulk density was strongly correlated with moisture (0.86), LOI (0.8), Humus (0.8) and nitrogen (0.82). -->
+
+#### Verification for non-linear relationships
+
+As canonical correlation analysis tests for linear relationships between sets of variables, we did preliminary investigation for clear non-linear interactions between individual drivers and community variables. Ordination scores of grass, forb and beetle community data were extracted from Detrended Correspondance Analyses (DCA), or subsequent Principal Component Analyses (PCA) if the first axis length of the DCA was under 2 units. The significance of the linear
+
+- DCA & PCA when DCA axis<2
+- extraction species scores
+- linear model species scores against individual driver
+- plot of residuals of the linear model -> 
+- posthoc tukey on residuals.
+
+### Canonical correlation
+
+Final set of variables described in [**table**]. For descriptive statistics of the drivers, check table in SI.
+
 
 # RESULTS
 
@@ -546,7 +580,7 @@ The authors declare no competing interests.
 #| message: true
 #| warning: true
 library(gt)
-farmer_management <- subset(landuse_grass, select = c(SiteID, FM_herbicide, FM_treecutting, FM_burning, FM_mowing, FM_mulching, FM_manure, FM_artificialfert, FM_shellsandlime))
+farmer_management <- subset(landuse_grass, select = c(SiteID, FM_herbicide, FM_treecutting, FM_burning, FM_mowing, FM_mulching, FM_manure, FM_artificialfert, FM_shellsandlime, Lastknownre_sowing, Lastknownplowing, Lastknowndrainage))
 farmer_management |> 
   gt() |> 
   cols_label(SiteID = "Site",
@@ -557,6 +591,9 @@ farmer_management |>
              FM_mulching = "Mulching",
              FM_manure = "Manure",
              FM_artificialfert = "Artificial fertilizer",
-             FM_shellsandlime = "Shell/sand/lime") |> 
+             FM_shellsandlime = "Shell/sand/lime",
+             Lastknownre_sowing = "Last known re-sowing",
+             Lastknownplowing = "Last known plowing",
+             Lastknowndrainage = "Last known drainage") |> 
   tab_spanner(label = "Fertilization", columns = c(FM_manure, FM_artificialfert, FM_shellsandlime))
 ```
