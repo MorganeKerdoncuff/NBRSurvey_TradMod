@@ -534,8 +534,7 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 # Livestock unit for adults - depends on type of livestock and breed (for cows)
 #unique(landuse_full$Cowbreed) # Milking cows (norsk rødt fe) are 1 SSU - Beef cattle (Limousin, Aberdeen angus, Highland) are 0.8 LSU - Sheep and goats are 0.1 LSu
 landuse_full <- landuse_full |> 
-  mutate(LSU_adultind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.1,
-                               ifelse(Cowbreed == "norsk rødt fe", 1, 0.8)))
+  mutate(LSU_adultind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.1, ifelse(Cowbreed == "norsk rødt fe", 1, 0.8)))
 #hist(landuse_full$LSU_adultind) # validated
 
 # Livestock unit for young - half for goats and sheep (0.05), young cows on field (0.7)
