@@ -1130,17 +1130,15 @@ write_csv(soilpene_full, "data/cleandata/NBR_FullSoilPene.csv")
 # [14] Weight of the PVC core with the cheesecloth (g)
 # [15] Percentage of water loss over 24h -> calculated from W0 and W24
 # [16] Percentage of water loss over 48h -> calculated from W0 and W48
-# [17] Bulk density calculated from the non-corrected volumes -> not to be used in the analysis
-# [18] Bulk density calculated for the corrected volumes only -> not to be used in the analysis
-# [19] Bulk density calculated from the best volume estimation
-# [20] Weight of percentage of soil moisture (g)
-# [21] Volume of percentage of soil moisture (cm3) -> calculated from the BD
-# [22] Percentage of soil porosity -> calculated from the BD
-# [23] Percentage of WFPS
-# [24] Comments during the lab processing of the soil
-# [25] Other comments
-# [26] If the samples are concerned by scale calibration issue
-# [27] Who performed the task
+# [17] Bulk density calculated from the best volume estimation [7]
+# [18] Weight of percentage of soil moisture (g)
+# [19] Volume of percentage of soil moisture (cm3) -> calculated from the BD
+# [20] Percentage of soil porosity -> calculated from the BD
+# [21] Percentage of WFPS
+# [22] Comments during the lab processing of the soil
+# [23] Other comments
+# [24] If the samples are concerned by scale calibration issue
+# [25] Who performed the task
 
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
@@ -1202,112 +1200,112 @@ test <- soilbulk_full |>
   transpose() # min core volume quite low, negative values for water loss 24h and 48h, negative BD
 
 # Best estimation soil core volume
-#soilbulk_full[is.na(soilbulk_full$CoreVol),] # two NA in IS1 & OG1 -> check datasheet -> lab incident, the 2 cores were discarded
-#hist(soilbulk_full$CoreVol) # Volumes range from 120 to 450 cm3, most above 360 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
+#soilbulk_full[is.na(soilbulk_full$CoreVol),] # two NA in IS1 & OG1 + 24 NAs in IC3 -> check datasheet -> lab incident, the 2 cores were discarded - Samples missing for IC3, never found
+#hist(soilbulk_full$CoreVol) # Volumes range from 15 to 60 cm3, most above 45-50 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
 
 # W0 - Weight of fresh soil before saturation
-#soilbulk_full[is.na(soilbulk_full$W0g),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$W0g),] # same NAs -> validated
 #hist(soilbulk_full$W0g) # Weights range from 50 to 180 g in a normal distribution -> very low weights likely to be linked to low volumes
 
 # WSAT - Soil weight after water saturation
-#soilbulk_full[is.na(soilbulk_full$WSAT),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$WSAT),] # same NAs -> validated
 #hist(soilbulk_full$WSAT) # Weights range from 60 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
 
 # W24H - Soil weight after 24h of drying
-#soilbulk_full[is.na(soilbulk_full$W24H),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$W24H),] # same NAs -> validated
 #hist(soilbulk_full$W24H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes, not so much difference compared to WSAT
 
 # W48H - Soil weight after 48h of drying
-#soilbulk_full[is.na(soilbulk_full$W48H),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$W48H),] # same NAs -> validated
 #hist(soilbulk_full$W48H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
 
 # WDRY - Soil weight after over at 105C
-#soilbulk_full[is.na(soilbulk_full$WDRY),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$WDRY),] # same NAs -> validated
 #hist(soilbulk_full$WDRY) # Weights range from 20 to 140 g in a normal distribution -> very low weights likely to be linked to low volumes
 
 # Percent water loss in 24h
-#soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same two NAs -> validated
-#hist(soilbulk_full$percent_Waterloss24h) # % range from -20% to 40%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same NAs -> validated
+#hist(soilbulk_full$percent_Waterloss24h) # % range from -40% to 40%, main between 0 and 10% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Percent water loss in 48h
-#soilbulk_full[is.na(soilbulk_full$percent_Waterloss48h),] # same two NAs -> validated
-#hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 60%, main between 0 and 5% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#soilbulk_full[is.na(soilbulk_full$percent_Waterloss48h),] # same NAs -> validated
+#hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 70%, main between 0 and 20% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Bulk density
-#soilbulk_full[is.na(soilbulk_full$BD),] # same two NAs -> validated
-#hist(soilbulk_full$BD) # % range from -0.1% to 0.4%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
+#soilbulk_full[is.na(soilbulk_full$BD),] # same NAs -> validated
+#hist(soilbulk_full$BD) # % range from -0.2% to 3, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Soil moisture in percentage weight
-#soilbulk_full[is.na(soilbulk_full$Weightpercent_Soilmoisture),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$Weightpercent_Soilmoisture),] # same NAs -> validated
 #hist(soilbulk_full$Weightpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
 
 # Soil moisture in percentage volume
-#soilbulk_full[is.na(soilbulk_full$Volpercent_Soilmoisture),] # same two NAs -> validated
+#soilbulk_full[is.na(soilbulk_full$Volpercent_Soilmoisture),] # same NAs -> validated
 #hist(soilbulk_full$Volpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 # Soil porosity
-#soilbulk_full[is.na(soilbulk_full$percent_Soilporosity),] # same two NAs -> validated
-#hist(soilbulk_full$percent_Soilporosity) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+#soilbulk_full[is.na(soilbulk_full$percent_Soilporosity),] # same NAs -> validated
+#hist(soilbulk_full$percent_Soilporosity) # % range from -70% to 80%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 # WFPS
 #soilbulk_full[is.na(soilbulk_full$percent_WFPS),] # same two NAs -> validated
-#hist(soilbulk_full$percent_WFPS) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
+#hist(soilbulk_full$percent_WFPS) # % range from -50% to one outlier over 10000, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
 
 #
 ## Data filtering
 
 # Min soil core volume
-#filter(soilbulk_full, CoreVol<350 & !is.na(CoreVol)) # 136 or 9% samples unfit
-#filter(soilbulk_full, CoreVol<380 & !is.na(CoreVol)) # 366 or 25% samples unfit
-#filter(soilbulk_full, CoreVol<400 & !is.na(CoreVol)) # 690 or 46% samples unfit
+#filter(soilbulk_full, CoreVol<40 & !is.na(CoreVol)) # 40 or 2% samples unfit
+#filter(soilbulk_full, CoreVol<45 & !is.na(CoreVol)) # 111 or 7% samples unfit
+#filter(soilbulk_full, CoreVol<50 & !is.na(CoreVol)) # 344 or 21% samples unfit -> cores should be minimum vol of 50 cm3
 
 # Negative water loss values
-#filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #138 samples with water loss 24h negative
-#filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #84 samples with water loss 48h negative
+#filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #132 samples with water loss 24h negative
+#filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #82 samples with water loss 48h negative
 
-# Selection data with min 350 cm3 soil volume and positive water loss
-soilbulk_full <- subset(soilbulk_full, CoreVol>350)
+# Selection data with min 50 cm3 soil volume and positive water loss
+soilbulk_full <- subset(soilbulk_full, CoreVol>50)
 soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
 soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
 
 # Check new variable distribution - water loss 24h
 #hist(soilbulk_full$percent_Waterloss24h) # still some extreme values over 20%
-#filter(soilbulk_full, percent_Waterloss24h>20) # 8 cores with more than 20% over 24h
+#filter(soilbulk_full, percent_Waterloss24h>20) # 6 cores with more than 20% over 24h
 # 2 cores from UC1, which is excluded from the analysis -> should be removed
-# 2 cores from OC3, concerned with scale issue (lots of negative values which are already removed). Water loss between 0-24 and 24-48 not coherent -> should be removed
+# 1 cores from OC3, concerned with scale issue (lots of negative values which are already removed). Water loss between 0-24 and 24-48 not coherent -> should be removed
 # 2 cores from OC2, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same plot (W48h>W24h for P1-D1_2) -> should be removed
 # 1 cores from OC5, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same site -> should be removed
-# 1 core from OG6, not concerned by scale issue. High value coherent with other samples from same plot -> to be kept
-soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20 | BDcoreID == "OG6-P2-D4_2")
+soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20)
 
 # Check new variable distribution - water loss 48h
-#hist(soilbulk_full$percent_Waterloss48h) # still some extreme values over 30%
-#filter(soilbulk_full, percent_Waterloss48h>30) # 2 cores with more than 30% over 48h
-# 1 core from OG6, same one than with more than 20% reduction in 24h -> to be kept
-# 1 core from IS3, with P3 concerned with scale issue. Water loss ~60%, completely incoherent with other samples from same plot -> to be removed
-soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h<40)
+#hist(soilbulk_full$percent_Waterloss48h) # still some extreme values over 25%
+#filter(soilbulk_full, percent_Waterloss48h>25) # 2 cores with more than 25% over 48h
+# OG6-P1-D3_1, not concerned by the scale issue and with values from other cores coherent -> to be kept
+# OC2-P2-D1_3, concerned with scale issue - value not coherent with water loss 24h and with other cores -> to be removed
+soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D1_3")
 
 # Check new variable distribution - bulk density
 #hist(soilbulk_full$BD) # no negative values anymore, quite nice normal distribution -> validated
 
 # Check new variable distribution - soil moisture in percent weight
 #hist(soilbulk_full$Weightpercent_Soilmoisture) # still some negative and extreme values (100%)
-#filter(soilbulk_full, Weightpercent_Soilmoisture<20) # 8 cores with less than 20% soil moisture
-# 4 cores from OC2, concerned with scale issue. 2 negative values, 2 other very low not coherent with other samples from the plot -> to be removed
-# 1 core from OC4, concerned with scale issue -> weight loss after 24h almost 0, value not coherent with other samples from the plot -> to be removed
-# 3 cores from OG4, concerned with scale issue -> values are coherent within the plot and relatively close to what is find in other plots (30%-40%) -> to be kept
-soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture>20 | SiteID == "OG4")
-#filter(soilbulk_full, Weightpercent_Soilmoisture>90) # 1 core from IS3, with P3 concerned with scale issue. Incoherent with other samples from same plot -> to be removed
-soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90) # Distribution a bit hectic
+#filter(soilbulk_full, Weightpercent_Soilmoisture<20) # 5 cores with less than 20% soil moisture
+# 3 cores from OC2, concerned with scale issue. OC2-P2-D2_2 negative value, OC2-P1-D1_3 very low not coherent with other samples from the plot -> to be removed - OC2-P3-D3_3 just under 20, not extreme compared with the other samples -> to be kept
+# OG4-P3-D3_1, concerned with scale issue -> values are coherent within the plot and relatively close to what is find in other plots (10%-30%) -> to be kept
+soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D2_2")
+soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P1-D1_3")
+#filter(soilbulk_full, Weightpercent_Soilmoisture>90) # IS3-P3-D4_1, with P3 concerned with scale issue. Incoherent with other samples from same plot -> to be removed
+soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90)
 
 # Check new variable distribution - soil moisture in percent volume
-#hist(soilbulk_full$Volpercent_Soilmoisture) # still some very low values, but no extremes, nice normal distribution
+#hist(soilbulk_full$Volpercent_Soilmoisture) # no extreme. nice normal distribution
 
 # Check new variable distribution - WFPS
 #hist(soilbulk_full$percent_WFPS) # no extremes, nice normal distribution
 
 # Check new number of replicates per site
-#sort(table(soilbulk_full$SiteID)) # 3 sites with less than 20 replicates (OS5, OC3, OC2) -> validated
+#sort(table(soilbulk_full$SiteID)) 
+# 9 sites with less than 20 replicates and lowest IC3 with 9 replicates (due to missing values) -> validated
 
 
 ## Export clean data in new excel file
