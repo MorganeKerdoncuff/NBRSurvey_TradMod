@@ -438,7 +438,7 @@ residualPlots(lm(GrassDCA1~FlockSize1_adults, data = allvar_grass)) # Tukey=2.66
 #residualPlots(lm(GrassDCA1~GrazingSurface_ha, data = allvar_grass)) # Tukey=0.073 ; p=0.94 -> validated
 #residualPlots(lm(GrassDCA1~TotalInfieldSurface, data = allvar_grass)) # Tukey=1.58 ; p=0.11 -> validated
 #residualPlots(lm(GrassDCA1~Grazingdensity_perha, data = allvar_grass)) # Tukey=0.66 ; p=0.51 -> validated
-#residualPlots(lm(GrassDCA1~MeanBD, data = allvar_grass)) # Tukey=0.34 ; p=0.73 -> validated
+#residualPlots(lm(GrassDCA1~MeanBD, data = allvar_grass)) # Tukey=0.32 ; p=0.75 -> validated
 #residualPlots(lm(GrassDCA1~MeanPT, data = allvar_grass)) # Tukey=-1.7 ; p=0.088 -> a bit tight
 #residualPlots(lm(GrassDCA1~MeanpH, data = allvar_grass)) # Tukey=0.35 ; p=0.73 -> validated
 #residualPlots(lm(GrassDCA1~MeanPhosphorus, data = allvar_grass)) # Tukey=0.48 ; p=0.63 -> validated
@@ -463,7 +463,7 @@ residualPlots(lm(ForbDCA1~FlockSize1_adults, data = allvar_forb)) # Tukey=-2.38 
 #residualPlots(lm(ForbDCA1~GrazingSurface_ha, data = allvar_forb)) # Tukey=-1.34 ; p=0.18 -> validated
 #residualPlots(lm(ForbDCA1~TotalInfieldSurface, data = allvar_forb)) # Tukey=-1.16 ; p=0.25 -> validated
 #residualPlots(lm(ForbDCA1~Grazingdensity_perha, data = allvar_forb)) # Tukey=-1.06 ; p=0.29 -> validated
-#residualPlots(lm(ForbDCA1~MeanBD, data = allvar_forb)) # Tukey=-0.33 ; p=0.74 -> validated
+#residualPlots(lm(ForbDCA1~MeanBD, data = allvar_forb)) # Tukey=-0.05 ; p=0.96 -> validated
 #residualPlots(lm(ForbDCA1~MeanPT, data = allvar_forb)) # Tukey=1.23 ; p=0.22 -> validated
 #residualPlots(lm(ForbDCA1~MeanpH, data = allvar_forb)) # Tukey=0.12 ; p=0.9 -> validated
 #residualPlots(lm(ForbDCA1~MeanPhosphorus, data = allvar_forb)) # Tukey=1.18 ; p=0.07 -> a bit tight
@@ -488,7 +488,7 @@ residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle)) # Tukey=-1.
 #residualPlots(lm(BeetlePCA1~GrazingSurface_ha, data = allvar_beetle)) # Tukey=0.87 ; p=0.39 -> validated
 #residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle)) # Tukey=-0.88 ; p=0.38 -> validated
 #residualPlots(lm(BeetlePCA1~Grazingdensity_perha, data = allvar_beetle)) # Tukey=0.31 ; p=0.76 -> validated
-#residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle)) # Tukey=-0.6 ; p=0.55 -> validated
+#residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle)) # Tukey=-0.45 ; p=0.66 -> validated
 #residualPlots(lm(BeetlePCA1~MeanPT, data = allvar_beetle)) # Tukey=0.82 ; p=0.41 -> validated
 residualPlots(lm(BeetlePCA1~MeanExposedGround, data = allvar_beetle)) # Tukey=-2.28 ; p=0.023 -> rejected (one outlier? -> not really after verification)
 residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # Tukey=-2.06 ; p=0.039 -> rejected (one outlier? -> not really after verification)
@@ -736,7 +736,7 @@ plt.cc(cancor_landscapexgrass, var.label = TRUE)
 cancor_grazingxlocenvi_grass <- cc(contin_grazing_vege, contin_locenvi_grass)
 rho_grazingxlocenvi_grass <- cancor_grazingxlocenvi_grass$cor
 rho_grazingxlocenvi_grass 
-# 1st axis correlation 0.59
+# 1st axis correlation 0.6
 p.asym(rho_grazingxlocenvi_grass, nobs, nvar_grazing_vege, nvar_locenvi_grass, tstat = "Hotelling") 
 # 1st dim NS - stat 1.12 - df1 30 - df2 82 - pval 0.94
 plt.cc(cancor_grazingxlocenvi_grass, var.label = TRUE)
@@ -761,7 +761,7 @@ rho_locenvixgrass <- cancor_locenvixgrass$cor
 rho_locenvixgrass 
 # 1st axis correlation 0.9
 p.asym(rho_locenvixgrass, nobs, nvar_locenvi_grass, nvar_grass, tstat = "Hotelling") 
-# 1st axis significant - stat 6.78 - df1 48 - df2 80 - pval 6.01.10-3
+# 1st axis significant - stat 6.81 - df1 48 - df2 80 - pval 5.77.10-3
 plt.cc(cancor_locenvixgrass, var.label = TRUE)
 plt.cc(cancor_locenvixgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
 
@@ -841,7 +841,7 @@ rho_landscapexlocalenvi_forb <- cancor_landscapexlocalenvi_forb$cor
 rho_landscapexlocalenvi_forb 
 # 1st axis correlation 0.77
 p.asym(rho_landscapexlocalenvi_forb, nobs, nvar_landscape_forb, nvar_locenvi_forb, tstat = "Hotelling") 
-# 1st dim significant - stat 2.38 - df1 25 - df2 87 - pval 0.04
+# 1st dim significant - stat 2.37 - df1 25 - df2 87 - pval 0.046
 plt.cc(cancor_landscapexlocalenvi_forb, var.label = TRUE)
 
 # Landscape x forb community
@@ -881,8 +881,13 @@ cancor_locenvixforb <- cc(contin_locenvi_forb, contin_forb)
 rho_locenvixforb <- cancor_locenvixforb$cor
 rho_locenvixforb 
 # 1st axis correlation 0.74
+# 2nd axis correlation 0.69
+# 3rd axis correlation 0.6
+
 p.asym(rho_locenvixforb, nobs, nvar_locenvi_forb, nvar_forb, tstat = "Hotelling") 
-# 1st dim significant - stat 3.08 - df1 30 - df2 82 - pval 0.034
+# 1st dim significant - stat 3.1 - df1 30 - df2 82 - pval 0.032
+# 2nd dim significant - stat 1.87 - df1 20 - df2 92 - pval 0.044
+# 3rd dim marginally significant - stat 0.98 - df1 12 - df2 102 - pval 0.084
 plt.cc(cancor_locenvixforb, var.label = TRUE)
 plt.cc(cancor_locenvixforb, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
 
