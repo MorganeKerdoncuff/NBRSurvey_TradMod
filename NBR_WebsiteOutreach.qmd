@@ -81,7 +81,7 @@ Fields grazed by goats were also the ones with the highest abundance of soil fau
 ```{r FunctionSpecies}
 #| label: fig-functionspecies
 #| out-width: "800px"
-#| fig-cap: "Biodiversity found in the fields of the Nordhordland Biosphere Reserve"
+#| fig-cap: "Biodiversity found in the fields of the Nordhordland Biosphere Reserve. Grasses can have different fodder values, beetles can decompose dung and plant litter, and soil fauna encompasses both decomposers and predators."
 #| message: true
 #| warning: true
 knitr::include_graphics("illustrations/NBR_OutreachSpecies.png")
