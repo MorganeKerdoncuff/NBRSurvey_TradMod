@@ -219,8 +219,8 @@ beetle <- subset(beetle_grass,
                    BeetleFamilies == "Staphylinidae" |
                    BeetleFamilies == "Hydrophilidae" |
                    BeetleFamilies == "Ptiliidae" |
-                   BeetleFamilies == "Scarabaeidae"|
-                   BeetleFamilies == "Siphidae")
+                   BeetleFamilies == "Scarabaeidae")#|
+                   #BeetleFamilies == "Siphidae")
 
 # Log transformation
 beetle <- beetle |> 
@@ -395,7 +395,7 @@ DCA_forb <- decorana(contin_forb)
 DCA_forb # Axis length of 2.7 -> keep DCA
 plot(DCA_forb)
 DCA_beetle <- decorana(contin_beetle)
-DCA_beetle # Axis length at 1 -> run PCA
+DCA_beetle # Axis length at 1.3 -> run PCA
 PCA_beetle <- prcomp(contin_beetle)
 PCA_beetle
 biplot(PCA_beetle)
@@ -484,9 +484,9 @@ residualPlots(lm(ForbDCA1~AspectDegree, data = allvar_forb)) #rejected
 # residualPlots(lm(BeetlePCA1~Infield_percent, data = allvar_beetle))
 # residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle))
 # residualPlots(lm(BeetlePCA1~Wetland_percent, data = allvar_beetle))
-#residualPlots(lm(BeetlePCA1~Sheep, data = allvar_beetle)) # binary, cannot be checked
-#residualPlots(lm(BeetlePCA1~Cow, data = allvar_beetle)) # binary, cannot be checked
-#residualPlots(lm(BeetlePCA1~Goat, data = allvar_beetle)) # binary, cannot be checked
+# residualPlots(lm(BeetlePCA1~Sheep, data = allvar_beetle)) # binary, cannot be checked
+# residualPlots(lm(BeetlePCA1~Cow, data = allvar_beetle)) # binary, cannot be checked
+# residualPlots(lm(BeetlePCA1~Goat, data = allvar_beetle)) # binary, cannot be checked
 # residualPlots(lm(BeetlePCA1~FlockSize1_adults, data = allvar_beetle))
 # residualPlots(lm(BeetlePCA1~GrazingSurface_ha, data = allvar_beetle))
 # residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle))
@@ -833,10 +833,14 @@ cancor_locenvixgrass <- cc(contin_locenvi_grass, contin_grass)
 rho_locenvixgrass <- cancor_locenvixgrass$cor
 rho_locenvixgrass 
 # 1st axis correlation 0.87
-p.asym(rho_locenvixgrass, nobs, nvar_locenvi, nvar_grass, tstat = "Hotelling") 
+sigsum <- p.asym(rho_locenvixgrass, nobs, nvar_locenvi, nvar_grass, tstat = "Hotelling")
+sigsum
 # 1st axis significant - stat 4.63 - df1 42 - df2 86 - pval 0.038
-plt.cc(cancor_locenvixgrass, var.label = TRUE)
-plt.cc(cancor_locenvixgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
+summary_locenvixgrass <- cbind(rho_locenvixgrass, sigsum$approx, sigsum$df1, sigsum$df2, sigsum$p.value)
+summary_locenvixgrass
+# plt.cc(cancor_locenvixgrass, var.label = TRUE)
+# plt.cc(cancor_locenvixgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
+
 
 
 
@@ -1013,7 +1017,7 @@ rho_fjordxbeetle <- cancor_fjordxbeetle$cor
 rho_fjordxbeetle
 # 1st axis correlation 0.69
 p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.44 - df1 20 - df2 74 - pval 0.18
+# 1st dim NS - stat 1.38 - df1 20 - df2 74 - pval 0.22
 plt.cc(cancor_fjordxbeetle, var.label = TRUE)
 
 #
@@ -1041,9 +1045,9 @@ plt.cc(cancor_landscapexlocalenvi_beetle, var.label = TRUE)
 cancor_landscapexbeetle <- cc(contin_landscape_beetle, contin_beetle)
 rho_landscapexbeetle <- cancor_landscapexbeetle$cor
 rho_landscapexbeetle
-# 1st axis correlation 0.68
+# 1st axis correlation 0.71
 p.asym(rho_landscapexbeetle, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.65 - df1 25 - df2 87 - pval 0.31
+# 1st dim NS - stat 1.76 - df1 25 - df2 87 - pval 0.24
 plt.cc(cancor_landscapexbeetle, var.label = TRUE)
 
 #
@@ -1062,9 +1066,9 @@ plt.cc(cancor_grazingxlocenvi_beetle, var.label = TRUE)
 cancor_grazingxbeetle <- cc(contin_grazing_beetle, contin_beetle)
 rho_grazingxbeetle <- cancor_grazingxbeetle$cor
 rho_grazingxbeetle
-# 1st axis correlation 0.67
+# 1st axis correlation 0.72
 p.asym(rho_grazingxbeetle, nobs, nvar_grazing, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.4 - df1 30 - df2 82 - pval 0.79
+# 1st dim NS - stat 1.73 - df1 30 - df2 82 - pval 0.55
 plt.cc(cancor_grazingxbeetle, var.label = TRUE)
 
 #
@@ -1076,7 +1080,7 @@ rho_locenvixbeetle <- cancor_locenvixbeetle$cor
 rho_locenvixbeetle
 # 1st axis correlation 0.73
 p.asym(rho_locenvixbeetle, nobs, nvar_locenvi, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 2.44 - df1 30 - df2 82 - pval 0.16
+# 1st dim NS - stat 2.5 - df1 30 - df2 82 - pval 0.14
 plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 #VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
 #plot(cancor_locenvixbeetle, which = 1)
@@ -1098,12 +1102,15 @@ plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 # Redundancy analysis and plot
 rda_fjordxlandscape <- rda(subset(landscape, select = -c(SiteID)) ~ Elevation_max + AnnualPrecipitation + MaxTempJuly + DistanceToSea_m, data = fjordsys)
 plotrda_fjordxlandscape <- ggord(rda_fjordxlandscape,
-      text = 3,
+      txt = 4,
       ptslab = TRUE,
       addsize = 3,
-      size = 2,
-      xlims = c(-1.5, 1),
-      ylims = c(-0.6, 1.2))
+      size = 1,
+      arrow = 0.3,
+      #repel = TRUE,
+      vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
+      xlims = c(-1.3, 1),
+      ylims = c(-0.8, 1.4))
 plotrda_fjordxlandscape
 
 # Summary rda
@@ -1144,13 +1151,15 @@ locenvi <- full_join(locenvi_vege, locenvi_beetle)
 # Redundancy analysis and plot
 rda_landscapexlocenvi <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(landscape, select = -c(SiteID)))
 plotrda_landscapexlocenvi <- ggord(rda_landscapexlocenvi,
-                                 text = 3,
+                                 text = 4,
                                  ptslab = TRUE,
                                  addsize = 3,
-                                 size = 2,
+                                 size = 1,
+                                 arrow = 0.3,
                                  repel = TRUE,
-                                 xlims = c(-1.2, 1),
-                                 ylims = c(-0.8, 1.1))
+                                 vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", Wetland_percent = "WetArea", TotCultivatedLand_percent = "CultArea"),
+                                 xlims = c(-1.1, 1.1),
+                                 ylims = c(-0.9, 1.2))
 plotrda_landscapexlocenvi
 
 # Summary rda
@@ -1188,17 +1197,22 @@ rda_landscapexlocenvi$CA$eig[rda_landscapexlocenvi$CA$eig > mean(rda_landscapexl
 # Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "hellinger")
 
+# Remove space within plant names (otherwise parse error in plot)
+names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
+
 # Redundancy analysis
 rda_fjordxgrass <- rda(hellinger_grass ~ ., data = subset(fjordsys, select = -c(SiteID)))
 plotrda_fjordxgrass <- ggord(rda_fjordxgrass,
-                               text = 3,
-                               parse = FALSE,
+                               text = 4,
+                               #parse = FALSE,
                                ptslab = TRUE,
                                addsize = 3,
-                               size = 2,
-                               repel = TRUE,
-                               xlims = c(-1, 1.1),
-                               ylims = c(-1, 1.1))
+                               size = 1,
+                             arrow = 0.3,
+                             vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
+                               #repel = TRUE,
+                               xlims = c(-1, 1.3),
+                               ylims = c(-1.1, 1.3))
 plotrda_fjordxgrass
 
 # Summary rda
@@ -1235,17 +1249,21 @@ rda_fjordxgrass$CA$eig[rda_fjordxgrass$CA$eig > mean(rda_fjordxgrass$CA$eig)]
 # Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "hellinger")
 
+# Remove space within plant names (otherwise parse error in plot)
+names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
+
 # Redundancy analysis
 rda_grazingxgrass <- rda(hellinger_grass ~ ., data = subset(grazing, select = -c(SiteID, FlockSize1_adults)))
 plotrda_grazingxgrass <- ggord(rda_grazingxgrass,
-                               text = 3,
-                               parse = FALSE,
+                               text = 4,
                                ptslab = TRUE,
                                addsize = 3,
-                               size = 2,
-                               repel = TRUE,
-                               xlims = c(-1, 1.1),
-                               ylims = c(-1.1, 0.9))
+                               size = 1,
+                               arrow = 0.3,
+                               vec_lab = list(TotalInfieldSurface = "FarmInfArea", GrazingSurface_ha = "GrazArea", AvgStockingDensity_perha = "StockDens", Sheep = "Sheep", Cow = "Cow"),
+                               #repel = TRUE,
+                               xlims = c(-1.1, 1.1),
+                               ylims = c(-1.2, 1))
 plotrda_grazingxgrass
 
 # Summary rda
@@ -1282,17 +1300,21 @@ rda_grazingxgrass$CA$eig[rda_grazingxgrass$CA$eig > mean(rda_grazingxgrass$CA$ei
 # Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "hellinger")
 
+# Remove space within plant names (otherwise parse error in plot)
+names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
+
 # Redundancy analysis
 rda_locenvixgrass <- rda(hellinger_grass ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
 plotrda_locenvixgrass <- ggord(rda_locenvixgrass,
-                               text = 3,
-                               parse = FALSE,
+                               text = 4,
                                ptslab = TRUE,
                                addsize = 3,
-                               size = 2,
-                               repel = TRUE,
-                               xlims = c(-0.8, 0.8),
-                               ylims = c(-0.7, 0.7))
+                               size = 1,
+                               arrow = 0.3,
+                               vec_lab = list(GeneralSlope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", AspectDegree = "Aspect", MeanpH = "pH"),
+                               #repel = TRUE,
+                               xlims = c(-1, 1),
+                               ylims = c(-1, 0.8))
 plotrda_locenvixgrass
 
 # Summary RDA
@@ -1331,17 +1353,21 @@ rda_locenvixgrass$CA$eig[rda_locenvixgrass$CA$eig > mean(rda_locenvixgrass$CA$ei
 # Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "hellinger")
 
+# Remove space within plant names (otherwise parse error in plot)
+names(hellinger_forb) <- gsub(" ", "_", names(hellinger_forb))
+
 # Redundancy analysis
 rda_locenvixforb <- rda(hellinger_forb ~ ., data = subset(locenvi_vege, select = -c(SiteID, AspectDegree)))
 plotrda_locenvixforb <- ggord(rda_locenvixforb,
-                               text = 3,
-                               parse = FALSE,
+                               text = 4,
                                ptslab = TRUE,
                                addsize = 3,
-                               size = 2,
+                               size = 1,
+                              arrow = 0.3,
+                              vec_lab = list(GeneralSlope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", MeanpH = "pH"),
                                repel = TRUE,
-                               xlims = c(-0.9, 0.9),
-                               ylims = c(-0.9,0.7))
+                              xlims = c(-1, 1),
+                              ylims = c(-1, 0.9))
 plotrda_locenvixforb
 
 # Summary RDA
@@ -1378,38 +1404,60 @@ rda_locenvixforb$CA$eig[rda_locenvixforb$CA$eig > mean(rda_locenvixforb$CA$eig)]
 #
 ## Fine-scale environment x beetle
 
-# # Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-# hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
-# 
-# # Redundancy analysis
-# rda_locenvixbeetle <- rda(hellinger_beetle ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
-# plotrda_locenvixbeetle <- ggord(rda_locenvixbeetle,
-#                               text = 3,
-#                               parse = FALSE,
-#                               ptslab = TRUE,
-#                               addsize = 3,
-#                               size = 2,
-#                               repel = TRUE,
-#                               xlims = c(-0.9, 0.9),
-#                               ylims = c(-0.9,0.7))
-# plotrda_locenvixbeetle
-# 
-# # Summary rda
-# summary(rda_locenvixbeetle)
-# 
-# # Total variance explained by RDA
-# RsquareAdj(rda_locenvixbeetle)
-# 
-# # Global RDA significance by permutation
-# anova.cca(rda_locenvixbeetle) # RDA model NS
-# 
-# # Individual axis significance
-# anova.cca(rda_locenvixbeetle, by = "axis") # 1st axis NS
-# 
-# # Individual term significance
-# anova.cca(rda_locenvixbeetle, by = "term")
-# # Mean BD significant - df 1 - variance 0.003 - F 4.06 - pval 0.018
-# # Mean Height marginally significant - df 1 - variance 0.002 - F 2.94 - pval 0.069
-# 
-# # Residual variation using Kaiser-Guttman criterion
-# rda_locenvixbeetle$CA$eig[rda_locenvixbeetle$CA$eig > mean(rda_locenvixbeetle$CA$eig)]
+# Hellinger transformation of response matrix, suited for abundance data (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
+
+# Redundancy analysis
+rda_locenvixbeetle <- rda(hellinger_beetle ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
+plotrda_locenvixbeetle <- ggord(rda_locenvixbeetle,
+                              text = 4,
+                              #parse = FALSE,
+                              ptslab = TRUE,
+                              addsize = 3,
+                              size = 1,
+                              arrow = 0.3,
+                              vec_lab = list(GeneralSlope = "Slope", AspectDegree = "Aspect", MeanBD = "BulkDens", MeanPT = "PenRate", MeanLitter = "LitCov", MeanBryo = "BryoCov", MeanHeight = "AvgHeight"),
+                              #repel = TRUE,
+                              xlims = c(-1.2, 1),
+                              ylims = c(-1.1, 1.1))
+plotrda_locenvixbeetle
+
+# Summary rda
+#summary(rda_locenvixbeetle)
+# 1st axis driven by bulk density (-0.69), aspect (0.43) and vegetation height (0.4)
+# 2nd axis driven by bryophyte layer (0.71), vegetation height (-0.76) and slope (0.4)
+# 1st axis drives Carabidae (-0.34) and Ptilidae (0.35)
+# 2nd axis drives Scarabaeidae (0.21)
+
+# Total variance explained by RDA
+RsquareAdj(rda_locenvixbeetle)
+# R2 0.31
+# Adj R2 0.08
+
+# Global RDA significance by permutation
+anova.cca(rda_locenvixbeetle)
+# RDA model NS - df 7 - var 0.013 - F 1.34 - pval 0.20
+# residual df 21 - variance 0.03
+
+# Individual axis significance
+anova.cca(rda_locenvixbeetle, by = "axis")
+# 1st axis NS  - df 1 - var 0.01 - F 7.93 - pval 0.16
+
+# Individual term significance
+anova.cca(rda_locenvixbeetle, by = "term")
+# Mean BD significant - df 1 - variance 0.005 - F 3.63 - pval 0.019
+# Mean Height marginally significant - df 1 - variance 0.004 - F 2.47 - pval 0.094
+
+# Residual variation using Kaiser-Guttman criterion
+rda_locenvixbeetle$CA$eig[rda_locenvixbeetle$CA$eig > mean(rda_locenvixbeetle$CA$eig)]
+# unexplained variance PC1 0.018
+
+#
+## Arrangement all plots
+
+rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_landscapexlocenvi, plotrda_grazingxgrass, plotrda_locenvixgrass, plotrda_locenvixforb, plotrda_locenvixbeetle, 
+                   labels = c("A", "B", "C", "D", "E", "F"),
+                   ncol = 2,
+                   nrow = 3)
+rdall
+ggsave("outputs/RDAresults.png", plot = rdall, width = 19, height = 26, units = "cm", bg = "white")
