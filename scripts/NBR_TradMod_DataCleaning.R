@@ -529,7 +529,7 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 #hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
 
 #
-## New variable - grazing intensity
+## New variable - average stocking density
 
 # Livestock unit for adults - depends on type of livestock and breed (for cows)
 #unique(landuse_full$Cowbreed) # Milking cows (norsk rødt fe) are 1 SSU - Beef cattle (Limousin, Aberdeen angus, Highland) are 0.8 LSU - Sheep and goats are 0.1 LSu
@@ -545,7 +545,7 @@ landuse_full <- landuse_full |>
 # Grazing intensity over the year - two goat flocks in Osterøy were known to be moved to summer farm (outfield)
 landuse_full <- landuse_full |>  
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
-  mutate(Grazingdensity_perha = ifelse(
+  mutate(AvgStockingDensity_perha = ifelse(
     Livestock1 == "goat" & Municipality_old == "Osterøy", 
     ((FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)*(YearlyGrazing1_month/12), 
     (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)
@@ -1704,7 +1704,12 @@ test <- arthro_full |>
 #hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
 
 #
-## Table formatting for vegan beetle only (long table)
+## Table formatting for vegan
+
+# Replace NAs by zeros
+arthro_full <-  mutate_if(is.numeric, ~replace(., is.na(.), 0))
+
+# Long table beetle only
 beetle_full <- subset(arthro_full, select = c(SiteID, SampleID, Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae))
 beetle_full <- beetle_full |> 
   pivot_longer(
@@ -1712,10 +1717,11 @@ beetle_full <- beetle_full |>
     names_to = "BeetleFamilies", 
     values_to = "BeetleFam_abundance") |> 
   mutate(PlotID = substr(SampleID, 1, 6)) |>
-  mutate(SiteID = substr(SampleID, 1, 3))
+  mutate(SiteID = substr(SampleID, 1, 3)) |> 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) # replace NAs by zeros
 
-#
-## Table formatting for vegan (long table)
+
+# Long table all arthropods
 arthro_full <- arthro_full |> 
   pivot_longer(
     cols = c(Staphylinidae, Carabidae, Hydrophilidae, Scarabaeidae, Ptiliidae, Curculionidae, Elateridae, Rhizophagidae, Leiodidae, Silphidae, Histeridae, Geotrupidae, Chrysomelidae, Dascillidae, Other, Erotylidae),
@@ -1726,11 +1732,10 @@ arthro_full <- arthro_full |>
     names_to = "Orders", 
     values_to = "Order_abundance") |>
   mutate(PlotID = substr(SampleID, 1, 6)) |>
-  mutate(SiteID = substr(SampleID, 1, 3))
+  mutate(SiteID = substr(SampleID, 1, 3)) |> 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0))
 
-#
-## Export clean data in new excel file
-
+# Export clean data in new excel file
 write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
 write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
 
@@ -1899,7 +1904,7 @@ averagepreci <- terra::app(allpreci_yearly, mean, NA.RM = TRUE)
 
 # Extract yearly values for NBR site coordinates
 precipitation <- as.data.frame(terra::extract(averagepreci, subset(sitecoord, select = c(Xsite, Ysite))))
-names(precipitation) <- gsub("mean", "AnnualPrecipitation", names(precipitation))
+names(precipitation) <- gsub("mean", "annualprecipitation", names(precipitation))
 
 #
 ## Max temperature data
@@ -1920,7 +1925,7 @@ plot(fullmaxtemp_meanJuly)
 
 # Extract mean values for NBR site coordinates
 maxtempjuly <- as.data.frame(terra::extract(fullmaxtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
-names(maxtempjuly) <- gsub("focal_mean", "MaxTempJuly", names(maxtempjuly))
+names(maxtempjuly) <- gsub("focal_mean", "maxtempJuly", names(maxtempjuly))
 
 #
 ## Min temperature data
@@ -1941,7 +1946,7 @@ plot(fullmintemp_meanJan)
 
 # Extract mean values for NBR site coordinates
 mintempJan <- as.data.frame(terra::extract(fullmintemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
-names(mintempJan) <- gsub("focal_mean", "MinTempJan", names(mintempJan))
+names(mintempJan) <- gsub("focal_mean", "mintempJan", names(mintempJan))
 
 #
 ## Preparation final dataset
@@ -1951,9 +1956,9 @@ climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintem
 
 # Rescaling - original data at 0.1 scale - temp conversion to C
 climate_full <- climate_full |> 
-  mutate(annualprecipitation = AnnualPrecipitation/10,
-         MaxTempJuly = MaxTempJuly/100-273.15,
-         MinTempJan = MinTempJan/100-273.15)
+  mutate(annualprecipitation = annualprecipitation/10,
+         maxtempJuly = maxtempJuly/100-273.15,
+         mintempJan = mintempJan/100-273.15)
 
 # Clean data + export in csv
 climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
