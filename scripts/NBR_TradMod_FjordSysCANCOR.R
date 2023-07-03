@@ -171,9 +171,9 @@ forb <- subset(vege_grass,
                   Species == "Achillea millefolium")
 
 # Log transformation
-grass <- grass |> 
+grass <- grass |>
   mutate(PlantSp_logcover = log1p(PlantSp_cover))
-forb <- forb |> 
+forb <- forb |>
   mutate(PlantSp_logcover = log1p(PlantSp_cover))
 
 # Contingency tables
@@ -1311,7 +1311,7 @@ plotrda_locenvixgrass <- ggord(rda_locenvixgrass,
                                addsize = 3,
                                size = 1,
                                arrow = 0.3,
-                               vec_lab = list(GeneralSlope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", AspectDegree = "Aspect", MeanpH = "pH"),
+                               vec_lab = list(General_slope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", AspectDegree = "Aspect", MeanpH = "pH"),
                                #repel = TRUE,
                                xlims = c(-1, 1),
                                ylims = c(-1, 0.8))
@@ -1364,7 +1364,7 @@ plotrda_locenvixforb <- ggord(rda_locenvixforb,
                                addsize = 3,
                                size = 1,
                               arrow = 0.3,
-                              vec_lab = list(GeneralSlope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", MeanpH = "pH"),
+                              vec_lab = list(General_slope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", MeanpH = "pH"),
                                repel = TRUE,
                               xlims = c(-1, 1),
                               ylims = c(-1, 0.9))
@@ -1416,7 +1416,7 @@ plotrda_locenvixbeetle <- ggord(rda_locenvixbeetle,
                               addsize = 3,
                               size = 1,
                               arrow = 0.3,
-                              vec_lab = list(GeneralSlope = "Slope", AspectDegree = "Aspect", MeanBD = "BulkDens", MeanPT = "PenRate", MeanLitter = "LitCov", MeanBryo = "BryoCov", MeanHeight = "AvgHeight"),
+                              vec_lab = list(General_slope = "Slope", AspectDegree = "Aspect", MeanBD = "BulkDens", MeanPT = "PenRate", MeanLitter = "LitCov", MeanBryo = "BryoCov", MeanHeight = "AvgHeight"),
                               #repel = TRUE,
                               xlims = c(-1.2, 1),
                               ylims = c(-1.1, 1.1))
