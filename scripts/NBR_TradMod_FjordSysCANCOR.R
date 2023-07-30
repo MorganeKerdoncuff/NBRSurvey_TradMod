@@ -1,10 +1,10 @@
 # TradMod WP2 - NBR survey grazer loading script
 #Description of the data
-#Date
-#Who
-#Project
-#Funding
-#Place
+#Year - 2023
+#Who - Morgane Kerdoncuff
+#Project - TradMod
+#Funding - NFR
+#Place - University of Bergen, Norway
 
 #### PACKAGE LOADING ####
 
@@ -59,7 +59,7 @@ vege_grass <- filter(vege_full, SiteID %in% siteinfo_grass$SiteID)
 beetle_grass <- filter(beetle_full, SiteID %in% siteinfo_grass$SiteID)
 
 #
-## Summarise data at site level -> should be 30 observations for non community data
+## Summarise data at site level -> should be 29 observations for non community data
 
 # Site info - validated
 
