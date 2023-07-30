@@ -1,10 +1,10 @@
 # TradMod WP2 - NBR survey cleaning script
 #Description of the data
-#Date
-#Who
-#Project
-#Funding
-#Place
+#Year - 2023
+#Who - Morgane Kerdoncuff
+#Project - TradMod
+#Funding - NFR
+#Place - University of Bergen, Norway
 
 #### PACKAGE LOADING ####
 
@@ -35,7 +35,7 @@ vege_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichne
 arthro_main <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
 arthro_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
 mesobio_raw <- read_excel(path = "data/rawdata/NBR_RawMesobio.xlsx", na="NA")
-
+biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
 
 #### SITE INFO ####
 
@@ -1433,7 +1433,67 @@ soilchem_full <- soilchem_raw
 ## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
 
 # Site ID
-#table(soilchem_full$SiteID) # 3 samples per site - validated
+#table(soilchem_full$SiteID) # 3 samples per site - validated - but missing OV1 site
+
+# Adding OV1-P1 replicate
+soilchem_full <- soilchem_full |> 
+  add_row(PlotID = 'OV1-P1',
+          SoilType = 13,
+          ClayCategory = 1,
+          LOI = 25.8,
+          SoilDensity_kg.L = 0.59,
+          Humus_percentDM = 25.8,
+          HumusCategory = 5,
+          pH = 5.4,
+          P.Al_mg.100g = 3,
+          K.Al_mg.100g = 14,
+          Mg.Al_mg.100g = 20,
+          Ca.Al_mg.100g = 31,
+          Na.Al_mg.100g = 6,
+          DryMatter_percent = 0.5,
+          TotalN_percentDM = 0.44,
+          SiteID = 'OV1'
+          )
+
+# Adding OV1-P2 replicate
+soilchem_full <- soilchem_full |> 
+  add_row(PlotID = 'OV1-P2',
+          SoilType = 13,
+          ClayCategory = 1,
+          LOI = 26.0,
+          SoilDensity_kg.L = 0.74,
+          Humus_percentDM = 26.0,
+          HumusCategory = 5,
+          pH = 4.9,
+          P.Al_mg.100g = 3,
+          K.Al_mg.100g = 13,
+          Mg.Al_mg.100g = 15,
+          Ca.Al_mg.100g = 21,
+          Na.Al_mg.100g = 5,
+          DryMatter_percent = 91.4,
+          TotalN_percentDM = 0.51,
+          SiteID = 'OV1'
+  )
+
+# Adding OV1-P3 replicate
+soilchem_full <- soilchem_full |> 
+  add_row(PlotID = 'OV1-P3',
+          SoilType = 14,
+          ClayCategory = 1,
+          LOI = 43.2,
+          SoilDensity_kg.L = 0.38,
+          Humus_percentDM = 43.2,
+          HumusCategory = 6,
+          pH = 5.0,
+          P.Al_mg.100g = 3,
+          K.Al_mg.100g = 12,
+          Mg.Al_mg.100g = 14,
+          Ca.Al_mg.100g = 16,
+          Na.Al_mg.100g = 5,
+          DryMatter_percent = 85.4,
+          TotalN_percentDM = 0.72,
+          SiteID = 'OV1'
+  )
 
 # Plot ID
 #soilchem_full[duplicated(soilchem_full$PlotID),] # Unique plot ID - validated
@@ -1562,6 +1622,9 @@ write_csv(soilchem_full, "data/cleandata/NBR_FullSoilChem.csv")
 
 #table(vege_raw$Species) # several name repetitions + some unknown species
 
+# Liste species names
+unique(vege_raw$Species)
+
 # Correction latin name
 vege_raw <- vege_raw |>  
   mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |> 
@@ -1569,7 +1632,29 @@ vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Polytrichum juniperirinum" = "Polytrichum juniperinum")) |> 
   mutate(Species = dplyr::recode(Species, "Rhacomitrium" = "Racomitrium")) |> 
   mutate(Species = dplyr::recode(Species, "Kystkransmose" = "Rhytidiadelphus loreus")) |> 
-  mutate(Species = dplyr::recode(Species, "Sphagunm" = "Sphagnum"))
+  mutate(Species = dplyr::recode(Species, "Sphagunm" = "Sphagnum")) |> 
+  mutate(Species = dplyr::recode(Species, "Antittrichia curtipendula" = "Antitrichia curtipendula")) |> 
+  mutate(Species = dplyr::recode(Species, "Antrichum" = "Atrichum")) |> 
+  mutate(Species = dplyr::recode(Species, "Braen sp US5-P2" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Bryum sp" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Carex sp2 US2-P2" = "Carex sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Chamaepericlymenum suecica" = "Chamaepericlymenum suecicum")) |> 
+  mutate(Species = dplyr::recode(Species, "Chiloscytinus pallenscens" = "Chiloscytinus pallescens")) |> 
+  mutate(Species = dplyr::recode(Species, "Cuppy moss UC1" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Gnaphlium sylvaticum" = "Gnaphalium sylvaticum")) |> 
+  mutate(Species = dplyr::recode(Species, "Golden curly fern UG2-P1" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Hieracium sp IG3-P1" = "Hieracium sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Liverwort UG2-P2" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Luminous liverwort US1-P3" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Moss ND1 UG1-P1" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Mystery Carex OV1-P1" = "Carex sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Mystery grass OC5-P1" = "Poaceae sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Orchid sp" = "Orchidaceae sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Plagomnium" = "Plagiomnium")) |> 
+  mutate(Species = dplyr::recode(Species, "Skinny pleurocarp IS5-P1" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Straminergon straminergon" = "Straminergon stramineum")) |> 
+  mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Sphagnum sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Unknown shrub US2-P1" = "Woody sp"))
 
 #
 ## Data cleaning and manipulation
@@ -1754,23 +1839,35 @@ write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
 # [5] Site ID
 # [6] Other observer ?
 
-
 #
 ## Summary - Check table size, list of variables, variable types (num/chr)
 
-#str(mesobio_raw) # RAS
+#str(mesobio_raw) # need to rename comments, siteID and plotID should also be added
 
 #
 ## Character cleaning, Common ID and correct Latin names for merging
 
 # Common ID
 names(mesobio_raw) <- gsub("Sample_name_on_pot", "SampleID", names(mesobio_raw))
+names(mesobio_raw) <- gsub("...5", "Comments", names(mesobio_raw))
+
+# Check ID coding
+table(mesobio_raw$SampleID) # ØY experiment samples merged in, need to extract ØY-GK as OV1
+mesobio_raw <- mesobio_raw |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-R1-T2-D1" = "OV1-P1-D1")) |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-R1-T3-D1" = "OV1-P2-D1")) |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T4-D1" = "OV1-P3-D1")) 
+  
+# Add PlotID and SiteID
+mesobio_raw <- mesobio_raw |> 
+  mutate(PlotID = substr(SampleID, 1, 6)) |>
+  mutate(SiteID = substr(SampleID, 1, 3))
 
 #
 ## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
 
 # Site ID
-table(mesobio_raw$SiteID) # Missing IG3, OG2, OG3, OG5; IC3; tous les OC
+table(mesobio_raw$SiteID) # at least 3 per sheep (S or V) sites -> validated
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
@@ -1806,6 +1903,150 @@ mesobio_full <- mesobio_raw |>
 ## Export clean data in new excel file
 
 write_csv(mesobio_full, "data/cleandata/NBR_FullMesobio.csv")
+
+
+
+#### ABOVEGROUND BIOMASS ####
+
+## Description
+
+## List of variables
+
+# [1] Name of the observer who sorted and weighted the biomass
+# [2] Sample ID
+# [3] Plant functional type
+# [4] Dry weight of the biomass with the bag
+# [5] Dry weight of the biomass without the bag
+# [6] Type of bag
+# [7] Comments
+
+#
+## Summary  - Check table size, list of variables, variable types (num/chr)
+
+#str(biomass_raw) # all good
+
+#
+## Character cleaning, Common ID and correct Latin names for merging
+
+# Character cleaning & change variable name
+names(biomass_raw) <- gsub(" ", "", names(biomass_raw))
+names(biomass_raw) <-  gsub("\\(", "_", names(biomass_raw))
+names(biomass_raw) <-  gsub("\\)", "", names(biomass_raw))
+names(biomass_raw) <-  gsub("\\+", "And", names(biomass_raw))
+names(biomass_raw) <- gsub("Who", "ProcessedBy", names(biomass_raw))
+names(biomass_raw) <- gsub("Dryweight_g", "DWbiomass_g", names(biomass_raw))
+
+
+# Check ID coding
+#table(biomass_raw$SampleID) # ØY experiment samples merged in, need to extract ØY-GK as OV1
+biomass_raw <- biomass_raw |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T2-D1" = "OV1-P1-D1")) |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T3-D1" = "OV1-P2-D1")) |> 
+  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T4-D1" = "OV1-P3-D1")) 
+
+# Add PlotID and SiteID
+biomass_raw <- biomass_raw |> 
+  mutate(PlotID = substr(SampleID, 1, 6)) |>
+  mutate(SiteID = substr(SampleID, 1, 3))
+
+#
+## Data cleaning - New R object
+
+biomass_full <- subset(biomass_raw, select = -c(BiomassAndbag_g, BagType, ProcessedBy, Comments))
+
+#
+## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+
+# Site ID
+table(biomass_full$SiteID) # all sheep sites with between 7 bags and 61 bags -> need to check functional types
+
+# Functional type
+#unique(biomass_full$FunctionalType) # Need clear categories
+biomass_full <- biomass_full |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Grasses" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminoids" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminoids" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminioids" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminiods" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Herbs" = "forbs")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Forbs" = "forbs")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Ferns" = "ferns")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Woody" = "woody")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Mosses" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "moss" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Moss" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Bryo" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "leaf litter" = "litter")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Litter" = "litter")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Lichens" = "lichens")) |>
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "lichen" = "lichens")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Club mosses" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycopodium" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Lycopodium" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Huperzia selago" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Diphasiastrum alpinum" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Selaginella selaginoides" = "lycophytes"))
+# 9 categories
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- biomass_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # some negative values -> should be 
+
+# Check distribution of quantitative variable
+hist(biomass_full$DWbiomass_g) # quite a few negative values
+#filter(biomass_full, DWbiomass_g < 1) # 5 negative values
+
+# Check for duplicates in weights
+dupli <- biomass_full |>
+  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
+  summarise(n = n(), .groups = "drop") |> 
+  filter(n > 1L)
+unique(dupli$SampleID) # 8 duplicates
+
+# OS2-P1-D1 monocotyledons, OS2-P2-D3 forbs & monocotyledons
+# filter(biomass_full, SampleID == "OS2-P1-D1")
+# filter(biomass_full, SampleID == "OS2-P2-D3")
+# filter(biomass_full, SiteID == "OS2" & FunctionalType == "monocotyledons")
+# filter(biomass_full, SiteID == "OS2" & FunctionalType == "forbs")
+# Check on comments -> sample sorted in two half separatly -> weights should be summed
+
+# US4 lycophytes
+# filter(biomass_full, SampleID == "US4-P1-D1")
+# filter(biomass_full, SampleID == "US4-P1-D2")
+# filter(biomass_full, SampleID == "US4-P1-D3")
+# filter(biomass_full, SampleID == "US4-P1-D4")
+# filter(biomass_full, SampleID == "US4-P2-D4")
+# filter(biomass_full, SampleID == "US4-P3-D1")
+# filter(biomass_full, SiteID == "US4" & FunctionalType == "lycophytes") # duplicates due to renaming -> need to sum up all rows
+
+# Summarise duplicates by sum
+biomass_full <- biomass_full |> 
+  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
+  summarise(DWbiomass_g = sum(DWbiomass_g, na.rm = TRUE)) |> 
+  ungroup()
+
+#
+## Prepare data for vegan
+
+# Export clean data in new excel file
+write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
+
 
 
 #### Climate data ####
@@ -1917,7 +2158,7 @@ maxtemp_dailyJuly <- terra::rast(maxtemp_listJuly)
 
 # Calculate mean
 maxtemp_meanJuly <- terra::app(maxtemp_dailyJuly, mean, NA.RM = TRUE)
-plot(maxtemp_meanJuly)
+#plot(maxtemp_meanJuly)
 
 # Fill missing cell with average from closest cells
 fullmaxtemp_meanJuly <- terra::focal(maxtemp_meanJuly, w=7, fun = "mean", na.policy = "only")
@@ -1938,7 +2179,7 @@ mintemp_dailyJan <- terra::rast(mintemp_listJan)
 
 # Calculate mean
 mintemp_meanJan <- terra::app(mintemp_dailyJan, mean, NA.RM = TRUE)
-plot(mintemp_meanJan)
+#plot(mintemp_meanJan)
 
 # Fill missing cell with average from closest cells
 fullmintemp_meanJan <- terra::focal(mintemp_meanJan, w=7, fun = "mean", na.policy = "only")
@@ -1947,6 +2188,48 @@ plot(fullmintemp_meanJan)
 # Extract mean values for NBR site coordinates
 mintempJan <- as.data.frame(terra::extract(fullmintemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
 names(mintempJan) <- gsub("focal_mean", "mintempJan", names(mintempJan))
+
+#
+## Average July temperature data
+
+# Import tiff files according to July month
+avgtemp_listJuly <- list.files(path = "./data/avgtempraster", pattern= '_07_.*\\.tif$', all.files=TRUE, full.names=TRUE)
+
+# Import raster files within one object
+avgtemp_dailyJuly <- terra::rast(avgtemp_listJuly)
+
+# Calculate mean
+avgtemp_meanJuly <- terra::app(avgtemp_dailyJuly, mean, NA.RM = TRUE)
+#plot(avgtemp_meanJuly)
+
+# Fill missing cell with average from closest cells
+fullavgtemp_meanJuly <- terra::focal(avgtemp_meanJuly, w=7, fun = "mean", na.policy = "only")
+plot(fullavgtemp_meanJuly)
+
+# Extract mean values for NBR site coordinates
+avgtempJuly <- as.data.frame(terra::extract(fullavgtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
+names(avgtempJuly) <- gsub("focal_mean", "avgtempJuly", names(avgtempJuly))
+
+#
+## Average Jan temperature data
+
+# Import tiff files according to Jan month
+avgtemp_listJan <- list.files(path = "./data/avgtempraster", pattern= '_01_.*\\.tif$', all.files=TRUE, full.names=TRUE)
+
+# Import raster files within one object
+avgtemp_dailyJan <- terra::rast(avgtemp_listJan)
+
+# Calculate mean
+avgtemp_meanJan <- terra::app(avgtemp_dailyJan, mean, NA.RM = TRUE)
+#plot(avgtemp_meanJan)
+
+# Fill missing cell with average from closest cells
+fullavgtemp_meanJan <- terra::focal(avgtemp_meanJan, w=7, fun = "mean", na.policy = "only")
+plot(fullavgtemp_meanJan)
+
+# Extract mean values for NBR site coordinates
+avgtempJan <- as.data.frame(terra::extract(fullavgtemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
+names(avgtempJan) <- gsub("focal_mean", "avgtempJan", names(avgtempJan))
 
 #
 ## Preparation final dataset
@@ -1964,3 +2247,9 @@ climate_full <- climate_full |>
 climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
 write_csv(climate_full, "data/cleandata/NBR_FullClimate.csv")
 
+# Export summary raster files
+writeRaster(averagepreci, "outputs/NBR_maps/NBR_AnnualPreci.tiff", overwrite = TRUE)
+writeRaster(fullmaxtemp_meanJuly, "outputs/NBR_maps/NBR_MaxJulyTemp.tiff", overwrite = TRUE)
+writeRaster(fullmintemp_meanJan, "outputs/NBR_maps/NBR_MinJanTemp.tiff", overwrite = TRUE)
+writeRaster(fullavgtemp_meanJuly, "outputs/NBR_maps/NBR_AvgJulyTemp.tiff", overwrite = TRUE)
+writeRaster(fullavgtemp_meanJan, "outputs/NBR_maps/NBR_AvgJanTemp.tiff", overwrite = TRUE)
