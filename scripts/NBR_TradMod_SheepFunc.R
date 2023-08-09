@@ -16,10 +16,12 @@
 library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
+library(dendextend) # Visual dendrogram
+library(cluster) # Fuzzy clustering
 library(ggplot2) # Visual representation
-library(ggord) # Ordination plot with ggplot2
-library(ggpubr) # Function ggarrange for several plots on same file
-library(GGally) # Extension ggplot
+# library(ggord) # Ordination plot with ggplot2
+# library(ggpubr) # Function ggarrange for several plots on same file
+# library(GGally) # Extension ggplot
 
 
 #### DATA LOADING ####
@@ -139,3 +141,85 @@ data_sheep <- purrr::reduce(list(siteinfo_sheep, subset(plantrichness_sheep, sel
 
 
 #### HIERARCHICAL CLUSTERING ####
+
+#
+## Clustering & dendrogram
+
+# Extraction SiteID
+siteID <- data_sheep$SiteID
+# data_sheep <- subset(data_sheep, select = -c(SiteID))
+
+# Site ID as rowname
+rownames(data_sheep) <- data_sheep$SiteID
+
+# Data scaling
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID))))
+
+# Distance matrix - environmental continuous numeric -> Euclidean
+dist_sheep <- dist(data_sheep_sc, method = "euclidean")
+
+# Clustering using Ward's (1963) clustering criterion
+hclustwd_sheep <- hclust(dist_sheep, method = "ward.D2")
+
+# Plot HC tree
+plot(hclustwd_sheep)
+
+# Show clusters (k=5) with base
+rect.hclust(hclustwd_sheep, k = 5, border = 2:6)
+
+# Show clusters (k=5) with color_branches
+dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
+                               k = 5, 
+                               #groupLabels = TRUE,
+                               col = c(2, 3, 4, 5, 6))
+plot(dendro_sheep)
+
+# Cluster group
+clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
+
+#
+## Ordination clusters
+
+# NMDS -> one-dimension
+nmds_sheep <- metaMDS(dist_sheep)
+# ordiplot(nmds_sheep, type = 'n')
+# points(nmds_sheep, pch = clusterwd+20, bg = clusterwd)
+# legend('topright', legend = 1:5, pch = (1:5)+20, pt.bg = 1:5)
+
+# Colour grouping
+#clusterwd # see order
+col_clusters <- c("green3", "purple", "cyan2", "blue1", "red2")
+col_clusters[clusterwd]
+
+# Plot ordination with base
+ordiplot(nmds_sheep, type = 'n')
+points(nmds_sheep, 
+       col = col_clusters[clusterwd], 
+       pch = clusterwd+20)
+text(nmds_sheep, 
+     col = col_clusters[clusterwd], 
+     labels=rownames(data_sheep_sc),
+     cex = 0.7,
+     pos = 1)
+legend("bottomright", 
+       legend = paste("Cluster", 1:5),
+       col = col_clusters, 
+       pt.bg = col_clusters,
+       bty = "n", 
+       pch = (1:5)+20)
+ordihull(nmds_sheep, 
+         groups = clusterwd, 
+         display = "sites")
+
+#### CLUSTER CHARTS ####
+
+#
+## Data preparation
+
+# Extraction cluster group
+data_sheep <- data_sheep |>
+  mutate(cluster = clusterwd)
+
+# Make variable group - Productivity, Diversity, Carbon, Soil
+data_sheep <- data_sheep |> 
+  mutate(group = ifelse())
