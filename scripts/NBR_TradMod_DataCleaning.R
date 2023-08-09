@@ -526,7 +526,7 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 
 # How many months main livestock graze on site during the year
 #landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
-#hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
+hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
 
 #
 ## New variable - average stocking density
