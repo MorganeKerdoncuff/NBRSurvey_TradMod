@@ -1,0 +1,32 @@
+---
+title: "NBR_SheepGradient"
+format: html
+author:
+  - name: Morgane Kerdoncuff
+    orcid:
+    email: morgane.kerdoncuf@uib.no
+    affiliations:
+      - Department of Biological Sciences, University of Bergen, Norway
+      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
+  - name: Amy Elizabeth Eycott
+    orcid:
+    affiliations: Faculty of Biosciences and Aquaculture, Nord University, Norway
+  - name: Inger Elisabeth Måren
+    orcid:
+    affiliations:
+      - University of Bergen, Norway
+      - UNESCO Chair on Sustainable Heritage and Environmental Management, University of Bergen, Norway
+      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
+date: today
+bibliography: NBR_survey.bib
+execute: 
+  echo: false
+---
+
+```{r ScriptSource}
+#| include: false
+source("scripts/NBR_TradMod_SheepFunc.R", local = knitr::knit_global())
+```
+
+
+
