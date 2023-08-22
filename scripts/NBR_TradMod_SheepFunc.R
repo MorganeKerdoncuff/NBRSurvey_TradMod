@@ -17,10 +17,10 @@ library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
 library(dendextend) # Visual dendrogram
-library(cluster) # Fuzzy clustering
+library(pvclust) # Multiscale bootstrap resampling
 library(ggplot2) # Visual representation
-# library(ggord) # Ordination plot with ggplot2
-# library(ggpubr) # Function ggarrange for several plots on same file
+library(forcats) # reorder groups for plots
+library(ggpubr) # Function ggarrange for several plots on same file
 # library(GGally) # Extension ggplot
 
 
@@ -50,7 +50,6 @@ soilchem_sheep <- filter(soilchem_full, SiteID %in% siteinfo_sheep$SiteID)
 mesobio_sheep <- filter(mesobio_full, SiteID %in% siteinfo_sheep$SiteID)
 biomass_sheep <- filter(biomass_full, SiteID %in% siteinfo_sheep$SiteID)
 
-
 #
 ## Plant species richness according to functional group
 
@@ -63,17 +62,39 @@ plantrichness_sheep <- plantrichness_sheep |>
 
 # List species
 #unique(plantrichness_sheep$Species)
+totplantsp <- length(unique(plantrichness_sheep$Species))
 
 # New functional group variable
 plantrichness_sheep <- plantrichness_sheep |>
   # assign functional group to species
   mutate(FunctionalGroup = case_when(
-    grepl("Achillea|Alchemilla|Anemone|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Fraxinus|Galium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Ranunculus|Rumex|Sagina|Sedum|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Veronica|Viola", Species) ~ "SPforbs",
-    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Carex|Dactylis|Danthonia|Deschampsia|Eriophorum|Festuca|Holcus|Juncus|Lolium|Luzula|Molinia|Nardus|Poa|Trichophorum", Species) ~ "SPmonocotyledons",
-    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "SPwoody",
-    grepl("Athyrium|Blechnum|Phegopteris|Polypodium|Pteridium", Species) ~ "SPferns",
-    .default = "SPbryophytes"
-  )) |> 
+    grepl("Achillea|Alchemilla|Anemone|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Fraxinus|Galium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Ranunculus|Rumex|Sagina|Sedum|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Veronica|Viola", Species) ~ "div_forbs",
+    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Carex|Dactylis|Danthonia|Deschampsia|Eriophorum|Festuca|Holcus|Juncus|Lolium|Luzula|Molinia|Nardus|Poa|Trichophorum", Species) ~ "div_monocotyledons",
+    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "div_woody",
+    grepl("Athyrium|Blechnum|Phegopteris|Polypodium|Pteridium", Species) ~ "div_ferns",
+    .default = "div_bryophytes"
+  ))
+
+# Total number species per functional group (writing)
+totforbsp <- plantrichness_sheep |> 
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |> 
+  filter(FunctionalGroup == "div_forbs")
+totmonocsp <- plantrichness_sheep |> 
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |> 
+  filter(FunctionalGroup == "div_monocotyledons")
+totwoodysp <- plantrichness_sheep |> 
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |> 
+  filter(FunctionalGroup == "div_woody")
+totbryosp <- plantrichness_sheep |> 
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |> 
+  filter(FunctionalGroup == "div_bryophytes")
+
+# Number of species per functional group per site
+plantrichness_sheep <- plantrichness_sheep |>   
   # number of species per functional group
   group_by(SiteID, FunctionalGroup) |> 
   summarise(S = n()) |> 
@@ -94,28 +115,33 @@ plantrichness_sheep <- plantrichness_sheep |>
 #   group_by(SiteID) |>  
 #   summarise(MeanRichness = mean(Plant_species_richness, na.rm=TRUE))
 
-## !! need total site species richness, from community data
-
 # Loss of ignition
 ## From chemistry data
 ## Same number of replicates per site
 ## Currently at plot level -> summary by average
 soilchem_sheep <- soilchem_sheep |> 
   group_by(SiteID) |> 
-  summarise(MeanLOI = mean(LOI))
+  summarise(LOI = mean(LOI))
 
 # Mite and springtail abundance
 ## From mesofauna data
 ## Different numbers of replicates per site -> need 3 replicates, 1 per plot
 ## Currently at sample level -> summary by average
 mesobio_sheep <- mesobio_sheep |> 
-  group_by(SiteID, PlotID) |> 
-  slice(1) |>
+  group_by(SiteID, PlotID) |>
   # Select randomly one row which match unique combination of site & plot IDs
-  ungroup() |> 
+  slice(1) |>
+  ungroup()
+
+# Total acari and collembola collected
+totacari <- sum(mesobio_sheep$Acari)
+totcollem <- sum(mesobio_sheep$Collembola)
+
+# Summary by average
+mesobio_sheep <- mesobio_sheep |> 
   group_by(SiteID) |> 
-  summarise(Acari = mean(Acari),
-            Collembola = mean(Collembola))
+  summarise(ab_acari = mean(Acari),
+            ab_collembola = mean(Collembola))
 
 # Woody, grass and forb biomass
 ## From biomass data
@@ -130,14 +156,27 @@ biomass_sheep <- biomass_sheep |>
   # make functional groups as variables
   group_by(SiteID) |>
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
-  summarise(woody = mean(woody),
-            monocotyledons = mean(monocotyledons),
-            forbs = mean(forbs))
+  summarise(biom_woody = mean(woody),
+            biom_monocotyledons = mean(monocotyledons),
+            biom_forbs = mean(forbs))
 
 #
 ## Initiate base dataset for hierachical clustering
 
-data_sheep <- purrr::reduce(list(siteinfo_sheep, subset(plantrichness_sheep, select = -c(SPferns)), biomass_sheep, mesobio_sheep, soilchem_sheep), dplyr::left_join)
+# Merge all data
+data_sheep <- purrr::reduce(list(siteinfo_sheep, subset(plantrichness_sheep, select = -c(div_ferns)), biomass_sheep, mesobio_sheep, soilchem_sheep), dplyr::left_join)
+
+# Intuitive ID according to following code - COx (costal outfield), Ix (infield), MOx (mountain oufield)
+
+data_sheep <- data_sheep |> 
+  mutate(fieldtype = case_when(
+    grepl("U", SiteID) ~ "MO",
+    grepl("IS2|OV|OS5|OS7|OS9", SiteID) ~ "CO",
+    .default = "IN"
+  )) |> 
+  group_by(fieldtype) |>
+  mutate(FieldID = paste(fieldtype, row_number(), sep = ""))
+
 
 
 #### HIERARCHICAL CLUSTERING ####
@@ -146,14 +185,15 @@ data_sheep <- purrr::reduce(list(siteinfo_sheep, subset(plantrichness_sheep, sel
 ## Clustering & dendrogram
 
 # Extraction SiteID
-siteID <- data_sheep$SiteID
+#siteID <- data_sheep$SiteID
 # data_sheep <- subset(data_sheep, select = -c(SiteID))
 
 # Site ID as rowname
-rownames(data_sheep) <- data_sheep$SiteID
+rownames(data_sheep) <- data_sheep$FieldID
 
 # Data scaling
-data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID))))
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID))))
+rownames(data_sheep_sc) <- data_sheep$FieldID
 
 # Distance matrix - environmental continuous numeric -> Euclidean
 dist_sheep <- dist(data_sheep_sc, method = "euclidean")
@@ -171,11 +211,27 @@ rect.hclust(hclustwd_sheep, k = 5, border = 2:6)
 dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
                                k = 5, 
                                #groupLabels = TRUE,
-                               col = c(2, 3, 4, 5, 6))
+                               col = c("pink", "pink3", "pink4", "orange", "orange3"))
 plot(dendro_sheep)
 
 # Cluster group
 clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
+
+#
+## Bootstrap method with pvclust
+
+# Contingency table
+# data_sheep_long <- pivot_longer(data_sheep, cols = -c(SiteID), names_to = "variables", values_to = "val")
+# data_sheep_contin <- xtabs(formula = val ~ variables + SiteID, data = data_sheep_long)
+# 
+# # Data scaling
+# data_sc <- scale(data_sheep_contin)
+# 
+# # Calculate pval of clusters
+# cluster_pval <- pvclust(data = data_sc, method.hclust = "ward.D2", method.dist = 'euclidean')
+# 
+# # Plot dendrogram
+# plot(cluster_pval)
 
 #
 ## Ordination clusters
@@ -188,28 +244,37 @@ nmds_sheep <- metaMDS(dist_sheep)
 
 # Colour grouping
 #clusterwd # see order
-col_clusters <- c("green3", "purple", "cyan2", "blue1", "red2")
+col_clusters <- c("pink3", "orange4", "orange", "pink4", "pink")
 col_clusters[clusterwd]
 
 # Plot ordination with base
-ordiplot(nmds_sheep, type = 'n')
-points(nmds_sheep, 
+cluster_ord <- ordiplot(nmds_sheep, type = 'n')
+cluster_ord <- points(nmds_sheep, 
        col = col_clusters[clusterwd], 
        pch = clusterwd+20)
-text(nmds_sheep, 
+cluster_ord <- text(nmds_sheep, 
      col = col_clusters[clusterwd], 
      labels=rownames(data_sheep_sc),
      cex = 0.7,
      pos = 1)
-legend("bottomright", 
+cluster_ord <- legend( 
        legend = paste("Cluster", 1:5),
+       x = 2.2,
+       y = 3.5,
+       #horiz = TRUE,
+       text.width = 1,
+       x.intersp = 0.5,
+       y.intersp = 0.5,
        col = col_clusters, 
        pt.bg = col_clusters,
        bty = "n", 
        pch = (1:5)+20)
-ordihull(nmds_sheep, 
+cluster_ord <- ordihull(nmds_sheep, 
          groups = clusterwd, 
          display = "sites")
+cluster_ord
+
+
 
 #### CLUSTER CHARTS ####
 
@@ -217,9 +282,184 @@ ordihull(nmds_sheep,
 ## Data preparation
 
 # Extraction cluster group
-data_sheep <- data_sheep |>
+data_sheep_sc <- data_sheep_sc |>
   mutate(cluster = clusterwd)
 
-# Make variable group - Productivity, Diversity, Carbon, Soil
-data_sheep <- data_sheep |> 
-  mutate(group = ifelse())
+# Make variable group - Productivity, Diversity, Carbon, Soil nutrients
+data_sheep_plot <- data_sheep_sc |> 
+  pivot_longer(cols = -c(cluster),
+               names_to = "variables",
+               values_to = "sc_val") |> 
+  mutate(var_group = ifelse(
+    grepl("div_", variables), "diversity", ifelse(
+      variables == "ab_acari" | variables == "ab_collembola" | variables == "LOI", "decomposition", "production"
+    )
+  )) |> 
+  # rearrange by variable group for ggplot
+  arrange(sc_val) |>
+  mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_bryophytes", "biom_woody", "biom_forbs", "biom_monocotyledons", "ab_acari", "ab_collembola", "LOI")))
+
+#
+## Boxplots
+
+# Cluster 1
+clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 1") +
+  labs("") +
+  ylim(-3,3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "pink3"),
+    legend.title = element_blank()
+    ) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_1
+
+# Cluster 2
+clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 2") +
+  ylim(-4,4) +
+  labs("") +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "orange4"),
+    legend.title = element_blank()
+  ) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_2
+
+# Cluster 3
+clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 3") +
+  labs("") +
+  ylim(-3,3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "orange"),
+    legend.title = element_blank()
+  ) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_3
+
+# Cluster 4
+clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 4") +
+  ylim(-3,3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "pink4"),
+    legend.title = element_blank()
+  ) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_4
+
+# Cluster 5
+clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 5") +
+  labs("") +
+  ylim(-3,3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "pink"),
+    legend.title = element_blank()
+  ) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_5
+
+# x-axis for plot arrange
+clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |> 
+  ggplot(aes(x = variables)) +
+  xlab("") +
+  ylab("") +
+  labs("") +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.x = element_blank(),
+    legend.title = element_blank()
+  )
+# scale_fill_grey()
+clusterplot_axis
+
+# Arrange all plots
+clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_5, clusterplot_1, clusterplot_4, clusterplot_3, clusterplot_2, nrow = 1, common.legend = TRUE)
+clusterplot_all
+ggsave(filename = "outputs/clusterplots.png", plot = clusterplot_all, height = 12, width = 25, units = "cm")
+
+
+#### DATA SUMMARY ####
+
+#
+## Data preparation
+
+# Make regular numeric cluster column
+data_sheep_sc <- data_sheep_sc |> 
+  mutate(clusterID = as.numeric(clusterwd))
+
+# Extraction column with SiteID
+data_sheep_sc <- data_sheep_sc |> 
+  mutate(SiteID = row.names(data_sheep_sc))
+
+# Join data
+data_sheep <- left_join(data_sheep, subset(data_sheep_sc, select = c(SiteID, clusterID)))
+
+#
+## Summary -> need to fix the "across col" to exclude non-numeric
+
+sheep_summary <- data_sheep |> 
+  dplyr::group_by(clusterID) |> 
+  summarise(across(.cols = everything(), list(mean = mean, sd = sd)))
