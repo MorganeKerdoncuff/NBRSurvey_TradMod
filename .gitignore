@@ -22,6 +22,7 @@ data/*
 #figures & output (excludes all figure files)
 outputs/*
 outreach/*
+illustrations/*
 *.png
 *.pdf
 *.jpeg
@@ -34,3 +35,4 @@ outreach/*
 *.bib
 *.json
 NBR_SmallScaleFjordFarming_files/*
+NBR_SheepGradient_files/*
