@@ -28,5 +28,147 @@ execute:
 source("scripts/NBR_TradMod_SheepFunc.R", local = knitr::knit_global())
 ```
 
+```{r setup, include=FALSE}
+# Register an inline hook:
+knitr::knit_hooks$set(inline = function(x) {
+  x <- sprintf("%1.2f", x)
+  paste(x, collapse = ", ")
+})
+```
+
+# ABSTRACT
+
+# INTRODUCTION
+
+## Context
+
+- the infield-outfield system: adaptation to heavily constrained environment resulting in complementary farming practices serving self-sustaining communities [@hjelleHesitantHuntersReview2006; @olssonAgroecosystemsNeolithicTime1991]
+- energy and nutrient flows created by human adaptative management at different spatial and temporal scales, from the farm unit's own outfields managed all year round to summer transhumance in the mountains
+- resulted in a particularly diverse landscape with co-occurrence of many habitat types of interest within a small geographical areas, not only regarding biodiversity but also cultural values.
+- list example studies on coastal heathlands (Inger), hay meadows [@wehnAdaptiveBiodiversityManagement2018; also Austrheim] and subalpine heathlands (Vigdis)
+- however trends of land abandonment towards isolated, less productive sites [@fjellstadPatternsChangeTwo1999; @hamreLandcoverStructuralChanges2007a], due to socio-economical changes in agricultural communities [@dramstadTenancyNorwegianAgriculture2010; @forbordDriversChangeNorwegian2014; @jonesLandtenureLandscapeChange1988]
+- despite relatively strong engagement from Norwegian government towards preservation of agricultural landscape, reversing the trend very challenging [@blekesauneAgricultureImportanceViability1999; @daugstadAgricultureUpholderCultural2006; @forbordDriversChangeNorwegian2014]
+- The recently designated NBR would be a helpful lever to engage different parties into dialogue and solutioning
+- Expand scientific knowledge on these habitat dynamic would therefore be helpful in that regard
+
+## Approach
+
+- ecosystem service framework pertinent to use for future trans-disciplinary initiatives and/or policy-making
+- but assessing ecosystem services requires a good understanding of the functioning of the system
+- particularly in the case of grazing systems, revolving around the nutrient and energy cycle created by livestock [ref concept cycle figure?]
+- [chunk description different steps & factors of influence]
+- as grazing effects interact with environmental gradient [@fynnManagingBrowsingGrazing2019] and habitat productivity [@mcnaughtonEcosystemlevelPatternsPrimary1989], it would be interesting to explore the balance between these different functions according to field types and across the fjord gradient [if secondary analysis relying on temp/precipitation gradient]
+- Reference study which looked at plant functional type diversity (alpha, beta, gamma) across elevational gradient in Western Norway [@austrheimPlantDiversityPatterns2002].
+
+- herbivore effect on plant species richness depends on site productivity -> (+) high vs (-) low [@bakkerHerbivoreImpactGrassland2006]
+
+## AIM/HYP
+
+- We relied on the following triptych: diversity, production, soil nutrient recycling
+- We expect the fields to aggregate according to two main subgroups representing infields and outfields respectively, and we expect a form of complementarity between these two groups. 
+- The main factor of difference should be woody biomass, which should be dominant in outfields and negligible in infields.
+- Outfields are also expected to have a higher bryophyte diversity but a lower forb diversity.
+- Infields should have higher monocotyledon biomass and faster energy cycle, thus a lower carbon stock in the soil.
+- However we expect these two groups to be heterogeneous due to the diversity of both ecological context and farming practices, and these lower divisions are what we are most interested about.
+- For outfields particularly, elevation, proximity to sea and traditional prescribed burning could heavily influence the results.
+
+# MATERIAL AND METHODS
+
+## Study area
+
+The UNESCO Nordhordland Biosphere Reserve (NBR) stretches up to 100 km from the North Sea through the fjord system of Western Norway [@kalandNordhordlandBiopshereReserve2018]. The fjord geomorphology, which grows from flat coastal areas towards sharp mountain slopes inland, creates a tight oceanic-subalpine climatic gradient from west to east with decreasing temperatures and increasing precipitations [@ketzlerClimateNorway2021]. Thus, mean annual precipitation can vary more than twice as much (from 1550 to 4800 mm) between the coast and the upland, and mean July temperature can drop by almost half (from 15.9 to 8.3C), along with increasing annual temperature range [**norsk klimaservicesenter**].
+
+In summer 2019 and 2020, we conducted an ecological survey on 23 sheep-grazed fields across the coast-mountain gradient of the NBR, among which 12 outfields, with 6 in the lowlands and 6 in the uplands, and 11 infields (@fig-sitemap). At low elevation, outfields were *Calluna* heathlands grazed all year round only by rustic sheep breeds such as the Norwegian old sheep (*norskgammelsau*) or the Cheviot sheep from Scotland (*sjeviotsau*). Three outfields, located along the coast, were traditionally managed by rotational prescribed burning to rejuvenate the heath and provide more palatable fodder for the animals. In the mountains, outfields were located above the tree line and dominated by *Vaccinium* vegetation. They would be grazed only during the summer season, by rustic breeds but also by the conventional Norwegian white sheep (*norsk hvit sau*). Infields were permanent grasslands, managed by small-scale rotational grazing of various sheep breeds and fertilised at least occasionally.
+
+Information on field management were collected from phone interviews with farmers, conducted from October 2021 to January 2022. Detailed data are presented in the Supplementary information.
 
 
+![Study sites location. Colour codes are for field types: white-circled black for coastal outfields, black-circled white for infields, black-circled grey for mountain outfields. **+CC**](illustrations/NBR_SheepMap.png){#fig-sitemap}
+
+## Data collection
+
+We visited each field once following the seasonal lag induced by the fjord gradient, from mid-June for the coastal area to mid-August for the mountain area. On each site, we set three plots of 3 x 3 m^2^ at least 6 m apart from each other within a representative sampling area of 400 m^2^. Plots were divided into nine quadrats of 1 m^2^, five of them for plant species inventory and the remaining four for soil and biomass sampling. 
+
+All vascular plants and bryophytes species within each quadrat were identified to the species level and attributed a percent of abundance-cover [**ref**] by the same two observers for both years. Vascular plants were identified with the Nordic flora [@mossbergGyldendalsStoreNordiske2018] on site, and all bryophytes were collected for expert identification with [**NEEDS ID BOOK FOR MOSSES**]. Species richness was estimated for each functional group, namely woody, vascular and cryptogams, at the scale of the site by integrating all species collected across the 15 quadrats.
+
+Aboveground standing biomass was collected from one 0.5 x 0.5 m^2^ quadrat per plot (3 replicates per site) by cutting vegetation as close to the ground while avoiding the litter. The samples were stored in the freezer (**temp**) before sorting into functional groups, namely woody, vascular and cryptogams. We dried the sorted samples in the oven at **temp** for 48h and weighted the dry biomass.
+
+We sampled soil with a stainless steel cylindrical core of 200 cm^3^ (diam. 10.5 cm; height 12 cm), which was dug into the ground by rotational movements. Samples were stored in the cooler (**temp**) before lab processing. For each plot, one core out of four (3 replicates per site) was used for mesofauna extraction with the Berlese-Tullgren method [**ref**]. We spread the soil over a grid of **mesh size** in an aluminium funnel with a cylindrical upper half of **x height** and **y diameter**, and a conical exit of **x height** and final **y diameter**. The funnels were kept under heating lamps (**voltage**) for 96 hours, with a distance of approx. 20 cm between the bulbs and the top of the funnels to avoid too fast drying of the soil surface which would trap the mesofauna. Samples were collected in 70% ethanol for later sorting and counting of acari and collembola. The three remaining cores per plot were sieved and merged (3 replicates per site), and 0.5 L sample was sent to a certified analysis laboratory to determine loss of ignition as a proxy for soil organic carbon content.
+
+## Data analysis
+
+All statistical and ordination analyses were performed on R (v.4.3.0) with R-Studio (v.2023.03.1+446) [@rcoreteamLanguageEnvironmentStatistical2023]. We used the *vegan* package [@oksanenVeganCommunityEcology2022] for clustering projection on ordination space. All data except plant species richness were summarized at the site level by average.
+
+All our variables were scaled prior to analysis to account for unit differences. We performed hierarchical clustering with Ward's criterion which squares the dissimilarities before clustering [@murtaghWardHierarchicalAgglomerative2014]. We chose Euclidean distance to calculate dissimilarities between our variables, which were all continuous and quantitative [**ref**]. As we ran this analysis for an exploratory purpose, we chose arbitrarily a number of clusters beyond the expected major infield/outfield dichotomy, while still aiming for compact clusters of equivalent sizes. We projected our clusters on ordination space with Nonmetric Multidimensional Scaling (NMDS) [**ref**] to verify for their consistency and orientation.
+
+What can be next [**AMY THIS IS FOR YOU PARTICULARLY TO READ AND GIVE SOME THOUGHTS**]
+
+- multiscale bootstrap resampling -> pvclust package
+  - to find "significance" of the hierarchical clustering
+  - as to me the clustering is more exploratory, there is no obligation for significance -> the definition of "groups" in itself is not the purpose of the paper
+  - also need to have quick chat with Richard, but not sure it makes actually sense to do bootstraping on such a small dataset, significance may be completely meaningless
+- ANOVA/stat testing on variable distribution according to clusters (see results), non-parametric anyway
+  - still the issue of not many sites - 3 groups with only 3 sites
+  - could be relevant to only compare the two bigger clusters (1 & 3) one is representative of outfield, and the other infield
+  - or test only the dominant division, which is roughly outfield (pink) against infield (orange)
+- an interesting complementary analysis, as this paper in particularly is driven by the "gradient" aspect of the BR, would be to test variables against temp/precipitation -> in that case I assume linear modelling
+  - maybe not for all, but the ones that seem to differ according to the clustering
+  - now I have the temp & precipitation data, for each site. At first I thought about geographical gradient, but I am not sure I know how to handle coordinates in that situation. Also climate data are more interesting because they take in account micro-climates
+
+![rough conceptual modal for temp & precipitation gradient](illustrations/NBR_SheepGradientConcept.png)
+
+# RESULTS
+
+We registered a total of `r totplantsp` plant species, among which `r nrow(totforbsp)` forbs, `r nrow(totmonocsp)` monocotyledons, `r nrow(totbryosp)` bryophytes, including mosses and liverworts, and `r nrow(totwoodysp)` shrubs and woody species. We also collected a total of `r totacari` acari and `r totcollem` collembola across all sites.
+
+## Hierarchical clustering
+
+::: {layout-ncol=1}
+![Hierarchical clustering dendrogram of sampled sites using Ward's criterion (k = 5). Colour gradients represent main division for outfields (pink) and infields (orange) respectively.](outputs/cluster_tree.png){#fig-clustertree}
+
+![Cluster projection on Nonmetric Multidimensional Scaling (NMDS).](outputs/cluster_ord.png){#fig-clusterord}
+:::
+
+![Variable distribution according to clusters](outputs/clusterplots.png){#fig-clusterplots}
+
+As expected, the sites aggregated into two main groups representing outfields (pink gradient) and infields (orange gradient) respectively (@fig-clustertree), with only one seemingly outlying infield (IS5) arranged with the outfields. Both groups showed dominant and relatively compact clusters of eight sites for outfields (C1) and six sites for infields (C3), the latter being particularly tight on the ordination space (@fig-clusterord). All remaining clusters, two for the outfield group and one for the infield group, were only made of three scattered sites.
+
+Outfield clusters were characterised by higher diversity and biomass of woody species as well as high diversity of bryophytes, but low forb biomass (@fig-clusterplots). Infield clusters had low percentage of organic matter in soil, high forb diversity, and consistently low bryophyte and woody species diversity. However infields did not have particularly high monocotyledon biomass compared with outfields.
+
+Within the outfield group, cluster 5 stood out with higher diversity across all plant functional groups, particularly monocotyledons (mean = `r filter(sheep_summary, clusterID == 5)$div_monocotyledons_mean`, sd = `r filter(sheep_summary, clusterID == 5)$div_monocotyledons_sd`) and forbs (mean = `r filter(sheep_summary, clusterID == 5)$div_forbs_mean`, sd = `r filter(sheep_summary, clusterID == 5)$div_forbs_sd`), but also showed consistently low abundance of collembola (mean = `r filter(sheep_summary, clusterID == 5)$ab_collembola_mean`, sd = `r filter(sheep_summary, clusterID == 5)$ab_collembola_sd`) and acari (mean = `r filter(sheep_summary, clusterID == 5)$ab_acari_mean`, sd = `r filter(sheep_summary, clusterID == 5)$ab_acari_sd`). Sites from cluster 4 displayed opposite patterns, with low diversity of monocotyledons (mean = `r filter(sheep_summary, clusterID == 4)$div_monocotyledons_mean`, sd = `r filter(sheep_summary, clusterID == 4)$div_monocotyledons_sd`) and forbs (mean = `r filter(sheep_summary, clusterID == 4)$div_forbs_mean`, sd = `r filter(sheep_summary, clusterID == 4)$div_forbs_sd`) but high abundance of collembola (mean = `r filter(sheep_summary, clusterID == 4)$ab_collembola_mean`, sd = `r filter(sheep_summary, clusterID == 4)$ab_collembola_sd`) and acari (mean = `r filter(sheep_summary, clusterID == 4)$ab_acari_mean`, sd = `r filter(sheep_summary, clusterID == 4)$ab_acari_sd`). These fields also showed the highest rates of soil organic carbon (mean = `r filter(sheep_summary, clusterID == 4)$LOI_mean`, sd = `r filter(sheep_summary, clusterID == 4)$LOI_sd`). Within the infield group, sites outside of the dominant cluster had on average higher forb biomass (mean~cl2~ = `r filter(sheep_summary, clusterID == 2)$biom_forbs_mean`, sd~cl2~ = `r filter(sheep_summary, clusterID == 2)$biom_forbs_sd`, against mean~cl3~ = `r filter(sheep_summary, clusterID == 3)$biom_forbs_mean`, sd~cl3~ = `r filter(sheep_summary, clusterID == 3)$biom_forbs_sd`) and more acari in soil (mean~cl2~ = `r filter(sheep_summary, clusterID == 2)$ab_acari_mean`, sd~cl2~ = `r filter(sheep_summary, clusterID == 2)$ab_acari_sd`, against mean~cl3~ = `r filter(sheep_summary, clusterID == 3)$ab_acari_mean`, sd~cl3~ = `r filter(sheep_summary, clusterID == 3)$ab_acari_sd`).
+
+
+# DISCUSSION
+
+## Main results
+
+- Expectations verified as the type of field the main aggregative factor
+  - Outfields with high woody biomass and higher bryophyte diversity
+  - Infields had faster nutrient cycle and higher forb diversity
+  - However infields did not have higher monocotyledon biomass compared with outfields
+- Overall, infields more "homogeneous" than outfields
+- In outfields, potential trade-offs between plant diversity and nutrient cycling/carbon storage
+
+## Grazing effect
+
+- increase cattle density decreases legumes species diversity through increase bare soil (trampling), but increase non-legumes forbs [@buzhdyganDirectIndirectEffects2020]
+
+## Elevation gradient
+
+- direct increase species richness with elevation, but indirect negative effect through decrease soil pH & subsequent decrease earthworms biomass [@buzhdyganDirectIndirectEffects2020]
+
+## Outfields vs infields
+
+- sheep feeding behaviour (e.g. bite rate) different according to habitat (grass vs heather) type [@hesterForagingBehaviourSheep1999]
+
+## Study limitations
+
+- biomass in itself not perfect proxy of nutritive feeding for animals, as chemical composition & plant strategy also affected by climatic gradient -> more defence mechanisms, thus less efficient energy & nutrient uptake under high precipitations conditions [@hopcraftHerbivoresResourcesRisks2010]
+
+## Perspectives
+
+- heaths in uplands very important for biodiversity conservation - carabid species [@eyreRelationshipBritishGround2003]
+
+# CONCLUSION
+
+# ACKOWLEDGEMENTS
