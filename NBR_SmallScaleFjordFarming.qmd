@@ -1,6 +1,6 @@
 ---
 title: "Traditional small-scale grazing systems drive grassland diversity in nordic fjords."
-format: docx
+format: html
 author:
   - name: Morgane Kerdoncuff
     orcid:
@@ -27,10 +27,10 @@ execute:
 ---
 
 
-<!-- ```{r ScriptSource} -->
-<!-- #| include: false -->
-<!-- source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global()) -->
-<!-- ``` -->
+```{r ScriptSource}
+#| include: false
+source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
+```
 
 
 # ABSTRACT
@@ -149,6 +149,8 @@ Canonical correlation analysis searches for the maximum correlation between line
 
 As canonical correlation analysis only accounts for quantitative variables, livestock type was transformed into dummy numeric data. All explanatory variables were centered and scaled to address the high heterogeneity of units within most sets. The statistical power of our analysis being limited by our low replication level (n = 29) and the assumption of linearity of the canonical correlation, we verified and filtered our explanatory variables as following: 1) Raw data distribution; variables with highly skewed distributions or with obvious outliers were removed. 2) Variable colinearity within set; we tested colinearity between variables of the same set with paired plots. When the correlation coefficient was equal to or over 0.8 between two variables, if applicable we kept the one with the highest within site replication, otherwise the choice was made according to ecological relevance. 3) Linearity assumption between explanatory sets and community data; we performed Tukey tests on linear model residuals between community ordination scores and individual explanatory variable [**REF**]. Ordination scores were extracted either from preliminary Detrended Correspondance Analysis (DCA), or from Principal Component Analysis (PCA) if the DCA's first axis length was under 2 units. The final list of variables kept for the canonical correlation analysis is shown in @varsummary.
 
+linearity - random dispersion residuals against variables
+
 ```{r VarSummary}
 #| label: tbl-varsummary
 #| tbl-cap: "Summary of explanatory variables for canonical correlation analysis of grass, forb and beetle dominant community data. Symbols for rejection are: ¤ non-normal distribution; ◦ colinearity with another variable; * linearity assumption rejected."
@@ -220,11 +222,93 @@ We tested for statistical significance of correlations with asymptotic approxima
 
 ![Canonical correlations between driver and community sets for dominant grasses (A), dominant forbs (B) and dominant beetle families (C). Correlation coefficient rho is provided for the first dimension and for all significant dimensions. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001.](illustrations/NBR_CancorResults.png){#fig-cancor}
 
+```{r CancorEnv}
+#| label: tbl-cancorenv
+#| tbl-cap: "Summary of statistical test for canonical correlations between environmental variables."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+cancorenv <- subset(envar, select = -c(id))
+cancorenv |> 
+  gt(groupname_col = "explanatory", rowname_col = "response") |> 
+  cols_move_to_start(
+    columns = c("rho", "dim")
+  ) |> 
+  cols_move(
+    columns = rho,
+    after = dim
+  ) |> 
+  cols_label(
+    stat = "statistic",
+    approx = "F-approx",
+    p.value = "p-value",
+    dim = "dimension"
+  ) |> 
+  fmt_number(
+    columns = c("stat", "approx", "rho"),
+    decimals = 2
+  ) |> 
+  fmt_scientific(
+    columns = p.value,
+    decimals = 2
+  ) |> 
+  opt_stylize(style = 6, color = 'gray')
+
+```
+
+There was a strong correlation between fjord variables and landscape variables (@fig-cancor; @tbl-cancorenv), confirmed by the RDA [ref]. The most important factors were average maximum July temperature (var = 0.44, F~1~ = 2.89, pval = 0.035) and distance to sea (var = 0.4, F~1~ = 2.63, pval = 0.041), driving axes 1 and 2 respectively. There was more forested land but less outfields in areas with higher summer temperature, and the proportion of wetlands increased with distance to sea. However, we could not observe any trend for the area of cultivated lands and infields in the landscape.
+
+We found no evidence of correlation between other environmental sets (@fig-cancor; @tbl-cancorenv).
+
+Individual RDA 
+- landscape x grazing -> wetland¤ -> (-) grazing surface, flock size, total infield surface
+- grazing x locenvi -> field size¤ -> (-) mean P, general slope 
+
+```{r CancorCom}
+#| label: tbl-cancorcom
+#| tbl-cap: "Summary of statistical test for canonical correlations between explanatory variables and grass, forb and beetle assemblages."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+cancorcom <- subset(comvar, select = -c(id))
+cancorcom |> 
+  gt(groupname_col = "explanatory", rowname_col = "response") |> 
+  cols_move_to_start(
+    columns = c("rho", "dim")
+  ) |> 
+  cols_move(
+    columns = rho,
+    after = dim
+  ) |> 
+  cols_label(
+    stat = "statistic",
+    approx = "F-approx",
+    p.value = "p-value",
+    dim = "dimension"
+  ) |> 
+  fmt_number(
+    columns = c("stat", "approx", "rho"),
+    decimals = 2
+  ) |> 
+  fmt_scientific(
+    columns = p.value,
+    decimals = 2
+  ) |> 
+  opt_stylize(style = 6, color = 'gray')
+
+```
+
 ![Redundancy analysis (RDA) plots for significant canonical correlations between sets of drivers and/or community data. A: Correlation between fjord set and landscape set, all variables included; B: Correlation between landscape set and fine-scale environment set, all variables included; C: Correlation between grazing management set and grass community data; D: Correlation between fine-scale environment set and grass community data; E: Correlation between fine-scale environment set and forb community data; F: correlation between fine-scale environment set and beetle community data.](outputs/RDAresults.png){#fig-rda}
 
-## Cascading interactions between environmental and anthropogenic drivers
 
-There was a strong correlation between the fjord system set and the landscape set (@fig-cancor), with the first dimension of the canonical correlation significant for all series and the second dimension significant for the forb and beetle series [**ref to summary table**]. It was confirmed by the RDA performed on all variables from both sets (R^2^~adj~ = 0.14, F~4~ = 2.14, pval = 0.011). The most important factors were average maximum July temperature (var = 0.44, F~1~ = 2.89, pval = 0.035) and distance from sea (var = 0.4, F~1~ = 2.63, pval = 0.041), which drove axes 1 and 2 respectively (@fig-rda A). The proportion of forest area around the field increased with increasing distance from sea and maximum summer temperature, while the opposite was observed for the proportion of outfield area. The other land cover type which responded to fjord characteristics was the wetland area, which was strongly associated with sites further away from the sea. There was however no trend on the proportion of cultivated land and infield areas.
+
+## Cascading interactions between environmental and anthropogenic drivers
 
 We could observe another noticeable correlation between the landscape set and the fine-scale environment set, even if it was not consistently significant across series (@fig-cancor). The RDA model including all variables from both sets was not significant (R^2^~adj~ = -0.02, F~5~ = 1.13, pval = 0.66) and did not emphasize any term (@fig-rda B). We can observe that the first axis (var = 0.1, F~1~ = 1.94, pval = 0.72) showed a gradient opposing the proportion of outfield area to the proportion of forest area, which could illustrate the underlying geographical gradient (@fig-rda A).
 
@@ -459,6 +543,43 @@ The authors declare no competing interests.
 
 ## APPENDIX
 
+```{r RDAEnv}
+#| label: tbl-rdaenv
+#| tbl-cap: "Summary of statistical test for redundancy analyses between environemntal variables."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+rdaenv <- subset(rdastat_envi, select = -c(r.squared, type))
+rdaenv |> 
+  gt(groupname_col = "model", rowname_col = "dim") |> 
+  cols_move_to_start(
+    columns = c("adj.r.squared")
+  ) |>
+  cols_move(
+    columns = Df,
+    after = F
+  ) |>
+  cols_label(
+    Variance = "variance",
+    PrF = "p-value",
+    Df = "df",
+    adj.r.squared = "adjRsq"
+  ) |>
+  fmt_number(
+    columns = c("Variance", "F", "adj.r.squared"),
+    decimals = 2
+  ) |>
+  fmt_scientific(
+    columns = PrF,
+    decimals = 2
+  ) |>
+  sub_missing(missing_text = "-") |> 
+  opt_stylize(style = 6, color = 'gray')
+
+```
 
 <!-- ```{r FarmerdManagement} -->
 <!-- #| label: tbl-farmermanagement -->
