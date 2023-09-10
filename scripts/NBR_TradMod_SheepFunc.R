@@ -283,7 +283,7 @@ cluster_ord
 
 # Extraction cluster group
 data_sheep_sc <- data_sheep_sc |>
-  mutate(cluster = clusterwd)
+  mutate(cluster = as.numeric(clusterwd))
 
 # Make variable group - Productivity, Diversity, Carbon, Soil nutrients
 data_sheep_plot <- data_sheep_sc |> 
@@ -441,25 +441,27 @@ clusterplot_all
 ggsave(filename = "outputs/clusterplots.png", plot = clusterplot_all, height = 12, width = 25, units = "cm")
 
 
+#### KRUSKAL-WALLIS TEST ON CLUSTERS ####
+
+
+
+
 #### DATA SUMMARY ####
 
 #
 ## Data preparation
 
-# Make regular numeric cluster column
-data_sheep_sc <- data_sheep_sc |> 
-  mutate(clusterID = as.numeric(clusterwd))
-
 # Extraction column with SiteID
 data_sheep_sc <- data_sheep_sc |> 
-  mutate(SiteID = row.names(data_sheep_sc))
+  mutate(FieldID = row.names(data_sheep_sc))
 
 # Join data
-data_sheep <- left_join(data_sheep, subset(data_sheep_sc, select = c(SiteID, clusterID)))
+sheep_summary <- full_join(data_sheep, subset(data_sheep_sc, select = c(FieldID, cluster)))
 
 #
 ## Summary -> need to fix the "across col" to exclude non-numeric
 
-sheep_summary <- data_sheep |> 
-  dplyr::group_by(clusterID) |> 
+sheep_summary <- sheep_summary |> 
+  dplyr::group_by(cluster) |> 
+  select_if(is.numeric) |> 
   summarise(across(.cols = everything(), list(mean = mean, sd = sd)))
