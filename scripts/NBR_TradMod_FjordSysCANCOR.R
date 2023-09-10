@@ -42,21 +42,21 @@ beetle_full <- read.csv("data/cleandata/NBR_FullBeetleComm.csv", sep=",") # Clea
 ## Filter grassland sites
 
 # Site selection & removal geographical outlier IG3
-siteinfo_grass <- siteinfo_full |>  
+siteinfo_infield <- siteinfo_full |>  
   filter(Habitat == "permanent grassland" & SiteID != "IG3") |> 
-  dplyr::select(SiteID, Type_livestock)
+  dplyr::select(SiteID, Livestock)
 
 # Extraction in other datasets
-climate_grass <- filter(climate_full, SiteID %in% siteinfo_grass$SiteID)
-landscape_grass <- filter(landscape_full, SiteID %in% siteinfo_grass$SiteID)
-landuse_grass <- filter(landuse_full, SiteID %in% siteinfo_grass$SiteID)
-area20x20_grass <- filter(area20x20_full, SiteID %in% siteinfo_grass$SiteID)
-groundcover_grass <- filter(groundcover_full, SiteID %in% siteinfo_grass$SiteID)
-soilbulk_grass <- filter(soilbulk_full, SiteID %in% siteinfo_grass$SiteID)
-soilchem_grass <- filter(soilchem_full, SiteID %in% siteinfo_grass$SiteID)
-soilpene_grass <- filter(soilpene_full, SiteID %in% siteinfo_grass$SiteID)
-vege_grass <- filter(vege_full, SiteID %in% siteinfo_grass$SiteID)
-beetle_grass <- filter(beetle_full, SiteID %in% siteinfo_grass$SiteID)
+climate_infield <- filter(climate_full, SiteID %in% siteinfo_infield$SiteID)
+landscape_infield <- filter(landscape_full, SiteID %in% siteinfo_infield$SiteID)
+landuse_infield <- filter(landuse_full, SiteID %in% siteinfo_infield$SiteID)
+area20x20_infield <- filter(area20x20_full, SiteID %in% siteinfo_infield$SiteID)
+groundcover_infield <- filter(groundcover_full, SiteID %in% siteinfo_infield$SiteID)
+soilbulk_infield <- filter(soilbulk_full, SiteID %in% siteinfo_infield$SiteID)
+soilchem_infield <- filter(soilchem_full, SiteID %in% siteinfo_infield$SiteID)
+soilpene_infield <- filter(soilpene_full, SiteID %in% siteinfo_infield$SiteID)
+vege_infield <- filter(vege_full, SiteID %in% siteinfo_infield$SiteID)
+beetle_infield <- filter(beetle_full, SiteID %in% siteinfo_infield$SiteID)
 
 #
 ## Summarise data at site level -> should be 29 observations for non community data
@@ -72,49 +72,49 @@ beetle_grass <- filter(beetle_full, SiteID %in% siteinfo_grass$SiteID)
 # Area 20 x 20 - validated
 
 # Ground cover - current at sample level -> summary by average
-groundcover_grass <- groundcover_grass |>  
+groundcover_infield <- groundcover_infield |>  
   group_by(SiteID) |>  
-  summarise(MeanBareSoil = mean(Bare_soil, na.rm=TRUE),
-            MeanRocks = mean(Rocks, na.rm=TRUE),
-            MeanLitter = mean(Litter, na.rm=TRUE),
-            MeanDeadWood = mean(Dead_wood, na.rm=TRUE),
-            MeanBryo = mean(Bryophytes, na.rm=TRUE),
-            MeanLichen = mean(Lichen, na.rm=TRUE),
-            MeanVasc = mean(Vascular, na.rm=TRUE),
-            MeanBlossom = mean(Blossom_cover, na.rm=TRUE),
+  summarise(BareGrd = mean(Bare_soil, na.rm=TRUE),
+            Rocks = mean(Rocks, na.rm=TRUE),
+            Litter = mean(Litter, na.rm=TRUE),
+            DeadWood = mean(Dead_wood, na.rm=TRUE),
+            Bryo = mean(Bryophytes, na.rm=TRUE),
+            Lichen = mean(Lichen, na.rm=TRUE),
+            Vasc = mean(Vascular, na.rm=TRUE),
+            Blossom = mean(Blossom_cover, na.rm=TRUE),
             MeanHeight = mean(VG_mean_height_cm, na.rm=TRUE),
             MaxHeight = mean(VG_max_height_cm, na.rm=TRUE),
-            MeanRichness = mean(Plant_species_richness, na.rm=TRUE))
+            PlantRich = mean(Plant_species_richness, na.rm=TRUE))
 
 # Bulk density - current at sample level -> summary by average
-soilbulk_grass <- soilbulk_grass |> 
+soilbulk_infield <- soilbulk_infield |> 
   group_by(SiteID) |> 
-  summarise(MeanBD = mean(BD),
-            MeanMoisture = mean(Weightpercent_Soilmoisture))
+  summarise(BD = mean(BD),
+            Moisture = mean(Weightpercent_Soilmoisture))
 
 # Soil chemistry - current at plot level -> summary by average
-soilchem_grass <- soilchem_grass |> 
+soilchem_infield <- soilchem_infield |> 
   group_by(SiteID) |> 
-  summarise(MeanLOI = mean(LOI),
-            MeanHumus = mean(Humus_percentDM),
-            MeanpH = mean(pH),
-            MeanPhosphorus = mean(P.Al_mg.100g),
-            MeanPotassium = mean(K.Al_mg.100g),
-            MeanNitrogen = mean(TotalN_percentDM),
-            MeanSodium = mean(Na.Al_mg.100g))
+  summarise(LOI = mean(LOI),
+            Humus = mean(Humus_percentDM),
+            pH = mean(pH),
+            Phosph = mean(P.Al_mg.100g),
+            Potass = mean(K.Al_mg.100g),
+            Nitrog = mean(TotalN_percentDM),
+            Sodium = mean(Na.Al_mg.100g))
 
 # Soil penetration - current at sample level -> summary by average
-soilpene_grass <- soilpene_grass |> 
+soilpene_infield <- soilpene_infield |> 
   group_by(SiteID) |> 
-  summarise(MeanPT = mean(AveragePT_cm))
+  summarise(SoilPene = mean(AveragePT_cm))
 
 # Plant community - current at quadrat level -> summary by average
-vege_grass <- vege_grass |> 
+vege_infield <- vege_infield |> 
   group_by(SiteID, Species) |> 
   summarise(PlantSp_cover = mean(Abundance))
 
 # Beetle community - current at pitfall level -> summary by average
-beetle_grass <- beetle_grass |> 
+beetle_infield <- beetle_infield |> 
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = mean(BeetleFam_abundance))
 
@@ -125,7 +125,7 @@ beetle_grass <- beetle_grass |>
 #hist(vege_grass$PlantSp_cover) # Poisson, highly skewed
 
 # Species frequencies across sites
-vege_freq <- filter(vege_grass, PlantSp_cover>0) |>
+vege_freq <- filter(vege_infield, PlantSp_cover>0) |>
   group_by(Species) |>
   count() |>
   dplyr::arrange(desc(n)) # filtering by frequency
@@ -137,7 +137,7 @@ filter(vege_freq, n > 9 & n < 20)
 # 10 forb species in at least 10 sites R. acris; P. erecta; G. saxatile; r. repens; A. millefolium; C. majus; H. radicata; C. pratensis; V. palustris; C. rotundifolia
 
 # Species average percent cover across site
-vege_average <- vege_grass |>
+vege_average <- vege_infield |>
   group_by(Species) |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) # filtering by average value across sites
@@ -150,7 +150,7 @@ filter(vege_average, PlantSp_cover < 3 & PlantSp_cover > 1)
 # filter(vege_freq, Species == "Lolium perenne") only present in 6 sites
 
 # Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
-grass <- subset(vege_grass,
+grass <- subset(vege_infield,
                 Species == "Agrostis capillaris" |
                 Species == "Festuca rubra" | 
                 Species == "Holcus lanatus" | 
@@ -161,7 +161,7 @@ grass <- subset(vege_grass,
                 Species == "Poa trivialis")
 
 # Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
-forb <- subset(vege_grass,
+forb <- subset(vege_infield,
                 Species == "Trifolium repens" |
                   Species == "Rumex acetosa" |
                   Species == "Galium saxatile" |
@@ -198,7 +198,7 @@ forb <- as.data.frame(forb)
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
 # Family frequencies across sites
-beetle_freq <- filter(beetle_grass, BeetleFam_abundance>0) |>
+beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
   group_by(BeetleFamilies) |>
   count() |>
   dplyr::arrange(desc(n)) # filtering by frequency
@@ -206,7 +206,7 @@ filter(beetle_freq, n > 10)
 # 8 beetle families in at least 10 sites Carab; Hydro; Scara; Staph; Ptili; Curcu; Elat; Silph
 
 # Species average percent cover across site
-beetle_average <- beetle_grass |>
+beetle_average <- beetle_infield |>
   group_by(BeetleFamilies) |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(BeetleFam_abundance)) # filtering by average value across sites
@@ -214,7 +214,7 @@ filter(beetle_average, BeetleFam_abundance > 3)
 # 6 beetles families with at least 3 individuals on average Staph; Ptili; Hyrdo; Scara; Carab; Silph
 
 # Selection main dung beetle families -> at least present in 10 sites + min 3 individuals on average -> 6 families
-beetle <- subset(beetle_grass,
+beetle <- subset(beetle_infield,
                  BeetleFamilies == "Carabidae" |
                    BeetleFamilies == "Staphylinidae" |
                    BeetleFamilies == "Hydrophilidae" |
@@ -243,9 +243,25 @@ beetle <- as.data.frame(beetle)
 ## Average Jan temp (num), from climate
 ## Distance to sea (num), from area 20x20
 
-# Selection variables & scaling
-fjordsys <- full_join(area20x20_grass, climate_grass)
-fjordsys <- subset(fjordsys, select = c(SiteID, Elevation_max, AnnualPrecipitation, MaxTempJuly, MinTempJan, DistanceToSea_m))
+# Selection variables
+fjordsys <- full_join(area20x20_infield, climate_infield)
+fjordsys <- subset(fjordsys, select = c(SiteID, Elevation_max, annualprecipitation, maxtempJuly, mintempJan, DistanceToSea_m))
+
+# Variable renaming
+names(fjordsys) <- gsub("Elevation_max", "Elev", names(fjordsys))
+names(fjordsys) <- gsub("annualprecipitation", "AnnPreci", names(fjordsys))
+names(fjordsys) <- gsub("maxtempJuly", "JulTemp", names(fjordsys))
+names(fjordsys) <- gsub("mintempJan", "JanTemp", names(fjordsys))
+names(fjordsys) <- gsub("DistanceToSea_m", "SeaDist", names(fjordsys))
+
+# Check distribution
+#hist(fjordsys$Elev) # Poisson distribution, not skewed -> validated
+#hist(fjordsys$AnnPreci) # Normal-like distribution, with some gaps -> validated
+#hist(fjordsys$JulTemp) # Normal-like distribution -> validated
+#hist(fjordsys$JanTemp) # Reverse Poisson distribution -> validated
+#hist(fjordsys$SeaDist) # Poisson-like distribution, with one gap -> validated
+
+# Scaling
 fjordsys <- fjordsys |> 
   mutate(across(where(is.numeric), scale))
 
@@ -260,12 +276,26 @@ fjordsys <- fjordsys |>
 ## Sum wetland area (num), from landscape
 
 # New variables - sum of cultivated land & forest
-landscape_grass <- landscape_grass |> 
-  mutate(TotCultivatedLand_percent = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
-  mutate(TotForest_percent = ProductiveForest_percent + NonProductiveForest_percent)
+landscape_infield <- landscape_infield |> 
+  mutate(Cultivated = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
+  mutate(Forest = ProductiveForest_percent + NonProductiveForest_percent)
 
-# Selection variables & scaling
-landscape <- subset(landscape_grass, select = c(SiteID, TotCultivatedLand_percent, TotForest_percent, Infield_percent, Outfield_percent, Wetland_percent))
+# Selection variables
+landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, Infield_percent, Outfield_percent, Wetland_percent))
+
+# Variable renaming
+names(landscape) <- gsub("Infield_percent", "Infield", names(landscape))
+names(landscape) <- gsub("Outfield_percent", "Outfield", names(landscape))
+names(landscape) <- gsub("Wetland_percent", "Wetland", names(landscape))
+
+# Check distribution
+#hist(landscape$Cultivated) # Poisson-like distribution -> validated
+#hist(landscape$Forest) # Normal-like distribution, one gap in the middle -> validated
+#hist(landscape$Infield) # unbalanced normal-like, but no outlier -> validated
+#hist(landscape$Outfield) # Poisson, not skewed -> validated
+#hist(landscape$Wetland) # Poisson, not skewed -> validated
+
+# Scaling
 landscape <- landscape |> 
   mutate(across(where(is.numeric), scale))
 
@@ -280,58 +310,63 @@ landscape <- landscape |>
 ## Average stocking density, from landuse
 
 # Dummy numeric for original character variables
-landuse_grass <- landuse_grass |> 
+landuse_infield <- landuse_infield |> 
   mutate(Sheep = ifelse(Livestock1 == "sheep",1,0)) |> 
   mutate(Cow = ifelse(Livestock1 == "cow", 1,0))
 
-# Selection variables & scaling
-grazing <- subset(landuse_grass, select = c(SiteID, Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, AvgStockingDensity_perha))
+# Selection variables
+grazing <- subset(landuse_infield, select = c(SiteID, Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, AvgStockingDensity_perha))
+
+# Variable renaming
+names(grazing) <- gsub("FlockSize1_adults", "NbAdults", names(grazing))
+names(grazing) <- gsub("GrazingSurface_ha", "FieldSize", names(grazing))
+names(grazing) <- gsub("TotalInfieldSurface", "FarmInfield", names(grazing))
+names(grazing) <- gsub("AvgStockingDensity_perha", "StockDens", names(grazing))
+
+# Check distribution
+#hist(grazing$NbAdults) # one outlier above 150 -> rejected
+#hist(grazing$FieldSize) # Poisson distribution, with few gaps -> validated
+#hist(grazing$FarmInfield) # Poisson-like distribution, a bit unbalanced but no outlier
+#hist(grazing$StockDens) # Poisson distribution -> validated
+
+# Scaling
+grazing <- subset(grazing, select = -c(NbAdults))
 grazing <- grazing |> 
   mutate(across(where(is.numeric), scale))
 
 #
 ## Creation general local environment matrix
 
-# General
-locenvi <- purrr::reduce(list(groundcover_grass, soilbulk_grass, soilpene_grass, soilchem_grass, area20x20_grass), dplyr::left_join)
-locenvi <- subset(locenvi, select = c(SiteID, MeanLitter, MeanBryo, MeanHeight, MeanBD, MeanMoisture, MeanLOI, MeanNitrogen, MeanPhosphorus, MeanpH, MeanHumus, MeanPT, AspectDegree, General_slope))
-
-# Plant
-## Slope angle (num), from area 20x20
-## Aspect angle (num), from area 20x20
-## Bulk density (num), from soilbulk
-## Moisture content (num), from soilbulk
-## Penetration rate (num), from soilpene
-## LOI (num), from soilchem
-## Nitrogen content (num), from soilchem
-## Phosphorous content (num), from soilchem
-## pH (num), from soilchem
-## Humus content (num), from soilchem
-locenvi_vege <- subset(locenvi, select = -c(MeanLitter, MeanBryo, MeanHeight))
-
-# Beetle
 # Desired variables
-## Slope angle (num), from area 20x20
-## Aspect angle (num), from area 20x20
-## Litter cover (num), from groundcover
-## Mean vegetation height (num), from groundcover
-## Bulk density (num), from soilbulk
-## Moisture content (num), from soilbulk
-## Humus content (num), from soilchem
+## 
+
 # Selection variables
-locenvi_beetle <- subset(locenvi, select = -c(MeanLOI, MeanNitrogen, MeanPhosphorus, MeanpH))
+locenvi <- purrr::reduce(list(groundcover_infield, soilbulk_infield, soilpene_infield, soilchem_infield, area20x20_infield), dplyr::left_join)
+locenvi <- subset(locenvi, select = c(SiteID, Litter, Bryo, MeanHeight, BD, Moisture, LOI, Nitrog, Phosph, pH, Humus, SoilPene, AspectDegree, General_slope))
+
+# Variables renaming
+names(locenvi) <- gsub("AspectDegree", "Aspect", names(locenvi))
+names(locenvi) <- gsub("General_slope", "Slope", names(locenvi))
+
+# Check distribution
+#hist(locenvi$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
+#hist(locenvi$Bryo) # Unbalanced Normal-like but no outlier -> validated
+#hist(locenvi$MeanHeight) # Poisson like, no outlier -> validated
+#hist(locenvi$BD) # Normal-like, a bit unbalanced but no outlier -> validated
+#hist(locenvi$Moisture) # poisson like, no outlier -> validated
+#hist(locenvi$LOI) # Poisson like, a bit skewed but no outlier -> validated
+#hist(locenvi$Nitrog) # Poisson like, with a gap but no outlier -> validated
+#hist(locenvi$Phosph) # poisson like, a bit skewed but no outlier -> validated
+#hist(locenvi$pH) # good Normal distribution -> validated
+#hist(locenvi$Humus) # Poisson distribution, a bit skewed -> validated
+#hist(locenvi$SoilPene) # Normal distribution a bit unbalanced, no outlier -> validated
+#hist(locenvi$Aspect) # inverse Normal distribution, but no outlier -> validated
+#hist(locenvi$Slope) # Poisson distribution, one gap but no outlier -> validated
 
 # Data scaling
+locenvi <- subset(locenvi, select = -c(Litter))
 locenvi <- locenvi |> 
   mutate(across(where(is.numeric), scale))
-locenvi_vege <- locenvi_vege |> 
-  mutate(across(where(is.numeric), scale))
-locenvi_beetle <- locenvi_beetle |> 
-  mutate(across(where(is.numeric), scale))
-
-
-
-#### VERIFICATION ASSUMPTIONS ####
 
 #
 ## Variables colinearity
@@ -351,15 +386,11 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 }
 
 # Fjord system variables
-#paircor_fjordsys <- ggpairs(select_if(fjordsys, is.numeric))
-#paircor_fjordsys # no colinearity between variables, one outlier on distance to sea
 pairs(select_if(fjordsys, is.numeric),
       upper.panel = panel.cor,
       lower.panel = panel.smooth) # high colinearity between max temp and min temp
 
 # Landscape variables
-#paircor_landscape <- ggpairs(select_if(landscape, is.numeric))
-#paircor_landscape # one correlation a bit strong between total cultivated land and infield percent
 pairs(select_if(landscape, is.numeric),
       upper.panel = panel.cor,
       lower.panel = panel.smooth) # one correlation a bit strong (0.74) between total cultivated land and infield percent
@@ -369,140 +400,14 @@ pairs(select_if(grazing, is.numeric),
       upper.panel = panel.cor,
       lower.panel = panel.smooth) # no correlation stronger than 0.64 -> validated
 
-# Local plant environmental variables
-pairs(select_if(locenvi_vege, is.numeric),
+# Local environmental variables
+pairs(select_if(locenvi, is.numeric),
       upper.panel = panel.cor,
       lower.panel = panel.smooth) # 5 variables highly correlated (>0.8): BD, moisture, LOI, humus, Nitrogen
 
-# Local beetle environmental variables
-pairs(select_if(locenvi_beetle, is.numeric),
-      upper.panel = panel.cor,
-      lower.panel = panel.smooth) # 3 variables highly correlated (>0.8): BD, moisture & humus
-
 # Removal strongly correlated variables - BD kept as with higher number of replication for each site
-fjordsys <- subset(fjordsys, select = -c(MinTempJan))
-locenvi <- subset(locenvi, select = -c(MeanMoisture, MeanLOI, MeanHumus, MeanNitrogen))
-locenvi_vege <- subset(locenvi_vege, select = -c(MeanMoisture, MeanLOI, MeanHumus, MeanNitrogen))
-locenvi_beetle <- subset(locenvi_beetle, select = -c(MeanMoisture, MeanHumus))
-
-#
-## Linear relationships of residuals
-
-# Ordination community data
-DCA_grass <- decorana(contin_grass)
-DCA_grass # Axis length of 2.1 -> keep DCA
-plot(DCA_grass)
-DCA_forb <- decorana(contin_forb)
-DCA_forb # Axis length of 2.7 -> keep DCA
-plot(DCA_forb)
-DCA_beetle <- decorana(contin_beetle)
-DCA_beetle # Axis length at 1.3 -> run PCA
-PCA_beetle <- prcomp(contin_beetle)
-PCA_beetle
-biplot(PCA_beetle)
-
-# Extraction grass species scores from DCA
-scores_grass <- as.data.frame(scores(DCA_grass, choices = c(1,2), display = "sites"))
-names(scores_grass) <- gsub("DCA1", "GrassDCA1", names(scores_grass))
-names(scores_grass) <- gsub("DCA2", "GrassDCA2", names(scores_grass))
-scores_grass <- scores_grass |>  
-  mutate(SiteID = row.names(scores_grass)) # PlotID as column for future binding
-
-# Extraction forb species scores from DCA (sup)
-scores_forb <- as.data.frame(scores(DCA_forb, choices = c(1,2), display = "sites"))
-names(scores_forb) <- gsub("DCA1", "ForbDCA1", names(scores_forb))
-names(scores_forb) <- gsub("DCA2", "ForbDCA2", names(scores_forb))
-scores_forb <- scores_forb |>  
-  mutate(SiteID = row.names(scores_forb)) # PlotID as column for future binding
-
-# Extraction beetle family scores from PCA
-scores_beetle <- as.data.frame(scores(PCA_beetle, choices = c(1,2), display = "sites"))
-names(scores_beetle) <- gsub("PC1", "BeetlePCA1", names(scores_beetle))
-names(scores_beetle) <- gsub("PC2", "BeetlePCA2", names(scores_beetle))
-scores_beetle <- scores_beetle |>  
-  mutate(SiteID = row.names(scores_beetle)) # PlotID as column for future binding
-
-# Table binding
-allvar_grass <- purrr::reduce(list(scores_grass, fjordsys, landscape, grazing, locenvi_vege), dplyr::left_join)
-allvar_forb <- purrr::reduce(list(scores_forb, fjordsys, landscape, grazing, locenvi_vege), dplyr::left_join)
-allvar_beetle <- purrr::reduce(list(scores_beetle, fjordsys, landscape, grazing, locenvi_beetle), dplyr::left_join)
-
-# Residuals LM for grasses
-# residualPlots(lm(GrassDCA1~Elevation_max, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~DistanceToSea_m, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~AnnualPrecipitation, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~MaxTempJuly, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~TotCultivatedLand_percent, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~TotForest_percent, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~Infield_percent, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~Outfield_percent, data = allvar_grass))
-residualPlots(lm(GrassDCA1~Wetland_percent, data = allvar_grass)) #rejected
-#residualPlots(lm(GrassDCA1~Sheep, data = allvar_grass)) # binary, cannot be checked
-#residualPlots(lm(GrassDCA1~Cow, data = allvar_grass)) # binary, cannot be checked
-#residualPlots(lm(GrassDCA1~Goat, data = allvar_grass)) # binary, cannot be checked
-residualPlots(lm(GrassDCA1~FlockSize1_adults, data = allvar_grass)) #rejected
-# residualPlots(lm(GrassDCA1~GrazingSurface_ha, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~TotalInfieldSurface, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~AvgStockingDensity_perha, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~General_slope, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~AspectDegree, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~MeanBD, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~MeanPT, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~MeanpH, data = allvar_grass))
-# residualPlots(lm(GrassDCA1~MeanPhosphorus, data = allvar_grass))
-
-# Residuals LM for forbs
-# residualPlots(lm(ForbDCA1~Elevation_max, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~DistanceToSea_m, data = allvar_forb))
-residualPlots(lm(ForbDCA1~AnnualPrecipitation, data = allvar_forb)) #rejected
-# residualPlots(lm(ForbDCA1~MaxTempJuly, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~TotCultivatedLand_percent, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~TotForest_percent, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~Infield_percent, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~Outfield_percent, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~Wetland_percent, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~Sheep, data = allvar_forb)) # binary, cannot be checked
-# residualPlots(lm(ForbDCA1~Cow, data = allvar_forb)) # binary, cannot be checked
-# residualPlots(lm(ForbDCA1~Goat, data = allvar_forb)) # binary, cannot be checked
-residualPlots(lm(ForbDCA1~FlockSize1_adults, data = allvar_forb)) #rejected
-# residualPlots(lm(ForbDCA1~GrazingSurface_ha, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~TotalInfieldSurface, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~AvgStockingDensity_perha, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~General_slope, data = allvar_forb))
-residualPlots(lm(ForbDCA1~AspectDegree, data = allvar_forb)) #rejected
-# residualPlots(lm(ForbDCA1~MeanBD, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~MeanPT, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~MeanpH, data = allvar_forb))
-# residualPlots(lm(ForbDCA1~MeanPhosphorus, data = allvar_forb))
-
-# Residuals LM for beetles
-# residualPlots(lm(BeetlePCA1~Elevation_max, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~DistanceToSea_m, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~AnnualPrecipitation, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~MaxTempJuly, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~TotCultivatedLand_percent, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~TotForest_percent, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~Infield_percent, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~Outfield_percent, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~Wetland_percent, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~Sheep, data = allvar_beetle)) # binary, cannot be checked
-# residualPlots(lm(BeetlePCA1~Cow, data = allvar_beetle)) # binary, cannot be checked
-# residualPlots(lm(BeetlePCA1~Goat, data = allvar_beetle)) # binary, cannot be checked
-# residualPlots(lm(BeetlePCA1~FlockSize1_adults, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~GrazingSurface_ha, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~TotalInfieldSurface, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~AvgStockingDensity_perha, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~General_slope, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~AspectDegree, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~MeanBD, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~MeanPT, data = allvar_beetle))
-residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # rejected
-# residualPlots(lm(BeetlePCA1~MeanBryo, data = allvar_beetle))
-# residualPlots(lm(BeetlePCA1~MeanHeight, data = allvar_beetle))
-
-
-
-#### Canonical correlation preparation ####
+fjordsys <- subset(fjordsys, select = -c(JanTemp))
+locenvi <- subset(locenvi, select = -c(Moisture, LOI, Humus, Nitrog))
 
 #
 ## Data preparation - Contingency tables
@@ -510,124 +415,36 @@ residualPlots(lm(BeetlePCA1~MeanLitter, data = allvar_beetle)) # rejected
 # Fjord system
 fjordsys_long <- fjordsys |> 
   pivot_longer(
-    cols = c(Elevation_max, AnnualPrecipitation, MaxTempJuly, DistanceToSea_m),
+    cols = c(Elev, AnnPreci, JulTemp, SeaDist),
     names_to = "Factors",
     values_to = "Values")
 contin_fjordsys <- xtabs(formula = Values ~ SiteID + Factors, data = fjordsys_long)
-contin_fjordsys_grass <- xtabs(formula = Values ~ SiteID + Factors, data = fjordsys_long)
-contin_fjordsys_forb <- xtabs(formula = Values ~ SiteID + Factors, data = filter(fjordsys_long, Factors != "AnnualPrecipitation")) # non-linear relationship
-contin_fjordsys_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = fjordsys_long)
 
 # Landscape
 landscape_long <- landscape |> 
   pivot_longer(
-    cols = c(TotCultivatedLand_percent, TotForest_percent, Infield_percent, Outfield_percent, Wetland_percent),
+    cols = c(Cultivated, Forest, Infield, Outfield, Wetland),
     names_to = "Factors",
     values_to = "Values"
   )
 contin_landscape <- xtabs(formula = Values ~ SiteID + Factors, data = landscape_long)
-contin_landscape_grass <- xtabs(formula = Values ~ SiteID + Factors, data = filter(landscape_long, Factors != "Wetland_percent"))
-contin_landscape_forb <- xtabs(formula = Values ~ SiteID + Factors, data = landscape_long)
-contin_landscape_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = landscape_long)
 
 # Grazing
 grazing_long <- grazing |> 
   pivot_longer(
-    cols = c(Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, AvgStockingDensity_perha),
+    cols = c(Sheep, Cow, FieldSize, FarmInfield, StockDens),
     names_to = "Factors",
     values_to = "Values")
 contin_grazing <- xtabs(formula = Values ~ SiteID + Factors, data = grazing_long)
-contin_grazing_grass <- xtabs(formula = Values ~ SiteID + Factors, data = filter(grazing_long, Factors != "FlockSize1_adults")) # non-linear relationship
-contin_grazing_forb <- xtabs(formula = Values ~ SiteID + Factors, data = filter(grazing_long, Factors != "FlockSize1_adults")) # non-linear relationship
-contin_grazing_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = grazing_long)
 
-# Local environment - general
+# Local environment
 locenvi_long <- locenvi |> 
   pivot_longer(
-    cols = c(MeanLitter, MeanBryo, MeanHeight, MeanBD, MeanPhosphorus, MeanpH, MeanPT, AspectDegree, General_slope),
+    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
     names_to = "Factors",
     values_to = "Values")
 contin_locenvi <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi_long)
 
-# Local environment - plants
-locenvi_long_vege <- locenvi_vege |> 
-  pivot_longer(
-    cols = c(MeanBD, MeanPT, MeanpH, MeanPhosphorus, General_slope, AspectDegree),
-    names_to = "Factors",
-    values_to = "Values")
-contin_locenvi_vege <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi_long_vege)
-contin_locenvi_grass <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi_long_vege)
-contin_locenvi_forb <- xtabs(formula = Values ~ SiteID + Factors, data = filter(locenvi_long_vege, Factors != "AspectDegree"))
-
-# Local environment - beetle
-locenvi_long_beetle <- locenvi_beetle |> 
-  pivot_longer(
-    cols = c(MeanHeight, MeanPT, MeanBD, MeanBryo, MeanLitter, AspectDegree, General_slope),
-    names_to = "Factors",
-    values_to = "Values")
-contin_locenvi_beetle <- xtabs(formula = Values ~ SiteID + Factors, data = filter(locenvi_long_beetle, Factors != "MeanLitter"))
-
-#
-## Graphical representation of correlations plant community
-
-# Fjord effect
-# correl_fjordxlandscape_vege <- matcor(contin_fjordsys, contin_landscape_vege)
-# img.matcor(correl_fjordxlandscape_vege, type = 2)
-# correl_fjordxgrazing_vege <- matcor(contin_fjordsys, contin_grazing_vege)
-# img.matcor(correl_fjordxgrazing_vege, type = 2)
-# correl_fjordxlocenvi_vege <- matcor(contin_fjordsys, contin_locenvi_vege)
-# img.matcor(correl_fjordxlocenvi_vege, type = 2)
-# correl_fjordxvege <- matcor(contin_fjordsys, contin_vege)
-# img.matcor(correl_fjordxvege, type = 2)
-
-# Landscape effect
-#correl_landscapexgrazing_vege <- matcor(contin_landscape_vege, contin_grazing_vege)
-#img.matcor(correl_landscapexgrazing_vege, type = 2)
-#correl_landscapexlocalenvi_vege <- matcor(contin_landscape_vege, contin_locenvi_vege)
-#img.matcor(correl_landscapexlocalenvi_vege, type = 2)
-#correl_landscapexvege <- matcor(contin_landscape_vege, contin_vege)
-#img.matcor(correl_landscapexvege, type = 2)
-
-# Grazing effect
-#correl_grazingxlocenvi_vege <- matcor(contin_grazing_vege, contin_locenvi_vege)
-#img.matcor(correl_grazingxlocenvi_vege, type = 2)
-#correl_grazingxvege <- matcor(contin_grazing_vege, contin_vege)
-#img.matcor(correl_grazingxlocenvi_vege, type = 2)
-
-# Local environment effect
-#correl_locenvixvege <- matcor(contin_locenvi_vege, contin_vege)
-#img.matcor(correl_grazingxlocenvi_vege, type = 2)
-
-#
-## Graphical representation of correlations beetle community
-
-# Fjord effect
-#correl_fjordxlandscape_beetle <- matcor(contin_fjordsys, contin_landscape_beetle)
-#img.matcor(correl_fjordxlandscape_beetle, type = 2)
-#correl_fjordxgrazing_beetle <- matcor(contin_fjordsys, contin_grazing_beetle)
-#img.matcor(correl_fjordxgrazing_beetle, type = 2)
-#correl_fjordxlocenvi_beetle <- matcor(contin_fjordsys, contin_locenvi_beetle)
-#img.matcor(correl_fjordxlocenvi_beetle, type = 2)
-#correl_fjordxbeetle <- matcor(contin_fjordsys, contin_beetle)
-#img.matcor(correl_fjordxbeetle, type = 2)
-
-# Landscape effect
-#correl_landscapexgrazing_beetle <- matcor(contin_landscape_beetle, contin_grazing_beetle)
-#img.matcor(correl_landscapexgrazing_beetle, type = 2)
-#correl_landscapexlocalenvi_beetle <- matcor(contin_landscape_beetle, contin_locenvi_beetle)
-#img.matcor(correl_landscapexlocalenvi_beetle, type = 2)
-#correl_landscapexbeetle <- matcor(contin_landscape_beetle, contin_beetle)
-#img.matcor(correl_landscapexbeetle, type = 2)
-
-# Grazing effect
-#correl_grazingxlocenvi_beetle <- matcor(contin_grazing_beetle, contin_locenvi_beetle)
-#img.matcor(correl_grazingxlocenvi_beetle, type = 2)
-#correl_grazingxbeetle <- matcor(contin_grazing_vege, contin_beetle)
-#img.matcor(correl_grazingxbeetle, type = 2)
-
-# Local environment effect
-#correl_locenvixbeetle <- matcor(contin_locenvi_beetle, contin_beetle)
-#img.matcor(correl_locenvixbeetle, type = 2)
 
 
 #### Canonical correlation analysis between driver sets ####
@@ -644,426 +461,295 @@ nvar_locenvi <- length(select_if(locenvi, is.numeric))
 ## Fjord effect
 
 # Fjord x landscape
-cancor_fjordxlandscape <- cc(contin_fjordsys, contin_landscape)
-rho_fjordxlandscape <- cancor_fjordxlandscape$cor
-rho_fjordxlandscape
+cancor <- cc(contin_fjordsys, contin_landscape)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.79
 # 2nd axis correlation 0.75
 # 3rd axis correlation 0.55
-p.asym(rho_fjordxlandscape, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
 # 1st dim significant - stat 3.45 - df1 20 - df2 74 - pval 1.5.10-4
 # 2nd dim significant - stat 1.77 - df1 12 - df2 82 - pval 1.5.10-3
 # 3rd dim marginally significant - stat 0.5 - df1 6 - df2 90 - pval 0.09
+fjordlandscape <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "landscape", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordlandscape
 
 # Fjord x grazing
-cancor_fjordxgrazing <- cc(contin_fjordsys, contin_grazing)
-rho_fjordxgrazing <- cancor_fjordxgrazing$cor
-rho_fjordxgrazing
+cancor <- cc(contin_fjordsys, contin_grazing)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.61
-p.asym(rho_fjordxgrazing, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
 # 1st dim NS - stat 1.11 - df1 24 - df2 70 - pval 0.72
+fjordgrazing <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "grazing", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordgrazing
 
 # Fjord x local environment
-cancor_fjordxlocenvi <- cc(contin_fjordsys, contin_locenvi)
-rho_fjordxlocenvi <- cancor_fjordxlocenvi$cor
-rho_fjordxlocenvi
+cancor <- cc(contin_fjordsys, contin_locenvi)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.63
-p.asym(rho_fjordxlocenvi, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
 # 1st dim NS - stat 1.43 - df1 36 - df2 58 - pval 0.96
+fjordlocenvi <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "locenvi", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordlocenvi
 
 #
 ## Landscape effect
 
-cancor_landscapexgrazing <- cc(contin_landscape, contin_grazing)
-rho_landscapexgrazing <- cancor_landscapexgrazing$cor
-rho_landscapexgrazing
+# Landscape x grazing
+cancor <- cc(contin_landscape, contin_grazing)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.69
-p.asym(rho_landscapexgrazing, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
-# 1st dim marginally significant - stat 1.96 - df1 30 - df2 82 - pval 0.39
+test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
+# 1st dim NS - stat 1.96 - df1 30 - df2 82 - pval 0.39
+landscapegrazing <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "landscape", response = "grazing", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+landscapegrazing
 
 # Landscape x local environment
-cancor_landscapexlocalenvi <- cc(contin_landscape, contin_locenvi)
-rho_landscapexlocalenvi <- cancor_landscapexlocalenvi$cor
-rho_landscapexlocalenvi
+cancor <- cc(contin_landscape, contin_locenvi)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.80
-p.asym(rho_landscapexlocalenvi, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
-# 1st dim marginally significant - stat 3.64 - df1 45 - df2 67 - pval 0.38
+test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
+# 1st dim NS - stat 3.64 - df1 45 - df2 67 - pval 0.38
+landscapelocenvi <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "landscape", response = "locenvi", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+landscapelocenvi
 
 #
 ## Grazing effect
 
 # Grazing x local environment
-cancor_grazingxlocenvi <- cc(contin_grazing, contin_locenvi)
-rho_grazingxlocenvi <- cancor_grazingxlocenvi$cor
-rho_grazingxlocenvi
+cancor <- cc(contin_grazing, contin_locenvi)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.79
-p.asym(rho_grazingxlocenvi, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
 # 1st dim NS - stat 4.26 - df1 54 - df2 74 - pval 0.54
+grazinglocenvi <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "grazing", response = "locenvi", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+grazinglocenvi
+
+#
+## Merging output
+
+envar <- purrr::reduce(list(fjordlandscape, fjordgrazing, fjordlocenvi, landscapegrazing, landscapelocenvi, grazinglocenvi), dplyr::full_join)
+envar <- envar |> 
+  filter(dim == "dim1" | p.value < 0.1)
 
 
 #### Canonical correlation analysis grass community ####
 
 # Number of observations (same for all sets)
-nobs <- dim(contin_fjordsys_grass)[1]
-
-# Number of variables in each set
-nvar_fjordsys <- length(select_if(fjordsys, is.numeric))
-nvar_landscape <- length(select_if(subset(landscape, select = -c(Wetland_percent)), is.numeric))
-nvar_grazing <- length(select_if(subset(grazing, select = -c(FlockSize1_adults)), is.numeric))
-nvar_locenvi <- length(select_if(locenvi_vege, is.numeric))
-nvar_grass <- length(select_if(grass, is.numeric))
-
-#
-## Fjord effect
-
-# Fjord x landscape
-cancor_fjordxlandscape_grass <- cc(contin_fjordsys_grass, contin_landscape_grass)
-rho_fjordxlandscape_grass <- cancor_fjordxlandscape_grass$cor
-rho_fjordxlandscape_grass
-# 1st axis correlation 0.79
-# 2nd axis correlation 0.63
-p.asym(rho_fjordxlandscape_grass, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
-# 1st dim significant - stat 2.44 - df1 16 - df2 78 - pval 7.1.10-4
-# 2nd dim marginally significant - stat 0.77 - df1 9 - df2 86 - pval 0.07
-plt.cc(cancor_fjordxlandscape_grass, var.label = TRUE)
-
-# Fjord x grazing
-cancor_fjordxgrazing_grass <- cc(contin_fjordsys_grass, contin_grazing_grass)
-rho_fjordxgrazing_grass <- cancor_fjordxgrazing_grass$cor
-rho_fjordxgrazing_grass
-# 1st axis correlation 0.6
-p.asym(rho_fjordxgrazing_grass, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 0.88 - df1 20 - df2 74 - pval 0.69
-plt.cc(cancor_fjordxgrazing_grass, var.label = TRUE)
-
-# Fjord x local environment
-cancor_fjordxlocenvi_grass <- cc(contin_fjordsys_grass, contin_locenvi_grass)
-rho_fjordxlocenvi_grass <- cancor_fjordxlocenvi_grass$cor
-rho_fjordxlocenvi_grass
-# 1st axis correlation 0.58
-p.asym(rho_fjordxlocenvi_grass, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 0.95 - df1 24 - df2 70 - pval 0.84
-plt.cc(cancor_fjordxlocenvi_grass, var.label = TRUE)
-
-# Fjord x grass community
-cancor_fjordxgrass <- cc(contin_fjordsys_grass, contin_grass)
-rho_fjordxgrass <- cancor_fjordxgrass$cor
-rho_fjordxgrass 
-# 1st axis correlation 0.8
-p.asym(rho_fjordxgrass, nobs, nvar_fjordsys, nvar_grass, tstat = "Hotelling") 
-# 1st dim marginally significant - stat 2.59 - df1 28 - df2 66 - pval 0.081
-plt.cc(cancor_fjordxgrass, var.label = TRUE)
-
-#
-## Landscape effect
-
-# Landscape x grazing
-cancor_landscapexgrazing_grass <- cc(contin_landscape_grass, contin_grazing_grass)
-rho_landscapexgrazing_grass <- cancor_landscapexgrazing_grass$cor
-rho_landscapexgrazing_grass
-# 1st axis correlation 0.6
-p.asym(rho_landscapexgrazing_grass, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
-# 1st dim marginally significant - stat 1.12 - df1 20 - df2 74 - pval 0.44
-plt.cc(cancor_landscapexgrazing_grass, var.label = TRUE)
-
-# Landscape x local environment
-cancor_landscapexlocalenvi_grass <- cc(contin_landscape_grass, contin_locenvi_grass)
-rho_landscapexlocalenvi_grass <- cancor_landscapexlocalenvi_grass$cor
-rho_landscapexlocalenvi_grass
-# 1st axis correlation 0.77
-p.asym(rho_landscapexlocalenvi_grass, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 2 - df1 24 - df2 70 - pval 0.11
-plt.cc(cancor_landscapexlocalenvi_grass, var.label = TRUE)
-
-# Landscape x grass community
-cancor_landscapexgrass <- cc(contin_landscape_grass, contin_grass)
-rho_landscapexgrass <- cancor_landscapexgrass$cor
-rho_landscapexgrass 
-# 1st axis correlation 0.71
-p.asym(rho_landscapexgrass, nobs, nvar_landscape, nvar_grass, tstat = "Hotelling") 
-# 1st dim NS - stat 1.53 - df1 28 - df2 66 - pval 0.61
-plt.cc(cancor_landscapexgrass, var.label = TRUE)
-
-#
-## Grazing effect
-
-# Grazing x local environment
-cancor_grazingxlocenvi_grass <- cc(contin_grazing_grass, contin_locenvi_grass)
-rho_grazingxlocenvi_grass <- cancor_grazingxlocenvi_grass$cor
-rho_grazingxlocenvi_grass
-# 1st axis correlation 0.6
-p.asym(rho_grazingxlocenvi_grass, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 1.12 - df1 30 - df2 82 - pval 0.94
-plt.cc(cancor_grazingxlocenvi_grass, var.label = TRUE)
-
-# Grazing x grass community
-cancor_grazingxgrass <- cc(contin_grazing_grass, contin_grass)
-rho_grazingxgrass <- cancor_grazingxgrass$cor
-rho_grazingxgrass 
-# 1st axis correlation 0.87 
-p.asym(rho_grazingxgrass, nobs, nvar_grazing, nvar_grass, tstat = "Hotelling") 
-# 1st axis significant - stat 4.6 - df1 35 - df2 77 - pval 5.2.10-3
-plt.cc(cancor_grazingxgrass, var.label = TRUE)
-plt.cc(cancor_grazingxgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
-
-#
-## Local environment effect
-
-cancor_locenvixgrass <- cc(contin_locenvi_grass, contin_grass)
-rho_locenvixgrass <- cancor_locenvixgrass$cor
-rho_locenvixgrass 
-# 1st axis correlation 0.87
-sigsum <- p.asym(rho_locenvixgrass, nobs, nvar_locenvi, nvar_grass, tstat = "Hotelling")
-sigsum
-# 1st axis significant - stat 4.63 - df1 42 - df2 86 - pval 0.038
-summary_locenvixgrass <- cbind(rho_locenvixgrass, sigsum$approx, sigsum$df1, sigsum$df2, sigsum$p.value)
-summary_locenvixgrass
-# plt.cc(cancor_locenvixgrass, var.label = TRUE)
-# plt.cc(cancor_locenvixgrass, d1 = 2, d2 = 3, var.label = TRUE) # dim 2 & 3
-
-
-
-
-#### Canonical correlation analysis forb community ####
-
-# Number of observations (same for all sets)
-nobs <- dim(contin_fjordsys_forb)[1]
-
-# Number of variables in each set
-nvar_fjordsys <- length(select_if(subset(fjordsys, select = -c(AnnualPrecipitation)), is.numeric))
-nvar_landscape <- length(select_if(landscape, is.numeric))
-nvar_grazing <- length(select_if(subset(grazing, select = -c(FlockSize1_adults)), is.numeric))
-nvar_locenvi <- length(select_if(subset(locenvi_vege, select = -c(AspectDegree)), is.numeric))
-nvar_forb <- length(select_if(forb, is.numeric))
-
-#
-## Fjord effect
-
-# Fjord x landscape
-cancor_fjordxlandscape_forb <- cc(contin_fjordsys_forb, contin_landscape_forb)
-rho_fjordxlandscape_forb <- cancor_fjordxlandscape_forb$cor
-rho_fjordxlandscape_forb
-# 1st axis correlation 0.79
-# 2nd axis correlation 0.75
-# 3rd axis correlation 0.45
-p.asym(rho_fjordxlandscape_forb, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
-# 1st dim significant - stat 3.22 - df1 15 - df2 59 - pval 3.18.10-5
-# 2nd dim significant - stat 1.55 - df1 8 - df2 65 - pval 4.23.10-4
-# 3rd dim marginally significant - stat 0.28 - df1 3 - df2 71 - pval 0.092
-plt.cc(cancor_fjordxlandscape_forb, var.label = TRUE) # dim 1 & 2
-plt.cc(cancor_fjordxlandscape_forb, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
-
-# Fjord x grazing
-cancor_fjordxgrazing_forb <- cc(contin_fjordsys_forb, contin_grazing_forb)
-rho_fjordxgrazing_forb <- cancor_fjordxgrazing_forb$cor
-rho_fjordxgrazing_forb
-# 1st axis correlation 0.52
-p.asym(rho_fjordxgrazing_forb, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 0.58 - df1 15 - df2 59 - pval 0.72
-plt.cc(cancor_fjordxgrazing_forb, var.label = TRUE)
-
-# Fjord x local environment
-cancor_fjordxlocenvi_forb <- cc(contin_fjordsys_forb, contin_locenvi_forb)
-rho_fjordxlocenvi_forb <- cancor_fjordxlocenvi_forb$cor
-rho_fjordxlocenvi_forb
-# 1st axis correlation 0.58
-p.asym(rho_fjordxlocenvi_forb, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 0.71 - df1 15 - df2 59 - pval 0.55
-plt.cc(cancor_fjordxlocenvi_forb, var.label = TRUE)
-
-# Fjord x forb community
-cancor_fjordxforb <- cc(contin_fjordsys_forb, contin_forb)
-rho_fjordxforb <- cancor_fjordxforb$cor
-rho_fjordxforb 
-# 1st axis correlation 0.63
-p.asym(rho_fjordxforb, nobs, nvar_fjordsys, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 1.57 - df1 21 - df2 53 - pval 0.78
-plt.cc(cancor_fjordxforb, var.label = TRUE)
-
-#
-## Landscape effect
-
-# Landscape x grazing
-cancor_landscapexgrazing_forb <- cc(contin_landscape_forb, contin_grazing_forb)
-rho_landscapexgrazing_forb <- cancor_landscapexgrazing_forb$cor
-rho_landscapexgrazing_forb
-# 1st axis correlation 0.67
-p.asym(rho_landscapexgrazing_forb, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 1.48 - df1 25 - df2 87 - pval 0.44
-plt.cc(cancor_landscapexgrazing_forb, var.label = TRUE)
-
-# Landscape x local environment
-cancor_landscapexlocalenvi_forb <- cc(contin_landscape_forb, contin_locenvi_forb)
-rho_landscapexlocalenvi_forb <- cancor_landscapexlocalenvi_forb$cor
-rho_landscapexlocalenvi_forb
-# 1st axis correlation 0.77
-p.asym(rho_landscapexlocalenvi_forb, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
-# 1st dim significant - stat 2.37 - df1 25 - df2 87 - pval 0.046
-plt.cc(cancor_landscapexlocalenvi_forb, var.label = TRUE)
-
-# Landscape x forb community
-cancor_landscapexforb <- cc(contin_landscape_forb, contin_forb)
-rho_landscapexforb <- cancor_landscapexforb$cor
-rho_landscapexforb 
-# 1st axis correlation 0.75
-p.asym(rho_landscapexforb, nobs, nvar_landscape, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 3 - df1 35 - df2 77 - pval 0.15
-plt.cc(cancor_landscapexforb, var.label = TRUE)
-
-#
-## Grazing effect
-
-# Grazing x local environment
-cancor_grazingxlocenvi_forb <- cc(contin_grazing_forb, contin_locenvi_forb)
-rho_grazingxlocenvi_forb <- cancor_grazingxlocenvi_forb$cor
-rho_grazingxlocenvi_forb
-# 1st axis correlation 0.59
-p.asym(rho_grazingxlocenvi_forb, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 0.96 - df1 25 - df2 87 - pval 0.87
-plt.cc(cancor_grazingxlocenvi_forb, var.label = TRUE)
-
-# Grazing x forb community
-cancor_grazingxforb <- cc(contin_grazing_forb, contin_forb)
-rho_grazingxforb <- cancor_grazingxforb$cor
-rho_grazingxforb 
-# 1st axis correlation 0.79
-p.asym(rho_grazingxforb, nobs, nvar_grazing, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 2.89 - df1 35 - df2 77 - pval 0.18
-plt.cc(cancor_grazingxforb, var.label = TRUE)
-
-#
-## Local environment effect
-
-cancor_locenvixforb <- cc(contin_locenvi_forb, contin_forb)
-rho_locenvixforb <- cancor_locenvixforb$cor
-rho_locenvixforb 
-# 1st axis correlation 0.77
-p.asym(rho_locenvixforb, nobs, nvar_locenvi, nvar_forb, tstat = "Hotelling") 
-# 1st dim marginally significant - stat 3.4 - df1 35 - df2 77 - pval 0.07
-plt.cc(cancor_locenvixforb, var.label = TRUE)
-plt.cc(cancor_locenvixforb, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
-
-
-#### Canonical correlation analysis beetle assemblage ####
-
-# Number of observations (same for all sets)
-nobs <- dim(contin_fjordsys_beetle)[1]
+nobs <- dim(contin_fjordsys)[1]
 
 # Number of variables in each set
 nvar_fjordsys <- length(select_if(fjordsys, is.numeric))
 nvar_landscape <- length(select_if(landscape, is.numeric))
 nvar_grazing <- length(select_if(grazing, is.numeric))
-nvar_locenvi <- length(select_if(subset(locenvi_beetle, select = -c(MeanLitter)), is.numeric))
+nvar_locenvi <- length(select_if(locenvi, is.numeric))
+nvar_grass <- length(select_if(grass, is.numeric))
+
+# Fjord x grass community
+cancor <- cc(contin_fjordsys, contin_grass)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.8
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_grass, tstat = "Hotelling") 
+# 1st dim marginally significant - stat 2.59 - df1 28 - df2 66 - pval 0.081
+fjordgrass <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "grass", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordgrass
+
+# Landscape x grass community
+cancor <- cc(contin_landscape, contin_grass)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.82
+test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grass, tstat = "Hotelling") 
+# 1st dim NS - stat 3.15 - df1 35 - df2 77 - pval 0.12
+landscapegrass <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "landscape", response = "grass", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+landscapegrass
+
+# Grazing x grass community
+cancor <- cc(contin_grazing, contin_grass)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.87 
+test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_grass, tstat = "Hotelling") 
+# 1st axis significant - stat 4.6 - df1 35 - df2 77 - pval 5.2.10-3
+grazinggrass <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "grazing", response = "grass", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+grazinggrass
+
+# Local environment effect x grass community
+cancor <- cc(contin_locenvi, contin_grass)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.87
+test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_grass, tstat = "Hotelling")
+# 1st axis significant - stat 4.63 - df1 42 - df2 86 - pval 0.038
+locenvigrass <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "locenvi", response = "grass", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+locenvigrass
+
+# Merging output
+grassvar <- purrr::reduce(list(fjordgrass, landscapegrass, grazinggrass, locenvigrass), dplyr::full_join)
+grassvar <- grassvar |> 
+  filter(dim == "dim1" | p.value < 0.1)
+
+
+#### Canonical correlation analysis forb community ####
+
+# Number of observations (same for all sets)
+nobs <- dim(contin_fjordsys)[1]
+
+# Number of variables in each set
+nvar_fjordsys <- length(select_if(fjordsys, is.numeric))
+nvar_landscape <- length(select_if(landscape, is.numeric))
+nvar_grazing <- length(select_if(grazing, is.numeric))
+nvar_locenvi <- length(select_if(locenvi, is.numeric))
+nvar_forb <- length(select_if(forb, is.numeric))
+
+
+# Fjord x forb community
+cancor <- cc(contin_fjordsys, contin_forb)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.69
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_forb, tstat = "Hotelling") 
+# 1st dim NS - stat 1.57 - df1 28 - df2 66 - pval 0.58
+fjordforb <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "forb", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordforb
+
+# Landscape x forb community
+cancor <- cc(contin_landscape, contin_forb)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.75
+test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_forb, tstat = "Hotelling") 
+# 1st dim NS - stat 3 - df1 35 - df2 77 - pval 0.15
+landscapeforb <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "landscape", response = "forb", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+landscapeforb
+
+# Grazing x forb community
+cancor <- cc(contin_grazing, contin_forb)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.79
+test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_forb, tstat = "Hotelling") 
+# 1st dim NS - stat 2.89 - df1 35 - df2 77 - pval 0.19
+grazingforb <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "grazing", response = "forb", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+grazingforb
+
+# Local environment effectx forb
+cancor <- cc(contin_locenvi, contin_forb)
+rhocancor <- cancor$cor
+rhocancor 
+# 1st axis correlation 0.77
+test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_forb, tstat = "Hotelling") 
+# 1st dim NS - stat 4.3 - df1 56 - df2 86 - pval 0.6
+locenviforb <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "locenvi", response = "forb", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+locenviforb
+
+# Merging output
+forbvar <- purrr::reduce(list(fjordforb, landscapeforb, grazingforb, locenviforb), dplyr::full_join)
+forbvar <- forbvar |> 
+  filter(dim == "dim1" | p.value < 0.1)
+
+
+#### Canonical correlation analysis beetle assemblage ####
+
+# Number of observations (same for all sets)
+nobs <- dim(contin_fjordsys)[1]
+
+# Number of variables in each set
+nvar_fjordsys <- length(select_if(fjordsys, is.numeric))
+nvar_landscape <- length(select_if(landscape, is.numeric))
+nvar_grazing <- length(select_if(grazing, is.numeric))
+nvar_locenvi <- length(select_if(locenvi, is.numeric))
 nvar_beetle <- length(select_if(beetle, is.numeric))
 
-#
-## Fjord effect
-
-# Fjord x landscape
-cancor_fjordxlandscape_beetle <- cc(contin_fjordsys_beetle, contin_landscape_beetle)
-rho_fjordxlandscape_beetle <- cancor_fjordxlandscape_beetle$cor
-rho_fjordxlandscape_beetle
-# 1st axis correlation 0.79
-# 2nd axis correlation 0.75
-# 3rd axis correlation 0.55
-p.asym(rho_fjordxlandscape_beetle, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
-# 1st dim significant - stat 3.45 - df1 20 - df2 74 - pval 1.48.10-4
-# 2nd dim significant - stat 1.77 - df1 12 - df2 82 - pval 1.48-3
-# 3rd dim marginally significant - stat 0.5 - df1 6 - df2 90 - pval 0.093
-plt.cc(cancor_fjordxlandscape_beetle, var.label = TRUE) # dim 1 & 2
-plt.cc(cancor_fjordxlandscape_beetle, d1 = 1, d2 = 3, var.label = TRUE) # dim 1 & 3
-
-# Fjord x grazing
-cancor_fjordxgrazing_beetle <- cc(contin_fjordsys_beetle, contin_grazing_beetle)
-rho_fjordxgrazing_beetle <- cancor_fjordxgrazing_beetle$cor
-rho_fjordxgrazing_beetle
-# 1st axis correlation 0.61
-p.asym(rho_fjordxgrazing_beetle, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 1.11 - df1 24 - df2 70 - pval 0.72
-plt.cc(cancor_fjordxgrazing_beetle, var.label = TRUE)
-
-# Fjord x local environment
-cancor_fjordxlocenvi_beetle <- cc(contin_fjordsys_beetle, contin_locenvi_beetle)
-rho_fjordxlocenvi_beetle <- cancor_fjordxlocenvi_beetle$cor
-rho_fjordxlocenvi_beetle
-# 1st axis correlation 0.61
-p.asym(rho_fjordxlocenvi_beetle, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 0.91 - df1 24 - df2 70 - pval 0.87
-plt.cc(cancor_fjordxlocenvi_beetle, var.label = TRUE)
-
 # Fjord x beetle assemblage
-cancor_fjordxbeetle <- cc(contin_fjordsys_beetle, contin_beetle)
-rho_fjordxbeetle <- cancor_fjordxbeetle$cor
-rho_fjordxbeetle
+cancor <- cc(contin_fjordsys, contin_beetle)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.69
-p.asym(rho_fjordxbeetle, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling")
 # 1st dim NS - stat 1.38 - df1 20 - df2 74 - pval 0.22
-plt.cc(cancor_fjordxbeetle, var.label = TRUE)
-
-#
-## Landscape effect
-
-# Landscape x grazing
-cancor_landscapexgrazing_beetle <- cc(contin_landscape_beetle, contin_grazing_beetle)
-rho_landscapexgrazing_beetle <- cancor_landscapexgrazing_beetle$cor
-rho_landscapexgrazing_beetle
-# 1st axis correlation 0.69
-p.asym(rho_landscapexgrazing_beetle, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 1.96 - df1 30 - df2 82 - pval 0.39
-plt.cc(cancor_landscapexgrazing_beetle, var.label = TRUE)
-
-# Landscape x local environment
-cancor_landscapexlocalenvi_beetle <- cc(contin_landscape_beetle, contin_locenvi_beetle)
-rho_landscapexlocalenvi_beetle <- cancor_landscapexlocalenvi_beetle$cor
-rho_landscapexlocalenvi_beetle
-# 1st axis correlation 0.79
-p.asym(rho_landscapexlocalenvi_beetle, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
-# 1st dim marginally significant - stat 2.67 - df1 30 - df2 82 - pval 0.092
-plt.cc(cancor_landscapexlocalenvi_beetle, var.label = TRUE)
+fjordbeetle <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "fjord", response = "beetle", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+fjordbeetle
 
 # Landscape x beetle assemblage
-cancor_landscapexbeetle <- cc(contin_landscape_beetle, contin_beetle)
-rho_landscapexbeetle <- cancor_landscapexbeetle$cor
-rho_landscapexbeetle
+cancor <- cc(contin_landscape, contin_beetle)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.71
-p.asym(rho_landscapexbeetle, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
 # 1st dim NS - stat 1.76 - df1 25 - df2 87 - pval 0.24
-plt.cc(cancor_landscapexbeetle, var.label = TRUE)
-
-#
-## Grazing effect
-
-# Grazing x local environment
-cancor_grazingxlocenvi_beetle <- cc(contin_grazing_beetle, contin_locenvi_beetle)
-rho_grazingxlocenvi_beetle <- cancor_grazingxlocenvi_beetle$cor
-rho_grazingxlocenvi_beetle
-# 1st axis correlation 0.77
-p.asym(rho_grazingxlocenvi_beetle, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 2.42 - df1 36 - df2 92 - pval 0.44
-plt.cc(cancor_grazingxlocenvi_beetle, var.label = TRUE)
+landscapebeetle <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "landscape", response = "beetle", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+landscapebeetle
 
 # Grazing x beetle community
-cancor_grazingxbeetle <- cc(contin_grazing_beetle, contin_beetle)
-rho_grazingxbeetle <- cancor_grazingxbeetle$cor
-rho_grazingxbeetle
+cancor <- cc(contin_grazing, contin_beetle)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.72
-p.asym(rho_grazingxbeetle, nobs, nvar_grazing, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.73 - df1 30 - df2 82 - pval 0.55
-plt.cc(cancor_grazingxbeetle, var.label = TRUE)
+test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_beetle, tstat = "Hotelling")
+# 1st dim NS - stat 1.64 - df1 25 - df2 87 - pval 0.32
+grazingbeetle <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "grazing", response = "beetle", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+grazingbeetle
 
-#
-## Local environment effect
-
-cancor_locenvixbeetle <- cc(contin_locenvi_beetle, contin_beetle)
-VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
-rho_locenvixbeetle <- cancor_locenvixbeetle$cor
-rho_locenvixbeetle
+# Local environment effect
+cancor <- cc(contin_locenvi, contin_beetle)
+rhocancor <- cancor$cor
+rhocancor
 # 1st axis correlation 0.73
-p.asym(rho_locenvixbeetle, nobs, nvar_locenvi, nvar_beetle, tstat = "Hotelling")
+test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_beetle, tstat = "Hotelling")
 # 1st dim NS - stat 2.5 - df1 30 - df2 82 - pval 0.14
-plt.cc(cancor_locenvixbeetle, var.label = TRUE)
-#VIScancor_locenvixbeetle <- cancor(contin_locenvi_beetle, contin_beetle)
-#plot(cancor_locenvixbeetle, which = 1)
+locenvibeetle <- as.data.frame(test) |> 
+  mutate(rho = rhocancor, explanatory = "locenvi", response = "beetle", dim = "dim") |>  
+  mutate(dim = paste(dim, row_number(), sep = ""))
+locenvibeetle
+
+# Merging output
+beetlevar <- purrr::reduce(list(fjordbeetle, landscapebeetle, grazingbeetle, locenvibeetle), dplyr::full_join)
+beetlevar <- beetlevar |> 
+  filter(dim == "dim1" | p.value < 0.1)
+
+# Merge all community outputs
+comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
 
 
 #### Redundancy analysis on environmental drivers ####
@@ -1080,282 +766,387 @@ plt.cc(cancor_locenvixbeetle, var.label = TRUE)
 ## Fjord x landscape
 
 # Redundancy analysis and plot
-rda_fjordxlandscape <- rda(subset(landscape, select = -c(SiteID)) ~ Elevation_max + AnnualPrecipitation + MaxTempJuly + DistanceToSea_m, data = fjordsys)
-plotrda_fjordxlandscape <- ggord(rda_fjordxlandscape,
+rda <- rda(subset(landscape, select = -c(SiteID)) ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxlandscape <- ggord(rda,
       txt = 4,
       ptslab = TRUE,
+      addcol = "chartreuse4",
       addsize = 3,
       size = 1,
       arrow = 0.3,
       #repel = TRUE,
-      vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
+      veccol = "cyan4",
+      labcol = "cyan4",
       xlims = c(-1.3, 1),
       ylims = c(-0.8, 1.4))
 plotrda_fjordxlandscape
 
+# Extraction axis significance
+perc <- round(100*(summary(rda)$cont$importance[2, 1:2]), 2)
+
+# Extraction scores
+sc_si <- scores(rda, display = "sites", choices = c(1,2), scaling=2)
+sc_sp <- scores(rda, display = "species", choices = c(1,2), scaling=2)
+sc_bp <- scores(rda, display = "bp", choices = c(1, 2), scaling=2)
+
+
+plot(rda,
+     scaling = 2, # set scaling type 
+     type = "none", # this excludes the plotting of any points from the results
+     frame = FALSE,
+     # set axis limits
+     #xlim = c(-1,1), 
+     #ylim = c(-1,1),
+     # label the plot (title, and axes)
+     main = "",
+     xlab = paste0("RDA1 (", perc[1], "%)"), 
+     ylab = paste0("RDA2 (", perc[2], "%)") 
+)
+# add points for site scores
+points(sc_si, 
+       #pch = 21, # set shape (here, circle with a fill colour)
+       #col = "black", # outline colour
+       #bg = "steelblue", # fill colour
+       cex = 0.8) # size
+# add points for species scores
+points(sc_sp, 
+       pch = 22, # set shape (here, square with a fill colour)
+       col = "black",
+       bg = "chartreuse4", 
+       cex = 1.2)
+# add text labels for species abbreviations
+text(sc_sp + c(0.1, 0.1), # adjust text coordinates to avoid overlap with points 
+     labels = rownames(sc_sp), 
+     col = "chartreuse4", 
+     font = 1, # bold
+     cex = 0.6)
+# add arrows for effects of the explanatory variables
+arrows(0,0, # start them from (0,0)
+       sc_bp[,1]*2, sc_bp[,2]*2, # end them at the score value
+       col = "cyan4", 
+       lwd = 2)
+# add text labels for arrows
+text(x = sc_bp[,1]*2 -0.1, # adjust text coordinate to avoid overlap with arrow tip
+     y = sc_bp[,2]*2 - 0.1, 
+     labels = rownames(sc_bp), 
+     col = "cyan4", 
+     cex = 0.8, 
+     font = 2)
+
 # Summary rda
-#summary(rda_fjordxlandscape)
-# 1st axis driven by maximum July temperature (-0.87)
-# 2nd axis driven by distance to sea (0.9)
-# 1st axis drives forest cover (-0.71) and outfield cover (0.75)
-# 2nd axis drives wetland cover (0.87)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_fjordxlandscape)
-# R2 0.26
-# Adj R2 0.14
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxlandscape)
-# RDA model significant - df 4 - var 1.32 - F 2.14 - pval 0.011
-# residual - df 23 - variance 3.68
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxlandscape, by = "axis")
-# 1st axis marginally significant - df 1 - var 0.65 - F 4.26 - pval 0.062
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
+
 
 # Individual term significance
-anova.cca(rda_fjordxlandscape, by = "term")
-# Max temp July significant - df 1 - var 0.44 - F 2.89 - pval 0.035
-# Distance to sea significant - df 1 - var 0.4 - F 2.63 - pval 0.041
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxlandscape$CA$eig[rda_fjordxlandscape$CA$eig > mean(rda_fjordxlandscape$CA$eig)]
-# unexplained variance PC1 1.89
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordlandscape <- rdatable |> 
+  mutate(model = "FjordxLandscape") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fjord x grazing (CANCOR NS)
 
 # Redundancy analysis and plot
-rda_fjordxgrazing <- rda(subset(grazing, select = -c(SiteID)) ~ Elevation_max + AnnualPrecipitation + MaxTempJuly + DistanceToSea_m, data = fjordsys)
-plotrda_fjordxgrazing <- ggord(rda_fjordxgrazing,
-                                 txt = 4,
-                                 ptslab = TRUE,
-                                 addsize = 3,
-                                 size = 1,
-                                 arrow = 0.3,
-                                 #repel = TRUE,
-                                 vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
-                                 xlims = c(-1.3, 1),
-                                 ylims = c(-0.8, 1.4))
+rda <- rda(subset(grazing, select = -c(SiteID)) ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxgrazing <- ggord(rda,
+                               txt = 4,
+                               ptslab = TRUE,
+                               addcol = "darkgoldenrod3",
+                               addsize = 3,
+                               size = 1,
+                               arrow = 0.3,
+                               #repel = TRUE,
+                               veccol = "cyan4",
+                               labcol = "cyan4",
+                                xlims = c(-1.5, 1.3),
+                                ylims = c(-1.3, 1.6))
 plotrda_fjordxgrazing
 
 # Summary rda
 #summary(rda_fjordxgrazing)
-# 1st axis driven by maximum July temperature (-0.87)
-# 2nd axis driven by distance to sea (0.9)
-# 1st axis drives forest cover (-0.71) and outfield cover (0.75)
-# 2nd axis drives wetland cover (0.87)
-
-# Total variance explained by RDA
-RsquareAdj(rda_fjordxgrazing)
-# R2 0.17
-# Adj R2 0.03
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxgrazing)
-# RDA model NS - df 4 - var 1.03 - F 1.24 - pval 0.21
-# residual - df 24 - variance 4.97
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxgrazing, by = "axis")
-# 1st axis NS - df 1 - var 0.78 - F 3.78 - pval 0.11
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_fjordxgrazing, by = "term")
-# NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxgrazing$CA$eig[rda_fjordxgrazing$CA$eig > mean(rda_fjordxgrazing$CA$eig)]
-# unexplained variance PC1 2.02 - PC2 1.00 - PC3 0.89
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordgrazing <- rdatable |>
+  mutate(model = "FjordxGrazing") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fjord x locenvi (CANCOR NS)
 
 # Redundancy analysis and plot
-rda_fjordxlocenvi <- rda(subset(locenvi, select = -c(SiteID)) ~ Elevation_max + AnnualPrecipitation + MaxTempJuly + DistanceToSea_m, data = fjordsys)
-plotrda_fjordxlocenvi <- ggord(rda_fjordxlocenvi,
+rda <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxlocenvi <- ggord(rda,
                                txt = 4,
                                ptslab = TRUE,
+                               addcol = "darkred",
                                addsize = 3,
                                size = 1,
                                arrow = 0.3,
                                #repel = TRUE,
-                               vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
-                               xlims = c(-1.3, 1),
-                               ylims = c(-0.8, 1.4))
+                               veccol = "cyan4",
+                               labcol = "cyan4",
+                               xlims = c(-1.1, 0.9),
+                               ylims = c(-0.9, 1.1))
 plotrda_fjordxlocenvi
 
 # Summary rda
 #summary(rda_fjordxlocenvi)
-# 1st axis driven by maximum July temperature (-0.87)
-# 2nd axis driven by distance to sea (0.9)
-# 1st axis drives forest cover (-0.71) and outfield cover (0.75)
-# 2nd axis drives wetland cover (0.87)
 
 # Total variance explained by RDA
-RsquareAdj(rda_fjordxlocenvi)
-# R2 0.13
-# Adj R2 -0.012
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxlocenvi)
-# RDA model NS - df 4 - var 1.19 - F 0.92 - pval 0.58
-# residual - df 24 - variance 7.81
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxlocenvi, by = "axis")
-# 1st axis NS - df 1 - var 0.52 - F 1.61 - pval 0.74
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_fjordxlocenvi, by = "term")
-# NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxlocenvi$CA$eig[rda_fjordxlocenvi$CA$eig > mean(rda_fjordxlocenvi$CA$eig)]
-# unexplained variance PC1 1.94 - PC2 1.52 - PC3 1.2 - PC4 1.04
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordlocenvi <- rdatable |> 
+  mutate(model = "FjordxFinescale") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x grazing
 
 # Redundancy analysis and plot
-rda_landscapexgrazing <- rda(subset(grazing, select = -c(SiteID)) ~ ., data = subset(landscape, select = -c(SiteID)))
-plotrda_landscapexgrazing <- ggord(rda_landscapexgrazing,
-                                   text = 4,
+rda <- rda(subset(grazing, select = -c(SiteID)) ~ ., data = subset(landscape, select = -c(SiteID)))
+plotrda_landscapexgrazing <- ggord(rda,
+                                   txt = 4,
                                    ptslab = TRUE,
+                                   addcol = "darkgoldenrod3",
                                    addsize = 3,
                                    size = 1,
                                    arrow = 0.3,
                                    repel = TRUE,
-                                   vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", Wetland_percent = "WetArea", TotCultivatedLand_percent = "CultArea"),
-                                   xlims = c(-1.1, 1.1),
-                                   ylims = c(-0.9, 1.2))
+                                   veccol = "chartreuse4",
+                                   labcol = "chartreuse4",
+                                   xlims = c(-1.2, 1.1),
+                                   ylims = c(-1.2, 1.1))
 plotrda_landscapexgrazing
 
 # Summary rda
 #summary(rda_landscapexgrazing)
-# 1st axis driven by forest cover (-0.72) and outfield cover (0.61)
-# 2nd axis driven by wetland cover (0.79)
-# 1st axis drives aspect (-0.62)
-# 2nd axis drives bulk density (-0.48)
 
 # Total variance explained by RDA
-RsquareAdj(rda_landscapexgrazing)
-# R2 0.20
-# Adj R2 0.023
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_landscapexgrazing)
-# RDA model NS - df 5 - var 1.19 - F 1.13 - pval 0.32
-# residual - df 23 - variance 4.81
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_landscapexgrazing, by = "axis")
-# 1st axis NS - df 1 - var 0.65 - F 3.10 - pval 0.33
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_landscapexgrazing, by = "term")
-# Wetland percent significant - df 1 - var 0.50 - F 2.37 - pval 0.044
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_landscapexgrazing$CA$eig[rda_landscapexgrazing$CA$eig > mean(rda_landscapexgrazing$CA$eig)]
-# unexplained variance PC1 2.08 - PC2 1.19
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalandscapegrazing <- rdatable |> 
+  mutate(model = "LandscapexGrazing") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x local environment
 
 # Redundancy analysis and plot
-rda_landscapexlocenvi <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(landscape, select = -c(SiteID)))
-plotrda_landscapexlocenvi <- ggord(rda_landscapexlocenvi,
-                                 text = 4,
-                                 ptslab = TRUE,
-                                 addsize = 3,
-                                 size = 1,
-                                 arrow = 0.3,
-                                 repel = TRUE,
-                                 vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", Wetland_percent = "WetArea", TotCultivatedLand_percent = "CultArea"),
+rda <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(landscape, select = -c(SiteID)))
+plotrda_landscapexlocenvi <- ggord(rda,
+                                  txt = 4,
+                                   ptslab = TRUE,
+                                   addcol = "darkred",
+                                   addsize = 3,
+                                   size = 1,
+                                   arrow = 0.3,
+                                   repel = TRUE,
+                                   veccol = "chartreuse4",
+                                   labcol = "chartreuse4",
                                  xlims = c(-1.1, 1.1),
                                  ylims = c(-0.9, 1.2))
 plotrda_landscapexlocenvi
 
 # Summary rda
 #summary(rda_landscapexlocenvi)
-# 1st axis driven by forest cover (-0.72) and outfield cover (0.61)
-# 2nd axis driven by wetland cover (0.79)
-# 1st axis drives aspect (-0.62)
-# 2nd axis drives bulk density (-0.48)
 
 # Total variance explained by RDA
-RsquareAdj(rda_landscapexlocenvi)
-# R2 0.15
-# Adj R2 -0.03
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_landscapexlocenvi)
-# RDA model NS - df 5 - var 1.36 - F 0.82 - pval 0.80
-# residual - df 23 - variance 7.65
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_landscapexlocenvi, by = "axis")
-# 1st axis NS - df 1 - var 0.54 - F 1.64 - pval 0.86
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_landscapexlocenvi, by = "term")
-# NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_landscapexlocenvi$CA$eig[rda_landscapexlocenvi$CA$eig > mean(rda_landscapexlocenvi$CA$eig)]
-# unexplained variance PC1 1.77 - PC2 1.69 - PC3 1.1 - PC4 0.87
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalandscapelocenvi <- rdatable |> 
+  mutate(model = "LandscapexFinescale") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Grazing x local environment (CANCOR NS)
 
 # Redundancy analysis and plot
-rda_grazingxlocenvi <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(grazing, select = -c(SiteID)))
-plotrda_grazingxlocenvi <- ggord(rda_grazingxlocenvi,
-                                   text = 4,
-                                   ptslab = TRUE,
-                                   addsize = 3,
-                                   size = 1,
-                                   arrow = 0.3,
-                                   repel = TRUE,
-                                   vec_lab = list(TotalInfieldSurface = "FarmInfArea", GrazingSurface_ha = "GrazArea", AvgStockingDensity_perha = "StockDens", FlockSize1_adults = "FlockSize", Sheep = "Sheep", Cow = "Cow"),
-                                   xlims = c(-1.1, 1.1),
-                                   ylims = c(-0.9, 1.2))
+rda <- rda(subset(locenvi, select = -c(SiteID)) ~ ., data = subset(grazing, select = -c(SiteID)))
+plotrda_grazingxlocenvi <- ggord(rda,
+                                 txt = 4,
+                                 ptslab = TRUE,
+                                 addcol = "darkred",
+                                 addsize = 3,
+                                 size = 1,
+                                 arrow = 0.3,
+                                 repel = TRUE,
+                                 veccol = "darkgoldenrod3",
+                                 labcol = "darkgoldenrod3",
+                                   xlims = c(-1, 1),
+                                   ylims = c(-1.1, 0.9))
 plotrda_grazingxlocenvi
 
 # Summary rda
-#summary(rda_grazingxlocenvi)
-# 1st axis driven by forest cover (-0.72) and outfield cover (0.61)
-# 2nd axis driven by wetland cover (0.79)
-# 1st axis drives aspect (-0.62)
-# 2nd axis drives bulk density (-0.48)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_grazingxlocenvi)
-# R2 0.23
-# Adj R2 0.022
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_grazingxlocenvi)
-# RDA model NS - df 6 - var 2.08 - F 1.1 - pval 0.32
-# residual - df 22 - variance 6.92
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_grazingxlocenvi, by = "axis")
-# 1st axis NS - df 1 - var 0.91 - F 2.91 - pval 0.28
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_grazingxlocenvi, by = "term")
-# Grazing surface marginally significant - df 1 - variance 0.58 - F 1.85 - pval 0.06
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_grazingxlocenvi$CA$eig[rda_grazingxlocenvi$CA$eig > mean(rda_grazingxlocenvi$CA$eig)]
-# unexplained variance PC1 1.61 - PC2 1.46 - PC3 1.0 - PC4 0.86
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdagrazinglocenvi <- rdatable |>
+  mutate(model = "GrazingxFinescale") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
-## Arrangement all plots
+## Environmental data summary
 
+# Plot Grouping
 rda_envi <- ggarrange(plotrda_fjordxlandscape, plotrda_fjordxgrazing, plotrda_fjordxlocenvi, plotrda_landscapexgrazing, plotrda_landscapexlocenvi, plotrda_grazingxlocenvi, 
                    labels = c("A", "B", "C", "D", "E", "F"),
                    ncol = 2,
@@ -1364,8 +1155,12 @@ rda_envi
 ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 19, height = 26, units = "cm", bg = "white")
 
 
-#### RDA grass community data ####
+# Stat summary
+rdastat_envi <- purrr::reduce(list(rdafjordlandscape, rdafjordgrazing, rdafjordlocenvi, rdalandscapegrazing, rdalandscapelocenvi, rdagrazinglocenvi), dplyr::full_join)
 
+
+
+#### RDA grass community data ####
 
 #
 ## Fjord x grass
@@ -1377,47 +1172,56 @@ hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "helli
 names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
 
 # Redundancy analysis
-rda_fjordxgrass <- rda(hellinger_grass ~ ., data = subset(fjordsys, select = -c(SiteID)))
-plotrda_fjordxgrass <- ggord(rda_fjordxgrass,
-                               text = 4,
-                               #parse = FALSE,
-                               ptslab = TRUE,
-                               addsize = 3,
-                               size = 1,
+rda <- rda(hellinger_grass ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxgrass <- ggord(rda,
+                             txt = 4,
+                             ptslab = TRUE,
+                             addcol = "black",
+                             addsize = 3,
+                             size = 1,
                              arrow = 0.3,
-                             vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
-                               #repel = TRUE,
-                               xlims = c(-1, 1.3),
-                               ylims = c(-1.1, 1.3))
+                             repel = TRUE,
+                             veccol = "cyan3",
+                             labcol = "cyan3",
+                               xlims = c(-1.1, 1.1),
+                               ylims = c(-1, 1.2))
 plotrda_fjordxgrass
 
 # Summary rda
-#summary(rda_fjordxgrass)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_fjordxgrass)
-# R2 0.11
-# Adj R2 -0.04
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxgrass)
-# RDA model NS - df 4 - var 0.026 - F 0.76 - pval 0.74
-# residual - df 24 - var 0.2
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxgrass, by = "axis") 
-# 1st axis NS  - df 1 - var 0.014 - F 1.7 - pval 0.76
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_fjordxgrass, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxgrass$CA$eig[rda_fjordxgrass$CA$eig > mean(rda_fjordxgrass$CA$eig)]
-# unexplained variance PC1 0.07 - PC2 0.05
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordgrass <- rdatable |>
+  mutate(model = "FjordxGrass") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x grass
@@ -1429,47 +1233,56 @@ hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "helli
 names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
 
 # Redundancy analysis
-rda_landscapexgrass <- rda(hellinger_grass ~ ., data = subset(landscape, select = -c(SiteID)))
-plotrda_landscapexgrass <- ggord(rda_landscapexgrass,
-                             text = 4,
-                             #parse = FALSE,
-                             ptslab = TRUE,
-                             addsize = 3,
-                             size = 1,
-                             arrow = 0.3,
-                             vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", TotCultivatedLand_percent = "CultArea"),
-                             #repel = TRUE,
-                             xlims = c(-1, 1.3),
-                             ylims = c(-1.1, 1.3))
+rda <- rda(hellinger_grass ~ ., data = subset(landscape, select = -c(SiteID)))
+plotrda_landscapexgrass <- ggord(rda,
+                                 txt = 4,
+                                 ptslab = TRUE,
+                                 addcol = "black",
+                                 addsize = 3,
+                                 size = 1,
+                                 arrow = 0.3,
+                                 repel = TRUE,
+                                 veccol = "chartreuse4",
+                                 labcol = "chartreuse4",
+                             xlims = c(-1.1, 1.1),
+                             ylims = c(-1.1, 1.1))
 plotrda_landscapexgrass
 
 # Summary rda
-#summary(rda_landscapexgrass)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_landscapexgrass)
-# R2 0.20
-# Adj R2 0.022
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_landscapexgrass)
-# RDA model NS - df 5 - var 0.045 - F 1.13 - pval 0.31
-# residual - df 23 - var 0.18
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_landscapexgrass, by = "axis") 
-# 1st axis NS  - df 1 - var 0.021 - F 2.64 - pval 0.48
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_landscapexgrass, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_landscapexgrass$CA$eig[rda_landscapexgrass$CA$eig > mean(rda_landscapexgrass$CA$eig)]
-# unexplained variance PC1 0.074 - PC2 0.035 - PC3 0.03
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalandscapegrass <- rdatable |>
+  mutate(model = "LandscapexGrass") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Grazing management x grass
@@ -1481,46 +1294,56 @@ hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "helli
 names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
 
 # Redundancy analysis
-rda_grazingxgrass <- rda(hellinger_grass ~ ., data = subset(grazing, select = -c(SiteID, FlockSize1_adults)))
-plotrda_grazingxgrass <- ggord(rda_grazingxgrass,
-                               text = 4,
+rda <- rda(hellinger_grass ~ ., data = subset(grazing, select = -c(SiteID)))
+plotrda_grazingxgrass <- ggord(rda,
+                               txt = 4,
                                ptslab = TRUE,
+                               addcol = "black",
                                addsize = 3,
                                size = 1,
                                arrow = 0.3,
-                               vec_lab = list(TotalInfieldSurface = "FarmInfArea", GrazingSurface_ha = "GrazArea", AvgStockingDensity_perha = "StockDens", Sheep = "Sheep", Cow = "Cow"),
-                               #repel = TRUE,
-                               xlims = c(-1.1, 1.1),
-                               ylims = c(-1.2, 1))
+                               repel = TRUE,
+                               veccol = "darkgoldenrod3",
+                               labcol = "darkgoldenrod3",
+                               xlims = c(-1, 1.1),
+                               ylims = c(-1.1, 1))
 plotrda_grazingxgrass
 
 # Summary rda
-#summary(rda_grazingxgrass)
-# 1st axis driven by sheep (-0.73), cow (0.76) and average stocking density (0.6)
-# 2nd axis driven by grazing surface (-0.65), average stocking density (-0.61) and goats
-# 1st axis drives Poa pratensis (-0.29) and Poa trivialis (0.29)
-# 2nd axis drives Holcus lanatus (-0.25)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_grazingxgrass)
-# R2 0.15
-# Adj R2 -0.04
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_grazingxgrass)
-# RDA model NS - df 5 - var 0.034 - F 0.79 - pval 0.77
-# residual - df 23 - var 0.2
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_grazingxgrass, by = "axis") 
-# 1st axis NS  - df 1 - var 0.02 - F 2.24 - pval 0.67
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_grazingxgrass, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_grazingxgrass$CA$eig[rda_grazingxgrass$CA$eig > mean(rda_grazingxgrass$CA$eig)]
-# unexplained variance PC1 0.07 - PC2 0.04 - PC3 0.03
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdagrazinggrass <- rdatable |>
+  mutate(model = "GrazingxGrass") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fine-scale environment x grass
@@ -1532,58 +1355,71 @@ hellinger_grass <- decostand(subset(grass, select = -c(SiteID)), method = "helli
 names(hellinger_grass) <- gsub(" ", "_", names(hellinger_grass))
 
 # Redundancy analysis
-rda_locenvixgrass <- rda(hellinger_grass ~ ., data = subset(locenvi_vege, select = -c(SiteID)))
-plotrda_locenvixgrass <- ggord(rda_locenvixgrass,
-                               text = 4,
+rda <- rda(hellinger_grass ~ ., data = subset(locenvi, select = -c(SiteID)))
+plotrda_locenvixgrass <- ggord(rda,
+                               txt = 4,
                                ptslab = TRUE,
+                               addcol = "black",
                                addsize = 3,
                                size = 1,
                                arrow = 0.3,
-                               vec_lab = list(General_slope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", AspectDegree = "Aspect", MeanpH = "pH"),
                                #repel = TRUE,
-                               xlims = c(-1, 1),
-                               ylims = c(-1, 0.8))
+                               veccol = "darkred",
+                               labcol = "darkred",
+                               xlims = c(-1.3, 0.8),
+                               ylims = c(-1.1, 0.9))
 plotrda_locenvixgrass
 
-# Summary RDA
-#summary(rda_locenvixgrass)
-# 1st axis driven by penetration rate (-0.58) and phosphorus (0.62)
-# 2nd axis driven by phosphorus (-0.54) and penetration rate (-0.5)
-# 1st axis drives Holcus lanatus (0.36), Deschampsia cespitosa (0.23), Deschampsia flexuosa (-0.26) and Poa trivialis (0.23)
-# 2nd axis drives Deschampsia flexuosa (-0.26), Festuca rubra (0.29) and Poa pratensis (0.28)
+# Summary rda
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_locenvixgrass)
-# R2 0.26
-# Adj R2 0.06
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_locenvixgrass)
-# RDA model significant - df 6 - variance 0.061 - F 1.32 - pval 0.14
-# residual df 22 - variance 0.17
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_locenvixgrass, by = "axis")
-# 1st axis NS  - df 1 - var 0.03 - F 3.88 - pval 0.23
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_locenvixgrass, by = "term")
-# Mean Phosphorus significant - df 1 - variance 0.022 - F 2.92 - pval 0.027
-# Mean PT marginally significant - df 1 - variance 0.017 - F 2.16 - pval 0.061
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_locenvixgrass$CA$eig[rda_locenvixgrass$CA$eig > mean(rda_locenvixgrass$CA$eig)]
-# unexplained variance PC1 0.06 - PC2 0.05
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalocenvigrass <- rdatable |>
+  mutate(model = "FinescalexGrass") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
-## Arrangement all plots
+## Grass model summary
 
+# Plot Grouping
 rda_grass <- ggarrange(plotrda_fjordxgrass, plotrda_landscapexgrass, plotrda_grazingxgrass, plotrda_locenvixgrass, 
                       labels = c("A", "B", "C", "D"),
                       ncol = 2,
                       nrow = 2)
 rda_grass
 ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 19, height = 26, units = "cm", bg = "white")
+
+# Stat summary
+rdastat_grass <- purrr::reduce(list(rdafjordgrass, rdalandscapegrass, rdagrazinggrass, rdalocenvigrass), dplyr::full_join)
+
 
 
 #### RDA forb community data ####
@@ -1598,47 +1434,56 @@ hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "helling
 names(hellinger_forb) <- gsub(" ", "_", names(hellinger_forb))
 
 # Redundancy analysis
-rda_fjordxforb <- rda(hellinger_forb ~ ., data = subset(fjordsys, select = -c(SiteID)))
-plotrda_fjordxforb <- ggord(rda_fjordxforb,
-                             text = 4,
-                             #parse = FALSE,
-                             ptslab = TRUE,
-                             addsize = 3,
-                             size = 1,
-                             arrow = 0.3,
-                             vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
-                             #repel = TRUE,
-                             xlims = c(-1, 1.3),
-                             ylims = c(-1.1, 1.3))
+rda <- rda(hellinger_forb ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxforb <- ggord(rda,
+                            txt = 4,
+                            ptslab = TRUE,
+                            addcol = "black",
+                            addsize = 3,
+                            size = 1,
+                            arrow = 0.3,
+                            #repel = TRUE,
+                            veccol = "cyan3",
+                            labcol = "cyan3",
+                             xlims = c(-1.2, 1.3),
+                             ylims = c(-0.8, 1.3))
 plotrda_fjordxforb
 
 # Summary rda
-#summary(rda_fjordxforb)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_fjordxforb)
-# R2 0.16
-# Adj R2 0.018
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxforb)
-# RDA model NS - df 4 - var 0.074 - F 1.13 - pval 0.34
-# residual - df 24 - var 0.39
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxforb, by = "axis") 
-# 1st axis NS  - df 1 - var 0.033 - F 1.99 - pval 0.55
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_fjordxforb, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxforb$CA$eig[rda_fjordxforb$CA$eig > mean(rda_fjordxforb$CA$eig)]
-# unexplained variance PC1 0.14 - PC2 0.08 - PC3 0.06
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordforb <- rdatable |>
+  mutate(model = "FjordxForb") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x forb (NS)
@@ -1650,47 +1495,56 @@ hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "helling
 names(hellinger_forb) <- gsub(" ", "_", names(hellinger_forb))
 
 # Redundancy analysis
-rda_landscapexforb <- rda(hellinger_forb ~ ., data = subset(landscape, select = -c(SiteID)))
-plotrda_landscapexforb <- ggord(rda_landscapexforb,
-                                 text = 4,
-                                 #parse = FALSE,
-                                 ptslab = TRUE,
-                                 addsize = 3,
-                                 size = 1,
-                                 arrow = 0.3,
-                                 vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", TotCultivatedLand_percent = "CultArea", Wetland_percent = "WetArea"),
-                                 #repel = TRUE,
-                                 xlims = c(-1, 1.3),
-                                 ylims = c(-1.1, 1.3))
+rda <- rda(hellinger_forb ~ ., data = subset(landscape, select = -c(SiteID)))
+plotrda_landscapexforb <- ggord(rda,
+                                txt = 4,
+                                ptslab = TRUE,
+                                addcol = "black",
+                                addsize = 3,
+                                size = 1,
+                                arrow = 0.3,
+                                #repel = TRUE,
+                                veccol = "chartreuse4",
+                                labcol = "chartreuse4",
+                                 xlims = c(-0.9, 1.2),
+                                 ylims = c(-0.9, 1.2))
 plotrda_landscapexforb
 
 # Summary rda
-#summary(rda_landscapexforb)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_landscapexforb)
-# R2 0.14
-# Adj R2 -0.053
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_landscapexforb)
-# RDA model NS - df 5 - var 0.063 - F 0.72 - pval 0.85
-# residual - df 23 - var 0.40
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_landscapexforb, by = "axis") 
-# 1st axis NS  - df 1 - var 0.033 - F 1.89 - pval 0.8
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_landscapexforb, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_landscapexforb$CA$eig[rda_landscapexforb$CA$eig > mean(rda_landscapexforb$CA$eig)]
-# unexplained variance PC1 0.15 - PC2 0.034 - PC3 0.062
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalandscapeforb <- rdatable |>
+  mutate(model = "LandscapexForb") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Grazing management x forb
@@ -1702,47 +1556,56 @@ hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "helling
 names(hellinger_forb) <- gsub(" ", "_", names(hellinger_forb))
 
 # Redundancy analysis
-rda_grazingxforb <- rda(hellinger_forb ~ ., data = subset(grazing, select = -c(SiteID, FlockSize1_adults)))
-plotrda_grazingxforb <- ggord(rda_grazingxforb,
-                               text = 4,
-                               ptslab = TRUE,
-                               addsize = 3,
-                               size = 1,
-                               arrow = 0.3,
-                               vec_lab = list(TotalInfieldSurface = "FarmInfArea", GrazingSurface_ha = "GrazArea", AvgStockingDensity_perha = "StockDens", Sheep = "Sheep", Cow = "Cow"),
-                               #repel = TRUE,
-                               xlims = c(-1.1, 1.1),
-                               ylims = c(-1.2, 1))
+rda <- rda(hellinger_forb ~ ., data = subset(grazing, select = -c(SiteID)))
+plotrda_grazingxforb <- ggord(rda,
+                              txt = 4,
+                              ptslab = TRUE,
+                              addcol = "black",
+                              addsize = 3,
+                              size = 1,
+                              arrow = 0.3,
+                              #repel = TRUE,
+                              veccol = "darkgoldenrod3",
+                              labcol = "darkgoldenrod3",
+                               xlims = c(-1.3, 0.8),
+                               ylims = c(-1.2, 0.9))
 plotrda_grazingxforb
 
 # Summary rda
-#summary(rda_grazingxforb)
-# 1st axis driven by sheep (-0.73), cow (0.76) and average stocking density (0.6)
-# 2nd axis driven by grazing surface (-0.65), average stocking density (-0.61) and goats
-# 1st axis drives Poa pratensis (-0.29) and Poa trivialis (0.29)
-# 2nd axis drives Holcus lanatus (-0.25)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_grazingxforb)
-# R2 0.21
-# Adj R2 0.032
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_grazingxforb)
-# RDA model NS - df 5 - var 0.096 - F 1.19 - pval 0.27
-# residual - df 23 - var 0.37
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_grazingxforb, by = "axis") 
-# 1st axis NS  - df 1 - var 0.05 - F 3.09 - pval 0.29
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_grazingxforb, by = "term") 
-# Sheep significant - df 1 - var 0.042 - F 2.58 - pval 0.025
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_grazingxforb$CA$eig[rda_grazingxforb$CA$eig > mean(rda_grazingxforb$CA$eig)]
-# unexplained variance PC1 0.13 - PC2 0.078 - PC3 0.06
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdagrazingforb <- rdatable |>
+  mutate(model = "GrazingxForb") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fine-scale environment x forb
@@ -1754,60 +1617,71 @@ hellinger_forb <- decostand(subset(forb, select = -c(SiteID)), method = "helling
 names(hellinger_forb) <- gsub(" ", "_", names(hellinger_forb))
 
 # Redundancy analysis
-rda_locenvixforb <- rda(hellinger_forb ~ ., data = subset(locenvi_vege, select = -c(SiteID, AspectDegree)))
-plotrda_locenvixforb <- ggord(rda_locenvixforb,
-                               text = 4,
-                               ptslab = TRUE,
-                               addsize = 3,
-                               size = 1,
+rda <- rda(hellinger_forb ~ ., data = subset(locenvi, select = -c(SiteID)))
+plotrda_locenvixforb <- ggord(rda,
+                              txt = 4,
+                              ptslab = TRUE,
+                              addcol = "black",
+                              addsize = 3,
+                              size = 1,
                               arrow = 0.3,
-                              vec_lab = list(General_slope = "Slope", MeanBD = "BulkDens", MeanPT = "PenRate", MeanPhosphorus = "Phosp", MeanpH = "pH"),
-                               repel = TRUE,
-                              xlims = c(-1, 1),
-                              ylims = c(-1, 0.9))
+                              repel = TRUE,
+                              veccol = "darkred",
+                              labcol = "darkred",
+                              xlims = c(-1, 1.1),
+                              ylims = c(-1.1, 1))
 plotrda_locenvixforb
 
-# Summary RDA
-#summary(rda_locenvixforb)
-# 1st axis driven by penetration rate (0.73), phosphorus (-0.63), pH (-0.58) and bulk density (-0.47)
-# 2nd axis driven by slope (-0.56), phosphorus (0.46), pH (0.44) and bulk density (-0.39)
-# 1st axis drives Potentilla erecta (0.51), Trifolium repens (-0.38), Galium saxatile (0.34) and Ranunculus acris (0.3)
-# 2nd axis drives Achillea millefolium (-0.38) and Galium saxatile (-0.24)
+# Summary rda
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_locenvixforb)
-# R2 0.3
-# Adj R2 0.15
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_locenvixforb)
-# RDA model significant - df 5 - var 0.14 - F 1.96 - pval 0.004
-# residual df 23 - variance 0.33
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_locenvixforb, by = "axis")
-# 1st axis significant - df 1 - var 0.083 - F 5.84 - pval 0.006
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_locenvixforb, by = "term")
-# Mean PT significant - df 1 - var 0.035 - F 2.43 - pval 0.037
-# Mean Phosphorus significant - df 1 - variance 0.035 - F 2.45 - pval 0.022
-# Mean BD marginally significant - df 1 - variance 0.03 - F 2.08 - pval 0.062
-# Mean pH marginally significant - df 1 - variance 0.028 - F 1.93 - pval 0.083
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_locenvixforb$CA$eig[rda_locenvixforb$CA$eig > mean(rda_locenvixforb$CA$eig)]
-# unexplained variance PC1 0.11 - PC2 0.08 - PC3 0.05
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalocenviforb <- rdatable |>
+  mutate(model = "FinescalexForb") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
-## Arrangement all plots
+## Forb model summary
 
+# Plot Grouping
 rda_forb <- ggarrange(plotrda_fjordxforb, plotrda_landscapexforb, plotrda_grazingxforb, plotrda_locenvixforb, 
                        labels = c("A", "B", "C", "D"),
                        ncol = 2,
                        nrow = 2)
 rda_forb
 ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 19, height = 26, units = "cm", bg = "white")
+
+# Stat summary
+rdastat_forb <- purrr::reduce(list(rdafjordforb, rdalandscapeforb, rdagrazingforb, rdalocenviforb), dplyr::full_join)
+
 
 
 #### RDA beetle community data ####
@@ -1819,47 +1693,56 @@ ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 19, height = 26, units =
 hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
 
 # Redundancy analysis
-rda_fjordxbeetle <- rda(hellinger_beetle ~ ., data = subset(fjordsys, select = -c(SiteID)))
-plotrda_fjordxbeetle <- ggord(rda_fjordxbeetle,
-                            text = 4,
-                            #parse = FALSE,
-                            ptslab = TRUE,
-                            addsize = 3,
-                            size = 1,
-                            arrow = 0.3,
-                            vec_lab = list(MaxTempJuly = "JulTemp", Elevation_max = "Elev", DistanceToSea_m = "SeaDist", AnnualPrecipitation = "AnnPreci"),
-                            #repel = TRUE,
-                            xlims = c(-1, 1.3),
-                            ylims = c(-1.1, 1.3))
+rda <- rda(hellinger_beetle ~ ., data = subset(fjordsys, select = -c(SiteID)))
+plotrda_fjordxbeetle <- ggord(rda,
+                              txt = 4,
+                              ptslab = TRUE,
+                              addcol = "black",
+                              addsize = 3,
+                              size = 1,
+                              arrow = 0.3,
+                              #repel = TRUE,
+                              veccol = "cyan3",
+                              labcol = "cyan3",
+                            xlims = c(-2.5, 1.5),
+                            ylims = c(-1.5, 2.5))
 plotrda_fjordxbeetle
 
 # Summary rda
-#summary(rda_fjordxbeetle)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_fjordxbeetle)
-# R2 0.07
-# Adj R2 -0.08
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_fjordxbeetle)
-# RDA model NS - df 4 - var 0.003 - F 0.46 - pval 0.92
-# residual - df 24 - var 0.041
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_fjordxbeetle, by = "axis") 
-# 1st axis NS  - df 1 - var 0.002 - F 1.23 - pval 0.9
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_fjordxbeetle, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_fjordxbeetle$CA$eig[rda_fjordxbeetle$CA$eig > mean(rda_fjordxbeetle$CA$eig)]
-# unexplained variance PC1 0.026
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdafjordbeetle <- rdatable |>
+  mutate(model = "FjordxBeetle") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x beetle (NS)
@@ -1868,47 +1751,56 @@ rda_fjordxbeetle$CA$eig[rda_fjordxbeetle$CA$eig > mean(rda_fjordxbeetle$CA$eig)]
 hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
 
 # Redundancy analysis
-rda_landscapexbeetle <- rda(hellinger_beetle ~ ., data = subset(landscape, select = -c(SiteID)))
-plotrda_landscapexbeetle <- ggord(rda_landscapexbeetle,
-                                text = 4,
-                                #parse = FALSE,
-                                ptslab = TRUE,
-                                addsize = 3,
-                                size = 1,
-                                arrow = 0.3,
-                                vec_lab = list(Outfield_percent = "OutfArea", Infield_percent = "InfArea", TotForest_percent = "ForArea", TotCultivatedLand_percent = "CultArea", Wetland_percent = "WetArea"),
-                                #repel = TRUE,
-                                xlims = c(-1, 1.3),
-                                ylims = c(-1.1, 1.3))
+rda <- rda(hellinger_beetle ~ ., data = subset(landscape, select = -c(SiteID)))
+plotrda_landscapexbeetle <- ggord(rda,
+                                  txt = 4,
+                                  ptslab = TRUE,
+                                  addcol = "black",
+                                  addsize = 3,
+                                  size = 1,
+                                  arrow = 0.3,
+                                  #repel = TRUE,
+                                  veccol = "chartreuse4",
+                                  labcol = "chartreuse4",
+                                xlims = c(-1.7, 1.1),
+                                ylims = c(-1.4, 1.4))
 plotrda_landscapexbeetle
 
 # Summary rda
-#summary(rda_landscapexbeetle)
-# 1st axis driven by July temperature (-0.9) and maximum elevation (0.31)
-# 2nd axis driven by maximum elevation (0.9) and annual precipitation (0.58)
-# 1st axis drives Poa pratensis (0.26)
-# 2nd axis drives Holcus lanatus (0.23)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_landscapexbeetle)
-# R2 0.14
-# Adj R2 -0.045
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_landscapexbeetle)
-# RDA model NS - df 5 - var 0.006 - F 0.76 - pval 0.66
-# residual - df 23 - var 0.04
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_landscapexbeetle, by = "axis") 
-# 1st axis NS  - df 1 - var 0.004 - F 2.45 - pval 0.71
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_landscapexbeetle, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_landscapexbeetle$CA$eig[rda_landscapexbeetle$CA$eig > mean(rda_landscapexbeetle$CA$eig)]
-# unexplained variance PC1 0.025
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalandscapebeetle <- rdatable |>
+  mutate(model = "LandscapexBeetle") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Grazing management x beetle (NS)
@@ -1917,46 +1809,56 @@ rda_landscapexbeetle$CA$eig[rda_landscapexbeetle$CA$eig > mean(rda_landscapexbee
 hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
 
 # Redundancy analysis
-rda_grazingxbeetle <- rda(hellinger_beetle ~ ., data = subset(grazing, select = -c(SiteID)))
-plotrda_grazingxbeetle <- ggord(rda_grazingxbeetle,
-                              text = 4,
-                              ptslab = TRUE,
-                              addsize = 3,
-                              size = 1,
-                              arrow = 0.3,
-                              vec_lab = list(TotalInfieldSurface = "FarmInfArea", GrazingSurface_ha = "GrazArea", AvgStockingDensity_perha = "StockDens", FlockSize1_adults = "FlockSize", Sheep = "Sheep", Cow = "Cow"),
-                              #repel = TRUE,
-                              xlims = c(-1.1, 1.1),
-                              ylims = c(-1.2, 1))
+rda <- rda(hellinger_beetle ~ ., data = subset(grazing, select = -c(SiteID)))
+plotrda_grazingxbeetle <- ggord(rda,
+                                txt = 4,
+                                ptslab = TRUE,
+                                addcol = "black",
+                                addsize = 3,
+                                size = 1,
+                                arrow = 0.3,
+                                #repel = TRUE,
+                                veccol = "darkgoldenrod3",
+                                labcol = "darkgoldenrod3",
+                              xlims = c(-1.6, 1),
+                              ylims = c(-1, 1.6))
 plotrda_grazingxbeetle
 
 # Summary rda
-#summary(rda_grazingxbeetle)
-# 1st axis driven by sheep (-0.73), cow (0.76) and average stocking density (0.6)
-# 2nd axis driven by grazing surface (-0.65), average stocking density (-0.61) and goats
-# 1st axis drives Poa pratensis (-0.29) and Poa trivialis (0.29)
-# 2nd axis drives Holcus lanatus (-0.25)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_grazingxbeetle)
-# R2 0.14
-# Adj R2 -0.094
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_grazingxbeetle)
-# RDA model NS - df 6 - var 0.006 - F 0.6 - pval 0.87
-# residual - df 22 - var 0.038
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_grazingxbeetle, by = "axis") 
-# 1st axis NS  - df 1 - var 0.003 - F 1.71 - pval 0.94
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_grazingxbeetle, by = "term") # NS
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_grazingxbeetle$CA$eig[rda_grazingxbeetle$CA$eig > mean(rda_grazingxbeetle$CA$eig)]
-# unexplained variance PC1 0.026
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdagrazingbeetle <- rdatable |>
+  mutate(model = "GrazingxBeetle") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fine-scale environment x beetle
@@ -1965,63 +1867,74 @@ rda_grazingxbeetle$CA$eig[rda_grazingxbeetle$CA$eig > mean(rda_grazingxbeetle$CA
 hellinger_beetle <- decostand(subset(beetle, select = -c(SiteID)), method = "hellinger")
 
 # Redundancy analysis
-rda_locenvixbeetle <- rda(hellinger_beetle ~ ., data = subset(locenvi_beetle, select = -c(SiteID)))
-plotrda_locenvixbeetle <- ggord(rda_locenvixbeetle,
-                              text = 4,
-                              #parse = FALSE,
-                              ptslab = TRUE,
-                              addsize = 3,
-                              size = 1,
-                              arrow = 0.3,
-                              vec_lab = list(General_slope = "Slope", AspectDegree = "Aspect", MeanBD = "BulkDens", MeanPT = "PenRate", MeanLitter = "LitCov", MeanBryo = "BryoCov", MeanHeight = "AvgHeight"),
-                              #repel = TRUE,
+rda <- rda(hellinger_beetle ~ ., data = subset(locenvi, select = -c(SiteID)))
+plotrda_locenvixbeetle <- ggord(rda,
+                                txt = 4,
+                                ptslab = TRUE,
+                                addcol = "black",
+                                addsize = 3,
+                                size = 1,
+                                arrow = 0.3,
+                                repel = TRUE,
+                                veccol = "darkred",
+                                labcol = "darkred",
                               xlims = c(-1.2, 1),
                               ylims = c(-1.1, 1.1))
 plotrda_locenvixbeetle
 
 # Summary rda
-#summary(rda_locenvixbeetle)
-# 1st axis driven by bulk density (-0.69), aspect (0.43) and vegetation height (0.4)
-# 2nd axis driven by bryophyte layer (0.71), vegetation height (-0.76) and slope (0.4)
-# 1st axis drives Carabidae (-0.34) and Ptilidae (0.35)
-# 2nd axis drives Scarabaeidae (0.21)
+#summary(rda)
 
 # Total variance explained by RDA
-RsquareAdj(rda_locenvixbeetle)
-# R2 0.31
-# Adj R2 0.08
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
 
 # Global RDA significance by permutation
-anova.cca(rda_locenvixbeetle)
-# RDA model NS - df 7 - var 0.013 - F 1.34 - pval 0.22
-# residual df 21 - variance 0.03
+testrda <- as.data.frame(anova.cca(rda)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model")
 
 # Individual axis significance
-anova.cca(rda_locenvixbeetle, by = "axis")
-# 1st axis NS  - df 1 - var 0.01 - F 7.93 - pval 0.19
+testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  filter(dim != "Residual")
 
 # Individual term significance
-anova.cca(rda_locenvixbeetle, by = "term")
-# Mean BD significant - df 1 - variance 0.005 - F 3.63 - pval 0.024
-# Mean Height marginally significant - df 1 - variance 0.004 - F 2.47 - pval 0.085
+testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "term") |> 
+  filter(dim != "Residual")
 
 # Residual variation using Kaiser-Guttman criterion
-rda_locenvixbeetle$CA$eig[rda_locenvixbeetle$CA$eig > mean(rda_locenvixbeetle$CA$eig)]
-# unexplained variance PC1 0.018
+resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
+
+# Summary table
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+rdalocenvibeetle <- rdatable |>
+  mutate(model = "FinescalexBeetle") |> 
+  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
-## Arrangement beetle plots
+## Beetle model summary
 
+# Plot Grouping
 rda_beetle <- ggarrange(plotrda_fjordxbeetle, plotrda_landscapexbeetle, plotrda_grazingxbeetle, plotrda_locenvixbeetle, 
-                   labels = c("A", "B", "C", "D"),
-                   ncol = 2,
-                   nrow = 2)
+                        labels = c("A", "B", "C", "D"),
+                        ncol = 2,
+                        nrow = 2)
 rda_beetle
 ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 19, height = 26, units = "cm", bg = "white")
 
+# Stat summary
+rdastat_beetle <- purrr::reduce(list(rdafjordbeetle, rdalandscapebeetle, rdagrazingbeetle, rdalocenvibeetle), dplyr::full_join)
 
-#
-## Arrangement all significant plots
+
+
+#### Significant RDA results ####
 
 rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_landscapexlocenvi, plotrda_grazingxgrass, plotrda_locenvixgrass, plotrda_locenvixforb, plotrda_locenvixbeetle, 
                    labels = c("A", "B", "C", "D", "E", "F"),
@@ -2029,3 +1942,69 @@ rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_landscapexlocenvi, plotrda_g
                    nrow = 3)
 rdall
 ggsave("outputs/RDAresults.png", plot = rdall, width = 19, height = 26, units = "cm", bg = "white")
+
+
+#### CHECK STRENGTH LINEAR RELATIONSHIPS ####
+
+# #
+# ## Linear relationships of residuals
+# 
+# # Ordination community data
+# DCA_grass <- decorana(contin_grass)
+# DCA_grass # Axis length of 2.1 -> keep DCA
+# plot(DCA_grass)
+# DCA_forb <- decorana(contin_forb)
+# DCA_forb # Axis length of 2.7 -> keep DCA
+# plot(DCA_forb)
+# DCA_beetle <- decorana(contin_beetle)
+# DCA_beetle # Axis length at 1.3 -> run PCA
+# PCA_beetle <- prcomp(contin_beetle)
+# PCA_beetle
+# biplot(PCA_beetle)
+# 
+# # Extraction grass species scores from DCA
+# scores_grass <- as.data.frame(scores(DCA_grass, choices = c(1,2), display = "sites"))
+# names(scores_grass) <- gsub("DCA1", "GrassDCA1", names(scores_grass))
+# names(scores_grass) <- gsub("DCA2", "GrassDCA2", names(scores_grass))
+# scores_grass <- scores_grass |>  
+#   mutate(SiteID = row.names(scores_grass)) # PlotID as column for future binding
+# 
+# # Extraction forb species scores from DCA (sup)
+# scores_forb <- as.data.frame(scores(DCA_forb, choices = c(1,2), display = "sites"))
+# names(scores_forb) <- gsub("DCA1", "ForbDCA1", names(scores_forb))
+# names(scores_forb) <- gsub("DCA2", "ForbDCA2", names(scores_forb))
+# scores_forb <- scores_forb |>  
+#   mutate(SiteID = row.names(scores_forb)) # PlotID as column for future binding
+# 
+# # Extraction beetle family scores from PCA
+# scores_beetle <- as.data.frame(scores(PCA_beetle, choices = c(1,2), display = "sites"))
+# names(scores_beetle) <- gsub("PC1", "BeetlePCA1", names(scores_beetle))
+# names(scores_beetle) <- gsub("PC2", "BeetlePCA2", names(scores_beetle))
+# scores_beetle <- scores_beetle |>  
+#   mutate(SiteID = row.names(scores_beetle)) # PlotID as column for future binding
+# 
+# # Table binding
+# allvar <- purrr::reduce(list(scores_grass, scores_forb, scores_beetle, fjordsys, landscape, grazing, locenvi), dplyr::left_join)
+
+# Distribution residuals environment LM
+
+# Distribution residuals grass LM
+# residualPlots(lm(GrassDCA1~GrazingSurface_ha, data = allvar))
+# residualPlots(lm(GrassDCA1~TotalInfieldSurface, data = allvar))
+# residualPlots(lm(GrassDCA1~AvgStockingDensity_perha, data = allvar))
+# residualPlots(lm(GrassDCA1~General_slope, data = allvar))
+# residualPlots(lm(GrassDCA1~AspectDegree, data = allvar))
+# residualPlots(lm(GrassDCA1~MeanBD, data = allvar))
+# residualPlots(lm(GrassDCA1~MeanPT, data = allvar))
+# residualPlots(lm(GrassDCA1~MeanpH, data = allvar))
+# residualPlots(lm(GrassDCA1~MeanPhosphorus, data = allvar))
+
+# Residuals LM for forbs
+# residualPlots(lm(ForbDCA1~General_slope, data = allvar_forb))
+# residualPlots(lm(ForbDCA1~AspectDegree, data = allvar_forb)) #rejected
+# residualPlots(lm(ForbDCA1~MeanBD, data = allvar_forb))
+# residualPlots(lm(ForbDCA1~MeanPT, data = allvar_forb))
+# residualPlots(lm(ForbDCA1~MeanpH, data = allvar_forb))
+# residualPlots(lm(ForbDCA1~MeanPhosphorus, data = allvar_forb))
+
+# Residuals LM for beetles
