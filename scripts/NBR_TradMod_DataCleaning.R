@@ -79,7 +79,7 @@ names(siteinfo_raw) <- gsub("Comments", "Comments_siteinfo", names(siteinfo_raw)
 #
 ## Data cleaning - new R object with removal empty columns or variables redundant with other datasets
 
-siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface))
+siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface, Ecologicalzone_former, Animal_on_site))
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
@@ -121,7 +121,7 @@ siteinfo_full <- siteinfo_full |>
 # Geographical locations
 #unique(siteinfo_full$Location) # Correct locations and location names
 
-# Muncipalities
+# Municipalities
 #unique(siteinfo_full$Municipality) # missing data + US2 Stordalen -> did you guys went that far ? Yes validated
 #siteinfo_full[is.na(siteinfo_full$Municipality),] # NA identified - US2, Stordalen is located in Masfjorden
 siteinfo_full <- siteinfo_full |> 
@@ -147,10 +147,17 @@ siteinfo_full <- siteinfo_full |>
   mutate(Habitat = dplyr::recode(Habitat, "Permanent grassland" = "permanent grassland")) |> 
   mutate(Habitat = dplyr::recode(Habitat, "Subalpine heathland" = "subalpine heathland"))
 #table(siteinfo_full$Habitat) # habitat repartition - validated
-
 #unique(siteinfo_full$Animal_on_site)
 
+#
+## Standard variable names
 
+names(siteinfo_full) <- gsub("NiBioEcologicalZone", "EcoZone", names(siteinfo_full))
+names(siteinfo_full) <- gsub("EPSG.", "", names(siteinfo_full))
+names(siteinfo_full) <- gsub("Type_livestock", "Livestock", names(siteinfo_full))
+names(siteinfo_full) <- gsub("Pooestimation_g-10percent", "Poo10per", names(siteinfo_full))
+
+#
 ## Export clean data in new excel file
 
 write_csv(siteinfo_full, "data/cleandata/NBR_FullSiteInfo.csv")
@@ -234,6 +241,7 @@ names(landuse_raw)<-  gsub("-", "_", names(landuse_raw))
 names(landuse_raw)<-  gsub("\\?", "", names(landuse_raw))
 names(landuse_raw)<-  gsub(":", "", names(landuse_raw))
 names(landuse_raw) <- gsub("Sitecode", "SiteID", names(landuse_raw)) #rename siteID so it matches with other sheets
+names(landuse_raw) <- gsub("Infield_outfield", "FieldType", names(landuse_raw))
 names(landuse_raw) <- gsub("Typeoflivestock", "Livestock", names(landuse_raw))
 names(landuse_raw) <- gsub("_ifapplicable", "", names(landuse_raw))
 names(landuse_raw) <- gsub("_villsaubreed", "breed", names(landuse_raw))
@@ -270,7 +278,7 @@ names(landuse_raw) <- gsub("Comments", "Comments_landuse", names(landuse_raw))
 #
 ## Data cleaning - new R object
 
-landuse_full <- landuse_raw
+landuse_full <- subset(landuse_raw, select = -c(Municipality_old, Locality, Postcode))
 
 #
 ## Char var land use - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
@@ -553,7 +561,7 @@ landuse_full <- landuse_full |>
 #hist(landuse_full$Grazingdensity_perha) # Range from 0 to 0.6, no visible outlier
 #landuse_full[is.na(landuse_full$Grazingdensity_perha),] # US6 as NA
 
-
+#
 ## Export clean data in new excel file
 
 write_csv(landuse_full, "data/cleandata/NBR_FullLanduse.csv")
