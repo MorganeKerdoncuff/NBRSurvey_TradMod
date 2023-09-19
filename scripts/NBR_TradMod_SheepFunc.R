@@ -16,6 +16,8 @@
 library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
+library(FSA) # Dunn's Test after KS
+library(dunn.test) # Dunn's Test after KS -> "classic" but less handy to use, but to refer to
 library(dendextend) # Visual dendrogram
 library(pvclust) # Multiscale bootstrap resampling
 library(ggplot2) # Visual representation
@@ -41,7 +43,7 @@ biomass_full <- read.csv("data/cleandata/NBR_FullBiomass.csv", sep=",") # Clean 
 
 # Site selection
 siteinfo_sheep <- siteinfo_full |>  
-  filter(Type_livestock == "sheep") |> 
+  filter(Livestock == "sheep") |> 
   dplyr::select(SiteID)
 
 # Extraction in other datasets
@@ -143,7 +145,7 @@ mesobio_sheep <- mesobio_sheep |>
   summarise(ab_acari = mean(Acari),
             ab_collembola = mean(Collembola))
 
-# Woody, grass and forb biomass
+# Woody, grass, forb and bryo biomass
 ## From biomass data
 ## Different numbers of replicates per site -> need 3 replicates, 1 per plot
 ## Currently at sample level -> summary by average
@@ -158,7 +160,8 @@ biomass_sheep <- biomass_sheep |>
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
   summarise(biom_woody = mean(woody),
             biom_monocotyledons = mean(monocotyledons),
-            biom_forbs = mean(forbs))
+            biom_forbs = mean(forbs),
+            biom_cryptogams = mean(cryptogams))
 
 #
 ## Initiate base dataset for hierachical clustering
@@ -205,17 +208,17 @@ hclustwd_sheep <- hclust(dist_sheep, method = "ward.D2")
 plot(hclustwd_sheep)
 
 # Show clusters (k=5) with base
-rect.hclust(hclustwd_sheep, k = 5, border = 2:6)
+rect.hclust(hclustwd_sheep, k = 4, border = 2:6)
 
 # Show clusters (k=5) with color_branches
 dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
-                               k = 5, 
+                               k = 4, 
                                #groupLabels = TRUE,
-                               col = c("pink", "pink3", "pink4", "orange", "orange3"))
+                               col = c("pink", "pink3", "orange", "orange3"))
 plot(dendro_sheep)
 
 # Cluster group
-clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
+clusterwd <- stats::cutree(hclustwd_sheep, k = 4)
 
 #
 ## Bootstrap method with pvclust
@@ -244,7 +247,7 @@ nmds_sheep <- metaMDS(dist_sheep)
 
 # Colour grouping
 #clusterwd # see order
-col_clusters <- c("pink3", "orange4", "orange", "pink4", "pink")
+col_clusters <- c("pink3", "orange4", "orange", "pink")
 col_clusters[clusterwd]
 
 # Plot ordination with base
@@ -258,17 +261,17 @@ cluster_ord <- text(nmds_sheep,
      cex = 0.7,
      pos = 1)
 cluster_ord <- legend( 
-       legend = paste("Cluster", 1:5),
-       x = 2.2,
+       legend = paste("Cluster", 1:4),
+       x = 2.3,
        y = 3.5,
        #horiz = TRUE,
        text.width = 1,
-       x.intersp = 0.5,
-       y.intersp = 0.5,
+       x.intersp = 1,
+       y.intersp = 1,
        col = col_clusters, 
        pt.bg = col_clusters,
        bty = "n", 
-       pch = (1:5)+20)
+       pch = (1:4)+20)
 cluster_ord <- ordihull(nmds_sheep, 
          groups = clusterwd, 
          display = "sites")
@@ -276,7 +279,7 @@ cluster_ord
 
 
 
-#### CLUSTER CHARTS ####
+#### ANALYSIS OF CLUSTERS ####
 
 #
 ## Data preparation
@@ -297,7 +300,80 @@ data_sheep_plot <- data_sheep_sc |>
   )) |> 
   # rearrange by variable group for ggplot
   arrange(sc_val) |>
-  mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_bryophytes", "biom_woody", "biom_forbs", "biom_monocotyledons", "ab_acari", "ab_collembola", "LOI")))
+  mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_bryophytes", "biom_woody", "biom_forbs", "biom_monocotyledons", "biom_cryptogams", "ab_acari", "ab_collembola", "LOI")))
+
+#
+## Comparison with factor cluster - Kruskal-Wallis followed by Dunn's test
+
+# Make cluster variable as factor
+data_sheep_plot <- data_sheep_plot |> 
+  mutate(cluster = as.factor(cluster))
+
+# LOI
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "LOI")) # significant **
+dunnTest(sc_val ~ cluster, 
+          data = filter(data_sheep_plot, variables == "LOI"),
+          method = "bonferroni")
+
+# Abundance collembola
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "ab_collembola")) #NS
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "ab_collembola"),
+         method = "bonferroni")
+
+# Abundance acari
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "ab_acari")) # significant *
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "ab_acari"),
+         method = "bonferroni")
+
+# Biomass cryptogams
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_cryptogams")) # significant *
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "biom_cryptogams"),
+         method = "bonferroni")
+
+# Biomass monocotyledons
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_monocotyledons")) #NS
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "biom_monocotyledons"),
+         method = "bonferroni")
+
+# Biomass forbs
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_forbs")) # significant *
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "biom_forbs"),
+         method = "bonferroni")
+
+# Biomass woody
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_woody")) # significant **
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "biom_woody"),
+         method = "bonferroni")
+
+# Diversity bryophytes
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_bryophytes")) # significant **
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "div_bryophytes"),
+         method = "bonferroni")
+
+# Diversity monocotyledons
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_monocotyledons")) # NS
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "div_monocotyledons"),
+         method = "bonferroni")
+
+# Diversity forbs
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_forbs")) # significant *
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "div_forbs"),
+         method = "bonferroni")
+
+# Diversity woody
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_woody")) # significant ***
+dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "div_woody"),
+         method = "bonferroni")
 
 #
 ## Boxplots
@@ -310,7 +386,7 @@ clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |>
   xlab("") +
   ylab("Cluster 1") +
   labs("") +
-  ylim(-3,3) +
+  ylim(-3.5, 3.5) +
   coord_flip() +
   theme_bw() +
   theme(
@@ -322,6 +398,14 @@ clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |>
     axis.title.x = element_text(colour = "pink3"),
     legend.title = element_blank()
     ) +
+  annotate("text", x = "LOI", y = 3.5, label = "a*", size = 3) +
+  annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
+  annotate("text", x = "biom_forbs", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_woody", y = 3.5, label = "a", size = 3) +
+  annotate("text", x = "div_bryophytes", y = 3.5, label = "a", size = 3) +
+  annotate("text", x = "div_forbs", y = 3.5, label = "a", size = 3) +
+  annotate("text", x = "div_woody", y = 3.5, label = "a", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_1
 
@@ -345,6 +429,14 @@ clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |>
     axis.title.x = element_text(colour = "orange4"),
     legend.title = element_blank()
   ) +
+  annotate("text", x = "LOI", y = 4, label = "ab", size = 3) +
+  annotate("text", x = "ab_acari", y = 4, label = "b*", size = 3) +
+  annotate("text", x = "biom_cryptogams", y = 4, label = "ab", size = 3) +
+  annotate("text", x = "biom_forbs", y = 4, label = "b¤", size = 3) +
+  annotate("text", x = "biom_woody", y = 4, label = "b*", size = 3) +
+  annotate("text", x = "div_bryophytes", y = 4, label = "bc", size = 3) +
+  annotate("text", x = "div_forbs", y = 4, label = "ab", size = 3) +
+  annotate("text", x = "div_woody", y = 4, label = "b*c", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_2
 
@@ -368,8 +460,38 @@ clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |>
     axis.title.x = element_text(colour = "orange"),
     legend.title = element_blank()
   ) +
+  annotate("text", x = "LOI", y = 2.5, label = "b", size = 3) +
+  annotate("text", x = "ab_acari", y = 2.5, label = "a", size = 3) +
+  annotate("text", x = "biom_cryptogams", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_forbs", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_woody", y = 2.5, label = "b**", size = 3) +
+  annotate("text", x = "div_bryophytes", y = 2.5, label = "b**", size = 3) +
+  annotate("text", x = "div_forbs", y = 2.5, label = "b¤", size = 3) +
+  annotate("text", x = "div_woody", y = 2.5, label = "b***", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_3
+
+# Former Cluster 4
+# clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |> 
+#   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+#   geom_hline(yintercept = 0, linetype = "dashed") +
+#   geom_boxplot() +
+#   xlab("") +
+#   ylab("Cluster 4") +
+#   ylim(-3,3) +
+#   coord_flip() +
+#   theme_bw() +
+#   theme(
+#     panel.grid.major = element_blank(),
+#     panel.grid.minor = element_blank(),
+#     panel.border = element_blank(),
+#     axis.ticks = element_blank(),
+#     axis.text.y = element_blank(),
+#     axis.title.x = element_text(colour = "pink4"),
+#     legend.title = element_blank()
+#   ) +
+#   scale_fill_grey(start = 0.5, end = 1)
+# clusterplot_4
 
 # Cluster 4
 clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |> 
@@ -378,28 +500,6 @@ clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster 4") +
-  ylim(-3,3) +
-  coord_flip() +
-  theme_bw() +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks = element_blank(),
-    axis.text.y = element_blank(),
-    axis.title.x = element_text(colour = "pink4"),
-    legend.title = element_blank()
-  ) +
-  scale_fill_grey(start = 0.5, end = 1)
-clusterplot_4
-
-# Cluster 5
-clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |> 
-  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_boxplot() +
-  xlab("") +
-  ylab("Cluster 5") +
   labs("") +
   ylim(-3,3) +
   coord_flip() +
@@ -413,8 +513,16 @@ clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |>
     axis.title.x = element_text(colour = "pink"),
     legend.title = element_blank()
   ) +
+  annotate("text", x = "LOI", y = 2.5, label = "a**", size = 3) +
+  annotate("text", x = "ab_acari", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_cryptogams", y = 2.5, label = "b*", size = 3) +
+  annotate("text", x = "biom_forbs", y = 2.5, label = "a", size = 3) +
+  annotate("text", x = "biom_woody", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "div_bryophytes", y = 2.5, label = "ac**", size = 3) +
+  annotate("text", x = "div_forbs", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "div_woody", y = 2.5, label = "ab*c¤", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
-clusterplot_5
+clusterplot_4
 
 # x-axis for plot arrange
 clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |> 
@@ -436,14 +544,16 @@ clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |>
 clusterplot_axis
 
 # Arrange all plots
-clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_5, clusterplot_1, clusterplot_4, clusterplot_3, clusterplot_2, nrow = 1, common.legend = TRUE)
+clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, clusterplot_3, clusterplot_2, nrow = 1, common.legend = TRUE)
 clusterplot_all
-ggsave(filename = "outputs/clusterplots.png", plot = clusterplot_all, height = 12, width = 25, units = "cm")
+ggsave(filename = "outputs/clusterplots2.png", plot = clusterplot_all, height = 12, width = 20, units = "cm")
 
 
 #### KRUSKAL-WALLIS TEST ON CLUSTERS ####
 
 
+
+#### LM AGAINST TEMP, PRECI & PHOSPHORUS ####
 
 
 #### DATA SUMMARY ####
