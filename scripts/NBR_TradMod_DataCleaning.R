@@ -11,8 +11,6 @@
 library(tidyverse) #R language
 library(readxl) #read xl files
 library(lubridate) #standard date data
-#library(raster) # work with raster files -> soon outdated, replaced by terra
-#library(rgdal) # work with raster files -> soon outdated
 library(terra) # work with raster files
 library(purrr) # merging several files at the same time
 
@@ -79,7 +77,7 @@ names(siteinfo_raw) <- gsub("Comments", "Comments_siteinfo", names(siteinfo_raw)
 #
 ## Data cleaning - new R object with removal empty columns or variables redundant with other datasets
 
-siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface, Ecologicalzone_former, Animal_on_site))
+siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface, Ecologicalzone_former, Animal_on_site, Location))
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
@@ -118,9 +116,6 @@ siteinfo_full <- siteinfo_full |>
   mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Fjord" = "fjord")) |> 
   mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Mountain" = "mountain"))
 
-# Geographical locations
-#unique(siteinfo_full$Location) # Correct locations and location names
-
 # Municipalities
 #unique(siteinfo_full$Municipality) # missing data + US2 Stordalen -> did you guys went that far ? Yes validated
 #siteinfo_full[is.na(siteinfo_full$Municipality),] # NA identified - US2, Stordalen is located in Masfjorden
@@ -153,7 +148,6 @@ siteinfo_full <- siteinfo_full |>
 ## Standard variable names
 
 names(siteinfo_full) <- gsub("NiBioEcologicalZone", "EcoZone", names(siteinfo_full))
-names(siteinfo_full) <- gsub("EPSG.", "", names(siteinfo_full))
 names(siteinfo_full) <- gsub("Type_livestock", "Livestock", names(siteinfo_full))
 names(siteinfo_full) <- gsub("Pooestimation_g-10percent", "Poo10per", names(siteinfo_full))
 
@@ -232,27 +226,28 @@ write_csv(siteinfo_full, "data/cleandata/NBR_FullSiteInfo.csv")
 ## Name & character cleaning land use
 
 # R friendly variable names
-names(landuse_raw)<-  gsub(" ", "", names(landuse_raw))
-names(landuse_raw)<-  gsub("\\)", "", names(landuse_raw))
-names(landuse_raw)<-  gsub("\\(", "_", names(landuse_raw))
-names(landuse_raw)<-  gsub("/", "_", names(landuse_raw))
-names(landuse_raw)<-  gsub(";", "_", names(landuse_raw))
-names(landuse_raw)<-  gsub("-", "_", names(landuse_raw))
-names(landuse_raw)<-  gsub("\\?", "", names(landuse_raw))
-names(landuse_raw)<-  gsub(":", "", names(landuse_raw))
+names(landuse_raw) <-  gsub(" ", "", names(landuse_raw))
+names(landuse_raw) <-  gsub("\\)", "", names(landuse_raw))
+names(landuse_raw) <-  gsub("\\(", "_", names(landuse_raw))
+names(landuse_raw) <-  gsub("/", "_", names(landuse_raw))
+names(landuse_raw) <-  gsub(";", "_", names(landuse_raw))
+names(landuse_raw) <-  gsub("-", "_", names(landuse_raw))
+names(landuse_raw) <-  gsub("\\?", "", names(landuse_raw))
+names(landuse_raw) <-  gsub(":", "", names(landuse_raw))
 names(landuse_raw) <- gsub("Sitecode", "SiteID", names(landuse_raw)) #rename siteID so it matches with other sheets
+names(landuse_raw) <- gsub("Interviewdate", "InterviewDate", names(landuse_raw))
 names(landuse_raw) <- gsub("Infield_outfield", "FieldType", names(landuse_raw))
 names(landuse_raw) <- gsub("Typeoflivestock", "Livestock", names(landuse_raw))
 names(landuse_raw) <- gsub("_ifapplicable", "", names(landuse_raw))
 names(landuse_raw) <- gsub("_villsaubreed", "breed", names(landuse_raw))
 names(landuse_raw) <- gsub("Numberofanimals", "FlockSize", names(landuse_raw))
-names(landuse_raw) <- gsub("Surveysitegrazingsurface_ha", "GrazingSurface_ha", names(landuse_raw))
-names(landuse_raw) <- gsub("Inmarksbeite_Gardskart", "TotalInfieldSurface", names(landuse_raw))
-names(landuse_raw) <- gsub("Currentlivestock_fromdate_year", "LivestockFrom_year", names(landuse_raw))
-names(landuse_raw) <- gsub("Gap_swithoutgrazing_timeperiod", "NoGrazing_period", names(landuse_raw))
+names(landuse_raw) <- gsub("Surveysitegrazingsurface_ha", "SelectedFieldArea_ha", names(landuse_raw))
+names(landuse_raw) <- gsub("Inmarksbeite_Gardskart", "FarmInfieldArea_ha", names(landuse_raw))
+names(landuse_raw) <- gsub("Currentlivestock_fromdate_year", "LivestockSinceYear", names(landuse_raw))
+names(landuse_raw) <- gsub("Gap_swithoutgrazing_timeperiod", "NoGrazingPeriod", names(landuse_raw))
 names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year1_currentlivestock_monthsperyear", "YearlyGrazing1_month", names(landuse_raw))
 names(landuse_raw) <- gsub("Yearlygrazingtimesurvey_year2_currentlivestock_monthsperyear", "YearlyGrazing2_month", names(landuse_raw))
-names(landuse_raw) <- gsub("Impressionofgrazingpressureonsurveysite", "FarmerImpression_GrazingPressure", names(landuse_raw))
+names(landuse_raw) <- gsub("Impressionofgrazingpressureonsurveysite", "GrazingPressureAccordingToFarmer", names(landuse_raw))
 names(landuse_raw) <- gsub("_type", "", names(landuse_raw))
 names(landuse_raw) <- gsub("_Ifseveral", "", names(landuse_raw))
 names(landuse_raw) <- gsub("Type_soffarmmanagement_soiltreatmentusedthelast10years", "FieldManagement1", names(landuse_raw))
@@ -278,7 +273,7 @@ names(landuse_raw) <- gsub("Comments", "Comments_landuse", names(landuse_raw))
 #
 ## Data cleaning - new R object
 
-landuse_full <- subset(landuse_raw, select = -c(Municipality_old, Locality, Postcode))
+landuse_full <- subset(landuse_raw, select = -c(Locality, Postcode, Grazingdensity_perha, GrazingPressureAccordingToFarmer, Inside_outsideatnight))
 
 #
 ## Char var land use - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
@@ -457,16 +452,6 @@ landuse_full <- landuse_full |>
 
 # Replace NAs by "no" in summary management columns only
 landuse_full <- landuse_full |> 
-  mutate_at(vars(starts_with("FM_")) & filter(
-                   SiteID != "IC2" |
-                SiteID != "US1" |
-                SiteID != "US2" |
-                SiteID != "US4" |
-                SiteID != "IS5" |
-                SiteID != "IG3"),
-            ~replace(is.na(.), "no"))
-
-landuse_full <- landuse_full |> 
   mutate_at(vars(starts_with("FM_")), ~replace(., is.na(.), "no"))
 
 #
@@ -526,7 +511,7 @@ landuse_full <- landuse_full |>
 
 # Total infield surface - missing values & distribution
 #landuse_full[is.na(landuse_full$TotalInfieldSurface),] # All missing values should be outfields/heathland sites - validated
-hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
+#hist(landuse_full$FarmInfieldArea_ha) # big range but no visible outlier
 
 # Date since the current livestock has been grazing
 #landuse_full[is.na(landuse_full$LivestockFrom_year),] # 7 missing values from farmers who did not reply the survey
@@ -534,7 +519,7 @@ hist(landuse_full$TotalInfieldSurface) # big range but no visible outlier
 
 # How many months main livestock graze on site during the year
 #landuse_full[is.na(landuse_full$YearlyGrazing1_month),] # 6 missing values from farmers who did not reply the survey
-hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
+#hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no visible outliers -> validated
 
 #
 ## New variable - average stocking density
@@ -542,21 +527,21 @@ hist(landuse_full$YearlyGrazing1_month) # coherent values (between 2 and 12), no
 # Livestock unit for adults - depends on type of livestock and breed (for cows)
 #unique(landuse_full$Cowbreed) # Milking cows (norsk rødt fe) are 1 SSU - Beef cattle (Limousin, Aberdeen angus, Highland) are 0.8 LSU - Sheep and goats are 0.1 LSu
 landuse_full <- landuse_full |> 
-  mutate(LSU_adultind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.1, ifelse(Cowbreed == "norsk rødt fe", 1, 0.8)))
+  mutate(LSU_adult = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.1, ifelse(Cowbreed == "norsk rødt fe", 1, 0.8)))
 #hist(landuse_full$LSU_adultind) # validated
 
 # Livestock unit for young - half for goats and sheep (0.05), young cows on field (0.7)
 landuse_full <- landuse_full |> 
-  mutate(LSU_youngind = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.05, 0.7))
+  mutate(LSU_young = ifelse(Livestock1 == "sheep" | Livestock1 == "goat", 0.05, 0.7))
 #hist(landuse_full$LSU_youngind) # validated
 
 # Grazing intensity over the year - two goat flocks in Osterøy were known to be moved to summer farm (outfield)
 landuse_full <- landuse_full |>  
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
-  mutate(AvgStockingDensity_perha = ifelse(
+  mutate(AvgStockDensity_perha = ifelse(
     Livestock1 == "goat" & Municipality_old == "Osterøy", 
-    ((FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)*(YearlyGrazing1_month/12), 
-    (FlockSize1_adults*LSU_adultind+FlockSize1_young*LSU_youngind)/TotalInfieldSurface)
+    ((FlockSize1_adults*LSU_adult+FlockSize1_young*LSU_young)/FarmInfieldArea_ha)*(YearlyGrazing1_month/12), 
+    (FlockSize1_adults*LSU_adult+FlockSize1_young*LSU_young)/FarmInfieldArea_ha)
     )
 #hist(landuse_full$Grazingdensity_perha) # Range from 0 to 0.6, no visible outlier
 #landuse_full[is.na(landuse_full$Grazingdensity_perha),] # US6 as NA
@@ -720,33 +705,37 @@ write_csv(landscape_full, "data/cleandata/NBR_FullLandscape.csv")
 ## Name & character cleaning sampling area
 
 # R friendly variable names
-names(area20x20_raw)<-gsub("%", "percent", names(area20x20_raw)) # remove percent signs from names
-names(area20x20_raw)<-gsub("&", "_", names(area20x20_raw)) # remove &
-names(area20x20_raw)<-gsub("\\(", "", names(area20x20_raw)) # remove (
-names(area20x20_raw)<-gsub("\\)", "", names(area20x20_raw)) # remove )
+names(area20x20_raw) <- gsub("%", "percent", names(area20x20_raw)) # remove percent signs from names
+names(area20x20_raw) <- gsub("&", "_", names(area20x20_raw)) # remove &
+names(area20x20_raw) <- gsub("\\(", "", names(area20x20_raw)) # remove (
+names(area20x20_raw) <- gsub("\\)", "", names(area20x20_raw)) # remove )
+names(area20x20_raw) <- gsub("Recording_date", "RecordingDate", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Number_paths", "NumberAnimalPaths", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Total_length_path_m", "AnimalPathsLength_m", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Elevation_max", "Elevation", names(area20x20_raw))
+names(area20x20_raw) <- gsub("General_slope", "Slope_degree", names(area20x20_raw))
+names(area20x20_raw) <- gsub("AspectDegree", "Aspect_degree", names(area20x20_raw))
+names(area20x20_raw) <- gsub("percent", "Percent", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Trees_Tall", "TreesTall", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Fern", "Ferns", names(area20x20_raw))
+names(area20x20_raw) <- gsub("Lichen", "Lichens", names(area20x20_raw))
 names(area20x20_raw) <- gsub("Comments", "Comments_area20x20", names(area20x20_raw))
 
 #
 ## Sampling date standardisation
 
-area20x20_raw$Recording_date <- as.POSIXct(area20x20_raw$Recording_date, format = "%d.%m.%Y")
+area20x20_raw$RecordingDate <- as.POSIXct(area20x20_raw$RecordingDate, format = "%d.%m.%Y")
 
 #
 ## Data cleaning - New R object
 
-area20x20_full <- area20x20_raw
+area20x20_full <- subset(area20x20_raw, select = -c(Team, Latitude1, Longitude1, Latitude2, Longitude2, NumberAnimalPaths, AnimalPathsLength_m, Elevation_min, Aspect))
 
 #
 ## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
 
 # Site ID
 #table(area20x20_full$SiteID) # Unique ID for each site - validated
-
-# Aspect
-#unique(area20x20_full$Aspect) # One missing value under "/"
-#area20x20_full[area20x20_full$Aspect == "/",] # UC1 -> flat bog, will not be used
-area20x20_full <- area20x20_full |> 
-  mutate(Aspect = dplyr::recode(Aspect, "/" = "NA"))
 
 #
 ## Numeric var sampling area - Check min/max, distribution and potential outliers
@@ -769,13 +758,13 @@ test <- area20x20_full |>
   transpose() # potential outliers are max herbs 97% and max lichens 20%
 
 # Distribution elevation max
-#hist(area20x20_full$Elevation_max) # Sites range from 0 to 900 m elevation, no outlier - validated
+#hist(area20x20_full$Elevation) # Sites range from 0 to 900 m elevation, no outlier - validated
 
 # Distribution slope
-#hist(area20x20_full$General_slope) # Slopes range from 0 to 35 degrees, no outlier - validated
+#hist(area20x20_full$Slope_degree) # Slopes range from 0 to 35 degrees, no outlier - validated
 
 # Distribution aspect degree
-#hist(area20x20_full$AspectDegree) # Aspect covers all spectrum (0 to 360), no outliers - validated
+#hist(area20x20_full$Aspect_degree) # Aspect covers all spectrum (0 to 360), no outliers - validated
 
 # Distribution distance to sea
 #area20x20_full[is.na(area20x20_full$DistanceToSea_m),] # 9 NA, corresponding to upland sites -> validated
@@ -783,29 +772,29 @@ test <- area20x20_full |>
 #filter(area20x20_full, DistanceToSea_m>10000) # IG3 in Modalen
 
 # Distribution rock cover
-#hist(area20x20_full$percentRock) # Some sites over 7%, check their location + 3 NAs
-#area20x20_full[area20x20_full$percentRock>7,] # 5 sites OV1, UG2, US3, IG3, US5
+#hist(area20x20_full$PercentRock) # Some sites over 7%, check their location + 3 NAs
+#area20x20_full[area20x20_full$PercentRock>7,] # 5 sites OV1, UG2, US3, IG3, US5
 # UG2, US3 and US5 in subalpine areas with exposed bedrock - validated
 # OV1 in coastal heathland habitat, with exposed bedrock - validated
 # IG3 in fjord area but at higher elevation, with exposed bedrock - validated
-test <- area20x20_full[is.na(area20x20_full$percentRock),] # 3 sites US1, UG1 and OC4 missing all soil cover percentages
+test <- area20x20_full[is.na(area20x20_full$PercentRock),] # 3 sites US1, UG1 and OC4 missing all soil cover percentages
 
 # Distribution mud cover
-#hist(area20x20_full$percentMud) # One site over 15%
-#area20x20_full[area20x20_full$percentMud>10,] # UC1 -> bog site, will not be included into the analysis - validated
+#hist(area20x20_full$PercentMud) # One site over 15%
+#area20x20_full[area20x20_full$PercentMud>10,] # UC1 -> bog site, will not be included into the analysis - validated
 
 # Distribution trees and tall shrubs cover
-#hist(area20x20_full$percentTrees_TallShrubs) # No sites over 10% - validated
+#hist(area20x20_full$PercentTreesTallShrubs) # No sites over 10% - validated
 
 # Distribution low shrubs
-#hist(area20x20_full$percentLowShrubs) # Wide range due to collection in both grassland and heathland habitats. Check that all grassland sites are under 10%
-#area20x20_full[area20x20_full$percentLowShrubs>10,] # 11 sites over 10%
+#hist(area20x20_full$PercentLowShrubs) # Wide range due to collection in both grassland and heathland habitats. Check that all grassland sites are under 10%
+#area20x20_full[area20x20_full$PercentLowShrubs>10,] # 11 sites over 10%
 # OV1, OV2, OS5, OS7, OS9, IS2 coastal heathlands - validated
 # US2, US3, US4, US5, UG2 subalpine heathlands - validated
 
 # Distribution herbs
-hist(area20x20_full$percentHerbs) # a few sites over 60%
-area20x20_full[area20x20_full$percentHerbs>60,] # OS1, OC1, IG1, IS2, IC1 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
+hist(area20x20_full$PercentHerbs) # a few sites over 60%
+area20x20_full[area20x20_full$PercentHerbs>60,] # OS1, OC1, IG1, IS2, IC1 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
 # OS1 80% - average 20% & no cover over 55% in quadrats, estimation from pictures 35%-40%
 # OC1 80% - average 25% & no cover over 50% in quadrats, estimation from pictures 10%-15% 
 # IG1 97% - average 20% & no cover over 30% in quadrats, estimation from pictures 15%-20%
@@ -813,21 +802,21 @@ area20x20_full[area20x20_full$percentHerbs>60,] # OS1, OC1, IG1, IS2, IC1 -> all
 # IC1 70% - average 45% & no cover over 70% in quadrats, estimation from pictures 60%-65%
 
 # Distribution monocotyledons
-hist(area20x20_full$percentMonocotyledons) # need to check again sites with weird herb estimations
+hist(area20x20_full$PercentMonocotyledons) # need to check again sites with weird herb estimations
 
 # Distribution bryophytes
-hist(area20x20_full$percentBryophytes) # need to check again sites with weird herb estimations
+hist(area20x20_full$PercentBryophytes) # need to check again sites with weird herb estimations
 
 # Distribution lichens
-#hist(area20x20_full$percentLichen) # one site over 10%
-#area20x20_full[area20x20_full$percentLichen>15,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
+#hist(area20x20_full$PercentLichens) # one site over 10%
+#area20x20_full[area20x20_full$PercentLichens>15,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
 
 #
 ## Calculation new variables
 
 # Heat Load Index
 area20x20_full <- area20x20_full |> 
-  mutate(HLI = cos(AspectDegree-225)*tan(General_slope))
+  mutate(HeatLoadIndex = cos(Aspect_degree-225)*tan(Slope_degree))
 #hist(area20x20_full$HLI) # 3 outliers: one under 200, two over 100
 #area20x20_full[area20x20_full$HLI>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
 #area20x20_full[area20x20_full$HLI<0,] #OS6 -> 11 degree slope with NE exposition
@@ -836,7 +825,6 @@ area20x20_full <- area20x20_full |>
 ## Export clean data in new excel file
 
 write_csv(area20x20_full, "data/cleandata/NBR_FullArea20x20.csv")
-
 
 
 #### Ground cover quadrats ####
@@ -1930,7 +1918,7 @@ test <- mesobio_raw |>
 #hist(soilmeso_raw$CoreDepth_cm) # Most around 14 cm -> validated
 
 #
-## New variable - abundance per soil volume
+## New variable - abundance per soil area with correction soil volume
 
 # Extraction survey data only
 mesobio_full <- mesobio_raw |> 
@@ -1940,10 +1928,11 @@ mesobio_full <- mesobio_raw |>
 mesobio_full <- left_join(mesobio_full, soilmeso_raw)
 mesobio_full <- subset(mesobio_full, select = c(SampleID, Acari, Collembola, PlotID, SiteID, CoreDepth_cm))
 
-# New variable
+# New variable with correction for soil volume
 mesobio_full <- mesobio_full |> 
-  mutate(Acari.m2 = Acari/(3.14*(0.105/2)^2)) |> 
-  mutate(Collembola.m2 = Collembola/(3.14*(0.105/2)^2))
+  # corrected abundance = (measured_abundance*standard_coreheight)/measured_coreheight
+  mutate(Acari.m2 = ((Acari*14)/CoreDepth_cm)/(3.14*(0.105/2)^2)) |> 
+  mutate(Collembola.m2 = ((Collembola*14)/CoreDepth_cm)/(3.14*(0.105/2)^2))
 
 #
 ## Export clean data in new excel file
@@ -2128,7 +2117,6 @@ biomass_full <- biomass_full |>
 
 # Export clean data in new excel file
 write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
-
 
 
 #### Climate data ####
@@ -2317,13 +2305,15 @@ names(avgtempJan) <- gsub("focal_mean", "avgtempJan", names(avgtempJan))
 ## Preparation final dataset
 
 # Merging all climate results
-climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintempJan), dplyr::left_join)
+climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintempJan, avgtempJuly, avgtempJan), dplyr::left_join)
 
 # Rescaling - original data at 0.1 scale - temp conversion to C
 climate_full <- climate_full |> 
   mutate(annualprecipitation = annualprecipitation/10,
          maxtempJuly = maxtempJuly/100-273.15,
-         mintempJan = mintempJan/100-273.15)
+         mintempJan = mintempJan/100-273.15,
+         avgtempJuly = avgtempJuly/100-273.15,
+         avgtempJan = avgtempJan/100-273.15)
 
 # Clean data + export in csv
 climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
@@ -2335,3 +2325,19 @@ writeRaster(fullmaxtemp_meanJuly, "outputs/NBR_maps/NBR_MaxJulyTemp.tiff", overw
 writeRaster(fullmintemp_meanJan, "outputs/NBR_maps/NBR_MinJanTemp.tiff", overwrite = TRUE)
 writeRaster(fullavgtemp_meanJuly, "outputs/NBR_maps/NBR_AvgJulyTemp.tiff", overwrite = TRUE)
 writeRaster(fullavgtemp_meanJan, "outputs/NBR_maps/NBR_AvgJanTemp.tiff", overwrite = TRUE)
+
+
+#### SUMMARY FOR REPOSITORY ####
+
+#
+## Site-level data
+# Merging of site info full, area 20x20, land use -> NBR_sitescale
+
+# Select variables for repository
+repo_site <- purrr::reduce(list(
+  subset(siteinfo_full, select = c(SiteID, EcoZone, Year, Habitat)), 
+  subset(landuse_full, select = c(SiteID, FieldType, Livestock1, FlockSize1_adults, FlockSize1_young, SelectedFieldArea_ha, FarmInfieldArea_ha, LSU_adult, LSU_young, AvgStockDensity_perha)), 
+  subset(area20x20_full, select = -c(HeatLoadIndex, Comments_area20x20))
+  ), dplyr::full_join)
+
+
