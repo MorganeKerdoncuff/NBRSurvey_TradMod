@@ -2312,8 +2312,8 @@ climate_full <- climate_full |>
   mutate(annualprecipitation = annualprecipitation/10,
          maxtempJuly = maxtempJuly/100-273.15,
          mintempJan = mintempJan/100-273.15,
-         avgtempJuly = avgtempJuly/100-273.15,
-         avgtempJan = avgtempJan/100-273.15)
+         avgtempJuly = avgtempJuly/10-273.15,
+         avgtempJan = avgtempJan/10-273.15)
 
 # Clean data + export in csv
 climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
