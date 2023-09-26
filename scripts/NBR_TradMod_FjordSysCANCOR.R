@@ -248,10 +248,10 @@ beetle <- beetle |>
 
 # Selection variables
 fjordsys <- full_join(area20x20_infield, climate_infield)
-fjordsys <- subset(fjordsys, select = c(SiteID, Elevation_max, annualprecipitation, maxtempJuly, mintempJan, DistanceToSea_m))
+fjordsys <- subset(fjordsys, select = c(SiteID, Elevation, annualprecipitation, maxtempJuly, mintempJan, DistanceToSea_m))
 
 # Variable renaming
-names(fjordsys) <- gsub("Elevation_max", "Elev", names(fjordsys))
+names(fjordsys) <- gsub("Elevation", "Elev", names(fjordsys))
 names(fjordsys) <- gsub("annualprecipitation", "AnnPreci", names(fjordsys))
 names(fjordsys) <- gsub("maxtempJuly", "JulTemp", names(fjordsys))
 names(fjordsys) <- gsub("mintempJan", "JanTemp", names(fjordsys))
@@ -318,13 +318,13 @@ landuse_infield <- landuse_infield |>
   mutate(Cow = ifelse(Livestock1 == "cow", 1,0))
 
 # Selection variables
-grazing <- subset(landuse_infield, select = c(SiteID, Sheep, Cow, FlockSize1_adults, GrazingSurface_ha, TotalInfieldSurface, AvgStockingDensity_perha))
+grazing <- subset(landuse_infield, select = c(SiteID, Sheep, Cow, FlockSize1_adults, SelectedFieldArea_ha, FarmInfieldArea_ha, AvgStockDensity_perha))
 
 # Variable renaming
 names(grazing) <- gsub("FlockSize1_adults", "NbAdults", names(grazing))
-names(grazing) <- gsub("GrazingSurface_ha", "FieldSize", names(grazing))
-names(grazing) <- gsub("TotalInfieldSurface", "FarmInfield", names(grazing))
-names(grazing) <- gsub("AvgStockingDensity_perha", "StockDens", names(grazing))
+names(grazing) <- gsub("SelectedFieldArea_ha", "FieldSize", names(grazing))
+names(grazing) <- gsub("FarmInfieldArea_ha", "FarmInfield", names(grazing))
+names(grazing) <- gsub("AvgStockDensity_perha", "StockDens", names(grazing))
 
 # Check distribution
 #hist(grazing$NbAdults) # one outlier above 150 -> rejected
@@ -345,11 +345,11 @@ grazing <- grazing |>
 
 # Selection variables
 locenvi <- purrr::reduce(list(groundcover_infield, soilbulk_infield, soilpene_infield, soilchem_infield, area20x20_infield), dplyr::left_join)
-locenvi <- subset(locenvi, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, AspectDegree, General_slope))
+locenvi <- subset(locenvi, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
 
 # Variables renaming
-names(locenvi) <- gsub("AspectDegree", "Aspect", names(locenvi))
-names(locenvi) <- gsub("General_slope", "Slope", names(locenvi))
+names(locenvi) <- gsub("Aspect_degree", "Aspect", names(locenvi))
+names(locenvi) <- gsub("Slope_degree", "Slope", names(locenvi))
 
 # Check distribution
 #hist(locenvi$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
