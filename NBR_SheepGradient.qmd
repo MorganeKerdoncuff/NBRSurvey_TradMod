@@ -61,6 +61,7 @@ knitr::knit_hooks$set(inline = function(x) {
 - Reference study which looked at plant functional type diversity (alpha, beta, gamma) across elevational gradient in Western Norway [@austrheimPlantDiversityPatterns2002].
 
 - herbivore effect on plant species richness depends on site productivity -> (+) high vs (-) low [@bakkerHerbivoreImpactGrassland2006]
+- grazing x productivity [@pakemanConsistencyPlantSpecies2004]
 
 ## AIM/HYP
 
@@ -76,7 +77,7 @@ knitr::knit_hooks$set(inline = function(x) {
 
 ## Study area
 
-The UNESCO Nordhordland Biosphere Reserve (NBR) stretches up to 100 km from the North Sea through the fjord system of Western Norway [@kalandNordhordlandBiopshereReserve2018]. The fjord geomorphology, which grows from flat coastal areas towards sharp mountain slopes inland, creates a tight oceanic-subalpine climatic gradient from west to east with decreasing temperatures and increasing precipitations [@ketzlerClimateNorway2021]. Thus, mean annual precipitation can vary more than twice as much (from 1550 to 4800 mm) between the coast and the upland, and mean July temperature can drop by almost half (from 15.9 to 8.3C), along with increasing annual temperature range [**norsk klimaservicesenter**].
+The UNESCO Nordhordland Biosphere Reserve (NBR) stretches up to 100 km from the North Sea through the fjord system of Western Norway [@kalandNordhordlandBiopshereReserve2018]. The fjord geomorphology, which grows from flat coastal areas towards sharp mountain slopes inland, creates a tight oceanic-subalpine climatic gradient from west to east with decreasing temperatures and increasing precipitations [@ketzlerClimateNorway2021]. Thus, mean annual precipitation can vary more than twice as much (from 1550 to 4800 mm) between the coast and the upland, and mean July temperature can drop by almost half (from 15.9 to 8.3°C), along with increasing annual temperature range [**norsk klimaservicesenter**].
 
 In summer 2019 and 2020, we conducted an ecological survey on 23 sheep-grazed fields across the coast-mountain gradient of the NBR, among which 12 outfields, with 6 in the lowlands and 6 in the uplands, and 11 infields (@fig-sitemap). At low elevation, outfields were *Calluna* heathlands grazed all year round only by rustic sheep breeds such as the Norwegian old sheep (*norskgammelsau*) or the Cheviot sheep from Scotland (*sjeviotsau*). Three outfields, located along the coast, were traditionally managed by rotational prescribed burning to rejuvenate the heath and provide more palatable fodder for the animals. In the mountains, outfields were located above the tree line and dominated by *Vaccinium* vegetation. They would be grazed only during the summer season, by rustic breeds but also by the conventional Norwegian white sheep (*norsk hvit sau*). Infields were permanent grasslands, managed by small-scale rotational grazing of various sheep breeds and fertilised at least occasionally.
 
