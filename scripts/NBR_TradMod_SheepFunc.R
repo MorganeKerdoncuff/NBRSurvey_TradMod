@@ -33,7 +33,8 @@ plantrichness_full <- read.csv("data/cleandata/NBR_FullPlantComm.csv", sep=",") 
 soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clean soil chemistry data
 mesobio_full <- read.csv("data/cleandata/NBR_FullMesobio.csv", sep=",") # Clean soil mesofauna data
 biomass_full <- read.csv("data/cleandata/NBR_FullBiomass.csv", sep=",") # Clean plant biomass data
-
+climate_full <- read.csv("data/cleandata/NBR_FullClimate.csv", sep=",") # Clean climate data
+soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clean soil chemistry data
 
 
 #### DATA PREPARATION ####
@@ -51,6 +52,8 @@ plantrichness_sheep <- filter(plantrichness_full, SiteID %in% siteinfo_sheep$Sit
 soilchem_sheep <- filter(soilchem_full, SiteID %in% siteinfo_sheep$SiteID)
 mesobio_sheep <- filter(mesobio_full, SiteID %in% siteinfo_sheep$SiteID)
 biomass_sheep <- filter(biomass_full, SiteID %in% siteinfo_sheep$SiteID)
+climate_sheep <- filter(climate_full, SiteID %in% siteinfo_sheep$SiteID)
+soilchem_sheep <- filter(soilchem_full, SiteID %in% siteinfo_sheep$SiteID)
 
 #
 ## Plant species richness according to functional group
@@ -108,6 +111,7 @@ plantrichness_sheep <- plantrichness_sheep |>
 ## Summarise data at site level -> should be 23 observations for non community data
 
 # Site info - validated
+# Climate - validated
 
 # Plant species richness
 ## From groundcover data
@@ -123,7 +127,7 @@ plantrichness_sheep <- plantrichness_sheep |>
 ## Currently at plot level -> summary by average
 soilchem_sheep <- soilchem_sheep |> 
   group_by(SiteID) |> 
-  summarise(LOI = mean(LOI))
+  summarise(LOI = mean(LOI), phophorus = mean(P.Al_mg.100g))
 
 # Mite and springtail abundance
 ## From mesofauna data
@@ -164,13 +168,19 @@ biomass_sheep <- biomass_sheep |>
             biom_cryptogams = mean(cryptogams))
 
 #
-## Initiate base dataset for hierachical clustering
+## Initial base dataset
 
 # Merge all data
-data_sheep <- purrr::reduce(list(siteinfo_sheep, subset(plantrichness_sheep, select = -c(div_ferns)), biomass_sheep, mesobio_sheep, soilchem_sheep), dplyr::left_join)
+data_sheep <- purrr::reduce(list(
+  siteinfo_sheep, 
+  subset(plantrichness_sheep, select = -c(div_ferns)), 
+  biomass_sheep, 
+  mesobio_sheep, 
+  soilchem_sheep, 
+  subset(climate_sheep, select = c(SiteID, annualprecipitation, avgtempJuly))
+  ), dplyr::left_join)
 
 # Intuitive ID according to following code - COx (costal outfield), Ix (infield), MOx (mountain oufield)
-
 data_sheep <- data_sheep |> 
   mutate(fieldtype = case_when(
     grepl("U", SiteID) ~ "MO",
@@ -180,23 +190,19 @@ data_sheep <- data_sheep |>
   group_by(fieldtype) |>
   mutate(FieldID = paste(fieldtype, row_number(), sep = ""))
 
+# Site ID as rowname
+rownames(data_sheep) <- data_sheep$FieldID
+
 
 
 #### HIERARCHICAL CLUSTERING ####
 
+# Data scaling
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID, annualprecipication, avgtempJuly, phosphorus))))
+rownames(data_sheep_sc) <- data_sheep$FieldID
+
 #
 ## Clustering & dendrogram
-
-# Extraction SiteID
-#siteID <- data_sheep$SiteID
-# data_sheep <- subset(data_sheep, select = -c(SiteID))
-
-# Site ID as rowname
-rownames(data_sheep) <- data_sheep$FieldID
-
-# Data scaling
-data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID))))
-rownames(data_sheep_sc) <- data_sheep$FieldID
 
 # Distance matrix - environmental continuous numeric -> Euclidean
 dist_sheep <- dist(data_sheep_sc, method = "euclidean")
@@ -549,11 +555,36 @@ clusterplot_all
 ggsave(filename = "outputs/clusterplots2.png", plot = clusterplot_all, height = 12, width = 20, units = "cm")
 
 
-#### KRUSKAL-WALLIS TEST ON CLUSTERS ####
-
-
-
 #### LM AGAINST TEMP, PRECI & PHOSPHORUS ####
+
+# Significant differences between groups
+
+# New table for LM
+data_sheep_lm <- subset(data_sheep, select = -c(fieldtype, SiteID))
+
+# LOI
+lm <- lm(LOI ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+
+# Abundance collembola
+
+# Abundance acari
+
+# Biomass cryptogams
+
+# Biomass monocotyledons
+
+# Biomass forbs
+
+# Biomass woody
+
+# Diversity bryophytes
+
+# Diversity monocotyledons
+
+# Diversity forbs
+
+# Diversity woody
 
 
 #### DATA SUMMARY ####
