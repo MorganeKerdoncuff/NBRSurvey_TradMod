@@ -98,7 +98,10 @@ In summer 2019 and 2020, we conducted an ecological survey on 29 infields across
 
 ## Data collection
 
-We visited each site once between mid-June and late July, starting with sites closer to the coast and progressing eastwards to accommodate to the seasonal lag. On each site, we defined a nested sampling design within a 20 x 20 m^2^ area representative of the infield, avoiding rocks, waterlogged ground, trees and field edges. The same rules were applied when setting three plots of 3 x 3 m^2^ within the sampling area, at least 6 m apart from each other and 2 m away from the edge [**ref sampling design**]. Each plot was divided into nine quadrats of 1 m^2^, five of them dedicated to plant community collection and the remaining four used for soil and beetle sampling.
+We visited each site once between mid-June and late July, starting with sites closer to the coast and progressing eastwards to accommodate to the seasonal lag. On each site, we defined a nested sampling design within a 20 x 20 m^2^ area representative of the infield, avoiding rocks, waterlogged ground, trees and field edges. The same rules were applied when setting three plots of 3 x 3 m^2^ within the sampling area, at least 6 m apart from each other and 2 m away from the edge (@fig-sampling). Each plot was divided into nine quadrats of 1 m^2^, five of them dedicated to plant community collection and the remaining four used for soil and beetle sampling.
+
+![Nested sampling design of the survey.](illustrations/NBR_SamplingDesign.png){#fig-sampling}
+
 
 ### Plant and beetle assemblages
 
@@ -108,7 +111,7 @@ We collected beetles with dung-baited pitfall traps set approx. 1 m from each ot
 
 ### Soil data
 
-We characterised soil structure with three complementary measurements: bulk density (BD) as a proxy for soil compaction, penetration rate for soil resistance induced by root mat density, and gravimetric water content (GWC) for water holding capacity. We measured the penetration rate by dropping from 1 m above ground a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight [**?**]) through a PVC tube ensuring vertical fall. The visible standing part of the stick was measured and subtracted from the total stick length to obtain the length of penetration into the soil. Before dropping the stick, the surrounding vegetation around a 5 cm radius was cleared to prevent resistance from the aboveground vegetation. We performed two penetration tests per quadrat, for a total of 24 tests per site. As the tip was regularly sharpened and remeasured, its length decreased by 0.7 cm by the end of the sampling season.
+We characterised soil structure with three complementary measurements: bulk density (BD) as a proxy for soil compaction, penetration rate for soil resistance induced by root mat density and soil texture, and gravimetric water content (GWC) for water holding capacity. We measured the penetration rate by dropping from 1 m above ground a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight [**?**]) through a PVC tube ensuring vertical fall. The visible standing part of the stick was measured and subtracted from the total stick length to obtain the length of penetration into the soil. Before dropping the stick, the surrounding vegetation around a 5 cm radius was cleared to prevent resistance from the aboveground vegetation. We performed two penetration tests per quadrat, for a total of 24 tests per site. As the tip was regularly sharpened and remeasured, its length decreased by 0.7 cm by the end of the sampling season.
 
 For BD and GWC measurements, we sampled three soil cores with PVC tubes of 57.23 cm^3^ (diam. 3.7 cm, height 10 cm) in each quadrat (36 cores per site). To limit soil compression when hammering down the tubes, we sharpened the edges beforehand and used a knife to cut the surrounding root mat. Samples were covered with plastic foil and stored at 6°C before processing in the lab. If necessary, the soil volume of each core was corrected for holes or unfilled space prior to weighing. As actual soil volume could be low due to sampling constraints (high root density, shallow or sandy soil, steep slope), we discarded cores with less than 50 cm^3^ of soil to prevent inaccurate measurements of bulk density and soil moisture [**ref**].
 
@@ -123,6 +126,8 @@ $$
 Usually, moist weight is measured from freshly sampled soil. However, as weather conditions varied considerably during our sampling, we standardised the measurement by weighing soil 48h after water saturation. Dry weight was obtained after 24h of drying in the oven at 105°C. After data filtering of low volumes and some negative values linked to a scale dysfunction during lab processing, all sites had at least 9 measurements of BD and GWC.
 
 For chemical analysis, we made another soil sampling with a stainless steel cylindrical core of 200 cm^3^ (diam. 10.5 cm; height 12 cm) in each quadrat (12 cores per site). The soil was stored at 4°C before being sieved and merged at the plot level. We sent 0.5 L of each merging to a certified analysis laboratory to determine total nitrogen content with modified Kjeldahl method (NS-EN 13654-1:2890) [@bremnerDeterminationNitrogenSoil1960], and available phosphorus concentration with ammonium lactacte extraction method [@brayDeterminationTotalOrganic1945].
+
+*Question for everyone (but mainly Amy) about variable terminology throughout the paper. There are two variables which give me some consistency issues: vegetation mean height and soil penetration. For the former, I am tempted to replace it by "sward height", as to me this is actually what we tried to measure (the "average height of the plant biomass"). However I have mostly seen it in grazing experiment, with more controlled setting that what we have here, so I am not sure we can be entitled to use it. I also saw a paper using the exression "vegetation stature" [@dorroughPlantNeighbourhoodLandscape2007]. For the latter, "soil penetration rate" is the test to estimate soil resistance induced by soil texture and root density (as defined above). Then would "soil resistance" be a correct term to use? If yes then I should change the coding on graph (currently SoilPenetration).*
 
 ### Environmental data
 
@@ -147,7 +152,7 @@ As to our knowledge there is no standard livestock unit for young sheep and goat
 
 ## Data analysis
 
-Canonical correlation analysis searches for the maximum correlation between linear projections of two data sets [@hotellingRelationsTwoSets1992]. We performed four canonical correlation series to investigate 1. the cascading influence in-between sets of environmental and management variables, and 2. the influence of these different sets on dominant grass, forb and beetle assemblages. All statistical analyses were performed on R (v.4.3.0) with R-Studio (v.2023.03.1+446) [@positteamRStudioIntegratedDevelopment2023; @rcoreteamLanguageEnvironmentStatistical2023]. The canonical correlation analyses and the related statistical tests were made with the CCA [@gonzalezCCACanonicalCorrelation2021] and CCP [@menzelCCPSignificanceTests2022] packages. The redundancy analyses were performed with the vegan package [@oksanenVeganCommunityEcology2022]. The visual representations of RDA were made using the ggord package [@beckGgordOrdinationPlots2022]. All data from nested sampling design were averaged at the site level.
+Canonical correlation analysis searches for the maximum correlation between linear projections of two data sets [@hotellingRelationsTwoSets1992]. We performed four canonical correlation series to investigate 1. the cascading influence in-between explanatory sets of environmental and management variables, and 2. the influence of these different sets on dominant grass, forb and beetle assemblages. All statistical analyses were performed on R (v.4.3.0) with R-Studio (v.2023.03.1+446) [@positteamRStudioIntegratedDevelopment2023; @rcoreteamLanguageEnvironmentStatistical2023]. The canonical correlation analyses and the related statistical tests were made with the CCA [@gonzalezCCACanonicalCorrelation2021] and CCP [@menzelCCPSignificanceTests2022] packages. The redundancy analyses were performed with the vegan package [@oksanenVeganCommunityEcology2022]. The visual representations of RDA were made using the ggord package [@beckGgordOrdinationPlots2022]. All data from nested sampling design were averaged at the site level.
 
 As canonical correlation analysis only accounts for quantitative variables, livestock type was transformed into dummy numeric.  All explanatory variables were centered and scaled to address the high heterogeneity of units within most sets. We verified and filtered our explanatory variables first according to raw data distribution, removing variables with highly skewed distributions or with obvious outliers, and second by testing variable colinearity within each set with paired plots. When the correlation coefficient was equal to or over 0.8 between two variables, if applicable we kept the one with the highest within site replication and/or the most balanced distribution, otherwise the choice was made according to ecological relevance. The final list of variables kept for the canonical correlation analysis is shown in @fig-fjordconcept.
 
@@ -165,9 +170,9 @@ We tested for statistical significance of correlations with asymptotic approxima
 
 *Question for all reviewers - the way I arranged figures & tables was according to type of analysis: 1) cancor illustration, 2) cancor stat summary, 3) rda graph, 4) rda stat summary. This what seemed the most logical to me. However, the text is structured according to "series": 1) in-between explanatory sets, 2) explanatory against assemblages. Then could it make more sense, to you, to do the same with illustrations, with for example: 1) cancor illustration explanatory only + RDA graph explanatory only, 2) summary stat cancor & rda explanatory only, 3) cancor illustration + RDA graphs assemblages, 4) summary stat cancor & rda assemblages. This latter option seems more messy to me (not sure about mixing outputs from different analyses), but I would rather ask you all before making a decision ~*
 
-## Cascading influence between exaplanatory sets
+## Cascading influence between explanatory sets
 
-There was a strong canonical correlation between fjord features and landscape composition (first dimension correlation coefficient rho1 = `r envar$rho[1]`, F approximation of Hotelling-Lawley trace F~`r envar$df1[1]`, `r envar$df2[1]`~ = `r envar$approx[1]`, p-value = `r envar$p.value[1]`) (@fig-cancor A; @tbl-cancorenv), which was supported by the RDA model (proportion explained variance = `r rdastat_all$Variance[1]`, F~`r rdastat_all$Df[1]`~ = `r rdastat_all$F[1]`, p-value = `r rdastat_all$PrF[1]`) (@tbl-rdastat). The most important factors were maximum July temperature (var = `r rdastat_all$Variance[4]`, F~1~ = `r rdastat_all$F[4]`, p-value = `r rdastat_all$PrF[4]`) and distance to sea (var = `r rdastat_all$Variance[5]`, F~1~ = `r rdastat_all$F[5]`, p-value = `r rdastat_all$PrF[5]`), driving axes 1 and 2 respectively (@fig-rda A). There seemed to have more forested lands (score~RDA1~ = -0.71) but less outfields (score~RDA1~ = 0.75) in areas with higher summer temperature, while the proportion of wetlands would increase with distance to sea (score~RDA2~ = 0.86). [*question for Adam - you pointed out the importance of highlighting clear relationships, could providing scores be enough of a justification, even if the axes themselves are not significant?*] On the other hand, the fjord gradient did not seem to affect the proportion of infields and cultivated lands in the landscape.
+There was a strong canonical correlation between fjord features and landscape composition (first dimension correlation coefficient rho1 = `r envar$rho[1]`, F approximation of Hotelling-Lawley trace F~20,74~ = `r envar$approx[1]`, p-value = `r envar$p.value[1]`) (@fig-cancor A; @tbl-cancorenv), which was supported by the RDA model (proportion explained variance = `r rdastat_all$Variance[1]`, F~`r rdastat_all$Df[1]`~ = `r rdastat_all$F[1]`, p-value = `r rdastat_all$PrF[1]`) (@tbl-rdaexp). The most important factors were maximum July temperature (var = `r rdastat_all$Variance[4]`, F~1~ = `r rdastat_all$F[4]`, p-value = `r rdastat_all$PrF[4]`) and distance to sea (var = `r rdastat_all$Variance[5]`, F~1~ = `r rdastat_all$F[5]`, p-value = `r rdastat_all$PrF[5]`), driving axes 1 and 2 respectively (@fig-rda A). We could observe more forested lands (score~RDA1~ = -0.71) but less outfields (score~RDA1~ = 0.75) in areas with higher summer temperature, while the proportion of wetlands would increase with distance to sea (score~RDA2~ = 0.86). [*question for Adam - you pointed out the importance of highlighting clear relationships, could providing scores be enough of a justification, even if the axes themselves are not significant?*] On the other hand, the fjord gradient did not seem to affect the proportion of infields and cultivated lands in the landscape.
 
 ![Summary of canonical correlation series on cascading influence in-between explanatory sets (A) and between explanatory sets and dominant grass (B), forb (C) and beetle (D) assemblages. Correlation coefficient rho is provided for the first dimension per default and for all other significant dimensions. Arrow thickness is proportional to the rho value and transparency is for non-significant correlations. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001.](illustrations/NBR_CancorResults.png){#fig-cancor}
 
@@ -175,7 +180,7 @@ There was a strong canonical correlation between fjord features and landscape co
 ::: {#tbl-cancorpanel layout-ncol=2}
 ```{r CancorEnv}
 #| label: tbl-cancorenv
-#| tbl-cap: "Summary of statistical tests for canonical correlations between environmental variables, with F approximation of Hotelling-Lawley Trace."
+#| tbl-cap: "In-between explanatory sets."
 #| message: false
 #| warning: false
 
@@ -213,7 +218,7 @@ cancorenv |>
 ```
 ```{r CancorCom}
 #| label: tbl-cancorcom
-#| tbl-cap: "Summary of statistical tests for canonical correlations between explanatory variables and grass, forb and beetle assemblages."
+#| tbl-cap: "Between explanatory sets and dominant assemblages of grass, forb and beetle."
 #| message: false
 #| warning: false
 
@@ -247,23 +252,27 @@ cancorcom |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
+Summary of statistical tests for canonical correlations with F approximation of Hotelling-Lawley Trace.
 :::
 
-Canonical correlations in-between explanatory sets did not show any other significant relationships (@fig-cancor A; @tbl-cancorenv), but we nevertheless noticed a marginally significant RDA model between grazing and fine-scale environment (var = `r rdastat_all$Variance[6]`, F~`r rdastat_all$Df[6]`~ = `r rdastat_all$F[6]`, p-value = `r rdastat_all$PrF[6]`) (@tbl-rdastat). The presence of sheep (var = `r rdastat_all$Variance[9]`, F~1~ = `r rdastat_all$F[9]`, p-value = `r rdastat_all$PrF[9]`) as well as the area of the selected infield (var = `r rdastat_all$Variance[10]`, F~1~ = `r rdastat_all$F[10]`, p-value = `r rdastat_all$PrF[10]`) showed potential influence over available phosphorus, field slope and soil penetration (@fig-rda B).
+Canonical correlations in-between explanatory sets did not show any other significant relationships (@fig-cancor A; @tbl-cancorenv), but we nevertheless noticed a marginally significant RDA model between grazing and fine-scale environment (var = `r rdastat_all$Variance[6]`, F~5~ = `r rdastat_all$F[6]`, p-value = `r rdastat_all$PrF[6]`) (@tbl-rdaexp). The presence of sheep (var = `r rdastat_all$Variance[9]`, F~1~ = `r rdastat_all$F[9]`, p-value = `r rdastat_all$PrF[9]`) as well as the area of the selected infield (var = `r rdastat_all$Variance[10]`, F~1~ = `r rdastat_all$F[10]`, p-value = `r rdastat_all$PrF[10]`) showed potential influence over available phosphorus, field slope and soil penetration (@fig-rda B).
 
 ![Redundancy analysis (RDA) plots for significant canonical correlations between sets of drivers and/or community data. A: Correlation between fjord and landscape; B: Correlation between grazing and fine-scale environment; C: Correlation between fine-scale environment and dominant grass assemblage; D: Correlation between fine-scale environment and dominant forb assemblage.](outputs/RDAresults.png){#fig-rda}
 
-```{r RDAstat}
-#| label: tbl-rdastat
-#| tbl-cap: "Summary of statistical test for signifiance redundancy analyses"
+
+::: {#tbl-rdapanel layout-ncol=2}
+```{r RDAexp}
+#| label: tbl-rdaexp
+#| tbl-cap: "In-between explanatory sets."
 #| message: false
 #| warning: false
 
 library(gt)
 library(tidyverse)
 
-rdastat <- subset(rdastat_all, select = -c(r.squared, type, eigenval, response, explanatory))
-rdastat |> 
+rdaexp <- filter(rdastat_all, model == "FjordxLandscape" | model == "GrazingxFinescale")
+rdaexp <- subset(rdaexp, select = -c(r.squared, type, eigenval, response, explanatory))
+rdaexp |> 
  # gt(groupname_col = "explanatory", rowname_col = "response") |> 
  # tab_options(row_group.as_column = TRUE) |> 
  gt(groupname_col = "model", rowname_col = "dim") |> 
@@ -292,25 +301,145 @@ rdastat |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
+```{r RDAcom}
+#| label: tbl-rdacom
+#| tbl-cap: "Between explanatory sets and dominant assemblages of grass, forb and beetle."
+#| message: false
+#| warning: false
 
+library(gt)
+library(tidyverse)
 
-## Drivers of grass, forb and beetle assemblages
+rdacom <- filter(rdastat_all, response == "Grass" | response == "Forb" | response == "Beetle")
+rdacom <- subset(rdacom, select = -c(r.squared, type, eigenval, response, explanatory))
+rdacom |> 
+ # gt(groupname_col = "explanatory", rowname_col = "response") |> 
+ # tab_options(row_group.as_column = TRUE) |> 
+ gt(groupname_col = "model", rowname_col = "dim") |> 
+  cols_move_to_start(
+    columns = c("dim", "adj.r.squared")
+  ) |>
+  cols_move(
+    columns = Df,
+    after = F
+  ) |>
+  cols_label(
+    Variance = "variance",
+    PrF = "p-value",
+    Df = "df",
+    adj.r.squared = "adjRsq"
+  ) |>
+  fmt_number(
+    columns = c("Variance", "F", "adj.r.squared"),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = PrF,
+    decimals = 4
+  ) |>
+  sub_missing(missing_text = "-") |> 
+  opt_stylize(style = 6, color = 'gray')
 
-Overall, drivers beyond the fine-scale environment showed very little if no correlation with plant and beetle assemblages (@fig-cancor). The only noticeable influences were from the fjord system and the grazing management on the grass assemblage. However, none of the subsequent RDA models were significant, and neither the fjord system (R^2^~adj~ = -0.04, F~4~ = 0.76, pval = 0.74) and the grazing management (R^2^~adj~ = -0.04, F~5~ = 0.79, pval = 0.77) showed explanatory power. The landscape set was not significantly correlated with any assemblage.
+```
+Summary of RDA permutation tests for relationships which showed significant canonical correlations
+:::
 
-Grass and forb assemblages were compared with almost the same set of fine-scale explanatory variables, except from the measure of aspect which was discarded from the forb series because of non-linearity assumption (**ref to var summary table**). The canonical correlation with fine-scale environment was significant for the grass assemblage and only marginally significant for the forb assemblage (**ref to summary table**). On the other hand, the RDA model was significant for the forb assemblage (R^2^~adj~ = 0.15, F~5~ = 1.96, pval = 0.005) and not for the grass assemblage (R^2^~adj~ = 0.06, F~6~ = 1.32, pval = 0.14). For both assemblages, phosphorus was a significant term (for grass: var = 0.022, F~1~ = 2.92, pval = 0.027; for forbs: var = 0.035, F~1~ = 2.45, pval = 0.038). *Deschampsia cespitosa*, *Ranunculus repens* and *Ranunculus acris* were associated with higher phosphorus concentration, while *Festuca rubra*, *Poa pratensis* and *Galium saxatile* were associated with lower phosphorus concentration (@fig-rda D-E). We can observe that bulk density, which was also a surrogate for total nitrogen (**ref to var summary table**), was at best marginally significant (for forbs: var = 0.03, F~1~ = 2.08, pval = 0.07) and did not interact with phosphorus concentration in any model. On the other hand, pH was strongly correlated with phosphorus concentration for the forb assemblage, while the two factors seemed completely unrelated for the grass assemblage. 
+## Cross-scale influence on dominant grass, forb and beetle assemblages
 
-The second driver highlighted in the RDAs for both grass (var = 0.017, F~1~ = 2.16, pval = 0.061) and forb (var = 0.035, F~1~ = 2.43, pval = 0.028) assemblages is the penetration rate, which we used as an indicator of soil resistance induced by root density. We can observe that *Deschampsia flexuosa* and *Potentilla erecta* were closely associated with soil with lower resistance, while *Trifolium repens* was associated with soil with higher resistance (@fig-rda D-E). Interestingly, bulk density and penetration rate interacted differently according to the functional group: the two factors were correlated for the grass assemblage, while they were rather inversely correlated for the forb assemblage. It would mean that soil compaction and soil resistance are equivalent environmental constraints for forbs, while they are not necessarily related for grasses.
+Only landscape composition did not show any significant correlation with plant and beetle assemblages (@fig-cancor B-D; @tbl-cancorcom). Both dominant grass species and beetle families were significantly correlated with the fjord system (for grasses: rho1 = `r comvar$rho[1]`, F~28,66~ = `r comvar$approx[1]`, p-value = `r comvar$p.value[1]`; for beetles: rho1 = `r comvar$rho[3]`, F~20,74~ = `r comvar$approx[3]`, p-value = `r comvar$p.value[3]`) and the grazing management (for grasses: rho1 = `r comvar$rho[4]`, F~35,77~ = `r comvar$approx[4]`, p-value = `r comvar$p.value[4]`; for beetles: rho1 = `r comvar$rho[6]`, F~25,87~ = `r comvar$approx[6]`, p-value = `r comvar$p.value[6]`), but none of these relationships were supported by corresponding RDA models (@tbl-rdacom). Dominant grass and forb species were significantly correlated with fine-scale environment (for grasses: rho1 = `r comvar$rho[10]`, F~56,86~ = `r comvar$approx[10]`, p-value = `r comvar$p.value[10]`; for forbs: rho1 = `r comvar$rho[12]`, F~56,86~ = `r comvar$approx[12]`, p-value = `r comvar$p.value[12]`), and in these two cases RDA models were also significant (@tbl-rdacom).
 
-Regarding the interaction between fine-scale environment and beetle assemblage, even if both the canonical correlation (**ref to summary table**) and the RDA model (R^2^~adj~ = -0.08, F~7~ = 1.34, pval = 0.20) were not significant, some marginal explanatory power was still brought by bulk density (var = 0.005, F~1~ = 3.63, pval = 0.019) and average vegetation height (var = 0.004, F~1~ = 2.47, pval = 0.094). Ptiliidae were associated with less-compacted soils while Carabidae were more tolerant to compaction (@fig-rda D-F). We can also observe, even if it was not significant, that the presence of Scarabaeidae seemed associated with a higher percent cover of the bryophyte layer.
+The fine-scale environment x grass RDA model had the highest explanatory power (var = `r rdastat_all$Variance[23]`, F~8~ = `r rdastat_all$F[23]`, p-value = `r rdastat_all$PrF[23]`), with the two first axes at least marginally significant (RDA1: var = `r rdastat_all$Variance[25]`, F~1~ = `r rdastat_all$F[25]`, p-value = `r rdastat_all$PrF[25]`; RDA2: var = `r rdastat_all$Variance[26]`, F~1~ = `r rdastat_all$F[26]`, p-value = `r rdastat_all$PrF[26]`) (@tbl-rdacom). The first axis was driven by sward mean height (var = `r rdastat_all$Variance[28]`, F~1~ = `r rdastat_all$F[28]`, p-value = `r rdastat_all$PrF[28]`) on the left, to the opposite of bryophyte percent cover (var = `r rdastat_all$Variance[27]`, F~1~ = `r rdastat_all$F[27]`, p-value = `r rdastat_all$PrF[27]`) on the right (@fig-rda D). Thus, *Deschampsia cespitosa* was more frequently found in infields with higher vegetation and low percent cover of mosses, while *Poa pratensis* was more dominant when associated with a well-developed bryophyte layer. The second axis was driven by soil penetration (var = `r rdastat_all$Variance[30]`, F~1~ = `r rdastat_all$F[30]`, p-value = `r rdastat_all$PrF[30]`) on the bottom against soil pH (var = `r rdastat_all$Variance[29]`, F~1~ = `r rdastat_all$F[29]`, p-value = `r rdastat_all$PrF[29]`) on the top (@fig-rda C). *Deschampsia flexuosa* was more common in acidic fields with low root density, when the three species *Holcus lanatus*, *Festuca rubra* and *Poa pratensis* were mostly associated with more basic soil.
+
+The RDA model between fine-scale environment and forb assemblage had lower explanatory power (var = `r rdastat_all$Variance[31]`, F~8~ = `r rdastat_all$F[31]`, p-value = `r rdastat_all$PrF[31]`) (@tbl-rdacom) but followed similar gradients than the grass model (@fig-rda D). The first axis (var = `r rdastat_all$Variance[33]`, F~1~ = `r rdastat_all$F[33]`, p-value = `r rdastat_all$PrF[33]`) was driven by soil penetration (var = `r rdastat_all$Variance[35]`, F~1~ = `r rdastat_all$F[35]`, p-value = `r rdastat_all$PrF[35]`) on one end, against pH and phosphorus (non-significant) on the other end. *Potentilla erecta* and *Galium saxatile* were associated with poorer, more acidic soils, where grass root density was lower, while *Ranunculus acris* and *Trifolium repens* were more common on more productive infields. The second axis was not significant but showed a clear gradient between high vegetation (var = `r rdastat_all$Variance[34]`, F~1~ = `r rdastat_all$F[34]`, p-value = `r rdastat_all$PrF[34]`) and strong slope (non-significant). *Trifolium repens* particularly was well-represented on steep fields with low vegetation height.
 
 # DISCUSSION
 
-Fine-scale drivers, and in particularly soil, were the most influential on plant and beetle assemblages. On the other hand, we did not identify any clear influence of the grazing management, the landscape or the fjord system. Nevertheless, we observed strong cascading effects on landscape from the climatic conditions induced by the fjord geomorphological characteristics.
+The cascading influence of ecological gradients across scales was only partially observed in our study. We found a well-supported correlation between the fjord gradient and the landscape composition, as well as a potential effect of grazing on fine-scale environment, but there was no influence of broader scales (fjord, landscape) over farm management and infields. Regarding assemblage responses, we only detected a significant influence of fine-scale environment on dominant grass and forb species, mainly through vegetation mean height, soil penetration and percent cover of bryophytes. However, we found no clear evidence that plant and particularly beetle assemblages were affected by other environmental gradients, as canonical correlations and redundancy analyses showed contradictory results.
+
+## Fine-scale environment as the main factor of influence over dominant plant assemblages
+
+### Fine-scale vs the rest
+
+in most studies which analysed cross-scales effect on natural communities, fine-scale dominant
+- variation in vascular plant communities mostly driven by heterogeneity within site than landscape composition [@soderstromPlantsInsectsBirds2001]
+
+- slope angle and solar radiation significant drivers of grassland plant species composition, with main gradient from high soil quality to steep slope [@klimekPlantSpeciesRichness2007]
+- In our case, we observed the same slope-soil quality gradient for grass assemblages, even if in our case slope was not a significant term. However for forb assemblages slope angle was unrelated to phosphorus (but in @klimekPlantSpeciesRichness2007, soil quality derived from "estimate of the land's value for agricultural production" -> no more indication.).
+- Higher frequency of *Poa pratensis* on steeper sites [@klimekPlantSpeciesRichness2007] -> same in our case even if slope not significant
+
+- solar radiation, or heat load index, is calculated from the slope angle and the aspect In our case, distribution of HLI values was affected by a few outstanding outliers so we decided to keep slope and aspect separate
+
+### Nutrient concentration - edaphic parameters
+
+- usually soil parameters, and most often nutrient availability, drive soil communities. But not the case here.
+- edaphic variables the most likely to explain most variation in plant community composition across scales [@siefertScaleDependenceVegetationenvironment2012]
+- main gradient driving floristic composition based on nitrate, phosphorus & water content (& yield) [@kleinebeckerEffectsGrazingSeasonal2011a]
+
+### Method
+
+- nutrient parameters -> soil total Nitrogen not the most appropriate
+- correlation phosphorous, mineral & total nitrogen, & organic carbon on nutrient gradient [@dorroughPlantNeighbourhoodLandscape2007]
+
+- plant height potentially related to the plant species
+- response variables -> only dominant species
+
+## Grazing management
+
+- potential effect grazing x fine-scale mostly on edaphic parameters
+
+- no significant effect stocking density on plant height, and trend rather non-intuitive as sward height increased with stocking density -> but even our highest stocking density was relatively low
+- vegetation stature declined with increasing intensity of sheep grazing [@dorroughPlantNeighbourhoodLandscape2007]
+- vegetation height at the plot level lower under more intensive grazing [@pakemanLongTermImpacts2019]
+
+- gradient of intensity not strong enough ?
+
+- grazing should influence plant communities through intensity
+- species such as *Galium saxatile*, *Ranunculus repens* & *Deschampsia cespitosa* showed clear benefits from low grazing intensity or grazing removal, while other became more dominant under high grazing intensity, such as *Agrostis capillaris*, *Holcus lanatus* and *Anthoxanthum odoratum* [@pakemanLongTermImpacts2019]
+- 
+
+grazing x type livestock
+- overall low effect of cattle introduction (from single to mixed grazing) compared with intensity [@pakemanLongTermImpacts2019]
+
+## Beetle effect
+
+- no effect may be due to too coarse taxonomic level (family)
+
+- carabid species composition responded to field management (crop vs mixed fodder/crop vs pastures) and heterogeneity at the farm level [@weibullSpeciesCompositionAgroecosystems2003]
+- landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
+
+- Plant species richness significant driver of spiders, carabids & butterflies [@jeanneretQuantifyingImpactLandscape2003] -> we did not include plant species richness in fine-scale explanatory set as it was circular argument with plants -> is it really ?
+
+
+## Cross-scale influence
+
+- difficulty to apprehend interactions across scales and compartments
+- only 15-20% variation in species composition plants, butterflies & carabids explained by all three scale heterogeneity (landscape, farm, field) [@weibullSpeciesCompositionAgroecosystems2003]
+
+- variance in floristic composition explained by broad-scale (altitude, mean annual temperature, annual precipitation), management (date of mowing) and field scale (pH, flooding frequency, humidity, available P & total N) [@zelnikPlantSpeciesDiversity2013]
+- elevation, along with slope angle and solar radiation, significant driver of plant species composition [@klimekPlantSpeciesRichness2007]
+
+- Maybe not enough contrast in the landscape to have effects -> Nordhordland agricultural landscape still mosaic-like, with low intensification patterns
+- landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
+- for beetles, only landscape influence was percentage of cultivated land [@jeanneretQuantifyingImpactLandscape2003]
+
+- limitation using species-based approach only: from savannah example, fodder quality of individual species dependent on rainfall and site productivity, as absence of limiting factors allow plant development towards defensive strategies against herbivores [@hopcraftHerbivoresResourcesRisks2010]
 
 
 
-## Fertilisation, not grazing, as the main driver
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - In line with previous research, plant species distribution was primarily affected by soil nutrient availability [**ref**].
 - Thus, we can observe a gradient of intensity, not through grazing (what we were looking for), but through fertilisation.
@@ -319,11 +448,6 @@ Fine-scale drivers, and in particularly soil, were the most influential on plant
 - Species associated with poor sites, such as *Festuca rubra*, *Poa pratensis* and *Galium saxatile*
 
 - Root mat density relatively closely associated with base soil in both assemblages -> would mean higher grass biomass -> look for link pH x fertilisation
-
-- 
-
-
-
 
 - Phosphorus is usually considered as the main limiting factor of primary production in agriculture [**ref**], and we expect it to be the case in our study as well as nitrogen was overall well-supplied across our fields [data not shown].
 - In none of our significant RDA models total nitrogen, which was inversely correlated with bulk density, was related to available phosphorus.
@@ -707,26 +831,27 @@ rdabeetle |>
 
 
 
-```{r VarSummary}
-#| label: tbl-varsummary
-#| tbl-cap: "Summary of explanatory variables for canonical correlation analysis of grass, forb and beetle dominant community data. Symbols for rejection are: ¤ non-normal distribution; ◦ colinearity with another variable; * linearity assumption rejected."
-#| message: false
-#| warning: false
+<!-- ```{r VarSummary} -->
+<!-- #| label: tbl-varsummary -->
+<!-- #| tbl-cap: "Summary of explanatory variables for canonical correlation analysis of grass, forb and beetle dominant community data. Symbols for rejection are: ¤ non-normal distribution; ◦ colinearity with another variable; * linearity assumption rejected." -->
+<!-- #| message: false -->
+<!-- #| warning: false -->
 
-library(readxl)
-library(gt)
-library(tidyverse)
+<!-- library(readxl) -->
+<!-- library(gt) -->
+<!-- library(tidyverse) -->
 
-varsummary <- read_xlsx("illustrations/FjordModelFactors.xlsx")
-# summary <- subset(papersummary, select = -c(Group))
-varsummary <- varsummary |>
-  group_by(Variable_set) |>
-  pivot_wider(names_from = Assumption, values_from = Confirmation)
+<!-- varsummary <- read_xlsx("illustrations/FjordModelFactors.xlsx") -->
+<!-- # summary <- subset(papersummary, select = -c(Group)) -->
+<!-- varsummary <- varsummary |> -->
+<!--   group_by(Variable_set) |> -->
+<!--   pivot_wider(names_from = Assumption, values_from = Confirmation) -->
 
-varsummary |>
-  gt(groupname_col = "Variable_set") |>
-  cols_label(
-    Variable = ""
-    ) |>
-  opt_stylize(style = 6, color = 'gray')
-```
+<!-- varsummary |> -->
+<!--   gt(groupname_col = "Variable_set") |> -->
+<!--   cols_label( -->
+<!--     Variable = "" -->
+<!--     ) |> -->
+<!--   opt_stylize(style = 6, color = 'gray') -->
+<!-- ``` -->
+
