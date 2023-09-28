@@ -2046,7 +2046,7 @@ rdall
 ggsave("outputs/RDAresults.png", plot = rdall, width = 15, height = 15, units = "cm", bg = "white")
 
 # RDA stat
-rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
+rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdafjordgrass, rdafjordbeetle, rdagrazinggrass, rdagrazingbeetle, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
 
 #
 ## Distribution residuals for significant relationships with terms
