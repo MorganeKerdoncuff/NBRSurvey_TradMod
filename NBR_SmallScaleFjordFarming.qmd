@@ -1,6 +1,8 @@
 ---
 title: "Dominant plant assemblages in semi-natural grasslands of Norwegian fjord system not affected by broader ecological gradients."
-format: html
+format: 
+  html:
+    embed-resources: true
 author:
   - name: Morgane Kerdoncuff
     orcid:
@@ -26,7 +28,6 @@ execute:
   echo: false
 ---
 
-
 ```{r ScriptSource}
 #| include: false
 source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
@@ -44,47 +45,21 @@ knitr::knit_hooks$set(inline = function(x) {
 
 We aimed to present an exploratory study of the cross-scale influence of environmental factors characterising small-scale farming systems in Norwegian fjord over dominant grass, forb and beetle assemblages. We used canonical correlation analysis to determine linear correlations between sets of explanatory and community variables.
 
-
-
 # INTRODUCTION
 
 <!-- The literature pool assessing the global impact of intensive farming on nature including habitat loss and fragmentation [@jongmanHomogenisationFragmentationEuropean2002], soil erosion and depletion [**REF**], freshwater pollution through nutrient leaching [REF], and biodiversity loss [@beckmannConventionalLandUse2019; @newboldGlobalEffectsLand2015; @kleijnRelationshipFarmlandBiodiversity2009] with subsequent erosion of ecosystem functions and services [@jeanneretIncreaseFoodProduction2021; @flynnLossFunctionalDiversity2009], has been growing relentlessly for the past 20 years and has made fertile ground for alarming predictions if business-as-usual was to continue over the rest of the century [@hunterAgriculture2050Recalibrating2017; @foleySolutionsCultivatedPlanet2011; @egliWinnersLosersNational2018]. -->
 
-Industrialised agriculture reliant upon a globalized food chain has pushed the capacity of the Earth system beyond its limits [@steffenPlanetaryBoundariesGuiding2015; @ipbesGlobalAssessmentReport2019]. The literature pool assessing its global impact on biodiversity [@beckmannConventionalLandUse2019; @kleijnRelationshipFarmlandBiodiversity2009; @newboldGlobalEffectsLand2015], with subsequent erosion of ecosystem functions and services [@jeanneretIncreaseFoodProduction2021; @flynnLossFunctionalDiversity2009], has been growing relentlessly over the past 20 years and has made fertile ground for alarming predictions if business-as-usual was to continue over the rest of this century [@egliWinnersLosersNational2018; @foleySolutionsCultivatedPlanet2011; @hunterAgriculture2050Recalibrating2017; @salaGlobalBiodiversityScenarios2000]. At the European scale, even though the Green Revolution did substantially increase food security over the second half of the XX^th^ century, the current degraded state of agricultural lands is rather forecasting stagnation if not decline of productivity potential for the coming decades [@jongmanHomogenisationFragmentationEuropean2002; @haladaWhichHabitatsEuropean2011; @vosTrendsEuropeanCultural1999]. Less emphasized is the impact of the agro-industrial model and trade on the people standing at the frontline of the chain, namely the farmers. While they should be amongst the most influential apparatus regarding land use and natural resource management, they find themselves at the bottom of the decision-making process, subdued to the versatility of the market and competing with fellow farmers at the other side of the globe [@holt-gimenezAgroecologyFoodSovereignty2012]. Following the repeated calls for a sustainable transition of agriculture in order to transcend short-term productivist strategies, a regained interest has grown towards small-scale farming systems [@plieningerTraditionalLanduseNature2006; @torokGrazingEuropeanOpen2016; @garibaldiFarmingApproachesGreater2017; @cunninghamCloseYieldgapSaving2013]. By prioritising long term preservation of natural capital over instant yield, these approaches enhance the heterogeneity and resilience of agro-ecosystems [@gardnerAgriculturalResiliencePerspectives2019; @menconiRevisitingGlobalFood2022], thus empowering local communities and supporting biodiversity of high value [@bignalLowintensityFarmingSystems1996a; @altieriLinkingEcologistsTraditional2004].
+Industrialised agriculture reliant upon a globalized food chain has pushed the capacity of the Earth system beyond its limits [@steffenPlanetaryBoundariesGuiding2015; @ipbesGlobalAssessmentReport2019]. The literature pool assessing its global impact on biodiversity [@beckmannConventionalLandUse2019; @kleijnRelationshipFarmlandBiodiversity2009; @newboldGlobalEffectsLand2015], with subsequent erosion of ecosystem functions and services [@jeanneretIncreaseFoodProduction2021; @flynnLossFunctionalDiversity2009], has been growing relentlessly over the past 20 years and has made fertile ground for alarming predictions if business-as-usual was to continue over the rest of this century [@egliWinnersLosersNational2018; @foleySolutionsCultivatedPlanet2011; @hunterAgriculture2050Recalibrating2017; @salaGlobalBiodiversityScenarios2000]. At the European scale, even though the Green Revolution did substantially increase food security over the second half of the XX^th^ century, the current degraded state of agricultural lands is rather forecasting stagnation if not decline of productivity potential for the coming decades [@jongmanHomogenisationFragmentationEuropean2002; @haladaWhichHabitatsEuropean2011; @vosTrendsEuropeanCultural1999]. Less emphasized is the impact of the agro-industrial model and trade on the people standing at the frontline of the chain, namely the farmers. While they should be amongst the most influential apparatus regarding land use and natural resource management, they find themselves at the bottom of the decision-making process, subdued to the versatility of the market and competing with fellow farmers from the other side of the globe [@holt-gimenezAgroecologyFoodSovereignty2012]. Following the repeated calls for a sustainable transition of agriculture in order to transcend short-term productivist strategies, a regained interest has grown towards small-scale farming systems [@plieningerTraditionalLanduseNature2006; @torokGrazingEuropeanOpen2016; @garibaldiFarmingApproachesGreater2017; @cunninghamCloseYieldgapSaving2013]. By prioritising long term preservation of natural capital over maximum instant yield, these approaches enhance the heterogeneity and resilience of agro-ecosystems [@gardnerAgriculturalResiliencePerspectives2019; @menconiRevisitingGlobalFood2022], thus empowering local communities and supporting biodiversity of high value [@bignalLowintensityFarmingSystems1996a; @altieriLinkingEcologistsTraditional2004].
 
 By nature adaptative and tailored to the local environment, small-scale farming can hardly be standardised and therefore requires an extensive effort of research across ecosystems to comprehend not only the whole spectrum of practices, but also how they interact with environmental dynamic and feedback [@altieriLinkingEcologistsTraditional2004; @cunninghamCloseYieldgapSaving2013]. A well-suited framework for this task is the UNESCO World Network of Biosphere Reserves (WNBR), which, through the Man and Biosphere (MAB) program, offers a platform for international collaboration and knowledge-sharing [@unescoNewRoadmapMan2017]. As model areas for regional experimentation and implementation of sustainable development [@barracloughGlobalKnowledgeAction2023; @unitednationsTransformingOurWorld2015], Biosphere Reserves promote applied research directed towards food security and locally adapted agricultural production [@anderzenEffectsOnfarmDiversification2020; @kratzerRuralInnovationsBiosphere2019; @tamouPastoralistsChangingEnvironment2018].
 
 First biosphere reserve in Norway, the UNESCO Nordhordland Biosphere Reserve (NBR) was designated over the highly touristic fjord area, which captures the singularity and variety of small-scale grazing systems in Western Norway [@kalandNordhordlandBiosphereReserve2018]. To adapt to the complex topographic and climatic gradients driven by the fjord geomorphology [@ketzlerClimateNorway2021], former farmer-fishermen communities relied on small, self-sustained farms, encompassing all necessary resources and land use types for subsistence of the household [@hetlandPluriactivityStrategyEmployment1986]. Thus, typical farm units would encompass a few arable lands, some forested areas, more productive infields for hay-making and less productive outfields for livestock grazing, resulting in a both temporally and spatially dynamic mosaic-like landscape [@haugeGaldaneLaerdalWestern1988; @hjelleHesitantHuntersReview2006; @indrelidFarmingSystemIts1988; @olssonAgroecosystemsNeolithicTime1991]. Following the global productivist strategy promoted in the 1970s, the intensification of agricultural practices coupled with the socio-economic decline of rural areas initiated two antagonist trends, still ongoing nowadays [@bjorkhaugMultifunctionalAgriculturePolicy2008]. On one hand, infields have been enlarged and improved with the introduction of artificial fertiliser to support the shift towards market-oriented livestock production, while more remote outfields have been progressively abandoned, leading to a drastic decline of the number of holdings [@fjellstadPatternsChangeTwo1999; @forbordDriversChangeNorwegian2014; @hamreLandcoverStructuralChanges2007a; @jonesLandtenureLandscapeChange1988]. However, compared to the rest of Norway and other European countries, in Nordhordland agricultural intensification has remained limited due the environmental constraints, thus preserving at least to a better extent small-scale grazing practices and the highly valued fjord landscape [@dramstadTenancyNorwegianAgriculture2010; @fjellstadPatternsChangeTwo1999].
 
-Nowadays, typical infield management in Western Norway still involves rotational grazing, with low stocking density and a high variety of locally-adapted livestock including cows, sheep and goats. These different practices have shown not only to enhance biodiversity [@bakkerDoesResourceAvailability2003; @skornikEffectGrazingPressure2010; @wangDiversifyingLivestockPromotes2019], but also to increase field productivity [@boavistaEffectsGrazingRegimes2019; @skornikEffectGrazingPressure2010], in both grazing experiments and observational studies. However, to which extent a Nordhordland farmer can influence the composition of the fields under such a high environmental heterogeneity and complex ecosystem dynamic? Indeed, big climatic gradients shape regional species pool [@habelEuropeanGrasslandEcosystems2013] and habitat productivity [**ref**], and thus geographical location [@birkhoferGeneralRelationshipsAbiotic2012], elevation [@austrheimPlantDiversityPatterns2002; @turtureanuScaleTaxondependentBiodiversity2014], temperature and precipitations [@dauberLocalVsLandscape2005; @wehnAdaptiveBiodiversityManagement2018; @zelnikPlantSpeciesDiversity2013] are likely to influence species distribution at broader scale across the NBR, but also at finer scale through site local conditions [@fynnManagingBrowsingGrazing2019; @reitaluDeterminantsFinescalePlant2014]. Likewise, surrounding landscape composition [@steffan-dewenterScaledependentEffectsLandscape2002; @leprovostContrastingResponsesBelowground2021; @soderstromPlantsInsectsBirds2001; @zulkaSpeciesRichnessDry2014] and structure [@billeterIndicatorsBiodiversityAgricultural2007; @concepcionEffectsLandscapeComplexity2008; @gonthierBiodiversityConservationAgriculture2014] can either disrupt or enhance the flow of grassland species, and can also enrich the assemblage with specialists from other habitats.
+Nowadays, typical infield management in Western Norway still involves rotational grazing, with low stocking density and a high variety of locally-adapted livestock including cows, sheep and goats. These different practices have shown not only to enhance biodiversity [@bakkerDoesResourceAvailability2003; @skornikEffectGrazingPressure2010; @wangDiversifyingLivestockPromotes2019], but also to increase field productivity [@boavistaEffectsGrazingRegimes2019; @skornikEffectGrazingPressure2010], in both grazing experiments and observational studies. However, to which extent a Nordhordland farmer can influence the composition of the fields under such a high environmental heterogeneity and complex ecosystem dynamic? Indeed, big climatic gradients shape regional species pool [@habelEuropeanGrasslandEcosystems2013] and habitat productivity \[**ref**\], and thus geographical location [@birkhoferGeneralRelationshipsAbiotic2012], elevation [@austrheimPlantDiversityPatterns2002; @turtureanuScaleTaxondependentBiodiversity2014], temperature and precipitations [@dauberLocalVsLandscape2005; @wehnAdaptiveBiodiversityManagement2018; @zelnikPlantSpeciesDiversity2013] are likely to influence species distribution not only at broader scale across the NBR, but also at finer scale through site local conditions [@fynnManagingBrowsingGrazing2019; @reitaluDeterminantsFinescalePlant2014]. Likewise, surrounding landscape composition [@steffan-dewenterScaledependentEffectsLandscape2002; @leprovostContrastingResponsesBelowground2021; @soderstromPlantsInsectsBirds2001; @zulkaSpeciesRichnessDry2014] and structure [@billeterIndicatorsBiodiversityAgricultural2007; @concepcionEffectsLandscapeComplexity2008; @gonthierBiodiversityConservationAgriculture2014] can either disrupt or enhance the flow of grassland species, and can also enrich the assemblage with specialists from other habitats.
 
-- Trying to disentangle the effects of environmental factors against human management across scales, land types and intensity gradient and has been a foremost objective for several decades already, and if up to today many studies are still focusing on that matter it means that the task is difficult
-- Many of these studies though took a conservation perspective, either to understand why the high species richness, or what are the anthropogenic threats
-- These approaches make sense when the objective is to prevent further intensification
-- However, in the NBR where the objective is to cooperate over sustainable land management, and where the main threat is land abandonment
+Disentangling the cross-scale effects of environmental gradients on species distribution has been a major ambition in ecological research [@hustonLocalProcessesRegional1999; @siefertScaleDependenceVegetationenvironment2012]. When it comes to grazing systems, most studies have taken a conservation perspective within contexts of either exceptionally high biodiversity [@denglerBiodiversityPalaearcticGrasslands2014; @habelEuropeanGrasslandEcosystems2013; @turtureanuScaleTaxondependentBiodiversity2014] or agricultural intensification [@billeterIndicatorsBiodiversityAgricultural2007; @gonthierBiodiversityConservationAgriculture2014; @zulkaSpeciesRichnessDry2014], thus rather focusing on diversity and/or rarity indicators. The variation of ordinary plant and animal communities have been less thoroughly investigated [but see @kleinebeckerEffectsGrazingSeasonal2011a; @klimekPlantSpeciesRichness2007; @zelnikPlantSpeciesDiversity2013] even though it offers both fundamental and applied prospects not only for habitat conservation [@jiguetInferencesCommonSpecies2006; + other] but also towards ecosystem function and service frameworks [@avolioChangesPlantCommunity2014; @phoenixSustainingEcosystemServices2008]. Indeed, from the farmer's point of view the most important features of grazing fields are the quality and quantity of fodder, which largely depends on plant assemblage [@collombCorrelationFattyAcids2002] and available soil nutrients \[**ref**\]. Understanding what influences the fields functionality and productivity would undoubtedly benefit the preservation of small-scale grazing systems, which mainly relies on farmers' ability and willingness to pursue their activity.
 
-- topography [@dauberLandscapeStructureIndicator2003; @dorroughPlantNeighbourhoodLandscape2007; @klimekPlantSpeciesRichness2007a; @lundholmPlantSpeciesDiversity2009]
-
-Quite often though these studies are conducted within a conservation perspective, with an emphasis on species richness and/or rare/threatened species.
-
-Several studies have tried to sort the cross-scale influence of environmental and anthropogenic factors on species richness [@billeterIndicatorsBiodiversityAgricultural2007; @habelEuropeanGrasslandEcosystems2013; @turtureanuScaleTaxondependentBiodiversity2014; @zulkaSpeciesRichnessDry2014]. Considerably less attention was given to community composition when it was not related to conservation perspectives on rare species [@gonthierBiodiversityConservationAgriculture2014, but see @zelnikPlantSpeciesDiversity2013].
-
-- *Functional resource heterogeneity*, which determines animals accessibility to fodder, is driven both by broader, spatially-fixed or temporally-recurrent factors, such as climate, topography and geology, and by finer, spatially and temporally variable factors, as for instance the patchiness of rainfall, grazing or fertiliser spraying by farmers [@fynnManagingBrowsingGrazing2019].
-
-- Yet, the dominant assemblages of plants and arthropods will drive the functionality of the system. 
-- In grasslands, the most important feature/service for the farmer is the site productivity. 
-- The dominant grasses should provide good forage for the livestock, the dominant forbs should assist either by enriching the soil (leguminous) or by providing complementary nutrients. 
-- The beetle assemblage should be dominated by groups which are specialised in dung-recycling.
-
-In our study, we attempted to conceptualise the combined environmental and anthropogenic influence on plant and beetle assemblages in infields, through a cascading design
-
-The potential drivers of the plant and beetle community were divided into 4 categories regarding their scale of influence and their relationship with human activity (@fig-fjordconcept):
-
--   the **fjord system** encompasses all geomorphological and climatic features which influence the landscape and are independent of any human influence.
--   the **landscape matrix** gathers the different land covers and uses which surround the field within 1 km2 radius. It is both dependent of the topography and the human activity (forestry, crops, grazing, infrastructures...).
--   the **grazing management** relates to the livestock breeding and to the structure of infield area of the farm. It is likely to be influenced by the landscape topography and the types of available habitats around the farm.
--   the **fine-scale environment** at the sampling area level represents all the ecological parameters which can directly or indirectly influence the local niches. These drivers will be affected by all factors occurring at wider scale.
-
+Our study is a preliminary attempt at exploring paths of influence of environmental gradients on dominant grass, forb and beetle assemblages of the NBR grazing fields. Our conceptual design relied on a cascading flow from the fjord system to the landscape, the farm management, and finally to the fine-scale conditions (@fig-fjordconcept): the **fjord system** encompassed all geomorphological and climatic features which would drive variation at both regional and local scales, such as elevation, distance to sea, precipitations and temperature; the **landscape matrix** was represented by proportions of different land covers within an area of 1 km radius around the field; the **grazing management** related to livestock breeding, stocking density and infield area; the **fine-scale environment** was made of all parameters in direct proximity with plant and beetle assemblages, including topography, edaphic conditions and sward structure. We chose the response taxonomic groups according to their contributions to grazing field services, respectively grass species (Poaceae) for forage production, forb species for nitrogen capture and/or pollination and beetle families for nutrient recycling through dung decomposition.
 
 # MATERIAL AND METHODS
 
@@ -92,16 +67,15 @@ The potential drivers of the plant and beetle community were divided into 4 cate
 
 The UNESCO Nordhordland Biosphere Reserve (NBR) is located in the fjord system of Western Norway, enclosed in-between the Bergen region in the south and the Sognefjorden, the deepest Norwegian fjord, in the north [@kalandNordhordlandBiopshereReserve2018]. There are sharp elevation and climatic gradients from west to east, with decreasing temperature (average mid-July temperature from 15.9 to 8.3°C) and increasing precipitations (mean annual precipitations from 1550 to 4800 mm) [@ketzlerClimateNorway2021; @meteorologiskinstituttNorskKlimaservicesenter]. Our study area is located in the lowlands of the southern part of the NBR, under 250 m elevation over sea level.
 
-In summer 2019 and 2020, we conducted an ecological survey on 29 infields across the fjord system of the NBR (@fig-sitemap). We selected our sites according to the Norwegian "areal type" AR5 classification system, which defines infield (*innmarksbeite*) as "*agricultural land that cannot be harvested mechanically* [with] *at least 50% of the area* [...] *covered with cultured grass or pasture-tolerant herbs*" [@ahlstromAR5Klassifikasjonssystem2019]. The fields were dedicated to grazing only for at least 10 years prior to sampling, with the same livestock, either sheep, goats or cows, for the last 5 years. Grazing intensity was low, with a maximum stocking rate of 0.6 per ha. Ten sites were fertilised at least occasionally with artificial fertiliser, manure and/or sand with lime. To the knowledge of the farmers, no field had been resown and/or plowed since at least the 1970s, and only four sites received upgraded drainage between 1990 and 2010 (OS1, IC1, OS4, OC3). More details on the management and the different treatments applied to the fields are available in Supplementary Information (@tbl-farmermanagement).
+In summer 2019 and 2020, we conducted an ecological survey on 29 infields across the fjord system of the NBR (@fig-sitemap). We selected our sites according to the Norwegian "areal type" AR5 classification system, which defines infield (*innmarksbeite*) as "*agricultural land that cannot be harvested mechanically* \[with\] *at least 50% of the area* \[...\] *covered with cultured grass or pasture-tolerant herbs*" [@ahlstromAR5Klassifikasjonssystem2019]. The fields were dedicated to grazing only for at least 10 years prior to sampling, with the same livestock, either sheep, goats or cows, for the last 5 years. Grazing intensity was low, with a maximum stocking rate of 0.6 per ha. Ten sites were fertilised at least occasionally with artificial fertiliser, manure and/or sand with lime. To the knowledge of the farmers, no field had been resown and/or plowed since at least the 1970s, and only four sites received upgraded drainage between 1990 and 2010 (OS1, IC1, OS4, OC3). More details on the management and the different treatments applied to the fields are available in Supplementary Information (@tbl-farmermanagement).
 
-![Study sites location. Colour codes are for livestock types: black for cows, grey for sheep, white for goats.](illustrations/NBR_GrazersMap.png){#fig-sitemap}
+![Study sites within Nordhordland UNESCO Biosphere Reserve in Western Norway. Colour codes are for livestock types: black for cows, grey for sheep, white for goats.](illustrations/NBR_GrazersMap.png){#fig-sitemap}
 
 ## Data collection
 
 We visited each site once between mid-June and late July, starting with sites closer to the coast and progressing eastwards to accommodate to the seasonal lag. On each site, we defined a nested sampling design within a 20 x 20 m^2^ area representative of the infield, avoiding rocks, waterlogged ground, trees and field edges. The same rules were applied when setting three plots of 3 x 3 m^2^ within the sampling area, at least 6 m apart from each other and 2 m away from the edge (@fig-sampling). Each plot was divided into nine quadrats of 1 m^2^, five of them dedicated to plant community collection and the remaining four used for soil and beetle sampling.
 
 ![Nested sampling design of the survey.](illustrations/NBR_SamplingDesign.png){#fig-sampling}
-
 
 ### Plant and beetle assemblages
 
@@ -111,23 +85,21 @@ We collected beetles with dung-baited pitfall traps set approx. 1 m from each ot
 
 ### Soil data
 
-We characterised soil structure with three complementary measurements: bulk density (BD) as a proxy for soil compaction, penetration rate for soil resistance induced by root mat density and soil texture, and gravimetric water content (GWC) for water holding capacity. We measured the penetration rate by dropping from 1 m above ground a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight [**?**]) through a PVC tube ensuring vertical fall. The visible standing part of the stick was measured and subtracted from the total stick length to obtain the length of penetration into the soil. Before dropping the stick, the surrounding vegetation around a 5 cm radius was cleared to prevent resistance from the aboveground vegetation. We performed two penetration tests per quadrat, for a total of 24 tests per site. As the tip was regularly sharpened and remeasured, its length decreased by 0.7 cm by the end of the sampling season.
+We characterised soil structure with three complementary measurements: bulk density (BD) as a proxy for soil compaction, soil penetration resistance induced by root mat density and soil texture, and gravimetric water content (GWC) for water holding capacity. We measured soil penetration resistance by dropping from 1 m above ground a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight \[**?**\]) through a PVC tube ensuring vertical fall. The visible standing part of the stick was measured and subtracted from the total stick length to obtain the length of penetration into the soil. Before dropping the stick, the surrounding vegetation around a 5 cm radius was cleared to prevent resistance from the aboveground vegetation. We performed two penetration tests per quadrat, for a total of 24 tests per site. As the tip was regularly sharpened and remeasured, its length decreased by 0.7 cm by the end of the sampling season.
 
-For BD and GWC measurements, we sampled three soil cores with PVC tubes of 57.23 cm^3^ (diam. 3.7 cm, height 10 cm) in each quadrat (36 cores per site). To limit soil compression when hammering down the tubes, we sharpened the edges beforehand and used a knife to cut the surrounding root mat. Samples were covered with plastic foil and stored at 6°C before processing in the lab. If necessary, the soil volume of each core was corrected for holes or unfilled space prior to weighing. As actual soil volume could be low due to sampling constraints (high root density, shallow or sandy soil, steep slope), we discarded cores with less than 50 cm^3^ of soil to prevent inaccurate measurements of bulk density and soil moisture [**ref**].
+For BD and GWC measurements, we sampled three soil cores with PVC tubes of 57.23 cm^3^ (diam. 3.7 cm, height 10 cm) in each quadrat (36 cores per site). To limit soil compression when hammering down the tubes, we sharpened the edges beforehand and used a knife to cut the surrounding root mat. Samples were covered with plastic foil and stored at 6°C before processing in the lab. If necessary, the soil volume of each core was corrected for holes or unfilled space prior to weighing. As actual soil volume could be low due to sampling constraints (high root density, shallow or sandy soil, steep slope), we discarded cores with less than 50 cm^3^ of soil to prevent inaccurate measurements of bulk density and soil moisture \[**ref**\].
 
-GWC is calculated as the difference in proportion between the soil fresh weight and the soil dry weight, and BD as the soil dry weight related to its volume:
-$$
+GWC is calculated as the difference in proportion between the soil fresh weight and the soil dry weight, and BD as the soil dry weight related to its volume: $$
 \text{Gravimetric water content } (\text{%}) = \frac{\text{Core moist weight } (g) - \text{Core dry weight } (g)}{\text{Core moist weight }(g)} *100
 $$
 
 $$
 \text{Bulk density }(g/cm^3) = \frac{\text{Core dry weight }(g)}{\text{Core volume }(cm^3)}
-$$
-Usually, moist weight is measured from freshly sampled soil. However, as weather conditions varied considerably during our sampling, we standardised the measurement by weighing soil 48h after water saturation. Dry weight was obtained after 24h of drying in the oven at 105°C. After data filtering of low volumes and some negative values linked to a scale dysfunction during lab processing, all sites had at least 9 measurements of BD and GWC.
+$$ Usually, moist weight is measured from freshly sampled soil. However, as weather conditions varied considerably during our sampling, we standardised the measurement by weighing soil 48h after water saturation. Dry weight was obtained after 24h of drying in the oven at 105°C. After data filtering of low volumes and some negative values linked to a scale dysfunction during lab processing, all sites had at least 9 measurements of BD and GWC.
 
 For chemical analysis, we made another soil sampling with a stainless steel cylindrical core of 200 cm^3^ (diam. 10.5 cm; height 12 cm) in each quadrat (12 cores per site). The soil was stored at 4°C before being sieved and merged at the plot level. We sent 0.5 L of each merging to a certified analysis laboratory to determine total nitrogen content with modified Kjeldahl method (NS-EN 13654-1:2890) [@bremnerDeterminationNitrogenSoil1960], and available phosphorus concentration with ammonium lactacte extraction method [@brayDeterminationTotalOrganic1945].
 
-*Question for everyone (but mainly Amy) about variable terminology throughout the paper. There are two variables which give me some consistency issues: vegetation mean height and soil penetration. For the former, I am tempted to replace it by "sward height", as to me this is actually what we tried to measure (the "average height of the plant biomass"). However I have mostly seen it in grazing experiment, with more controlled setting that what we have here, so I am not sure we can be entitled to use it. I also saw a paper using the exression "vegetation stature" [@dorroughPlantNeighbourhoodLandscape2007]. For the latter, "soil penetration rate" is the test to estimate soil resistance induced by soil texture and root density (as defined above). Then would "soil resistance" be a correct term to use? If yes then I should change the coding on graph (currently SoilPenetration).*
+*Question for everyone (but mainly Amy) about variable terminology throughout the paper regarding vegetation mean height. I am tempted to replace it by "sward height", as to me this is actually what we tried to measure (the "average height of the plant biomass"). However I have mostly seen it in grazing experiment, with more controlled setting that what we have here, so I am not sure we can be entitled to use it. I also saw a paper using the exression "vegetation stature" [@dorroughPlantNeighbourhoodLandscape2007].*
 
 ### Environmental data
 
@@ -139,45 +111,41 @@ For surrounding landscape composition, we calculated land use percent cover in a
 
 We conducted phone interviews from October 2021 to January 2022 to collect information on field management. For 3 out of 26 farmers who were unable or unwilling to reply to our survey, we used data from a similar interview series conducted in 2018 [@reiersenBaerekraftVestnorskLandbruk2019]. Regarding grazing management, we asked the farmers for the following elements: the type of livestock which has been grazing the site for at least the past 5 years; the size of the flock, including adults and young; the number of months the animals stayed on the field; the total surface area of infields grazed by the animals on the farm; the size of the grazing infield we selected as a survey site. Other information related to the farm management are available in Supplementary Information (@tbl-farmermanagement).
 
-Standard calculation of stocking density is made with the following formula [**REF**]:
-$$
+Standard calculation of stocking density is made with the following formula \[**REF**\]: $$
 \text{Stocking density} = \frac{\text{number animals}\times{\text{standard livestock unit}}}{\text{area}\times{\text{grazing period}}}
-$$
-However, estimating stocking density for rotational grazing systems presented some challenges. Usually, farmers in Western Norway move their livestock all year round across different fields according to their productivity or state at some point in time, without following a consistent schedule. Thus, as most respondents could not give us accurate grazing period for the infield we selected, we arranged the formula to calculate an average stocking density for the farms' total infield area over a year:
+$$ However, estimating stocking density for rotational grazing systems presented some challenges. Usually, farmers in Western Norway move their livestock all year round across different fields according to their productivity or state at some point in time, without following a consistent schedule. Thus, as most respondents could not give us accurate grazing period for the infield we selected, we arranged the formula to calculate an average stocking density for the farms' total infield area over a year:
 
 $$
 \text{Average stocking density} = \frac{\text{Nadults}\times{\text{standard  LU}} + \text{Nyoung}\times{\text{young LU}} }{\text{total infield area of the farm}}
-$$
-As to our knowledge there is no standard livestock unit for young sheep and goats, we estimated it as half the value of adult (0.05 LU). Total infield area was retrieved from the map of agricultural properties made by the Norwegian Institute of Bioeconomy Research (https://gardskart.nibio.no/). We gathered in this category areas classified as infields (*innmark*), but also unclassified areas which were known as grazing fields from the farmer and/or from field observation. For two farms (IG1 and IG2) which livestock was moved to mountain summer farms every year, we calculated average stocking density for the time period when animals were in the lowlands.
+$$ As to our knowledge there is no standard livestock unit for young sheep and goats, we estimated it as half the value of adult (0.05 LU). Total infield area was retrieved from the map of agricultural properties made by the Norwegian Institute of Bioeconomy Research (https://gardskart.nibio.no/). We gathered in this category areas classified as infields (*innmark*), but also unclassified areas which were known as grazing fields from the farmer and/or from field observation. For two farms (IG1 and IG2) which livestock was moved to mountain summer farms every year, we calculated average stocking density for the time period when animals were in the lowlands.
 
 ## Data analysis
 
 Canonical correlation analysis searches for the maximum correlation between linear projections of two data sets [@hotellingRelationsTwoSets1992]. We performed four canonical correlation series to investigate 1. the cascading influence in-between explanatory sets of environmental and management variables, and 2. the influence of these different sets on dominant grass, forb and beetle assemblages. All statistical analyses were performed on R (v.4.3.0) with R-Studio (v.2023.03.1+446) [@positteamRStudioIntegratedDevelopment2023; @rcoreteamLanguageEnvironmentStatistical2023]. The canonical correlation analyses and the related statistical tests were made with the CCA [@gonzalezCCACanonicalCorrelation2021] and CCP [@menzelCCPSignificanceTests2022] packages. The redundancy analyses were performed with the vegan package [@oksanenVeganCommunityEcology2022]. The visual representations of RDA were made using the ggord package [@beckGgordOrdinationPlots2022]. All data from nested sampling design were averaged at the site level.
 
-As canonical correlation analysis only accounts for quantitative variables, livestock type was transformed into dummy numeric.  All explanatory variables were centered and scaled to address the high heterogeneity of units within most sets. We verified and filtered our explanatory variables first according to raw data distribution, removing variables with highly skewed distributions or with obvious outliers, and second by testing variable colinearity within each set with paired plots. When the correlation coefficient was equal to or over 0.8 between two variables, if applicable we kept the one with the highest within site replication and/or the most balanced distribution, otherwise the choice was made according to ecological relevance. The final list of variables kept for the canonical correlation analysis is shown in @fig-fjordconcept.
+As canonical correlation analysis only accounts for quantitative variables, livestock type was transformed into dummy numeric. All explanatory variables were centered and scaled to address the high heterogeneity of units within most sets. We verified and filtered our explanatory variables first according to raw data distribution, removing variables with highly skewed distributions or with obvious outliers, and second by testing variable colinearity within each set with paired plots. When the correlation coefficient was equal to or over 0.8 between two variables, if applicable we kept the one with the highest within site replication and/or the most balanced distribution, otherwise the choice was made according to ecological relevance. The final list of variables kept for the canonical correlation analysis is shown in @fig-fjordconcept.
 
-Community data were percent cover for grass (Poaceae) and forb species, and abundance for beetle families. We classified taxa according to their frequency and abundance across sites: species or families found in at least one-third of the infields, with a minimum average percent cover of 1% for the former and a minimum average occurrences of 3 for the latter, were selected for the analysis. In total, eight species of grasses, seven species of forbs and five families of beetles were selected (@fig-fjordconcept). Community data were transformed using Hellinger transformation, which lowers the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001]. 
+Community data were percent cover for grass (Poaceae) and forb species, and abundance for beetle families. We classified taxa according to their frequency and abundance across sites: species or families found in at least one-third of the infields, with a minimum average percent cover of 1% for the former and a minimum average occurrences of 3 for the latter, were selected for the analysis. In total, eight species of grasses, seven species of forbs and five families of beetles were selected (@fig-fjordconcept). Community data were transformed using Hellinger transformation, which lowers the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
 
 ![Cascading influence of environmental gradients and human management over plant and beetle dominant assemblages of grazing infields in Norwegian fjord system. Explanatory variables are listed for each set, with shaded ones excluded from analyses either because of data distribution or colinearity.](illustrations/NBR_FjordConcept.png){#fig-fjordconcept}
 
 We tested for statistical significance of correlations with asymptotic approximation of Hotelling-Lawley Trace (*p.asym* function in CCP package) [@mullerPracticalMethodsComputing1984]. Significant canonical correlations were investigated further with Redundancy Analyses (RDA) [@legendreNumericalEcology2012]. We used adjusted R^2^ [@legendreTestingSignificanceCanonical2011; @peres-netoVariationPartitioningSpecies2006] and tested statistical significance of RDA models, axes and terms by ANOVA-like permutation (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012]. For illustrative purpose, we performed RDAs on all combinations of sets and provided them in Supplementary Information (@tbl-rdaenv; @tbl-rdagrass; @tbl-rdaforb; @tbl-rdabeetle).
 
 <!-- 3) Linearity assumption between explanatory sets and community data; we performed Tukey tests on linear model residuals between community ordination scores and individual explanatory variable [**REF**]. Ordination scores were extracted either from preliminary Detrended Correspondance Analysis (DCA), or from Principal Component Analysis (PCA) if the DCA's first axis length was under 2 units.  -->
-<!-- - RDA: multivariate regression of response matrix on explanatory matrix, coupled with a principal component analysis on resulting vectors of fitted values  -->
 
+<!-- - RDA: multivariate regression of response matrix on explanatory matrix, coupled with a principal component analysis on resulting vectors of fitted values  -->
 
 # RESULTS
 
-*Question for all reviewers - the way I arranged figures & tables was according to type of analysis: 1) cancor illustration, 2) cancor stat summary, 3) rda graph, 4) rda stat summary. This what seemed the most logical to me. However, the text is structured according to "series": 1) in-between explanatory sets, 2) explanatory against assemblages. Then could it make more sense, to you, to do the same with illustrations, with for example: 1) cancor illustration explanatory only + RDA graph explanatory only, 2) summary stat cancor & rda explanatory only, 3) cancor illustration + RDA graphs assemblages, 4) summary stat cancor & rda assemblages. This latter option seems more messy to me (not sure about mixing outputs from different analyses), but I would rather ask you all before making a decision ~*
+*Question for all reviewers - the way I arranged figures & tables was according to type of analysis: 1) cancor illustration, 2) cancor stat summary, 3) rda graph, 4) rda stat summary. This what seemed the most logical to me. However, the text is structured according to "series": 1) in-between explanatory sets, 2) explanatory against assemblages. Then could it make more sense, to you, to do the same with illustrations, with for example: 1) cancor illustration explanatory only + RDA graph explanatory only, 2) summary stat cancor & rda explanatory only, 3) cancor illustration + RDA graphs assemblages, 4) summary stat cancor & rda assemblages. This latter option seems more messy to me (not sure about mixing outputs from different analyses), but I would rather ask you all before making a decision \~*
 
 ## Cascading influence between explanatory sets
 
-There was a strong canonical correlation between fjord features and landscape composition (first dimension correlation coefficient rho1 = `r envar$rho[1]`, F approximation of Hotelling-Lawley trace F~20,74~ = `r envar$approx[1]`, p-value = `r envar$p.value[1]`) (@fig-cancor A; @tbl-cancorenv), which was supported by the RDA model (proportion explained variance = `r rdastat_all$Variance[1]`, F~`r rdastat_all$Df[1]`~ = `r rdastat_all$F[1]`, p-value = `r rdastat_all$PrF[1]`) (@tbl-rdaexp). The most important factors were maximum July temperature (var = `r rdastat_all$Variance[4]`, F~1~ = `r rdastat_all$F[4]`, p-value = `r rdastat_all$PrF[4]`) and distance to sea (var = `r rdastat_all$Variance[5]`, F~1~ = `r rdastat_all$F[5]`, p-value = `r rdastat_all$PrF[5]`), driving axes 1 and 2 respectively (@fig-rda A). We could observe more forested lands (score~RDA1~ = -0.71) but less outfields (score~RDA1~ = 0.75) in areas with higher summer temperature, while the proportion of wetlands would increase with distance to sea (score~RDA2~ = 0.86). [*question for Adam - you pointed out the importance of highlighting clear relationships, could providing scores be enough of a justification, even if the axes themselves are not significant?*] On the other hand, the fjord gradient did not seem to affect the proportion of infields and cultivated lands in the landscape.
+There was a strong canonical correlation between fjord features and landscape composition (first dimension correlation coefficient rho1 = `r envar$rho[1]`, F approximation of Hotelling-Lawley trace F~20,74~ = `r envar$approx[1]`, p-value = `r envar$p.value[1]`) (@fig-cancor A; @tbl-cancorenv), which was supported by the RDA model (proportion explained variance = `r rdastat_all$Variance[1]`, F~`r rdastat_all$Df[1]`~ = `r rdastat_all$F[1]`, p-value = `r rdastat_all$PrF[1]`) (@tbl-rdaexp). The most important factors were maximum July temperature (var = `r rdastat_all$Variance[4]`, F~1~ = `r rdastat_all$F[4]`, p-value = `r rdastat_all$PrF[4]`) and distance to sea (var = `r rdastat_all$Variance[5]`, F~1~ = `r rdastat_all$F[5]`, p-value = `r rdastat_all$PrF[5]`), driving axes 1 and 2 respectively (@fig-rda A). We could observe more forested lands (score~RDA1~ = -0.71) but less outfields (score~RDA1~ = 0.75) in areas with higher summer temperature, while the proportion of wetlands would increase with distance to sea (score~RDA2~ = 0.86). \[*question for Adam - you pointed out the importance of highlighting clear relationships, could providing scores be enough of a justification, even if the axes themselves are not significant?*\] On the other hand, the fjord gradient did not seem to affect the proportion of infields and cultivated lands in the landscape.
 
-![Summary of canonical correlation series on cascading influence in-between explanatory sets (A) and between explanatory sets and dominant grass (B), forb (C) and beetle (D) assemblages. Correlation coefficient rho is provided for the first dimension per default and for all other significant dimensions. Arrow thickness is proportional to the rho value and transparency is for non-significant correlations. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001.](illustrations/NBR_CancorResults.png){#fig-cancor}
+![Summary of canonical correlation series on cascading influence in-between explanatory sets (A) and between explanatory sets and dominant grass (B), forb (C) and beetle (D) assemblages. Correlation coefficient rho is provided for the first dimension per default and for all other significant dimensions. Arrow thickness is proportional to the rho value and transparency is for non-significant correlations. Significance levels are: ° for p-value \< 0.1; \* for p-value \< 0.05; \*\* for p-value \< 0.01; \*\*\* for p-value \< 0.001.](illustrations/NBR_CancorResults.png){#fig-cancor}
 
-
-::: {#tbl-cancorpanel layout-ncol=2}
+::: {#tbl-cancorpanel layout-ncol="2"}
 ```{r CancorEnv}
 #| label: tbl-cancorenv
 #| tbl-cap: "In-between explanatory sets."
@@ -216,6 +184,7 @@ cancorenv |>
 #gtsave(cancorenv, "illustrations/cancorenv.png")
 
 ```
+
 ```{r CancorCom}
 #| label: tbl-cancorcom
 #| tbl-cap: "Between explanatory sets and dominant assemblages of grass, forb and beetle."
@@ -252,6 +221,7 @@ cancorcom |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
+
 Summary of statistical tests for canonical correlations with F approximation of Hotelling-Lawley Trace.
 :::
 
@@ -259,8 +229,7 @@ Canonical correlations in-between explanatory sets did not show any other signif
 
 ![Redundancy analysis (RDA) plots for significant canonical correlations between sets of drivers and/or community data. A: Correlation between fjord and landscape; B: Correlation between grazing and fine-scale environment; C: Correlation between fine-scale environment and dominant grass assemblage; D: Correlation between fine-scale environment and dominant forb assemblage.](outputs/RDAresults.png){#fig-rda}
 
-
-::: {#tbl-rdapanel layout-ncol=2}
+::: {#tbl-rdapanel layout-ncol="2"}
 ```{r RDAexp}
 #| label: tbl-rdaexp
 #| tbl-cap: "In-between explanatory sets."
@@ -301,6 +270,7 @@ rdaexp |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
+
 ```{r RDAcom}
 #| label: tbl-rdacom
 #| tbl-cap: "Between explanatory sets and dominant assemblages of grass, forb and beetle."
@@ -341,6 +311,7 @@ rdacom |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
+
 Summary of RDA permutation tests for relationships which showed significant canonical correlations
 :::
 
@@ -348,270 +319,183 @@ Summary of RDA permutation tests for relationships which showed significant cano
 
 Only landscape composition did not show any significant correlation with plant and beetle assemblages (@fig-cancor B-D; @tbl-cancorcom). Both dominant grass species and beetle families were significantly correlated with the fjord system (for grasses: rho1 = `r comvar$rho[1]`, F~28,66~ = `r comvar$approx[1]`, p-value = `r comvar$p.value[1]`; for beetles: rho1 = `r comvar$rho[3]`, F~20,74~ = `r comvar$approx[3]`, p-value = `r comvar$p.value[3]`) and the grazing management (for grasses: rho1 = `r comvar$rho[4]`, F~35,77~ = `r comvar$approx[4]`, p-value = `r comvar$p.value[4]`; for beetles: rho1 = `r comvar$rho[6]`, F~25,87~ = `r comvar$approx[6]`, p-value = `r comvar$p.value[6]`), but none of these relationships were supported by corresponding RDA models (@tbl-rdacom). Dominant grass and forb species were significantly correlated with fine-scale environment (for grasses: rho1 = `r comvar$rho[10]`, F~56,86~ = `r comvar$approx[10]`, p-value = `r comvar$p.value[10]`; for forbs: rho1 = `r comvar$rho[12]`, F~56,86~ = `r comvar$approx[12]`, p-value = `r comvar$p.value[12]`), and in these two cases RDA models were also significant (@tbl-rdacom).
 
-The fine-scale environment x grass RDA model had the highest explanatory power (var = `r rdastat_all$Variance[23]`, F~8~ = `r rdastat_all$F[23]`, p-value = `r rdastat_all$PrF[23]`), with the two first axes at least marginally significant (RDA1: var = `r rdastat_all$Variance[25]`, F~1~ = `r rdastat_all$F[25]`, p-value = `r rdastat_all$PrF[25]`; RDA2: var = `r rdastat_all$Variance[26]`, F~1~ = `r rdastat_all$F[26]`, p-value = `r rdastat_all$PrF[26]`) (@tbl-rdacom). The first axis was driven by sward mean height (var = `r rdastat_all$Variance[28]`, F~1~ = `r rdastat_all$F[28]`, p-value = `r rdastat_all$PrF[28]`) on the left, to the opposite of bryophyte percent cover (var = `r rdastat_all$Variance[27]`, F~1~ = `r rdastat_all$F[27]`, p-value = `r rdastat_all$PrF[27]`) on the right (@fig-rda D). Thus, *Deschampsia cespitosa* was more frequently found in infields with higher vegetation and low percent cover of mosses, while *Poa pratensis* was more dominant when associated with a well-developed bryophyte layer. The second axis was driven by soil penetration (var = `r rdastat_all$Variance[30]`, F~1~ = `r rdastat_all$F[30]`, p-value = `r rdastat_all$PrF[30]`) on the bottom against soil pH (var = `r rdastat_all$Variance[29]`, F~1~ = `r rdastat_all$F[29]`, p-value = `r rdastat_all$PrF[29]`) on the top (@fig-rda C). *Deschampsia flexuosa* was more common in acidic fields with low root density, when the three species *Holcus lanatus*, *Festuca rubra* and *Poa pratensis* were mostly associated with more basic soil.
+The fine-scale environment x grass RDA model had the highest explanatory power (var = `r rdastat_all$Variance[23]`, F~8~ = `r rdastat_all$F[23]`, p-value = `r rdastat_all$PrF[23]`), with the two first axes at least marginally significant (RDA1: var = `r rdastat_all$Variance[25]`, F~1~ = `r rdastat_all$F[25]`, p-value = `r rdastat_all$PrF[25]`; RDA2: var = `r rdastat_all$Variance[26]`, F~1~ = `r rdastat_all$F[26]`, p-value = `r rdastat_all$PrF[26]`) (@tbl-rdacom). The first axis was driven by sward mean height (var = `r rdastat_all$Variance[28]`, F~1~ = `r rdastat_all$F[28]`, p-value = `r rdastat_all$PrF[28]`) on the left, to the opposite of bryophyte percent cover (var = `r rdastat_all$Variance[27]`, F~1~ = `r rdastat_all$F[27]`, p-value = `r rdastat_all$PrF[27]`) on the right (@fig-rda D). Thus, *Deschampsia cespitosa* was more frequently found in infields with higher vegetation and low percent cover of mosses, while *Poa pratensis* was more dominant when associated with a well-developed bryophyte layer. The second axis was driven by soil penetration (var = `r rdastat_all$Variance[30]`, F~1~ = `r rdastat_all$F[30]`, p-value = `r rdastat_all$PrF[30]`) on the bottom against soil pH (var = `r rdastat_all$Variance[29]`, F~1~ = `r rdastat_all$F[29]`, p-value = `r rdastat_all$PrF[29]`) on the top (@fig-rda C). *Deschampsia flexuosa* was more common in acidic and less-productive fields, when the three species *Holcus lanatus*, *Festuca rubra* and *Poa pratensis* mostly occurred in more basic fields with dense root mat.
 
 The RDA model between fine-scale environment and forb assemblage had lower explanatory power (var = `r rdastat_all$Variance[31]`, F~8~ = `r rdastat_all$F[31]`, p-value = `r rdastat_all$PrF[31]`) (@tbl-rdacom) but followed similar gradients than the grass model (@fig-rda D). The first axis (var = `r rdastat_all$Variance[33]`, F~1~ = `r rdastat_all$F[33]`, p-value = `r rdastat_all$PrF[33]`) was driven by soil penetration (var = `r rdastat_all$Variance[35]`, F~1~ = `r rdastat_all$F[35]`, p-value = `r rdastat_all$PrF[35]`) on one end, against pH and phosphorus (non-significant) on the other end. *Potentilla erecta* and *Galium saxatile* were associated with poorer, more acidic soils, where grass root density was lower, while *Ranunculus acris* and *Trifolium repens* were more common on more productive infields. The second axis was not significant but showed a clear gradient between high vegetation (var = `r rdastat_all$Variance[34]`, F~1~ = `r rdastat_all$F[34]`, p-value = `r rdastat_all$PrF[34]`) and strong slope (non-significant). *Trifolium repens* particularly was well-represented on steep fields with low vegetation height.
 
 # DISCUSSION
 
-The cascading influence of ecological gradients across scales was only partially observed in our study. We found a well-supported correlation between the fjord gradient and the landscape composition, as well as a potential effect of grazing on fine-scale environment, but there was no influence of broader scales (fjord, landscape) over farm management and infields. Regarding assemblage responses, we only detected a significant influence of fine-scale environment on dominant grass and forb species, mainly through vegetation mean height, soil penetration and percent cover of bryophytes. However, we found no clear evidence that plant and particularly beetle assemblages were affected by other environmental gradients, as canonical correlations and redundancy analyses showed contradictory results.
+The cascading influence of environmental gradients across scales was only partially observed in our study. We found a well-supported correlation between the fjord gradient and the landscape composition, as well as a potential effect of grazing on fine-scale environment, but there was no influence of broader scales (fjord, landscape) over farm management and infields. Regarding assemblage responses, we only detected a significant influence of fine-scale environment on dominant grass and forb species, mainly through vegetation mean height, soil penetration and percent cover of bryophytes. However, we found no clear evidence that plant and particularly beetle assemblages were affected by other environmental gradients, as canonical correlations and redundancy analyses showed contradictory results.
 
-## Fine-scale environment as the main factor of influence over dominant plant assemblages
+## Fine-scale environment as the main factor of influence on dominant plant assemblages
 
-### Fine-scale vs the rest
+In line with previous research, dominant grass and forb species were primarily affected by fine-scale environmental variation over management, landscape and fjord system [@siefertScaleDependenceVegetationenvironment2012, + other]. Both assemblages responded to two similar gradients, sward height against bryophyte cover on one hand and soil resistance against soil acidity on the other, explaining the highest variation for grasses and forbs respectively. The former may hide an underlying productivity gradient [@grimeCompetitiveExclusionHerbaceous1973, + other], with the antagonism between tall vascular species and bryophytes resulting from light competition [@olffEffectsHerbivoresGrassland1998, + other]. Sward height, which depends on individual species' growth form, can only be a poorly reliable predictor of species distribution when considered on its own, unless in strictly controlled experimental conditions \[**ref**\]. For instance in our study, tall and unpalatable *Deschampsia cespitosa*, if dominant, much probably contributed to increase average vegetation height, justifying the tight association we observed on our RDA. However the focus should not be on this relationship, which bears little interest in itself, but rather on the environmental conditions which allowed the growth of *Deschampsia cespitosa* along with tall vegetation. We observed that slope, even though non-significant, was consistently associated with bryophyte cover against sward height. Slope angle affects primary productivity through nutrient depletion driven by soil erosion and water runoff \[**ref**\], influencing vegetation mean height [@dorroughPlantNeighbourhoodLandscape2007, + other], species composition [@klimekPlantSpeciesRichness2007] and soil moisture [@bennieInfluenceSlopeAspect2006]. Thus the first gradient may, at least partially, be linked to topography with steep, well-drained fields at one end and flat, more productive fields at the other [@losvikHayMeadowCommunities1993].
 
-in most studies which analysed cross-scales effect on natural communities, fine-scale dominant
-- variation in vascular plant communities mostly driven by heterogeneity within site than landscape composition [@soderstromPlantsInsectsBirds2001]
+<!-- An interesting complementary measure to characterise the effect of topography is the solar radiation index, calculated from the slope and the aspect angles [**ref**]. We initially planned to include it in our analysis, but because of extreme values we decided to only consider slope and aspect independently. -->
 
-- slope angle and solar radiation significant drivers of grassland plant species composition, with main gradient from high soil quality to steep slope [@klimekPlantSpeciesRichness2007]
-- In our case, we observed the same slope-soil quality gradient for grass assemblages, even if in our case slope was not a significant term. However for forb assemblages slope angle was unrelated to phosphorus (but in @klimekPlantSpeciesRichness2007, soil quality derived from "estimate of the land's value for agricultural production" -> no more indication.).
-- Higher frequency of *Poa pratensis* on steeper sites [@klimekPlantSpeciesRichness2007] -> same in our case even if slope not significant
+The second gradient combined variation of soil acidity and of soil resistance to penetration, with low pH associated with lower soil resistance. Soil resistance to penetration is a feature of *soil strength*, which depends not only on soil properties including structure, texture, water content and carbon ratio, but also on biotic components such as plant roots [@forsterRootTraitsCrop2022; @mirrehInfluenceSoilBulk1972; @sojkaSituStrengthBulk2001]. Correlation with one or the other parameter is however far from being straightforward, as for example, soil resistance was found to be either strongly [@gabrielCoverCropsReduce2021], weakly [@kumiQuantifyingRootinducedSoil2023] or conditionally [@sojkaSituStrengthBulk2001] associated with water content, depending on the considered soil layer. Likewise, average plant root diameter and seemingly root volume tend to increase soil resistance in experimental conditions, but consistency of observations would be highly variable depending on soil texture and plant species [@kumiQuantifyingRootinducedSoil2023]. In our study, bulk density, which was strongly correlated with gravimetric water content and organic carbon (loss of ignition), was not related to our measure of soil resistance. This could be an indication that structural and textural soil properties did not account for much variation in soil penetration resistance in comparison with plant roots, even if interpretation remained limited in the absence of direct measurement of root length and/or density.
 
-- solar radiation, or heat load index, is calculated from the slope angle and the aspect In our case, distribution of HLI values was affected by a few outstanding outliers so we decided to keep slope and aspect separate
+It would nevertheless be coherent with the observed pH gradient, as soil acidity inhibits root growth by increase of ionic aluminium, toxic to plants at high concentration, and decrease of calcium and magnesium nutrients [@halingRootMorphologyRoothair2010a, @mengGlobalSoilAcidification2019]. Across all our sites, soil pH ranged from 4.3 to 5.2 and was thus below the threshold under which aluminium toxicity becomes substantial, at pH 5.5 [@kochianCellularMechanismsAluminum1995]. By increasing environmental stress and subsequently favouring acid-tolerant species [@grimeCompetitiveExclusionHerbaceous1973, + acidity based], soil pH can be a strong driver of variation in plant communities [@zelnikPlantSpeciesDiversity2013]. In Western Norway for instance, phytosociological associations of "oceanic" and "boreal" meadows show affinities for higher and lower pH respectively [@losvikHayMeadowCommunities1993]. Strong soil acidity in managed grasslands can be driven by bedrock type and fertilisation \[**ref**\]. We did not observe any coherent trend between bedrock type and pH, as for example from the two sites located on acidic granitic gneiss only one showed substantially low pH (4.3) compared to average (5.0), when our three sites located on more basic anorthosite showed pH close to average (from 4.9 to 5.1) [@norgesgeologiskeundersokelseNasjonalBerggrunnsdatabase2023]. Regarding field management, mineral fertilisers such as inorganic nitrogen dramatically acidify the soil [@kiddImpacts120Years2017], while animal manure and lime rather increase pH and can therefore be used to balance the acidification provoked by artificial fertilisers [@caiIntensifiedSoilAcidification2015, @xuModelbasedOptimalManagement2023]. From our interviews with farmers we registered that at least 21 infields were fertilised with either artificial fertiliser, manure and/or lime, with half of them receiving both artificial fertiliser and manure \[*non provided data*\]. However, as we were unable to collect consistent data on amount, frequency and time of fertilisation we could not include the soil enrichment factor in our analysis.
 
-### Nutrient concentration - edaphic parameters
+We nevertheless expected that measurements of available phosphorus and total nitrogen would influence plant species composition \[**ref**\], but surprisingly none showed any significant effect. Besides, their trends were not related to each other neither consistently associated with the pH gradient. Soil nutrients are known to be important drivers of variation in plant species composition [@kleinebeckerEffectsGrazingSeasonal2011a, + other] but their direct effects are not always demonstrated [@andersonRainfallSoilsModify2007, + other].
 
-- usually soil parameters, and most often nutrient availability, drive soil communities. But not the case here.
-- edaphic variables the most likely to explain most variation in plant community composition across scales [@siefertScaleDependenceVegetationenvironment2012]
-- main gradient driving floristic composition based on nitrate, phosphorus & water content (& yield) [@kleinebeckerEffectsGrazingSeasonal2011a]
+-   correlation phosphorous, mineral & total nitrogen, & organic carbon on nutrient gradient [@dorroughPlantNeighbourhoodLandscape2007]
+-   total nitrogen offer a poor approximation of available nitrogen for plants, which should be in inorganic form of nitrate (NO~3~^-^) or ammonium (NH~4~^+^).
 
-### Method
+Limitations - absence of direct measurement of root length and/or density. - Our assessment of soil penetration resistance should also be treated cautiously, as we favoured cost and time efficiency over accuracy and reproducibility [@sojkaSituStrengthBulk2001]. - pH was measured ex-situ <!-- We did not calibrated our *in situ* measurements with soil water content [@sojkaSituStrengthBulk2001], but the two variables were not correlated at all. --> - Topographical characteristics and soil quality have been shown to be drivers of plant community composition in managed grasslands, but overall variation explained for species composition quite low, especially compared to species diversity [@klimekPlantSpeciesRichness2007] - slope & solar radiation did significantly explain variation of plant assemblages @klimekPlantSpeciesRichness2007 - topography influences species richness through aspect (South) @dauberLandscapeStructureIndicator2003 - solar radiation, or heat load index, is calculated from the slope angle and the aspect In our case, distribution of HLI values was affected by a few outstanding outliers so we decided to keep slope and aspect separate - soil humidity important factor but depends on taxa: (+) on vascular plant species, (-) on wild bees [@dauberLandscapeStructureIndicator2003] -\> importance to have diversity of land use types
 
-- nutrient parameters -> soil total Nitrogen not the most appropriate
-- correlation phosphorous, mineral & total nitrogen, & organic carbon on nutrient gradient [@dorroughPlantNeighbourhoodLandscape2007]
-
-- plant height potentially related to the plant species
-- response variables -> only dominant species
+Association between plants & environment not that straightforward - Some examples of consistency first: - in @klimekPlantSpeciesRichness2007, higher frequency of *Poa pratensis* on steeper sites -\> same as us - However neither the relationship between slope and soil richness or their effect on plant species may be as straightforward. - If erosion and water runoff would alter soil quality by nutrient depletion, this imbalance may not always affect plant uptake [@kleinebeckerEffectsGrazingSeasonal2011a], and by extension plant assemblages, depending on neighbouring habitats.
 
 ## Grazing management
 
-- potential effect grazing x fine-scale mostly on edaphic parameters
+-   potential effect grazing x fine-scale mostly on edaphic parameters
+-   not really in line with grazing gradients, but bryophyte rather associated with sheep and height rather associated with stocking density (sheep against stocking density)
+-   So no hints that low sward height associated with higher intensity grazing
 
-- no significant effect stocking density on plant height, and trend rather non-intuitive as sward height increased with stocking density -> but even our highest stocking density was relatively low
-- vegetation stature declined with increasing intensity of sheep grazing [@dorroughPlantNeighbourhoodLandscape2007]
-- vegetation height at the plot level lower under more intensive grazing [@pakemanLongTermImpacts2019]
+Our objectives in this study was not to investigate the effect of grazing management on grassland communities *per se*, but rather to question its level of influence in comparison with environmental drivers across scales. Unfortunately, it may have been the category the most affected by our methodological approach. First of all, the number of replicates was low for both the scope (cross-scale multivariate) and the type (canonical correlation) of analysis. For example, each livestock type was represented by 9 or 10 fields, which is an insufficient level of replication considering the amount and range of environmental variation within our study area, that we were willing to capture. Most generally, the characterisation of small-scale grazing systems is particularly challenging, due to the diversity of practices between and within the farms \[**REF**\]. Even if only considering components directly associated with the grazers, such as number of animals, grazing period, type of livestock, as the common strategy relies on rotational management, reducing the assessment to a unique field fails to capture the whole system dynamic \[**REF**\]. A more pertinent approach would be to scale-up the studies at farm level \[**REF**\].
 
-- gradient of intensity not strong enough ?
+-   Vegetation structure
 
-- grazing should influence plant communities through intensity
-- species such as *Galium saxatile*, *Ranunculus repens* & *Deschampsia cespitosa* showed clear benefits from low grazing intensity or grazing removal, while other became more dominant under high grazing intensity, such as *Agrostis capillaris*, *Holcus lanatus* and *Anthoxanthum odoratum* [@pakemanLongTermImpacts2019]
-- 
+-   no significant effect stocking density on plant height, and trend rather non-intuitive as sward height increased with stocking density -\> but even our highest stocking density was relatively low
 
-grazing x type livestock
-- overall low effect of cattle introduction (from single to mixed grazing) compared with intensity [@pakemanLongTermImpacts2019]
+-   vegetation stature declined with increasing intensity of sheep grazing [@dorroughPlantNeighbourhoodLandscape2007]
 
-## Beetle effect
+-   vegetation height at the plot level lower under more intensive grazing [@pakemanLongTermImpacts2019]
 
-- no effect may be due to too coarse taxonomic level (family)
+-   gradient of intensity not strong enough ?
 
-- carabid species composition responded to field management (crop vs mixed fodder/crop vs pastures) and heterogeneity at the farm level [@weibullSpeciesCompositionAgroecosystems2003]
-- landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
+-   grazing intensity in sheep grazing only significant on plant composition if heavy [@skornikEffectGrazingPressure2010]
 
-- Plant species richness significant driver of spiders, carabids & butterflies [@jeanneretQuantifyingImpactLandscape2003] -> we did not include plant species richness in fine-scale explanatory set as it was circular argument with plants -> is it really ?
+-   community composition of semi-natural grasslands affected by cattle density [@buzhdyganDirectIndirectEffects2020]
 
+-   Even small conventional intensification steps, such as low artificial fertilizer use, can negatively affect species richness without systematically increase yield [@beckmannConventionalLandUse2019]. Though this is context-dependent, we can consider that within our survey area we do have a gradient of intensity
+
+-   species such as *Galium saxatile*, *Ranunculus repens* & *Deschampsia cespitosa* showed clear benefits from low grazing intensity or grazing removal, while other became more dominant under high grazing intensity, such as *Agrostis capillaris*, *Holcus lanatus* and *Anthoxanthum odoratum* [@pakemanLongTermImpacts2019]
+
+-   species which benefited from grazing introduction were *Festuca rubra*, *Poa pratensis*, *Holcus mollis*, *Deschampsia cespitosa*, *Deschampsia flexuosa* & *Agrostis capillaris*, but *Deschampsia cespitosa* kept on expanding even after new cessation for 3 years [@krahulecVegetationChangesFollowing2001]
+
+-   sheep grazing at high intensity with distinct community composition, with exclusive *Achillea millefolium*, *Festuca rubra* & *Poa pratensis*, but no substantial differences between light and moderate grazing [@skornikEffectGrazingPressure2010]
+
+-   response variables -\> only dominant species -\> responses to grazing depends on dominance level [@chanetonDisturbanceEffectsPlant1991]
+
+grazing x type livestock - difference uptake strategies between ungulates, which focus on immediate nutritive intake, and ruminant, which favour higher daily digestible intakes [@wallisdevriesImportanceScalePatchiness1999] - overall low effect of cattle introduction (from single to mixed grazing) compared with intensity [@pakemanLongTermImpacts2019] - no effect of mixed-grazing (cattle & sheep) on plant composition in experiments [@jerrentrupDiverseSwardsMixedGrazing2020] - weak effect of livestock on species composition over time, with increase of forb contents and species richness under cattle grazing compared with sheep [@jerrentrupLittleGrazerSpecies2015]
+
+grazing x rotational/continuous - increase prostrate species biomass & decrease of species dominance with rotational grazing [@boavistaEffectsGrazingRegimes2019]
+
+grazing x productivity - response of community composition to grazing treatments (grazing/no grazing) depends on site productivity: the most productive the site, the most change [@lezamaVariationGrazinginducedVegetation2014]
+
+-   Other management practices that we did not include in our analysis, such as fertilisation, could have been influential, notably on the soil. Different types of fertilisation were used by the farmers, ranging from lime/sand and manure to artificial fertilisers
+
+-   Literature point on the effects of different fertiliser types
+
+-   Unfortunately, data on fertilisation practices were relatively scarce and inconsistent. Most farmers would communicate if they fertilised their fields and what kind of fertilisers they used, but information on amount, periodicity and frequency were missing. The type of fertilisers alone could not be included in the analysis as its distribution across sites was very uneven (canonical correlation biais).
+
+-   did not look for feedback on grazing
+
+-   site topography affects grazing time @hesterForagingBehaviourSheep1999
+
+-   *Functional resource heterogeneity*, which determines animals accessibility to fodder, is driven both by broader, spatially-fixed or temporally-recurrent factors, such as climate, topography and geology, and by finer, spatially and temporally variable factors, as for instance the patchiness of rainfall, grazing or fertiliser spraying by farmers [@fynnManagingBrowsingGrazing2019].
+
+## How about beetles
+
+-   no effect may be due to too coarse taxonomic level (family)
+
+-   carabid species composition responded to field management (crop vs mixed fodder/crop vs pastures) and heterogeneity at the farm level [@weibullSpeciesCompositionAgroecosystems2003]
+
+-   landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
+
+-   carabid community in field relatively stable after 10 years [@purtaufCarabidCommunitiesSpatiotemporal2004]
+
+-   taxa (butterflies, carabids, plants) respond differently to landscape features and landscape more important driver for high mobility organisms [@weibullSpeciesCompositionAgroecosystems2003]
+
+-   Beetle & spiders can be affected by landscape -\> see @bataryResponsesGrasslandSpecialist2007, @bataryAreSpidersReacting2008, @ostmanLandscapeComplexityFarming2001
+
+-   Plant species richness significant driver of spiders, carabids & butterflies [@jeanneretQuantifyingImpactLandscape2003] -\> we did not include plant species richness in fine-scale explanatory set as it was circular argument with plants -\> is it really ?
+
+-   structure & composition woody layer influence dung beetle diversity, and ground & dung beetles community composition [@soderstromPlantsInsectsBirds2001] -\> positive diversity-heterogeneity relationship
+
+-   tree cover main underlying gradient of community structure for both dung & ground beetles [@soderstromPlantsInsectsBirds2001] -\> data collected but not included in the analysis due to very low representativity
+
+-   ground beetle diversity positively related to proportion of field layer artificially fertilised [@soderstromPlantsInsectsBirds2001]
+
+-   age of grassland significant factor of variation of wild bees [@dauberLandscapeStructureIndicator2003]
 
 ## Cross-scale influence
 
-- difficulty to apprehend interactions across scales and compartments
-- only 15-20% variation in species composition plants, butterflies & carabids explained by all three scale heterogeneity (landscape, farm, field) [@weibullSpeciesCompositionAgroecosystems2003]
+-   Our result - correlation between fjord and landscape but none with lower scales
+-   influence of broad-scale variables smaller if not invisible at small extent and grain [@siefertScaleDependenceVegetationenvironment2012]
 
-- variance in floristic composition explained by broad-scale (altitude, mean annual temperature, annual precipitation), management (date of mowing) and field scale (pH, flooding frequency, humidity, available P & total N) [@zelnikPlantSpeciesDiversity2013]
-- elevation, along with slope angle and solar radiation, significant driver of plant species composition [@klimekPlantSpeciesRichness2007]
+### The fjord
 
-- Maybe not enough contrast in the landscape to have effects -> Nordhordland agricultural landscape still mosaic-like, with low intensification patterns
-- landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
-- for beetles, only landscape influence was percentage of cultivated land [@jeanneretQuantifyingImpactLandscape2003]
+-   variance in floristic composition explained by broad-scale (altitude, mean annual temperature, annual precipitation), management (date of mowing) and field scale (pH, flooding frequency, humidity, available P & total N) [@zelnikPlantSpeciesDiversity2013]
 
-- limitation using species-based approach only: from savannah example, fodder quality of individual species dependent on rainfall and site productivity, as absence of limiting factors allow plant development towards defensive strategies against herbivores [@hopcraftHerbivoresResourcesRisks2010]
+-   elevation, along with slope angle and solar radiation, significant driver of plant species composition [@klimekPlantSpeciesRichness2007]
 
+-   elevation had significant effect on grassland plant community composition [@buzhdyganDirectIndirectEffects2020] -\> but big gradient, from plains to mountains
 
+-   strong effect of slope on meadows composition compared to pastures, where elevational gradient is substantially smaller [@klimekPlantSpeciesRichness2007]
 
+-   precipitation and temperature affect species dominance [@milchunasQuantitativeEffectsGrazing1993], but pondered according to grazing evolutionary history
 
+-   can the complexity of the fjord be approached through such a narrow time window & static variables (average temp/precipitation)?
 
+### The landscape
 
+-   For the landscape: as we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species -\> low level of replication, low resolution
 
+-   Maybe not enough contrast in the landscape to have effects -\> Nordhordland agricultural landscape still mosaic-like, with low intensification patterns
 
+-   landscape intensification & homogenisation affected carabid communities towards smaller, more mobile and ubiquitous species [@burelDifferentialResponseSelected2004]
 
+-   dung beetle community composition affected by % urban elements & % arable fields, ground beetle only by % urban elements [@soderstromPlantsInsectsBirds2001] -\> two categories not well represented in our case
 
+-   landscape drivers only marginally influential (presence cultivated fields), if not at all (including variability, heterogeneity, pattern & composition) in driving carabid & spider community composition against local habitat drivers such as habitat type (meadows at different intensities, hedgerows, orchards, forest edges) or plant species richness [@jeanneretQuantifyingImpactLandscape2003]
 
+### Scale issue
 
+-   missing temporal patterns
 
+-   animal behaviour impacted by environment & plant community[@brownImportanceScaleEvaluating1989]
 
+-   influence of topography on sheep daily grazing time [@hesterForagingBehaviourSheep1999]
 
+-   difficulty to apprehend interactions across scales and compartments
 
+-   small response scale against explanatory scale [@siefertScaleDependenceVegetationenvironment2012]
 
+-   only 15-20% variation in species composition plants, butterflies & carabids explained by all three scale heterogeneity (landscape, farm, field) [@weibullSpeciesCompositionAgroecosystems2003]
 
-- In line with previous research, plant species distribution was primarily affected by soil nutrient availability [**ref**].
-- Thus, we can observe a gradient of intensity, not through grazing (what we were looking for), but through fertilisation.
-- Nutrient-rich soils should favour more competitive species, which are usually the most desirable from an agronomic perspective, over species with higher tolerance to environmental stress [**REF**].
-- Species associated with enriched sites, such as *Deschampsia cespitosa*, *Ranunculus repens* and *Ranunculus acris*
-- Species associated with poor sites, such as *Festuca rubra*, *Poa pratensis* and *Galium saxatile*
+-   butterfly species richness sensitive to both large-scale & small-scale, while carabids only sensitive to small-scale [@weibullSpeciesRichnessAgroecosystems2003]
 
-- Root mat density relatively closely associated with base soil in both assemblages -> would mean higher grass biomass -> look for link pH x fertilisation
+-   influence of landscape context depends on spatial scale of study, and also interaction influence x spatial scale depends on the guild [@steffan-dewenterScaledependentEffectsLandscape2002]
 
-- Phosphorus is usually considered as the main limiting factor of primary production in agriculture [**ref**], and we expect it to be the case in our study as well as nitrogen was overall well-supplied across our fields [data not shown].
-- In none of our significant RDA models total nitrogen, which was inversely correlated with bulk density, was related to available phosphorus.
-- We also considered available phosphorus to be a better predictor of nutrient limitation in soil, as total nitrogen offer a poor approximation of available nitrogen for plants, which should be in inorganic form of nitrate (NO~3~^-^) or ammonium (NH~4~^+^).
+-   Canonical analysis -\> works best with high number of replicates as it should require normal distribution of variables.
 
+-   Methodological implication -\> different outcomes with cancor and RDA
 
-- Soil resistance induced by root mat comopaction, typical of graminea species, also influenced both grass and forb assemblages.
-- *Deschampsia flexuosa* was particularly associated with 
+-   <!-- The statistical power of our analysis being limited by our low replication level (n = 29) and the assumption of linearity of the canonical correlation -->
 
+-   limitation using species-based approach only: from savannah example, fodder quality of individual species dependent on rainfall and site productivity, as absence of limiting factors allow plant development towards defensive strategies against herbivores [@hopcraftHerbivoresResourcesRisks2010]
 
-- Edaphic parameters main drivers of plant species composition [@siefertScaleDependenceVegetationenvironment2012]
-- soil humidity important factor but depends on taxa: (+) on vascular plant species, (-) on wild bees [@dauberLandscapeStructureIndicator2003] -> importance to have diversity of land use types
+## Bilan - in Nordhorldand
 
-### Nutrient
+### Our results
 
-Quite unsurprisingly, grassland plant assemblages were affected by soil phosphorus, which is generally more limiting than nitrogen in agroecosystems [**REF**]. Nutrient distribution across our study sites (data not provided) confirmed that nitrogen was overall well if not exceedingly supplied, while phosphorus was morel likely to be lacking. Nutrient-rich soils should favour more competitive species, which are usually the most desirable from an agronomic perspective, over species with higher tolerance to environmental stress [**REF**].
+-   Paradoxically, our gradient may be too short for showing effect at very broad scale (fjord gradient), but on the other hand our number of replicates was too small -\> with such low amount of replicates and diversity (lots of noise), only very strong influence would show
 
-#### Species by species
+-   The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently \[REF\].
 
-- Deschampsia cespitosa (+)
-  - nitrophilous
-  - expand both during grazing and even after 3 years abandonment [@krahulecVegetationChangesFollowing2001]
-- Festuca rubra (-)
-- Poa pratensis (-)
-- Ranunculus repens (+)
-- Ranunculus acris (+)
-- Galium saxatile (-)
+-   we considered only the descending direction, while the system is obviously more complex with bottom-up feedback
 
-- But interesting pattern which showed in our RDA, as both *Festuca rubra* and *Poa pratensis* were closely associated at the lower end of the phosphorus gradient. If the former is a stress-tolerant [**REF**], low productive species, the latter is highly productive fodder species [**REF**].
-- Explanation might be found within plant associations -> comparison with phytosociological surveys of @losvikHayMeadowCommunities1993 and @losvikPhytosociologyEcologyOld1988 in Hordaland hay meadows
-- @skornikEffectGrazingPressure2010 found both species as characteristic of heavily grazed grassland community composition on mesic soil
-- In @klimekPlantSpeciesRichness2007a, *Poa trivialis* positively correlated with nitrogen fertilisation -> trend confirmed in our analysis, even if it nitrogen was not a significant driver
-- For forbs, *Ranunculus acris* and *Ranunculus repens* were both positively correlated with phosphorus concentration (in @klimekPlantSpeciesRichness2007a, *Ranunculus acris* negatively correlated with nitrogen), while *Galium saxatile* was negatively correlated -> phytosociological associations
-- Contrary to grass communities though, nitrogen and phosphorus gradients were not correlated -> Distribution of nitrogen and phosphorus in the plant shoots differs according to functional type [@chanetonNitrogenPhosphorusCycling1996] -> could uptake in general differ?
-- Likewise, effect of pH on forb communities was closely related to phosphorus, while they both were independent for grass communities
-- pH is a very important determinant of plant community composition [@zelnikPlantSpeciesDiversity2013] as it affects availability of nutrients by altering their chemical forms -> more acidic field will be poorer -> going back to *Galium saxatile* ?
-- transition to small methodological point -> we used total N extraction, which is not representative of the plant-available N, while P-extraction was more specific to available forms
-- effect of P and N on pant community composition not always visible [@andersonRainfallSoilsModify2007]
+-   No taxonomic group can be a good surrogate of all the others for assessing effects of landscape and/or land-use in agricultural environment [@billeterIndicatorsBiodiversityAgricultural2007]
 
-### Soil structure
+-   Importance of including different taxa, because responses differ [@gonthierBiodiversityConservationAgriculture2014]
 
-- Soil structure was the second most important driver of plant community and was the most influential factor on beetle assemblage
-- We characterised soil structure by bulk density and penetration rate: when the measure of bulk density is a standardised method which indirectly assesses compaction by relying on the proportion on empty space over the whole volume [**REF**], penetration rate is an in-field, direct measurement of the soil resistance to pressure, and thus includes the root density in the resistance ability of the soil.
-- Example with thick grass root mat which stabilises but also "immobilizes" the soil
-- Interestingly, bulk density and penetration rate interacted differently according to the target community: no interaction for grasses, rather opposed for forbs (soft soil associated with low BD), rather correlated for beetles (soft soil associated with high BD) -> more details on how both indicators could be complementary
-- Penetration rate never correlated with phosphorus, so maybe no link with grazing intensity -> check with RDA in SI how BD and penetration relate to stocking density and cows
-- Both *Deschampsia flexuosa* and *Potentilla erecta* closely associated with soft soil -> back to @losvikPhytosociologyEcologyOld1988
+### What is good about small scale farming in Western Norway
 
-- *Achillea millefolium* associated with steeper slopes -> should be a way to link that to soil structure
-
-- For beetles, family which was the most sensitive to high bulk density was Ptiliidae
-- Ptiliidae are very small and are not likely to be able to create their own way in the soil like bigger families such as Carabidae and Scarabaeidae can do - though they are mostly flying and should not be ground-diggers
-- Even though they are mainly associated with dung, they could be affected by other environmental factors
-- Transition to methodological point: most studies investigated dung-associated beetle community would focus on Scarabaeidae, while this family only is far from representing the whole range of coprophragous species, which includes specimens from Silphidae, Hydrophylidae, Ptiliidae, Staphylinidae -> would be important to expand the focus beyond Scarabs (actually "dung beetle" is per default associated with Scarabs only while this group is acknowledged as paraphyletic).
-
-## Other local environment factors
-
-- structure & composition woody layer influence dung beetle diversity, and ground & dung beetles community composition [@soderstromPlantsInsectsBirds2001] -> positive diversity-heterogeneity relationship
-- tree cover main underlying gradient of community structure for both dung & ground beetles [@soderstromPlantsInsectsBirds2001] -> data collected but not included in the analysis due to very low representativity
-- plant species richness significantly, even if to a low extent, affects carabids & spider assemblages [@jeanneretQuantifyingImpactLandscape2003]
-
-## Grazing management
-
-### Grazing management - direct effect
-
-- Grazing management was not significantly correlated with plant and beetle assemblages, even if an underlying trend was suggested by the canonical correlation analysis
-- Grassland community responses to grazing management are not straightforward, especially in observational studies where the different features (intensity, periodicity, livestock type) are combined.
-
-- First a look at experiments to investigate each factor independently
-- INTENSITY
-- grazing intensity in sheep grazing only significant on plant composition if heavy [@skornikEffectGrazingPressure2010]
-- decrease plant species richness with increasing cattle density [@buzhdyganDirectIndirectEffects2020]
-- cattle density significantly influenced plant species composition [@buzhdyganDirectIndirectEffects2020]
-- Both *Ranunculus repens* and *Deschampsia cespitosa* benefited from lower grazing intensity in marginal upland grasslands [@pakemanLongTermImpacts2019]
-- CONTINUOUS VS ROTATIONAL
-- increase prostrate species biomass & decrease of species dominance with rotational grazing [@boavistaEffectsGrazingRegimes2019]
-- increase plant species diversity (Shannon), richness & fruit production under late grazing (from mid-July) compared with early (from May) [@lennartssonEffectTimingGrassland2012]
-- MIXED VS SINGLE
-- aboveground diversity, multidiversity and multifunctionality higher under mixed grazing [@wangDiversifyingLivestockPromotes2019]
-- no effect of mixed grazing on plant composition [@jerrentrupDiverseSwardsMixedgrazing2020]
-- overall mixed grazing less impactful on species compared to intensity, even if effect varies depending on habitat productivity [@pakemanLongTermImpacts2019]
-- LIVESTOCK TYPE
-- weak effect of livestock on species composition over time, with increase of forb contents and species richness under cattle grazing compared with sheep [@jerrentrupLittleGrazerSpecies2015]
-- Then references to observational studies
-- difference uptake strategies between ungulates, which focus on immediate nutritive intake, and ruminant, which favour higher daily digestible intakes [@wallisdevriesImportanceScalePatchiness1999]
-
-### Grazing management - indirect effect
-
-- The correlation between grazing management and fine-scale environment of plants, which mostly revolved around edaphic factors, was particularly low
-- Potential indirect effect linked to phosphorus gradient -> check RDA in SI grazing x fine-scale
-- no clear interaction cattle density x elevation on plant species richness or composition [@buzhdyganDirectIndirectEffects2020]
-
-### Other management
-
-- ground beetle diversity positively related to proportion of field layer artificially fertilised [@soderstromPlantsInsectsBirds2001]
-- age of grassland significant factor of variation of wild bees [@dauberLandscapeStructureIndicator2003]
-
-### The methodological point
-
-Our objectives in this study was not to investigate the effect of grazing management on grassland communities *per se*, but rather to question its level of influence in comparison with environmental drivers across scales. Unfortunately, it may have been the category the most affected by our methodological approach. First of all, the number of replicates was low for both the scope (cross-scale multivariate) and the type (canonical correlation) of analysis. For example, each livestock type was represented by 9 or 10 fields, which is an insufficient level of replication considering the amount and range of environmental variation within our study area, that we were willing to capture. Most generally, the characterisation of small-scale grazing systems is particularly challenging, due to the diversity of practices between and within the farms [**REF**]. Even if only considering components directly associated with the grazers, such as number of animals, grazing period, type of livestock, as the common strategy relies on rotational management, reducing the assessment to a unique field fails to capture the whole system dynamic [**REF**]. A more pertinent approach would be to scale-up the studies at farm level [**REF**].
-
-- Other management practices that we did not include in our analysis, such as fertilisation, could have been influential, notably on the soil. Different types of fertilisation were used by the farmers, ranging from lime/sand and manure to artificial fertilisers
-- Literature point on the effects of different fertiliser types
-- Unfortunately, data on fertilisation practices were relatively scarce and inconsistent. Most farmers would communicate if they fertilised their fields and what kind of fertilisers they used, but information on amount, periodicity and frequency were missing. The type of fertilisers alone could not be included in the analysis as its distribution across sites was very uneven (canonical correlation biais).
-
-- Even small conventional intensification steps, such as low artificial fertilizer use, can negatively affect species richness without systematically increase yield [@beckmannConventionalLandUse2019]. Though this is context-dependent, we can consider that within our survey area we do have a gradient of intensity (@tbl-farmermanagement)
-
-## Landscape effect
-
-- about 15% of total variance of arthropod species richness explained by landscape variables (i.e. percent of crop, grassland, fallow land, & length forest edge) [@dauberLocalVsLandscape2005] -> overall, lower influence of landscape-scale factors compared to land use or local environment (temp, humidity)
-- landscape effect depends on field type, i.e. arable land [@jonsenResponseGeneralistSpecialist1997], or management [@weibullSpeciesRichnessAgroecosystems2003]
-- dung beetle community composition affected by % urban elements & % arable fields, ground beetle only by % urban elements [@soderstromPlantsInsectsBirds2001] -> two categories inot well represented in our case
-- landscape drivers  only marginally influential (presence cultivated fields), if not at all (including variability, heterogeneity, pattern & composition) in driving carabid & spider community composition against local habitat drivers such as habitat type (meadows at different intensities, hedgerows, orchards, forest edges) or plant species richness [@jeanneretQuantifyingImpactLandscape2003]
-- % forest & fallow land arround field with positive influence on ant species diversity [@dauberLandscapeStructureIndicator2003]
-- but no effect at all of landscape matrix on vascular species richness [@dauberLandscapeStructureIndicator2003]
-
-## Fjord effect
-
-- plant species composition affected by elevation [@buzhdyganDirectIndirectEffects2020] -> but elevation up to the mountains
-
-### Limitations
-
-- more mobile taxa, such as pollinators, could be more sensitive to landscape-scale factors
-- butterfly species richness sensitive to both large-scale & small-scale, while carabids only sensitive to small-scale [@weibullSpeciesRichnessAgroecosystems2003]
-- influence of landscape context depends on spatial scale of study, and also interaction influence x spatial scale depends on the guild [@steffan-dewenterScaledependentEffectsLandscape2002]
-
-## Responses according to taxa
-
-- carabid (species richness) more sensitive to land use than staphylinids, which were firstly affected by temperature [@dauberLocalVsLandscape2005]. For both, length of forest edge and percent of fallow land in the surrounding area seemed to influence.
-- carabid community in field relatively stable after 10 years [@purtaufCarabidCommunitiesSpatiotemporal2004]
-- taxa (butterflies, carabids, plants) respond differently to landscape features and landscape more important driver for high mobility organisms [@weibullSpeciesCompositionAgroecosystems2003]
-- no correlation between species richness of ant, wild bee & vascular plant when assessing for influence landscape matrix on grassland diversity [@dauberLandscapeStructureIndicator2003]
-
-## Cascading interaction across scales
-
-- we considered only the descending direction, while the system is obviously more complex with bottom-up feedback
-  - influence of topography on sheep daily grazing time [@hesterForagingBehaviourSheep1999]
-
-- For the landscape: as we focused on main species for the plant communities and on main families for the beetle assemblages, We probably lack resolution to be able to detect any effect. If present, forest or wetland specialists would not weight much in the pools and probably be part of the rare species -> low level of replication, low resolution
-
-- increase of extreme temperature with distance to sea and forest -> continental less mild than close to sea, maybe having average summer temperature would be relevant
-
-- influence of broad-scale variables smaller if not invisible at small extent and grain [@siefertScaleDependenceVegetationenvironment2012]
-
-- strong effect of slope on meadows composition compared to pastures, where elevational gradient is substantially smaller [@klimekPlantSpeciesRichness2007a]
-- increased species turnover induced by grazing with rainfall [@andersonRainfallSoilsModify2007]
-- The productivity potential of individual grazing fields in small-scale farming is dependent from both natural and anthropogenic factors, which can be so deeply intertwined that it is difficult and maybe not always pertinent to treat them independently [REF].
-- Topographical characteristics and soil quality have been shown to be drivers of plant community composition in managed grasslands, but overall variation explained for species composition quite low, especially compared to species diversity [@klimekPlantSpeciesRichness2007a]
-- precipitation and temperature affect species dominance [@milchunasQuantitativeEffectsGrazing1993], but pondered according to grazing evolutionary history
-- grazing effect on plant diversity and composition influenced by site productivity [@lezamaVariationGrazinginducedVegetation2014]
-
-
-## Limitation
-
-- Canonical analysis -> works best with high number of replicates as it should require normal distribution of variables.
-- Methodological implication -> different outcomes with cancor and RDA
-- <!-- The statistical power of our analysis being limited by our low replication level (n = 29) and the assumption of linearity of the canonical correlation -->
-
-
-## Perspectives
-
-- No taxonomic group can be a good surrogate of all the others for assessing effects of landscape and/or land-use in agricultural environment [@billeterIndicatorsBiodiversityAgricultural2007]
-- Importance of including different taxa, because responses differ [@gonthierBiodiversityConservationAgriculture2014]
-
+-   rotational grazing beneficial for both plant diversity and field productivity [@boavistaEffectsGrazingRegimes2019]
+-   increase plant species diversity (Shannon), richness & fruit production under late grazing (from mid-July) compared with early (from May) [@lennartssonEffectTimingGrassland2012]
+-   aboveground diversity, multidiversity and multifunctionality higher under mixed grazing [@wangDiversifyingLivestockPromotes2019]
 
 # CONCLUSION
 
@@ -648,7 +532,6 @@ The authors declare no competing interests.
 ## DATA AVAILABILITY
 
 ## APPENDIX
-
 
 ```{r RDAEnv}
 #| label: tbl-rdaenv
@@ -688,7 +571,6 @@ rdaenv |>
 
 ```
 
-
 ```{r RDAGrass}
 #| label: tbl-rdagrass
 #| tbl-cap: "Summary of statistical test for redundancy analyses between grass assemblages and environmental variables."
@@ -727,7 +609,6 @@ rdagrass |>
 
 ```
 
-
 ```{r RDAForb}
 #| label: tbl-rdaforb
 #| tbl-cap: "Summary of statistical test for redundancy analyses between forb assemblage and environmental variables."
@@ -765,7 +646,6 @@ rdaforb |>
   opt_stylize(style = 6, color = 'gray')
 
 ```
-
 
 ```{r RDABeetle}
 #| label: tbl-rdabeetle
@@ -806,52 +686,87 @@ rdabeetle |>
 ```
 
 <!-- ```{r FarmerdManagement} -->
+
 <!-- #| label: tbl-farmermanagement -->
+
 <!-- #| tbl-cap: "Field management applied by the farmer for the last 10 years." -->
+
 <!-- #| message: true -->
+
 <!-- #| warning: true -->
+
 <!-- library(gt) -->
+
 <!-- farmer_management <- subset(landuse_grass, select = c(SiteID, FM_herbicide, FM_treecutting, FM_burning, FM_mowing, FM_mulching, FM_manure, FM_artificialfert, FM_shellsandlime, Lastknownre_sowing, Lastknownplowing, Lastknowndrainage)) -->
+
 <!-- farmer_management |>  -->
+
 <!--   gt() |>  -->
+
 <!--   cols_label(SiteID = "Site", -->
+
 <!--              FM_herbicide = "Herbicide", -->
+
 <!--              FM_treecutting = "Tree cutting", -->
+
 <!--              FM_burning = "Burning", -->
+
 <!--              FM_mowing = "Mowing", -->
+
 <!--              FM_mulching = "Mulching", -->
+
 <!--              FM_manure = "Manure", -->
+
 <!--              FM_artificialfert = "Artificial fertilizer", -->
+
 <!--              FM_shellsandlime = "Shell/sand/lime", -->
+
 <!--              Lastknownre_sowing = "Last known re-sowing", -->
+
 <!--              Lastknownplowing = "Last known plowing", -->
+
 <!--              Lastknowndrainage = "Last known drainage") |>  -->
+
 <!--   tab_spanner(label = "Fertilization", columns = c(FM_manure, FM_artificialfert, FM_shellsandlime)) -->
+
 <!-- ``` -->
 
-
-
 <!-- ```{r VarSummary} -->
+
 <!-- #| label: tbl-varsummary -->
+
 <!-- #| tbl-cap: "Summary of explanatory variables for canonical correlation analysis of grass, forb and beetle dominant community data. Symbols for rejection are: ¤ non-normal distribution; ◦ colinearity with another variable; * linearity assumption rejected." -->
+
 <!-- #| message: false -->
+
 <!-- #| warning: false -->
 
 <!-- library(readxl) -->
+
 <!-- library(gt) -->
+
 <!-- library(tidyverse) -->
 
 <!-- varsummary <- read_xlsx("illustrations/FjordModelFactors.xlsx") -->
+
 <!-- # summary <- subset(papersummary, select = -c(Group)) -->
+
 <!-- varsummary <- varsummary |> -->
+
 <!--   group_by(Variable_set) |> -->
+
 <!--   pivot_wider(names_from = Assumption, values_from = Confirmation) -->
 
 <!-- varsummary |> -->
-<!--   gt(groupname_col = "Variable_set") |> -->
-<!--   cols_label( -->
-<!--     Variable = "" -->
-<!--     ) |> -->
-<!--   opt_stylize(style = 6, color = 'gray') -->
-<!-- ``` -->
 
+<!--   gt(groupname_col = "Variable_set") |> -->
+
+<!--   cols_label( -->
+
+<!--     Variable = "" -->
+
+<!--     ) |> -->
+
+<!--   opt_stylize(style = 6, color = 'gray') -->
+
+<!-- ``` -->
