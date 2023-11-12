@@ -77,7 +77,7 @@ plantrichness_sheep <- plantrichness_sheep |>
     grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Carex|Dactylis|Danthonia|Deschampsia|Eriophorum|Festuca|Holcus|Juncus|Lolium|Luzula|Molinia|Nardus|Poa|Trichophorum", Species) ~ "div_monocotyledons",
     grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "div_woody",
     grepl("Athyrium|Blechnum|Phegopteris|Polypodium|Pteridium", Species) ~ "div_ferns",
-    .default = "div_bryophytes"
+    .default = "div_cryptogams"
   ))
 
 # Total number species per functional group (writing)
@@ -96,7 +96,7 @@ totwoodysp <- plantrichness_sheep |>
 totbryosp <- plantrichness_sheep |> 
   group_by(Species, FunctionalGroup) |>
   summarise(Abundance = mean(Abundance)) |> 
-  filter(FunctionalGroup == "div_bryophytes")
+  filter(FunctionalGroup == "div_cryptogams")
 
 # Number of species per functional group per site
 plantrichness_sheep <- plantrichness_sheep |>   
@@ -127,7 +127,7 @@ plantrichness_sheep <- plantrichness_sheep |>
 ## Currently at plot level -> summary by average
 soilchem_sheep <- soilchem_sheep |> 
   group_by(SiteID) |> 
-  summarise(LOI = mean(LOI), phophorus = mean(P.Al_mg.100g))
+  summarise(LOI = mean(LOI), phosphorus = mean(P.Al_mg.100g))
 
 # Mite and springtail abundance
 ## From mesofauna data
@@ -151,14 +151,9 @@ mesobio_sheep <- mesobio_sheep |>
 
 # Woody, grass, forb and bryo biomass
 ## From biomass data
-## Different numbers of replicates per site -> need 3 replicates, 1 per plot
 ## Currently at sample level -> summary by average
 biomass_sheep <- biomass_sheep |>
-  group_by(SiteID, PlotID) |>
   pivot_wider(names_from = FunctionalType, values_from = DWbiomass_g) |> 
-  # Select randomly one row which match unique combination of site & plot IDs
-  slice(1) |>
-  ungroup() |>
   # make functional groups as variables
   group_by(SiteID) |>
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
@@ -198,7 +193,7 @@ rownames(data_sheep) <- data_sheep$FieldID
 #### HIERARCHICAL CLUSTERING ####
 
 # Data scaling
-data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID, annualprecipication, avgtempJuly, phosphorus))))
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID, annualprecipitation, avgtempJuly, phosphorus))))
 rownames(data_sheep_sc) <- data_sheep$FieldID
 
 #
@@ -214,17 +209,17 @@ hclustwd_sheep <- hclust(dist_sheep, method = "ward.D2")
 plot(hclustwd_sheep)
 
 # Show clusters (k=5) with base
-rect.hclust(hclustwd_sheep, k = 4, border = 2:6)
+rect.hclust(hclustwd_sheep, k = 5, border = 2:6)
 
 # Show clusters (k=5) with color_branches
 dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
-                               k = 4, 
+                               k = 5, 
                                #groupLabels = TRUE,
-                               col = c("pink", "pink3", "orange", "orange3"))
+                               col = c("pink", "pink3", "pink4", "orange", "orange3"))
 plot(dendro_sheep)
 
 # Cluster group
-clusterwd <- stats::cutree(hclustwd_sheep, k = 4)
+clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
 
 #
 ## Bootstrap method with pvclust
@@ -253,7 +248,7 @@ nmds_sheep <- metaMDS(dist_sheep)
 
 # Colour grouping
 #clusterwd # see order
-col_clusters <- c("pink3", "orange4", "orange", "pink")
+col_clusters <- c("pink", "orange4", "orange", "pink4", "pink3")
 col_clusters[clusterwd]
 
 # Plot ordination with base
@@ -267,17 +262,17 @@ cluster_ord <- text(nmds_sheep,
      cex = 0.7,
      pos = 1)
 cluster_ord <- legend( 
-       legend = paste("Cluster", 1:4),
-       x = 2.3,
-       y = 3.5,
+       legend = paste("Cluster", 1:5),
+       x = 1.2,
+       y = 3,
        #horiz = TRUE,
        text.width = 1,
        x.intersp = 1,
-       y.intersp = 1,
+       y.intersp = 0.3,
        col = col_clusters, 
        pt.bg = col_clusters,
        bty = "n", 
-       pch = (1:4)+20)
+       pch = (1:5)+20)
 cluster_ord <- ordihull(nmds_sheep, 
          groups = clusterwd, 
          display = "sites")
@@ -306,7 +301,7 @@ data_sheep_plot <- data_sheep_sc |>
   )) |> 
   # rearrange by variable group for ggplot
   arrange(sc_val) |>
-  mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_bryophytes", "biom_woody", "biom_forbs", "biom_monocotyledons", "biom_cryptogams", "ab_acari", "ab_collembola", "LOI")))
+  mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_cryptogams", "biom_woody", "biom_forbs", "biom_monocotyledons", "biom_cryptogams", "ab_acari", "ab_collembola", "LOI")))
 
 #
 ## Comparison with factor cluster - Kruskal-Wallis followed by Dunn's test
@@ -316,70 +311,98 @@ data_sheep_plot <- data_sheep_plot |>
   mutate(cluster = as.factor(cluster))
 
 # LOI
-kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "LOI")) # significant **
-dunnTest(sc_val ~ cluster, 
+ks <- kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "LOI")) # significant **
+ks_LOI <- c(ks$statistic, ks$parameter, ks$p.value)
+dunn <- dunnTest(sc_val ~ cluster, 
           data = filter(data_sheep_plot, variables == "LOI"),
           method = "bonferroni")
+dunnsig_LOI <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "LOI")
 
 # Abundance collembola
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "ab_collembola")) #NS
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "ab_collembola"),
          method = "bonferroni")
+dunnsig_collembola <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "ab_collembola")
 
 # Abundance acari
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "ab_acari")) # significant *
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "ab_acari"),
          method = "bonferroni")
+dunnsig_acari <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "ab_acari")
 
 # Biomass cryptogams
-kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_cryptogams")) # significant *
-dunnTest(sc_val ~ cluster, 
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_cryptogams")) # NS
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "biom_cryptogams"),
          method = "bonferroni")
+dunnsig_biom.cryptogams <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "biom_cryptogams")
 
 # Biomass monocotyledons
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_monocotyledons")) #NS
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "biom_monocotyledons"),
          method = "bonferroni")
+dunnsig_biom.monocotyledons <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "biom_monocotyledons")
 
 # Biomass forbs
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_forbs")) # significant *
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "biom_forbs"),
          method = "bonferroni")
+dunnsig_biom.forbs <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "biom_forbs")
 
 # Biomass woody
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "biom_woody")) # significant **
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "biom_woody"),
          method = "bonferroni")
+dunnsig_biom.woody <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "biom_woody")
 
-# Diversity bryophytes
-kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_bryophytes")) # significant **
-dunnTest(sc_val ~ cluster, 
-         data = filter(data_sheep_plot, variables == "div_bryophytes"),
+# Diversity cryptogams
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_cryptogams")) # significant **
+dunn <- dunnTest(sc_val ~ cluster, 
+         data = filter(data_sheep_plot, variables == "div_cryptogams"),
          method = "bonferroni")
+dunnsig_div.cryptogams <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "div_cryptogams")
 
 # Diversity monocotyledons
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_monocotyledons")) # NS
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "div_monocotyledons"),
          method = "bonferroni")
+dunnsig_div.monocotyledons <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "div_monocotyledons")
 
 # Diversity forbs
 kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_forbs")) # significant *
-dunnTest(sc_val ~ cluster, 
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "div_forbs"),
          method = "bonferroni")
+dunnsig_div.forbs <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "div_forbs")
 
 # Diversity woody
-kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_woody")) # significant ***
-dunnTest(sc_val ~ cluster, 
+kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "div_woody")) # significant **
+dunn <- dunnTest(sc_val ~ cluster, 
          data = filter(data_sheep_plot, variables == "div_woody"),
          method = "bonferroni")
+dunnsig_div.woody <- filter(dunn$res, dunn$res$P.adj < 0.1) |> 
+  mutate(Var = "div_woody")
+
+#
+## Stat summary
+
+dunsig_summary <- purrr::reduce(list(dunnsig_LOI, dunnsig_acari, dunnsig_collembola, dunnsig_biom.cryptogams, dunnsig_biom.forbs, dunnsig_biom.monocotyledons, dunnsig_biom.woody, dunnsig_div.cryptogams, dunnsig_div.forbs, dunnsig_div.monocotyledons, dunnsig_div.woody), dplyr::full_join)
 
 #
 ## Boxplots
@@ -392,7 +415,7 @@ clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |>
   xlab("") +
   ylab("Cluster 1") +
   labs("") +
-  ylim(-3.5, 3.5) +
+  ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
   theme(
@@ -401,17 +424,17 @@ clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.x = element_text(colour = "pink3"),
+    axis.title.x = element_text(colour = "pink"),
     legend.title = element_blank()
     ) +
-  annotate("text", x = "LOI", y = 3.5, label = "a*", size = 3) +
-  annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
-  annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
-  annotate("text", x = "biom_forbs", y = 3.5, label = "ab", size = 3) +
-  annotate("text", x = "biom_woody", y = 3.5, label = "a", size = 3) +
-  annotate("text", x = "div_bryophytes", y = 3.5, label = "a", size = 3) +
-  annotate("text", x = "div_forbs", y = 3.5, label = "a", size = 3) +
-  annotate("text", x = "div_woody", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "LOI", y = 3.5, label = "a*", size = 3) +
+  #annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "biom_forbs", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_woody", y = 3.5, label = "a*", size = 3) +
+  #annotate("text", x = "div_cryptogams", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "div_forbs", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "div_woody", y = 3.5, label = "a", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_1
 
@@ -422,7 +445,7 @@ clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster 2") +
-  ylim(-4,4) +
+  ylim(-4, 4) +
   labs("") +
   coord_flip() +
   theme_bw() +
@@ -435,14 +458,14 @@ clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |>
     axis.title.x = element_text(colour = "orange4"),
     legend.title = element_blank()
   ) +
-  annotate("text", x = "LOI", y = 4, label = "ab", size = 3) +
-  annotate("text", x = "ab_acari", y = 4, label = "b*", size = 3) +
-  annotate("text", x = "biom_cryptogams", y = 4, label = "ab", size = 3) +
-  annotate("text", x = "biom_forbs", y = 4, label = "b¤", size = 3) +
+  #annotate("text", x = "LOI", y = 4, label = "ab", size = 3) +
+  annotate("text", x = "ab_acari", y = 4, label = "a*", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 4, label = "ab", size = 3) +
+  annotate("text", x = "biom_forbs", y = 4, label = "a°", size = 3) +
   annotate("text", x = "biom_woody", y = 4, label = "b*", size = 3) +
-  annotate("text", x = "div_bryophytes", y = 4, label = "bc", size = 3) +
-  annotate("text", x = "div_forbs", y = 4, label = "ab", size = 3) +
-  annotate("text", x = "div_woody", y = 4, label = "b*c", size = 3) +
+  #annotate("text", x = "div_cryptogams", y = 4, label = "bc", size = 3) +
+  #annotate("text", x = "div_forbs", y = 4, label = "ab", size = 3) +
+  #annotate("text", x = "div_woody", y = 4, label = "b*c", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_2
 
@@ -454,7 +477,7 @@ clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |>
   xlab("") +
   ylab("Cluster 3") +
   labs("") +
-  ylim(-3,3) +
+  ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
   theme(
@@ -466,48 +489,25 @@ clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |>
     axis.title.x = element_text(colour = "orange"),
     legend.title = element_blank()
   ) +
-  annotate("text", x = "LOI", y = 2.5, label = "b", size = 3) +
-  annotate("text", x = "ab_acari", y = 2.5, label = "a", size = 3) +
-  annotate("text", x = "biom_cryptogams", y = 2.5, label = "ab", size = 3) +
-  annotate("text", x = "biom_forbs", y = 2.5, label = "ab", size = 3) +
-  annotate("text", x = "biom_woody", y = 2.5, label = "b**", size = 3) +
-  annotate("text", x = "div_bryophytes", y = 2.5, label = "b**", size = 3) +
-  annotate("text", x = "div_forbs", y = 2.5, label = "b¤", size = 3) +
-  annotate("text", x = "div_woody", y = 2.5, label = "b***", size = 3) +
+  annotate("text", x = "LOI", y = 2.5, label = "a***", size = 3) +
+  annotate("text", x = "ab_acari", y = 2.5, label = "b*", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 2.5, label = "ab", size = 3) +
+  #annotate("text", x = "biom_forbs", y = 2.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_woody", y = 2.5, label = "b*", size = 3) +
+  annotate("text", x = "div_cryptogams", y = 2.5, label = "a*", size = 3) +
+  annotate("text", x = "div_forbs", y = 2.5, label = "a*", size = 3) +
+  annotate("text", x = "div_woody", y = 2.5, label = "a*", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_3
 
-# Former Cluster 4
-# clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |> 
-#   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
-#   geom_hline(yintercept = 0, linetype = "dashed") +
-#   geom_boxplot() +
-#   xlab("") +
-#   ylab("Cluster 4") +
-#   ylim(-3,3) +
-#   coord_flip() +
-#   theme_bw() +
-#   theme(
-#     panel.grid.major = element_blank(),
-#     panel.grid.minor = element_blank(),
-#     panel.border = element_blank(),
-#     axis.ticks = element_blank(),
-#     axis.text.y = element_blank(),
-#     axis.title.x = element_text(colour = "pink4"),
-#     legend.title = element_blank()
-#   ) +
-#   scale_fill_grey(start = 0.5, end = 1)
-# clusterplot_4
-
 # Cluster 4
-clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |> 
+clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |>
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
   xlab("") +
   ylab("Cluster 4") +
-  labs("") +
-  ylim(-3,3) +
+  ylim(-4,4) +
   coord_flip() +
   theme_bw() +
   theme(
@@ -516,19 +516,50 @@ clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.x = element_text(colour = "pink"),
+    axis.title.x = element_text(colour = "pink4"),
     legend.title = element_blank()
   ) +
-  annotate("text", x = "LOI", y = 2.5, label = "a**", size = 3) +
-  annotate("text", x = "ab_acari", y = 2.5, label = "ab", size = 3) +
-  annotate("text", x = "biom_cryptogams", y = 2.5, label = "b*", size = 3) +
-  annotate("text", x = "biom_forbs", y = 2.5, label = "a", size = 3) +
-  annotate("text", x = "biom_woody", y = 2.5, label = "ab", size = 3) +
-  annotate("text", x = "div_bryophytes", y = 2.5, label = "ac**", size = 3) +
-  annotate("text", x = "div_forbs", y = 2.5, label = "ab", size = 3) +
-  annotate("text", x = "div_woody", y = 2.5, label = "ab*c¤", size = 3) +
+  annotate("text", x = "LOI", y = 3.5, label = "b***", size = 3) +
+  #annotate("text", x = "ab_acari", y = 3.5, label = "b*", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "biom_forbs", y = 3.5, label = "b°", size = 3) +
+  #annotate("text", x = "biom_woody", y = 3.5, label = "b*", size = 3) +
+  annotate("text", x = "div_cryptogams", y = 3.5, label = "b*", size = 3) +
+  annotate("text", x = "div_forbs", y = 3.5, label = "b*", size = 3) +
+  annotate("text", x = "div_woody", y = 3.5, label = "b*", size = 3) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_4
+
+# Cluster 5
+clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster 5") +
+  labs("") +
+  ylim(-4, 4) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "pink3"),
+    legend.title = element_blank()
+  ) +
+  #annotate("text", x = "LOI", y = 3.5, label = "a**", size = 3) +
+  #annotate("text", x = "ab_acari", y = 3.5, label = "b*", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 3.5, label = "b*", size = 3) +
+  #annotate("text", x = "biom_forbs", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "biom_woody", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "div_cryptogams", y = 3.5, label = "b*", size = 3) +
+  #annotate("text", x = "div_forbs", y = 3.5, label = "ab", size = 3) +
+  annotate("text", x = "div_woody", y = 3.5, label = "b°", size = 3) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_5
 
 # x-axis for plot arrange
 clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |> 
@@ -550,42 +581,232 @@ clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |>
 clusterplot_axis
 
 # Arrange all plots
-clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, clusterplot_3, clusterplot_2, nrow = 1, common.legend = TRUE)
+clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, clusterplot_5, clusterplot_2, clusterplot_3, nrow = 1, common.legend = TRUE)
 clusterplot_all
-ggsave(filename = "outputs/clusterplots2.png", plot = clusterplot_all, height = 12, width = 20, units = "cm")
+ggsave(filename = "outputs/clusterplots.png", plot = clusterplot_all, height = 8, width = 20, units = "cm")
 
 
 #### LM AGAINST TEMP, PRECI & PHOSPHORUS ####
 
-# Significant differences between groups
-
 # New table for LM
 data_sheep_lm <- subset(data_sheep, select = -c(fieldtype, SiteID))
 
-# LOI
+# Distribution explanatory variables
+hist(data_sheep_lm$annualprecipitation)
+hist(data_sheep_lm$avgtempJuly)
+hist(data_sheep_lm$phosphorus) # one outlier -> to be removed
+
+#
+## Correlation explanatory variables
+
+# Precipitation x temperature
+lm <- lm(annualprecipitation ~ avgtempJuly, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$avgtempJuly, data_sheep_lm$annualprecipitation, pch = 16, col = "red")
+abline(lm)
+
+# Precipitation x phosphorus
+lm <- lm(phosphorus ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$phosphorus, pch = 16, col = "red")
+abline(lm)
+
+# Remove phosphorus outlier & temperature (highly correlated with precipitation)
+data_sheep_lm <- filter(data_sheep_lm, phosphorus < 20)
+data_sheep_lm <- subset(data_sheep_lm, select = -c(avgtempJuly))
+
+#
+## LOI
+
+# Against precipitation simple
 lm <- lm(LOI ~ annualprecipitation, data = data_sheep_lm)
 summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$LOI, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
 
-# Abundance collembola
+# Against phosphorus simple
+lm <- lm(LOI ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$LOI, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
 
-# Abundance acari
+#
+## Abundance collembola
 
-# Biomass cryptogams
+# Against precipitation simple
+lm <- lm(ab_collembola ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$ab_collembola, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
 
-# Biomass monocotyledons
+# Against phosphorus simple
+lm <- lm(ab_collembola ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$ab_collembola, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
 
-# Biomass forbs
+#
+## Abundance acari
 
-# Biomass woody
+# Against precipitation simple
+lm <- lm(ab_acari ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$ab_acari, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
 
-# Diversity bryophytes
+# Against phosphorus simple
+lm <- lm(ab_acari ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$ab_acari, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
 
-# Diversity monocotyledons
+# Summary plot lm soil
 
-# Diversity forbs
 
-# Diversity woody
+#
+## Biomass cryptogams
 
+# Against precipitation simple
+lm <- lm(biom_cryptogams ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_cryptogams, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(biom_cryptogams ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_cryptogams, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Biomass monocotyledons
+
+# Against precipitation simple
+lm <- lm(biom_monocotyledons ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_monocotyledons, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(biom_monocotyledons ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_monocotyledons, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Biomass forbs
+
+# Against precipitation simple
+lm <- lm(biom_forbs ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_forbs, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(biom_forbs ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_forbs, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Biomass woody
+
+# Against precipitation simple
+lm <- lm(biom_woody ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_woody, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(biom_woody ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_woody, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Diversity bryophytes
+
+# Against precipitation simple
+lm <- lm(div_cryptogams ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_cryptogams, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(div_cryptogams ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$div_cryptogams, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Diversity monocotyledons
+
+# Against precipitation simple
+lm <- lm(div_monocotyledons ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_monocotyledons, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(div_monocotyledons ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$div_monocotyledons, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Diversity forbs
+
+# Against precipitation simple
+lm <- lm(div_forbs ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_forbs, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(div_forbs ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$div_forbs, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Diversity woody
+
+# Against precipitation simple
+lm <- lm(div_woody ~ annualprecipitation, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_woody, pch = 16, col = "blue")
+abline(lm)
+plot(lm$residuals)
+
+# Against phosphorus simple
+lm <- lm(div_woody ~ phosphorus, data = data_sheep_lm)
+summary(lm)
+plot(data_sheep_lm$phosphorus, data_sheep_lm$div_woody, pch = 16, col = "green")
+abline(lm)
+plot(lm$residuals)
+
+#
+## Plot summary
 
 #### DATA SUMMARY ####
 
