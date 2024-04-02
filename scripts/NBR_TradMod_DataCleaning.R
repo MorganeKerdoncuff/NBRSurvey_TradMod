@@ -1973,12 +1973,7 @@ names(biomass_raw) <- gsub("Dryweight_g", "DWbiomass_g", names(biomass_raw))
 
 
 # Check ID coding
-#table(biomass_raw$SampleID) # ØY experiment samples merged in, need to extract ØY-GK as OV1
-biomass_raw <- biomass_raw |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T2-D1" = "OV1-P1-D1")) |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T3-D1" = "OV1-P2-D1")) |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T4-D1" = "OV1-P3-D1")) |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T3-D2" = "OV1-P2-D2"))
+#table(biomass_raw$SampleID) # all good
 
 # Add PlotID and SiteID
 biomass_raw <- biomass_raw |> 
@@ -2007,6 +2002,7 @@ biomass_full <- biomass_full |>
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Herbs" = "forbs")) |> 
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Forbs" = "forbs")) |> 
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Ferns" = "ferns")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "fern" = "ferns")) |> 
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Fern" = "ferns")) |> 
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Woody" = "woody")) |> 
   mutate(FunctionalType = dplyr::recode(FunctionalType, "Mosses" = "bryophytes")) |> 
@@ -2031,7 +2027,7 @@ biomass_full <- biomass_full |>
 
 # Check categories
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> to check
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
@@ -2039,25 +2035,27 @@ xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteI
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
 xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # check lycophyte P1-D1
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
 xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # missing bryophyte & litter on OV1-P2-D1 -> to be removed
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # missing weight, in process
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, one missing bag for litter & bryophyte , in process
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, one missing bag for litter & bryophyte, in process 
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # Lots of missing moss/litter data on P1 & P2 -> to check
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # Lots of missing moss/litter, and possible confusion with lycophytes -> to check
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # missing bryophyte & litter on OV1-P2-D1 -> to be removed
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # 3 D1s, all functional groups -> validated
 #xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US6")) # 3 D1s, all functional groups -> validated
 
 #
-## Remove incomplete samples
+## Remove mislabelled & non fully sorted samples
 
-biomass_full <- filter(biomass_full, SampleID != "OS5-?-?" & SampleID != "OV1-P2-D1")
+biomass_full <- filter(biomass_full, SampleID != "OS5-?-?" &
+                         SampleID != "OS2-P2-D1" &
+                         SampleID != "OS2-P3-D2")
 
 #
 ## Numeric var - Check min/max, distribution and potential outliers
@@ -2114,6 +2112,15 @@ biomass_full <- biomass_full |>
 
 #
 ## Prepare data for vegan
+
+# Select 3 replicates per site
+biomass_full <- biomass_full |> 
+  group_by(SiteID, PlotID) |>
+  pivot_wider(names_from = FunctionalType, values_from = DWbiomass_g) |> 
+  # Select randomly one row which match unique combination of site & plot IDs
+  slice(1) |>
+  ungroup() |>
+  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "DWbiomass_g")
 
 # Export clean data in new excel file
 write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
