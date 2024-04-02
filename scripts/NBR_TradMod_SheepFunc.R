@@ -21,6 +21,8 @@ library(dunn.test) # Dunn's Test after KS -> "classic" but less handy to use, bu
 library(dendextend) # Visual dendrogram
 library(pvclust) # Multiscale bootstrap resampling
 library(ggplot2) # Visual representation
+library(concaveman) # better hull
+library(ggforce) # better ggplot
 library(forcats) # reorder groups for plots
 library(ggpubr) # Function ggarrange for several plots on same file
 # library(GGally) # Extension ggplot
@@ -29,6 +31,7 @@ library(ggpubr) # Function ggarrange for several plots on same file
 #### DATA LOADING ####
 
 siteinfo_full <- read.csv("data/cleandata/NBR_FullSiteInfo.csv", sep=",") # Clean site info data
+landuse_full <- read.csv("data/cleandata/NBR_FullLandUse.csv", sep=",") # Clean site info data
 plantrichness_full <- read.csv("data/cleandata/NBR_FullPlantComm.csv", sep=",") # Clean aboveground cover data
 soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clean soil chemistry data
 mesobio_full <- read.csv("data/cleandata/NBR_FullMesobio.csv", sep=",") # Clean soil mesofauna data
@@ -45,9 +48,10 @@ soilchem_full <- read.csv("data/cleandata/NBR_FullSoilChem.csv", sep=",") # Clea
 # Site selection
 siteinfo_sheep <- siteinfo_full |>  
   filter(Livestock == "sheep") |> 
-  dplyr::select(SiteID)
-
+  dplyr::select(SiteID, EcoZone) 
+  
 # Extraction in other datasets
+landuse_sheep <- filter(landuse_full, SiteID %in% siteinfo_sheep$SiteID)
 plantrichness_sheep <- filter(plantrichness_full, SiteID %in% siteinfo_sheep$SiteID)
 soilchem_sheep <- filter(soilchem_full, SiteID %in% siteinfo_sheep$SiteID)
 mesobio_sheep <- filter(mesobio_full, SiteID %in% siteinfo_sheep$SiteID)
@@ -110,8 +114,7 @@ plantrichness_sheep <- plantrichness_sheep |>
 #
 ## Summarise data at site level -> should be 23 observations for non community data
 
-# Site info - validated
-# Climate - validated
+# Site info - ok
 
 # Plant species richness
 ## From groundcover data
@@ -167,23 +170,34 @@ biomass_sheep <- biomass_sheep |>
 
 # Merge all data
 data_sheep <- purrr::reduce(list(
-  siteinfo_sheep, 
+  siteinfo_sheep,
+  subset(landuse_sheep, select = c(SiteID, FieldType)),
   subset(plantrichness_sheep, select = -c(div_ferns)), 
   biomass_sheep, 
   mesobio_sheep, 
-  soilchem_sheep, 
-  subset(climate_sheep, select = c(SiteID, annualprecipitation, avgtempJuly))
-  ), dplyr::left_join)
+  soilchem_sheep), dplyr::left_join)
 
-# Intuitive ID according to following code - COx (costal outfield), Ix (infield), MOx (mountain oufield)
+# Intuitive ID according to following code - COx (costal outfield), CIx (coastal infield), FIx (fjord infield), MOx (mountain oufield)
 data_sheep <- data_sheep |> 
-  mutate(fieldtype = case_when(
-    grepl("U", SiteID) ~ "MO",
-    grepl("IS2|OV|OS5|OS7|OS9", SiteID) ~ "CO",
-    .default = "IN"
+  mutate(fieldclass = ifelse(
+    EcoZone == "mountain" & FieldType == "outfield", "MO", ifelse(
+      EcoZone == "coastal" & FieldType == "infield", "CI", ifelse(
+        EcoZone == "fjord" & FieldType == "infield", "FI", "CO"
+      )
+    )
   )) |> 
-  group_by(fieldtype) |>
-  mutate(FieldID = paste(fieldtype, row_number(), sep = ""))
+  group_by(fieldclass) |> 
+  mutate(FieldID = paste(fieldclass, row_number(), sep = ""))
+
+# # Intuitive ID according to following code - COx (costal outfield), Ix (infield), MOx (mountain oufield)
+# data_sheep <- data_sheep |>
+#   mutate(fieldclass_b = case_when(
+#     grepl("U", SiteID) ~ "MO",
+#     grepl("IS2|OV|OS5|OS7|OS9", SiteID) ~ "CO",
+#     .default = "IN"
+#   )) |>
+#   group_by(fieldclass_b) |>
+#   mutate(FieldID = paste(fieldclass_b, row_number(), sep = ""))
 
 # Site ID as rowname
 rownames(data_sheep) <- data_sheep$FieldID
@@ -193,8 +207,9 @@ rownames(data_sheep) <- data_sheep$FieldID
 #### HIERARCHICAL CLUSTERING ####
 
 # Data scaling
-data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, fieldtype, FieldID, annualprecipitation, avgtempJuly, phosphorus))))
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, EcoZone, FieldType, fieldclass, FieldID))))
 rownames(data_sheep_sc) <- data_sheep$FieldID
+#rownames(data_sheep_sc) <- data_sheep$SiteID
 
 #
 ## Clustering & dendrogram
@@ -208,17 +223,18 @@ hclustwd_sheep <- hclust(dist_sheep, method = "ward.D2")
 # Plot HC tree
 plot(hclustwd_sheep)
 
-# Show clusters (k=5) with base
+# Show primary (k=2) & secondary (k=5) clusters with base
 rect.hclust(hclustwd_sheep, k = 5, border = 2:6)
 
-# Show clusters (k=5) with color_branches
-dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
+# Show primary (k=2) & secondary (k=5) clusters with color_branches
+dendro_sheep_sec <- color_branches(as.dendrogram(hclustwd_sheep), 
                                k = 5, 
                                #groupLabels = TRUE,
-                               col = c("pink", "pink3", "pink4", "orange", "orange3"))
-plot(dendro_sheep)
+                               col = c("pink", "pink2", "pink4", "orange", "orange3"))
+plot(dendro_sheep_sec)
 
-# Cluster group
+# Primary and secondary cluster groups
+# clusterwd_prim <- stats::cutree(hclustwd_sheep, k = 2)
 clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
 
 #
@@ -236,6 +252,10 @@ clusterwd <- stats::cutree(hclustwd_sheep, k = 5)
 # 
 # # Plot dendrogram
 # plot(cluster_pval)
+
+#
+## Comparison theory distribution (classification) vs observed (primary cluster)
+
 
 #
 ## Ordination clusters
@@ -278,6 +298,51 @@ cluster_ord <- ordihull(nmds_sheep,
          display = "sites")
 cluster_ord
 
+#
+## Ordination cluster ggplot
+
+# Extraction scores
+nmds_scores <- as.data.frame(scores(nmds_sheep))
+nmds_scores$FieldID <- rownames(nmds_scores)
+
+# Add groups
+nmds_scores <- left_join(nmds_scores, subset(data_sheep, select = c(FieldType, EcoZone, FieldID)))
+nmds_scores <- nmds_scores |> 
+  mutate(clusterID = clusterwd,
+         clustercol = col_clusters[clusterwd])
+
+# Groups
+col_clusters <- c("pink", "orange4", "orange", "pink4", "pink3") # hull
+col_clusters[clusterwd]
+
+# Plotting
+ggcluster_ord <- ggplot(data = nmds_scores, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(aes(
+    shape = EcoZone,
+    colour = FieldType
+  ), size = 3) +
+  scale_colour_manual(values = c("infield" = "lightgrey", "outfield" = "black")) +
+  geom_mark_ellipse(aes(
+    fill = clustercol
+  )) +
+  # geom_mark_hull(aes(
+  #   fill = clustercol
+  # )) +
+  # geom_text(data = nmds_scores, aes(
+  #   x = NMDS1,
+  #   y = NMDS2,
+  #   label = FieldID
+  # ))
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        panel.background = element_blank(),
+        legend.background = element_blank(),
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+ggcluster_ord
 
 
 #### ANALYSIS OF CLUSTERS ####
@@ -285,13 +350,14 @@ cluster_ord
 #
 ## Data preparation
 
-# Extraction cluster group
+# Extraction primary & secondary cluster group
 data_sheep_sc <- data_sheep_sc |>
-  mutate(cluster = as.numeric(clusterwd))
+  mutate(cluster_prim = as.numeric(clusterwd_prim)) |> 
+  mutate(cluster_sec = as.numeric(clusterwd_sec))
 
 # Make variable group - Productivity, Diversity, Carbon, Soil nutrients
 data_sheep_plot <- data_sheep_sc |> 
-  pivot_longer(cols = -c(cluster),
+  pivot_longer(cols = -c(cluster_prim, cluster_sec),
                names_to = "variables",
                values_to = "sc_val") |> 
   mutate(var_group = ifelse(
@@ -303,12 +369,61 @@ data_sheep_plot <- data_sheep_sc |>
   arrange(sc_val) |>
   mutate(variables = factor(variables, levels = c("div_woody", "div_forbs", "div_monocotyledons", "div_cryptogams", "biom_woody", "biom_forbs", "biom_monocotyledons", "biom_cryptogams", "ab_acari", "ab_collembola", "LOI")))
 
-#
-## Comparison with factor cluster - Kruskal-Wallis followed by Dunn's test
-
 # Make cluster variable as factor
 data_sheep_plot <- data_sheep_plot |> 
-  mutate(cluster = as.factor(cluster))
+  mutate(cluster_prim = as.factor(cluster_prim)) |> 
+  mutate(cluster_sec = as.factor(cluster_sec))
+
+#
+## Comparison primary clusters - unpaired non-parametric Mann-Whitney test
+
+# LOI
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "LOI")) # significant ***
+wcx_LOI <- c(wcx$statistic, wcx$p.value)
+
+# Abundance collembola
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "ab_collembola")) # NS
+wcx_collembola <- c(wcx$statistic, wcx$p.value)
+
+# Abundance acari
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "ab_acari")) # NS
+wcx_acari <- c(wcx$statistic, wcx$p.value)
+
+# Biomass cryptogams
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "biom_cryptogams")) # NS
+wcx_biom.cryptogams <- c(wcx$statistic, wcx$p.value)
+
+# Biomass monocotyledons
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "biom_monocotyledons")) # NS
+wcx_biom.monocotyledons <- c(wcx$statistic, wcx$p.value)
+
+# Biomass forbs
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "biom_forbs")) # significant **
+wcx_biom.forbs <- c(wcx$statistic, wcx$p.value)
+
+# Biomass woody
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "biom_woody")) # significant ***
+wcx_biom.woody <- c(wcx$statistic, wcx$p.value)
+
+# Diversity cryptogams
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "div_cryptogams")) # significant ***
+wcx_div.cryptogams <- c(wcx$statistic, wcx$p.value)
+
+# Diversity monocotyledons
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "div_monocotyledons")) # NS
+wcx_div.monocotyledons <- c(wcx$statistic, wcx$p.value)
+
+# Diversity forbs
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "div_forbs")) # significant **
+wcx_div.forbs <- c(wcx$statistic, wcx$p.value)
+
+# Diversity woody
+wcx <- wilcox.test(sc_val ~ cluster_prim, data = filter(data_sheep_plot, variables == "div_woody")) # significant ***
+wcx_div.woody <- c(wcx$statistic, wcx$p.value)
+
+
+#
+## Comparison with factor cluster - Kruskal-Wallis followed by Dunn's test
 
 # LOI
 ks <- kruskal.test(sc_val ~ cluster, data = filter(data_sheep_plot, variables == "LOI")) # significant **
@@ -407,8 +522,70 @@ dunsig_summary <- purrr::reduce(list(dunnsig_LOI, dunnsig_acari, dunnsig_collemb
 #
 ## Boxplots
 
-# Cluster 1
-clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |> 
+# Primary cluster A
+clusterplot_A <- filter(data_sheep_plot, cluster_prim == 1) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster A") +
+  labs("") +
+  ylim(-4, 4) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "pink3"),
+    legend.title = element_blank()
+  ) +
+  annotate("text", x = "LOI", y = 3.5, label = "***", size = 3) +
+  #annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
+  annotate("text", x = "biom_forbs", y = 3.5, label = "**", size = 3) +
+  annotate("text", x = "biom_woody", y = 3.5, label = "***", size = 3) +
+  annotate("text", x = "div_cryptogams", y = 3.5, label = "***", size = 3) +
+  annotate("text", x = "div_forbs", y = 3.5, label = "**", size = 3) +
+  annotate("text", x = "div_woody", y = 3.5, label = "***", size = 3) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_A
+
+# Primary cluster B
+clusterplot_B <- filter(data_sheep_plot, cluster_prim == 2) |> 
+  ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_boxplot() +
+  xlab("") +
+  ylab("Cluster B") +
+  labs("") +
+  ylim(-4, 4) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.x = element_text(colour = "orange2"),
+    legend.title = element_blank()
+  ) +
+  #annotate("text", x = "LOI", y = 3.5, label = "a*", size = 3) +
+  #annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
+  #annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "biom_forbs", y = 3.5, label = "ab", size = 3) +
+  #annotate("text", x = "biom_woody", y = 3.5, label = "a*", size = 3) +
+  #annotate("text", x = "div_cryptogams", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "div_forbs", y = 3.5, label = "a", size = 3) +
+  #annotate("text", x = "div_woody", y = 3.5, label = "a", size = 3) +
+  scale_fill_grey(start = 0.5, end = 1)
+clusterplot_B
+
+# Secondary cluster 1
+clusterplot_1 <- filter(data_sheep_plot, cluster_sec == 1) |> 
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
@@ -438,8 +615,8 @@ clusterplot_1 <- filter(data_sheep_plot, cluster == 1) |>
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_1
 
-# Cluster 2
-clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |> 
+# Secondary Cluster 2
+clusterplot_2 <- filter(data_sheep_plot, cluster_sec == 2) |> 
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
@@ -469,8 +646,8 @@ clusterplot_2 <- filter(data_sheep_plot, cluster == 2) |>
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_2
 
-# Cluster 3
-clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |> 
+# Secondary Cluster 3
+clusterplot_3 <- filter(data_sheep_plot, cluster_sec == 3) |> 
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
@@ -500,8 +677,8 @@ clusterplot_3 <- filter(data_sheep_plot, cluster == 3) |>
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_3
 
-# Cluster 4
-clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |>
+# Secondary Cluster 4
+clusterplot_4 <- filter(data_sheep_plot, cluster_sec == 4) |>
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
@@ -530,8 +707,8 @@ clusterplot_4 <- filter(data_sheep_plot, cluster == 4) |>
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_4
 
-# Cluster 5
-clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |> 
+# Secondary Cluster 5
+clusterplot_5 <- filter(data_sheep_plot, cluster_sec == 5) |> 
   ggplot(aes(x = variables, y = sc_val, fill = var_group)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
@@ -547,7 +724,7 @@ clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.x = element_text(colour = "pink3"),
+    axis.title.x = element_text(colour = "pink2"),
     legend.title = element_blank()
   ) +
   #annotate("text", x = "LOI", y = 3.5, label = "a**", size = 3) +
@@ -561,8 +738,11 @@ clusterplot_5 <- filter(data_sheep_plot, cluster == 5) |>
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_5
 
+#
+## Arrange plots
+
 # x-axis for plot arrange
-clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |> 
+clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |> 
   ggplot(aes(x = variables)) +
   xlab("") +
   ylab("") +
@@ -577,12 +757,44 @@ clusterplot_axis <- filter(data_sheep_plot, cluster == 1) |>
     axis.text.x = element_blank(),
     legend.title = element_blank()
   )
-# scale_fill_grey()
 clusterplot_axis
 
+# Significant symbols primary comparison for plot arrange
+# clusterplot_primsig <- filter(data_sheep_plot, cluster_prim == 1) |> 
+#   ggplot(aes(x = variables)) +
+#   xlab("") +
+#   ylab("") +
+#   labs("") +
+#   coord_flip() +
+#   theme_bw() +
+#   theme(
+#     panel.grid.major = element_blank(),
+#     panel.grid.minor = element_blank(),
+#     panel.border = element_blank(),
+#     axis.ticks = element_blank(),
+#     axis.text.x = element_blank(),
+#     legend.title = element_blank()
+#   ) +
+#   annotate("text", x = "LOI", y = 0, label = "***", size = 3) +
+#   #annotate("text", x = "ab_acari", y = 3.5, label = "ab", size = 3) +
+#   #annotate("text", x = "biom_cryptogams", y = 3.5, label = "a", size = 3) +
+#   annotate("text", x = "biom_forbs", y = 0, label = "**", size = 3) +
+#   annotate("text", x = "biom_woody", y = 0, label = "***", size = 3) +
+#   annotate("text", x = "div_cryptogams", y = 0, label = "***", size = 3) +
+#   annotate("text", x = "div_forbs", y = 0, label = "**", size = 3) +
+#   annotate("text", x = "div_woody", y = 0, label = "***", size = 3)
+# clusterplot_primsig
+
+# Arrange primary plots
+clusterplot_prim <- ggarrange(clusterplot_axis, clusterplot_A, clusterplot_B, nrow = 1, common.legend = TRUE)
+clusterplot_prim
+
+# Arrange secondary plots
+clusterplot_sec <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, clusterplot_5, clusterplot_2, clusterplot_3, nrow = 1, common.legend = TRUE)
+clusterplot_sec
+
 # Arrange all plots
-clusterplot_all <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, clusterplot_5, clusterplot_2, clusterplot_3, nrow = 1, common.legend = TRUE)
-clusterplot_all
+clusterplot_all <- ggarrange(clusterwd_prim, clusterwd_sec)
 ggsave(filename = "outputs/clusterplots.png", plot = clusterplot_all, height = 8, width = 20, units = "cm")
 
 
