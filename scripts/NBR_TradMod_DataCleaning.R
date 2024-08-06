@@ -19,7 +19,7 @@ library(purrr) # merging several files at the same time
 siteinfo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo") # Farm information, field location and habitat type
 landuse_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
 #farmer_raw <- read_excel(path = "data/rawdata/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
-landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx", sheet="MatrixProportion") #Land cover data around the fields from Geonorge, at site level
+landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx") #Land cover data around the fields from Geonorge, at site level
 area20x20_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
 groundcover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
 soilpene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
