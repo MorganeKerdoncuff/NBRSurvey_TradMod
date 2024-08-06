@@ -287,25 +287,31 @@ fjordsys_sc <- fjordsys |>
 ## Sum outfield area (num), from landscape
 ## Sum wetland area (num), from landscape
 
-# New variables - sum of cultivated land & forest
+# Percent of land cover
 landscape_infield <- landscape_infield |> 
-  mutate(Cultivated = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
-  mutate(Forest = ProductiveForest_percent + NonProductiveForest_percent)
+  mutate(TotLand_ha = TotalArea_ha - Sea_ha) |> 
+  mutate(Forest = (ProductiveForest_ha + NonProductiveForest_ha)/TotLand_ha*100) |> 
+  mutate(Cultivated = (FullyCultivatedLand_ha + SuperficiallyCultivatedLand_ha)/TotLand_ha*100) |> 
+  mutate(Infield = Infield_ha/TotLand_ha*100) |> 
+  mutate(Outfield = Outfield_ha/TotLand_ha*100) |> 
+  mutate(Wetland = Wetland_ha/TotLand_ha*100) |> 
+  mutate(Artificial = Infrastructure_ha/TotLand_ha*100)
+
+# New variables - sum of cultivated land & forest
+# landscape_infield <- landscape_infield |> 
+#   mutate(Cultivated = FullyCultivatedLand_percent + SuperficiallyCultivatedLand_percent) |> 
+#   mutate(Forest = ProductiveForest_percent + NonProductiveForest_percent)
 
 # Selection variables
-landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, Infield_percent, Outfield_percent, Wetland_percent))
-
-# Variable renaming
-names(landscape) <- gsub("Infield_percent", "Infield", names(landscape))
-names(landscape) <- gsub("Outfield_percent", "Outfield", names(landscape))
-names(landscape) <- gsub("Wetland_percent", "Wetland", names(landscape))
+landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, Infield, Outfield, Wetland, Artificial))
 
 # Check distribution
-#hist(landscape$Cultivated) # Poisson-like distribution -> validated
-#hist(landscape$Forest) # Normal-like distribution, one gap in the middle -> validated
-#hist(landscape$Infield) # unbalanced normal-like, but no outlier -> validated
-#hist(landscape$Outfield) # Poisson, not skewed -> validated
-#hist(landscape$Wetland) # Poisson, not skewed -> validated
+# hist(landscape$Cultivated) # Normal-like distribution, one gap in the middle -> validated
+# hist(landscape$Forest) # uneven distribution but no outlier -> validated
+# hist(landscape$Infield) # unbalanced normal-like, but no outlier -> validated
+# hist(landscape$Outfield) # Poisson, not skewed -> validated
+# hist(landscape$Wetland) # Poisson, not skewed -> validated
+# hist(landscape$Artificial) # Poisson, no zero -> valiated
 
 # Scaling
 landscape_sc <- landscape |> 
@@ -435,7 +441,7 @@ contin_fjordsys <- xtabs(formula = Values ~ SiteID + Factors, data = fjordsys_lo
 # Landscape
 landscape_long <- landscape_sc |> 
   pivot_longer(
-    cols = c(Cultivated, Forest, Infield, Outfield, Wetland),
+    cols = c(Cultivated, Forest, Infield, Outfield, Wetland, Artificial),
     names_to = "Factors",
     values_to = "Values"
   )
@@ -464,6 +470,7 @@ contin_locenvi <- xtabs(formula = Values ~ SiteID + Factors, data = locenvi_long
 # Number of observations (same for all sets)
 nobs <- dim(contin_fjordsys)[1]
 
+# Number of variables per set
 nvar_fjordsys <- length(select_if(fjordsys_sc, is.numeric))
 nvar_landscape <- length(select_if(landscape_sc, is.numeric))
 nvar_grazing <- length(select_if(grazing_sc, is.numeric))
@@ -475,26 +482,18 @@ nvar_locenvi <- length(select_if(locenvi_sc, is.numeric))
 # Fjord x landscape
 cancor <- cc(contin_fjordsys, contin_landscape)
 rhocancor <- cancor$cor
-rhocancor
-# 1st axis correlation 0.79
-# 2nd axis correlation 0.75
-# 3rd axis correlation 0.55
-test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling")
-# 1st dim significant - stat 3.45 - df1 20 - df2 74 - pval 1.5.10-4
-# 2nd dim significant - stat 1.77 - df1 12 - df2 82 - pval 1.5.10-3
-# 3rd dim marginally significant - stat 0.5 - df1 6 - df2 90 - pval 0.09
+rhocancor # Canonical correlation per dimension
+test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_landscape, tstat = "Hotelling") # Hotelling test for significance
 fjordlandscape <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Landscape", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
-fjordlandscape
+fjordlandscape # Summary statistics
 
 # Fjord x grazing
 cancor <- cc(contin_fjordsys, contin_grazing)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.61
 test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 1.11 - df1 24 - df2 70 - pval 0.72
 fjordgrazing <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Grazing", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -504,9 +503,7 @@ fjordgrazing
 cancor <- cc(contin_fjordsys, contin_locenvi)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.63
 test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 1.43 - df1 36 - df2 58 - pval 0.96
 fjordlocenvi <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Finescale", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -519,9 +516,7 @@ fjordlocenvi
 cancor <- cc(contin_landscape, contin_grazing)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.69
 test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grazing, tstat = "Hotelling")
-# 1st dim NS - stat 1.96 - df1 30 - df2 82 - pval 0.39
 landscapegrazing <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Landscape", response = "Grazing", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -531,9 +526,7 @@ landscapegrazing
 cancor <- cc(contin_landscape, contin_locenvi)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.80
 test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 3.64 - df1 45 - df2 67 - pval 0.38
 landscapelocenvi <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Landscape", response = "Finescale", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -546,19 +539,20 @@ landscapelocenvi
 cancor <- cc(contin_grazing, contin_locenvi)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.79
 test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_locenvi, tstat = "Hotelling")
-# 1st dim NS - stat 4.26 - df1 54 - df2 74 - pval 0.54
 grazinglocenvi <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Grazing", response = "Finescale", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
 grazinglocenvi
 
 #
-## Merging output
+## Summary statistical output
 
-envar <- purrr::reduce(list(fjordlandscape, fjordgrazing, fjordlocenvi, landscapegrazing, landscapelocenvi, grazinglocenvi), dplyr::full_join)
-envar <- envar |> 
+# All results
+envar_SI <- purrr::reduce(list(fjordlandscape, fjordgrazing, fjordlocenvi, landscapegrazing, landscapelocenvi, grazinglocenvi), dplyr::full_join)
+
+# Significant only
+envar <- envar_SI |> 
   filter(dim == "dim1" | p.value < 0.1)
 
 
@@ -578,9 +572,7 @@ nvar_grass <- length(select_if(grass, is.numeric))
 cancor <- cc(contin_fjordsys, contin_grass)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.8
 test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_grass, tstat = "Hotelling") 
-# 1st dim marginally significant - stat 2.59 - df1 28 - df2 66 - pval 0.081
 fjordgrass <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Grass", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -590,9 +582,7 @@ fjordgrass
 cancor <- cc(contin_landscape, contin_grass)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.82
 test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grass, tstat = "Hotelling") 
-# 1st dim NS - stat 3.15 - df1 35 - df2 77 - pval 0.12
 landscapegrass <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Landscape", response = "Grass", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -602,9 +592,7 @@ landscapegrass
 cancor <- cc(contin_grazing, contin_grass)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.87 
 test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_grass, tstat = "Hotelling") 
-# 1st axis significant - stat 4.6 - df1 35 - df2 77 - pval 5.2.10-3
 grazinggrass <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Grazing", response = "Grass", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -614,17 +602,20 @@ grazinggrass
 cancor <- cc(contin_locenvi, contin_grass)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.87
 test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_grass, tstat = "Hotelling")
-# 1st axis significant - stat 4.63 - df1 42 - df2 86 - pval 0.038
 locenvigrass <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Finescale", response = "Grass", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
 locenvigrass
 
-# Merging output
-grassvar <- purrr::reduce(list(fjordgrass, landscapegrass, grazinggrass, locenvigrass), dplyr::full_join)
-grassvar <- grassvar |> 
+#
+## Summary statistical output
+
+# All results
+grassvar_SI <- purrr::reduce(list(fjordgrass, landscapegrass, grazinggrass, locenvigrass), dplyr::full_join)
+
+# Significant only
+grassvar <- grassvar_SI |> 
   filter(dim == "dim1" | p.value < 0.1)
 
 
@@ -644,9 +635,7 @@ nvar_forb <- length(select_if(forb, is.numeric))
 cancor <- cc(contin_fjordsys, contin_forb)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.69
 test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 1.57 - df1 28 - df2 66 - pval 0.58
 fjordforb <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Forb", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -656,9 +645,7 @@ fjordforb
 cancor <- cc(contin_landscape, contin_forb)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.75
 test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 3 - df1 35 - df2 77 - pval 0.15
 landscapeforb <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Landscape", response = "Forb", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -668,9 +655,7 @@ landscapeforb
 cancor <- cc(contin_grazing, contin_forb)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.79
 test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 2.89 - df1 35 - df2 77 - pval 0.19
 grazingforb <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Grazing", response = "Forb", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -680,17 +665,20 @@ grazingforb
 cancor <- cc(contin_locenvi, contin_forb)
 rhocancor <- cancor$cor
 rhocancor 
-# 1st axis correlation 0.77
 test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_forb, tstat = "Hotelling") 
-# 1st dim NS - stat 4.3 - df1 56 - df2 86 - pval 0.6
 locenviforb <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Finescale", response = "Forb", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
 locenviforb
 
-# Merging output
-forbvar <- purrr::reduce(list(fjordforb, landscapeforb, grazingforb, locenviforb), dplyr::full_join)
-forbvar <- forbvar |> 
+#
+## Summary statistical output
+
+# All results
+forbvar_SI <- purrr::reduce(list(fjordforb, landscapeforb, grazingforb, locenviforb), dplyr::full_join)
+
+# Significant only
+forbvar <- forbvar_SI |> 
   filter(dim == "dim1" | p.value < 0.1)
 
 
@@ -710,9 +698,7 @@ nvar_beetle <- length(select_if(beetle, is.numeric))
 cancor <- cc(contin_fjordsys, contin_beetle)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.69
 test <- p.asym(rhocancor, nobs, nvar_fjordsys, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.38 - df1 20 - df2 74 - pval 0.22
 fjordbeetle <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Fjord", response = "Beetle", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -722,9 +708,7 @@ fjordbeetle
 cancor <- cc(contin_landscape, contin_beetle)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.71
 test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.76 - df1 25 - df2 87 - pval 0.24
 landscapebeetle <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Landscape", response = "Beetle", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -734,9 +718,7 @@ landscapebeetle
 cancor <- cc(contin_grazing, contin_beetle)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.72
 test <- p.asym(rhocancor, nobs, nvar_grazing, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 1.64 - df1 25 - df2 87 - pval 0.32
 grazingbeetle <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Grazing", response = "Beetle", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -746,20 +728,24 @@ grazingbeetle
 cancor <- cc(contin_locenvi, contin_beetle)
 rhocancor <- cancor$cor
 rhocancor
-# 1st axis correlation 0.73
 test <- p.asym(rhocancor, nobs, nvar_locenvi, nvar_beetle, tstat = "Hotelling")
-# 1st dim NS - stat 2.5 - df1 30 - df2 82 - pval 0.14
 locenvibeetle <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Finescale", response = "Beetle", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
 locenvibeetle
 
-# Merging output
-beetlevar <- purrr::reduce(list(fjordbeetle, landscapebeetle, grazingbeetle, locenvibeetle), dplyr::full_join)
-beetlevar <- beetlevar |> 
+#
+## Summary statistical output
+
+# All results
+beetlevar_SI <- purrr::reduce(list(fjordbeetle, landscapebeetle, grazingbeetle, locenvibeetle), dplyr::full_join)
+
+# Significant only
+beetlevar <- beetlevar_SI |> 
   filter(dim == "dim1" | p.value < 0.1)
 
-# Merge all community outputs
+#
+## All significant community outputs
 comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
 
 
@@ -853,12 +839,12 @@ ggrda <- function (ord_in, grp_in = NULL, axes = c("1", "2"), ...)
 # Redundancy analysis and plot
 rda <- rda(subset(landscape_sc, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxlandscape <- ggrda(rda,
-      txt = 4,
+      txt = 3,
       ptslab = TRUE,
       addcol = "chartreuse4",
-      addsize = 3,
+      addsize = 2.5,
       size = 1,
-      arrow = 0.3,
+      arrow = 0.2,
       #repel = TRUE,
       veccol = "cyan4",
       labcol = "cyan4",
@@ -916,12 +902,12 @@ rdafjordlandscape <- rdatable |>
 # Redundancy analysis and plot
 rda <- rda(subset(grazing_sc, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxgrazing <- ggrda(rda,
-                               txt = 4,
+                               txt = 3,
                                ptslab = TRUE,
                                addcol = "darkgoldenrod3",
-                               addsize = 3,
+                               addsize = 2.5,
                                size = 1,
-                               arrow = 0.3,
+                               arrow = 0.2,
                                #repel = TRUE,
                                veccol = "cyan4",
                                labcol = "cyan4",
@@ -975,17 +961,17 @@ rdafjordgrazing <- rdatable |>
 # Redundancy analysis and plot
 rda <- rda(subset(locenvi_sc, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxlocenvi <- ggrda(rda,
-                               txt = 4,
+                               txt = 3,
                                ptslab = TRUE,
                                addcol = "darkred",
-                               addsize = 3,
+                               addsize = 2.5,
                                size = 1,
-                               arrow = 0.3,
+                               arrow = 0.2,
                                #repel = TRUE,
                                veccol = "cyan4",
                                labcol = "cyan4",
-                               xlims = c(-1.1, 0.9),
-                               ylims = c(-0.9, 1.1))
+                               xlims = c(-1.1, 1.1),
+                               ylims = c(-1.1, 1.1))
 plotrda_fjordxlocenvi
 
 # Summary rda
@@ -1036,17 +1022,17 @@ rdafjordlocenvi <- rdatable |>
 # Redundancy analysis and plot
 rda <- rda(subset(grazing_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 plotrda_landscapexgrazing <- ggrda(rda,
-                                   txt = 4,
+                                   txt = 3,
                                    ptslab = TRUE,
                                    addcol = "darkgoldenrod3",
-                                   addsize = 3,
+                                   addsize = 2.5,
                                    size = 1,
-                                   arrow = 0.3,
+                                   arrow = 0.2,
                                    repel = TRUE,
                                    veccol = "chartreuse4",
                                    labcol = "chartreuse4",
-                                   xlims = c(-1.2, 1.1),
-                                   ylims = c(-1.2, 1.1))
+                                   xlims = c(-1.2, 1.2),
+                                   ylims = c(-1.2, 1.2))
 plotrda_landscapexgrazing
 
 # Summary rda
@@ -1097,17 +1083,17 @@ rdalandscapegrazing <- rdatable |>
 # Redundancy analysis and plot
 rda <- rda(subset(locenvi_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 plotrda_landscapexlocenvi <- ggrda(rda,
-                                  txt = 4,
+                                  txt = 3,
                                    ptslab = TRUE,
                                    addcol = "darkred",
-                                   addsize = 3,
+                                   addsize = 2.5,
                                    size = 1,
-                                   arrow = 0.3,
+                                   arrow = 0.2,
                                    repel = TRUE,
                                    veccol = "chartreuse4",
                                    labcol = "chartreuse4",
-                                 xlims = c(-1.1, 1.1),
-                                 ylims = c(-0.9, 1.2))
+                                 xlims = c(-1.2, 1.2),
+                                 ylims = c(-1.2, 1.2))
 plotrda_landscapexlocenvi
 
 # Summary rda
@@ -1158,17 +1144,17 @@ rdalandscapelocenvi <- rdatable |>
 # Redundancy analysis and plot
 rda <- rda(subset(locenvi_sc, select = -c(SiteID)) ~ ., data = subset(grazing_sc, select = -c(SiteID)))
 plotrda_grazingxlocenvi <- ggrda(rda,
-                                 txt = 4,
+                                 txt = 3,
                                  ptslab = TRUE,
                                  addcol = "darkred",
-                                 addsize = 3,
+                                 addsize = 2.5,
                                  size = 1,
-                                 arrow = 0.3,
+                                 arrow = 0.2,
                                  repel = TRUE,
                                  veccol = "darkgoldenrod3",
                                  labcol = "darkgoldenrod3",
-                                   xlims = c(-1, 1),
-                                   ylims = c(-1.1, 0.9))
+                                   xlims = c(-1.1, 1.1),
+                                   ylims = c(-1.1, 1.1))
 plotrda_grazingxlocenvi
 
 # Summary rda
@@ -1216,18 +1202,16 @@ rdagrazinglocenvi <- rdatable |>
 #
 ## Environmental data summary
 
-# Plot Grouping
+# Stat summary
+rdastat_envi <- purrr::reduce(list(rdafjordlandscape, rdafjordgrazing, rdafjordlocenvi, rdalandscapegrazing, rdalandscapelocenvi, rdagrazinglocenvi), dplyr::full_join)
+
+# Plot grouping
 rda_envi <- ggarrange(plotrda_fjordxlandscape, plotrda_fjordxgrazing, plotrda_fjordxlocenvi, plotrda_landscapexgrazing, plotrda_landscapexlocenvi, plotrda_grazingxlocenvi, 
                    labels = c("A", "B", "C", "D", "E", "F"),
                    ncol = 2,
                    nrow = 3)
 rda_envi
 ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 19, height = 26, units = "cm", bg = "white")
-
-
-# Stat summary
-rdastat_envi <- purrr::reduce(list(rdafjordlandscape, rdafjordgrazing, rdafjordlocenvi, rdalandscapegrazing, rdalandscapelocenvi, rdagrazinglocenvi), dplyr::full_join)
-
 
 
 #### RDA grass community data ####
@@ -1241,17 +1225,17 @@ names(grass) <- gsub(" ", ".", names(grass))
 # Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxgrass <- ggrda(rda,
-                             txt = 4,
+                             txt = 3,
                              ptslab = TRUE,
                              addcol = "black",
-                             addsize = 3,
+                             addsize = 2.5,
                              size = 1,
-                             arrow = 0.3,
+                             arrow = 0.2,
                              #repel = TRUE,
                              veccol = "cyan3",
                              labcol = "cyan3",
-                               xlims = c(-1, 1.3),
-                               ylims = c(-1.1, 1.2))
+                               xlims = c(-1.3, 1.3),
+                               ylims = c(-1.3, 1.3))
 plotrda_fjordxgrass
 
 # Summary rda
@@ -1305,17 +1289,17 @@ names(grass) <- gsub(" ", ".", names(grass))
 # Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 plotrda_landscapexgrass <- ggrda(rda,
-                                 txt = 4,
+                                 txt = 3,
                                  ptslab = TRUE,
                                  addcol = "black",
-                                 addsize = 3,
+                                 addsize = 2.5,
                                  size = 1,
-                                 arrow = 0.3,
+                                 arrow = 0.2,
                                  #repel = TRUE,
                                  veccol = "chartreuse4",
                                  labcol = "chartreuse4",
-                             xlims = c(-1, 1),
-                             ylims = c(-1, 1))
+                             xlims = c(-1.1, 1.1),
+                             ylims = c(-1.1, 1.1))
 plotrda_landscapexgrass
 
 # Summary rda
@@ -1369,17 +1353,17 @@ names(grass) <- gsub(" ", ".", names(grass))
 # Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(grazing_sc, select = -c(SiteID)))
 plotrda_grazingxgrass <- ggrda(rda,
-                               txt = 4,
+                               txt = 3,
                                ptslab = TRUE,
                                addcol = "black",
-                               addsize = 3,
+                               addsize = 2.5,
                                size = 1,
-                               arrow = 0.3,
+                               arrow = 0.2,
                                repel = TRUE,
                                veccol = "darkgoldenrod3",
                                labcol = "darkgoldenrod3",
-                               xlims = c(-1.1, 1),
-                               ylims = c(-1.2, 0.9))
+                               xlims = c(-1.2, 1.2),
+                               ylims = c(-1.2, 1.2))
 plotrda_grazingxgrass
 
 # Summary rda
@@ -1433,17 +1417,17 @@ names(grass) <- gsub(" ", ".", names(grass))
 # Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(locenvi_sc, select = -c(SiteID)))
 plotrda_locenvixgrass <- ggrda(rda,
-                               txt = 4,
+                               txt = 3,
                                ptslab = TRUE,
                                addcol = "black",
-                               addsize = 3,
+                               addsize = 2.5,
                                size = 1,
-                               arrow = 0.3,
+                               arrow = 0.2,
                                repel = TRUE,
                                veccol = "darkred",
                                labcol = "darkred",
-                               xlims = c(-1.2, 0.9),
-                               ylims = c(-1.1, 1))
+                               xlims = c(-1.2, 1.2),
+                               ylims = c(-1.2, 1.2))
 plotrda_locenvixgrass
 
 # Summary rda
@@ -1491,6 +1475,9 @@ rdalocenvigrass <- rdatable |>
 #
 ## Grass model summary
 
+# Stat summary
+rdastat_grass <- purrr::reduce(list(rdafjordgrass, rdalandscapegrass, rdagrazinggrass, rdalocenvigrass), dplyr::full_join)
+
 # Plot Grouping
 rda_grass <- ggarrange(plotrda_fjordxgrass, plotrda_landscapexgrass, plotrda_grazingxgrass, plotrda_locenvixgrass, 
                       labels = c("A", "B", "C", "D"),
@@ -1498,10 +1485,6 @@ rda_grass <- ggarrange(plotrda_fjordxgrass, plotrda_landscapexgrass, plotrda_gra
                       nrow = 2)
 rda_grass
 ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 13, units = "cm", bg = "white")
-
-# Stat summary
-rdastat_grass <- purrr::reduce(list(rdafjordgrass, rdalandscapegrass, rdagrazinggrass, rdalocenvigrass), dplyr::full_join)
-
 
 
 #### RDA forb community data ####
@@ -1515,17 +1498,17 @@ names(forb) <- gsub(" ", ".", names(forb))
 # Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxforb <- ggrda(rda,
-                            txt = 4,
+                            txt = 3,
                             ptslab = TRUE,
                             addcol = "black",
-                            addsize = 3,
+                            addsize = 2.5,
                             size = 1,
-                            arrow = 0.3,
+                            arrow = 0.2,
                             #repel = TRUE,
                             veccol = "cyan3",
                             labcol = "cyan3",
-                             xlims = c(-1.1, 1),
-                             ylims = c(-1.2, 0.9))
+                             xlims = c(-1.2, 1.2),
+                             ylims = c(-1.2, 1.2))
 plotrda_fjordxforb
 
 # Summary rda
@@ -1579,17 +1562,17 @@ names(forb) <- gsub(" ", ".", names(forb))
 # Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 plotrda_landscapexforb <- ggrda(rda,
-                                txt = 4,
+                                txt = 3,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 3,
+                                addsize = 2.5,
                                 size = 1,
-                                arrow = 0.3,
+                                arrow = 0.2,
                                 #repel = TRUE,
                                 veccol = "chartreuse4",
                                 labcol = "chartreuse4",
-                                 xlims = c(-0.9, 1.2),
-                                 ylims = c(-0.9, 1.2))
+                                 xlims = c(-1.1, 1.1),
+                                 ylims = c(-1.1, 1.1))
 plotrda_landscapexforb
 
 # Summary rda
@@ -1643,17 +1626,17 @@ names(forb) <- gsub(" ", ".", names(forb))
 # Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(grazing_sc, select = -c(SiteID)))
 plotrda_grazingxforb <- ggrda(rda,
-                              txt = 4,
+                              txt = 3,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 3,
+                              addsize = 2.5,
                               size = 1,
-                              arrow = 0.3,
+                              arrow = 0.2,
                               #repel = TRUE,
                               veccol = "darkgoldenrod3",
                               labcol = "darkgoldenrod3",
-                               xlims = c(-1.2, 0.8),
-                               ylims = c(-1.1, 0.9))
+                               xlims = c(-1.2, 1.2),
+                               ylims = c(-1.2, 1.2))
 plotrda_grazingxforb
 
 # Summary rda
@@ -1707,17 +1690,17 @@ names(forb) <- gsub(" ", ".", names(forb))
 # Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(locenvi_sc, select = -c(SiteID)))
 plotrda_locenvixforb <- ggrda(rda,
-                              txt = 4,
+                              txt = 3,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 3,
+                              addsize = 2.5,
                               size = 1,
-                              arrow = 0.3,
+                              arrow = 0.2,
                               #repel = TRUE,
                               veccol = "darkred",
                               labcol = "darkred",
-                              xlims = c(-1, 1.1),
-                              ylims = c(-0.9, 1.2))
+                              xlims = c(-1.2, 1.2),
+                              ylims = c(-1.2, 1.2))
 plotrda_locenvixforb
 
 # Summary rda
@@ -1765,6 +1748,9 @@ rdalocenviforb <- rdatable |>
 #
 ## Forb model summary
 
+# Stat summary
+rdastat_forb <- purrr::reduce(list(rdafjordforb, rdalandscapeforb, rdagrazingforb, rdalocenviforb), dplyr::full_join)
+
 # Plot Grouping
 rda_forb <- ggarrange(plotrda_fjordxforb, plotrda_landscapexforb, plotrda_grazingxforb, plotrda_locenvixforb, 
                        labels = c("A", "B", "C", "D"),
@@ -1772,10 +1758,6 @@ rda_forb <- ggarrange(plotrda_fjordxforb, plotrda_landscapexforb, plotrda_grazin
                        nrow = 2)
 rda_forb
 ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 13, units = "cm", bg = "white")
-
-# Stat summary
-rdastat_forb <- purrr::reduce(list(rdafjordforb, rdalandscapeforb, rdagrazingforb, rdalocenviforb), dplyr::full_join)
-
 
 
 #### RDA beetle community data ####
@@ -1786,17 +1768,17 @@ rdastat_forb <- purrr::reduce(list(rdafjordforb, rdalandscapeforb, rdagrazingfor
 # Redundancy analysis
 rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
 plotrda_fjordxbeetle <- ggrda(rda,
-                              txt = 4,
+                              txt = 3,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 3,
+                              addsize = 2.5,
                               size = 1,
-                              arrow = 0.3,
+                              arrow = 0.2,
                               #repel = TRUE,
                               veccol = "cyan3",
                               labcol = "cyan3",
-                            xlims = c(-1.65, 1.65),
-                            ylims = c(-1.5, 1.8))
+                            xlims = c(-1.8, 1.8),
+                            ylims = c(-1.8, 1.8))
 plotrda_fjordxbeetle
 
 # Summary rda
@@ -1847,17 +1829,17 @@ rdafjordbeetle <- rdatable |>
 # Redundancy analysis
 rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 plotrda_landscapexbeetle <- ggrda(rda,
-                                  txt = 4,
+                                  txt = 3,
                                   ptslab = TRUE,
                                   addcol = "black",
-                                  addsize = 3,
+                                  addsize = 2.5,
                                   size = 1,
-                                  arrow = 0.3,
+                                  arrow = 0.2,
                                   #repel = TRUE,
                                   veccol = "chartreuse4",
                                   labcol = "chartreuse4",
-                                xlims = c(-1.7, 1.7),
-                                ylims = c(-2.3, 1.1))
+                                xlims = c(-1.4, 1.4),
+                                ylims = c(-1.4, 1.4))
 plotrda_landscapexbeetle
 
 # Summary rda
@@ -1908,12 +1890,12 @@ rdalandscapebeetle <- rdatable |>
 # Redundancy analysis
 rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(grazing_sc, select = -c(SiteID)))
 plotrda_grazingxbeetle <- ggrda(rda,
-                                txt = 4,
+                                txt = 3,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 3,
+                                addsize = 2.5,
                                 size = 1,
-                                arrow = 0.3,
+                                arrow = 0.2,
                                 #repel = TRUE,
                                 veccol = "darkgoldenrod3",
                                 labcol = "darkgoldenrod3",
@@ -1969,17 +1951,17 @@ rdagrazingbeetle <- rdatable |>
 # Redundancy analysis
 rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(locenvi_sc, select = -c(SiteID)))
 plotrda_locenvixbeetle <- ggrda(rda,
-                                txt = 4,
+                                txt = 3,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 3,
+                                addsize = 2.5,
                                 size = 1,
-                                arrow = 0.3,
+                                arrow = 0.2,
                                 repel = TRUE,
                                 veccol = "darkred",
                                 labcol = "darkred",
-                              xlims = c(-1.1, 0.9),
-                              ylims = c(-0.9, 1.1))
+                              xlims = c(-1.1, 1.1),
+                              ylims = c(-1.1, 1.1))
 plotrda_locenvixbeetle
 
 # Summary rda
@@ -2027,6 +2009,9 @@ rdalocenvibeetle <- rdatable |>
 #
 ## Beetle model summary
 
+# Stat summary
+rdastat_beetle <- purrr::reduce(list(rdafjordbeetle, rdalandscapebeetle, rdagrazingbeetle, rdalocenvibeetle), dplyr::full_join)
+
 # Plot Grouping
 rda_beetle <- ggarrange(plotrda_fjordxbeetle, plotrda_landscapexbeetle, plotrda_grazingxbeetle, plotrda_locenvixbeetle, 
                         labels = c("A", "B", "C", "D"),
@@ -2035,15 +2020,17 @@ rda_beetle <- ggarrange(plotrda_fjordxbeetle, plotrda_landscapexbeetle, plotrda_
 rda_beetle
 ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 13, units = "cm", bg = "white")
 
-# Stat summary
-rdastat_beetle <- purrr::reduce(list(rdafjordbeetle, rdalandscapebeetle, rdagrazingbeetle, rdalocenvibeetle), dplyr::full_join)
-
-
 
 #### Significant RDA results ####
 
-#
-## RDA summary for paper
+# Significant models
+filter(rdastat_envi, PrF < 0.1 & type == "model")
+filter(rdastat_grass, PrF < 0.1 & type == "model")
+filter(rdastat_forb, PrF < 0.1 & type == "model")
+filter(rdastat_beetle, PrF < 0.1 & type == "model")
+
+# Summary significant RDA stat
+rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
 
 # Plot
 rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_grazingxlocenvi, plotrda_locenvixgrass, plotrda_locenvixforb, 
@@ -2053,38 +2040,37 @@ rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_grazingxlocenvi, plotrda_loc
 rdall
 ggsave("outputs/RDAresults.png", plot = rdall, width = 15, height = 15, units = "cm", bg = "white")
 
-# RDA stat
-rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdafjordgrass, rdafjordbeetle, rdagrazinggrass, rdagrazingbeetle, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
+
 
 #
 ## Distribution residuals for significant relationships with terms
 
 # Ordination community data
-DCA_grass <- decorana(contin_grass)
-DCA_grass # Axis length of 1.9 -> run PCA
-PCA_grass <- prcomp(contin_grass)
-PCA_grass
-biplot(PCA_grass)
-DCA_forb <- decorana(contin_forb)
-DCA_forb # Axis length of 3.1 -> keep DCA
-plot(DCA_forb)
-
-# Extraction grass species scores from PCA
-scores_grass <- as.data.frame(scores(PCA_grass, choices = c(1,2), display = "sites"))
-names(scores_grass) <- gsub("PC1", "GrassPCA1", names(scores_grass))
-names(scores_grass) <- gsub("PC2", "GrassPCA2", names(scores_grass))
-scores_grass <- scores_grass |>
-  mutate(SiteID = row.names(scores_grass)) # PlotID as column for future binding
-
-# Extraction forb species scores from DCA
-scores_forb <- as.data.frame(scores(DCA_forb, choices = c(1,2), display = "sites"))
-names(scores_forb) <- gsub("DCA1", "ForbDCA1", names(scores_forb))
-names(scores_forb) <- gsub("DCA2", "ForbDCA2", names(scores_forb))
-scores_forb <- scores_forb |>
-  mutate(SiteID = row.names(scores_forb)) # PlotID as column for future binding
-
-# Table binding
-allvar <- purrr::reduce(list(scores_grass, scores_forb, fjordsys_sc, landscape_sc, grazing_sc, locenvi_sc), dplyr::left_join)
+# DCA_grass <- decorana(contin_grass)
+# DCA_grass # Axis length of 1.9 -> run PCA
+# PCA_grass <- prcomp(contin_grass)
+# PCA_grass
+# biplot(PCA_grass)
+# DCA_forb <- decorana(contin_forb)
+# DCA_forb # Axis length of 3.1 -> keep DCA
+# plot(DCA_forb)
+# 
+# # Extraction grass species scores from PCA
+# scores_grass <- as.data.frame(scores(PCA_grass, choices = c(1,2), display = "sites"))
+# names(scores_grass) <- gsub("PC1", "GrassPCA1", names(scores_grass))
+# names(scores_grass) <- gsub("PC2", "GrassPCA2", names(scores_grass))
+# scores_grass <- scores_grass |>
+#   mutate(SiteID = row.names(scores_grass)) # PlotID as column for future binding
+# 
+# # Extraction forb species scores from DCA
+# scores_forb <- as.data.frame(scores(DCA_forb, choices = c(1,2), display = "sites"))
+# names(scores_forb) <- gsub("DCA1", "ForbDCA1", names(scores_forb))
+# names(scores_forb) <- gsub("DCA2", "ForbDCA2", names(scores_forb))
+# scores_forb <- scores_forb |>
+#   mutate(SiteID = row.names(scores_forb)) # PlotID as column for future binding
+# 
+# # Table binding
+# allvar <- purrr::reduce(list(scores_grass, scores_forb, fjordsys_sc, landscape_sc, grazing_sc, locenvi_sc), dplyr::left_join)
 
 # Distribution residuals fjord x landscape
 # residualPlots(lm(Forest~JulTemp, data = allvar)) # random -> validated
