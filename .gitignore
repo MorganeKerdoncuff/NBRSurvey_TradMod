@@ -1,24 +1,19 @@
 # Defaut
 .Ruserdata
 .DS_Store
-
 # History files
 .Rhistory
 .Rapp.history
-
 # Session Data files
 .RData
-
 # RStudio files
 .Rproj.user/
-
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 .Rproj.user
-
-#data (excludes everything in the folder data)
+#data (excludes all data files)
 data/*
-
+*.csv
 #figures & output (excludes all figure files)
 outputs/*
 outreach/*
@@ -26,13 +21,13 @@ illustrations/*
 *.png
 *.pdf
 *.jpeg
-
 # Mardown outputs (exclude html or word docs)
 *.html
 *.docx
-
 # Bibliography (exclude all bibtex files)
 *.bib
 *.json
 NBR_SmallScaleFjordFarming_files/*
 NBR_SheepGradient_files/*
+# Extra
+NBR_RDAexforMaaike.R
