@@ -1667,7 +1667,7 @@ vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Plagomnium" = "Plagiomnium")) |> 
   mutate(Species = dplyr::recode(Species, "Skinny pleurocarp IS5-P1" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Straminergon straminergon" = "Straminergon stramineum")) |> 
-  mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Sphagnum sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Unknown shrub US2-P1" = "Woody sp"))
 
 #
@@ -1685,8 +1685,15 @@ vege_full <- vege_full |>
   summarise_if(is.numeric, sum, na.rm = TRUE) |>  
   distinct()
 #sort(table(vege_full$Species)) #no doubletons remaining
+# from 676 to 674 variables -> 2 quadrats removed?
 
-# from 676 to 673 variables -> 3 quadrats removed?
+# Remove non-identified species
+vege_full <- subset(vege_full, Species != "Bryophyte sp" &
+           Species != "Woody sp" &
+           Species != "Hieracium sp" &
+           Species != "Carex sp" &
+           Species != "Poaceae sp" &
+           Species != "Orchidaceae sp")
 
 #
 ## Table formatting for vegan (long table)
