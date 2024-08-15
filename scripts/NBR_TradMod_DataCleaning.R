@@ -1640,17 +1640,12 @@ write_csv(soilchem_full, "data/cleandata/NBR_FullSoilChem.csv")
 unique(vege_raw$Species)
 
 # Correction latin name
-vege_raw <- vege_raw |>  
-  mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |> 
-  mutate(Species = dplyr::recode(Species, "Polytrichiastrum" = "Polytrichastrum")) |> 
-  mutate(Species = dplyr::recode(Species, "Polytrichum juniperirinum" = "Polytrichum juniperinum")) |> 
-  mutate(Species = dplyr::recode(Species, "Rhacomitrium" = "Racomitrium")) |> 
-  mutate(Species = dplyr::recode(Species, "Kystkransmose" = "Rhytidiadelphus loreus")) |> 
-  mutate(Species = dplyr::recode(Species, "Sphagunm" = "Sphagnum")) |> 
+vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Antittrichia curtipendula" = "Antitrichia curtipendula")) |> 
-  mutate(Species = dplyr::recode(Species, "Antrichum" = "Atrichum")) |> 
+  mutate(Species = dplyr::recode(Species, "Antrichum undulatum" = "Atrichum undulatum")) |> 
   mutate(Species = dplyr::recode(Species, "Braen sp US5-P2" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Bryum sp" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |>
   mutate(Species = dplyr::recode(Species, "Carex sp2 US2-P2" = "Carex sp")) |> 
   mutate(Species = dplyr::recode(Species, "Chamaepericlymenum suecica" = "Chamaepericlymenum suecicum")) |> 
   mutate(Species = dplyr::recode(Species, "Chiloscytinus pallenscens" = "Chiloscytinus pallescens")) |> 
@@ -1658,16 +1653,24 @@ vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Gnaphlium sylvaticum" = "Gnaphalium sylvaticum")) |> 
   mutate(Species = dplyr::recode(Species, "Golden curly fern UG2-P1" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Hieracium sp IG3-P1" = "Hieracium sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Kystkransmose" = "Rhytidiadelphus loreus")) |> 
   mutate(Species = dplyr::recode(Species, "Liverwort UG2-P2" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Luminous liverwort US1-P3" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Moss ND1 UG1-P1" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Mystery Carex OV1-P1" = "Carex sp")) |> 
   mutate(Species = dplyr::recode(Species, "Mystery grass OC5-P1" = "Poaceae sp")) |> 
   mutate(Species = dplyr::recode(Species, "Orchid sp" = "Orchidaceae sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Plagomnium" = "Plagiomnium")) |> 
+  mutate(Species = dplyr::recode(Species, "Plagomnium medium" = "Plagiomnium medium")) |> 
+  mutate(Species = dplyr::recode(Species, "Polytrichiastrum alpinum" = "Polytrichastrum alpinum")) |> 
+  mutate(Species = dplyr::recode(Species, "Polytrichum juniperirinum" = "Polytrichum juniperinum")) |> 
+  mutate(Species = dplyr::recode(Species, "Rhacomitrium lanuginosum" = "Racomitrium lanuginosum")) |> 
+  mutate(Species = dplyr::recode(Species, "Rhacomitrium canescens" = "Racomitrium canescens")) |> 
+  mutate(Species = dplyr::recode(Species, "Rhacomitrium sudeticum" = "Racomitrium sudeticum")) |> 
+  mutate(Species = dplyr::recode(Species, "Rhacomitrium affine" = "Racomitrium affine")) |> 
   mutate(Species = dplyr::recode(Species, "Skinny pleurocarp IS5-P1" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Straminergon straminergon" = "Straminergon stramineum")) |> 
+  mutate(Species = dplyr::recode(Species, "Sphagunm compactum" = "Sphagnum compactum")) |>
   mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Bryophyte sp")) |> 
+  mutate(Species = dplyr::recode(Species, "Straminergon straminergon" = "Straminergon stramineum")) |> 
   mutate(Species = dplyr::recode(Species, "Unknown shrub US2-P1" = "Woody sp"))
 
 #
