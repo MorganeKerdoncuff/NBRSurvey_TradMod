@@ -16,16 +16,19 @@
 library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
-library(FSA) # Dunn's Test after KS
-library(dunn.test) # Dunn's Test after KS -> "classic" but less handy to use, but to refer to
+# library(FSA) # Dunn's Test after KS
+# library(dunn.test) # Dunn's Test after KS -> "classic" but less handy to use, but to refer to
+library(fpc) # clustering validation statistics
+library(mri) # Adjusted Wallace index, non sensitive to cluster size (contrary to adjusted Rand index)
+library(rcompanion) # effect size statistics
+library(factoextra) # clustering visualisation
 library(dendextend) # Visual dendrogram
-library(pvclust) # Multiscale bootstrap resampling
 library(ggplot2) # Visual representation
 library(concaveman) # better hull
 library(ggforce) # better ggplot
 library(forcats) # reorder groups for plots
 library(ggpubr) # Function ggarrange for several plots on same file
-# library(GGally) # Extension ggplot
+library(GGally) # Extension ggplot
 
 
 #### DATA LOADING ####
@@ -109,7 +112,9 @@ plantrichness_sheep <- plantrichness_sheep |>
   summarise(S = n()) |> 
   # make functional groups as variables
   pivot_wider(names_from = FunctionalGroup, values_from = S) |> 
-  mutate_if(is.numeric, ~replace(., is.na(.), 0))
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
+  # Total species richness
+  mutate(div_tot = rowSums(across(where(is.numeric)), na.rm=TRUE))
   
 #
 ## Summarise data at site level -> should be 23 observations for non community data
@@ -148,7 +153,7 @@ mesobio_sheep <- mesobio_sheep |>
 ## From biomass data
 ## Currently at sample level -> summary by average
 biomass_sheep <- biomass_sheep |>
-  pivot_wider(names_from = FunctionalType, values_from = DWbiomass_g) |> 
+  pivot_wider(names_from = FunctionalType, values_from = Biomass.m2) |> 
   # make functional groups as variables
   group_by(SiteID) |>
   mutate_if(is.numeric, ~replace(., is.na(.), 0)) |> 
@@ -196,17 +201,15 @@ data_sheep <- data_sheep |>
 # Site ID as rowname
 # rownames(data_sheep) <- data_sheep$FieldID
 
+# Data scaling
+data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, EcoZone, FieldType, fieldclass, FieldID, div_tot))))
+rownames(data_sheep_sc) <- data_sheep$FieldID
+#rownames(data_sheep_sc) <- data_sheep$SiteID
 
 
 #### HIERARCHICAL CLUSTERING ####
 
-# Data scaling
-data_sheep_sc <- as.data.frame(scale(subset(data_sheep, select = -c(SiteID, EcoZone, FieldType, fieldclass, FieldID))))
-rownames(data_sheep_sc) <- data_sheep$FieldID
-#rownames(data_sheep_sc) <- data_sheep$SiteID
-
-#
-## Clustering & dendrogram
+## Distance matrix & clustering dendrogram
 
 # Distance matrix - environmental continuous numeric -> Euclidean
 dist_sheep <- dist(data_sheep_sc, method = "euclidean")
@@ -214,92 +217,86 @@ dist_sheep <- dist(data_sheep_sc, method = "euclidean")
 # Clustering using Ward's (1963) clustering criterion
 hclustwd_sheep <- hclust(dist_sheep, method = "ward.D2")
 
-# Plot HC tree
-plot(hclustwd_sheep)
-
-# Show primary (k=2) & secondary (k=4) clusters with base
-rect.hclust(hclustwd_sheep, k = 4, border = 2:6)
-
 # Show primary (k=2) & secondary (k=4) clusters with color_branches
 dendro_sheep <- color_branches(as.dendrogram(hclustwd_sheep), 
                                k = 4, 
                                #groupLabels = TRUE,
-                               col = c("orange", "orange3", "pink", "pink4"))
-                               # col = c("pink", "pink4", "orange", "orange3"))
+                               col = c("pink", "pink4", "orange", "orange3"))
 plot(dendro_sheep)
-
-# Primary and secondary cluster groups
-clusterwd_prim <- stats::cutree(hclustwd_sheep, k = 2)
-clusterwd_sec <- stats::cutree(hclustwd_sheep, k = 4)
 
 # Save dendrogram
 png(filename = "outputs/cluster_tree.png", width = 14, height = 8, units = "cm", res = 600, pointsize = 9, bg = "transparent")
 plot(dendro_sheep)
 dev.off()
 
-#
-## Bootstrap method with pvclust
+## Primary clusters quality check
 
-# Contingency table
-# data_sheep_long <- pivot_longer(data_sheep, cols = -c(SiteID), names_to = "variables", values_to = "val")
-# data_sheep_contin <- xtabs(formula = val ~ variables + SiteID, data = data_sheep_long)
-# 
-# # Data scaling
-# data_sc <- scale(data_sheep_contin)
-# 
-# # Calculate pval of clusters
-# cluster_pval <- pvclust(data = data_sc, method.hclust = "ward.D2", method.dist = 'euclidean')
-# 
-# # Plot dendrogram
-# plot(cluster_pval)
+# Observed & expected clusters
+clusterwd_prim <- stats::cutree(hclustwd_sheep, k = 2)
+clusterexp_prim <- ifelse(data_sheep$FieldType == "outfield", 1, 2)
 
-#
-## Comparison theory distribution (classification) vs observed (primary cluster)
+# Clustering statistics
+clusterstat_prim <- cluster.stats(dist_sheep, clusterwd_prim, clusterexp_prim)
 
+## Secondary clusters quality check
+
+# Observed & expected cluster
+clusterwd_sec <- stats::cutree(hclustwd_sheep, k = 4)
+clusterexp_sec <- ifelse(
+  data_sheep$fieldclass == "CO" | data_sheep$fieldclass == "FO", 1,
+  ifelse(
+    data_sheep$fieldclass == "CI", 2,
+    ifelse(
+      data_sheep$fieldclass == "FI", 3, 4
+    )
+  )
+)
+
+# Clustering statistics
+clusterstat_sec <- cluster.stats(dist_sheep, clusterwd_sec, clusterexp_sec)
+
+## Summary table
+
+# Empty table defining variables
+clusterstat <- data.frame(
+  Clustering = as.character(),
+  NbCluster = as.numeric(),
+  AvgBtwCluster = as.numeric(), # aim for highest
+  AvgWthCluster = as.numeric(), # aim for lowest
+  WthClusterSs = as.numeric(), # aim for lowest
+  DunnIndex = as.numeric(), # aim for highest
+  AdjRandIndex = as.numeric(), # aim for closest to 1 - sensible to cluster size
+  AdjWallaceIndex = as.numeric() # aim for closest to 1 - non sensible to cluster size
+)
+
+# Adding rows
+clusterstat <- clusterstat |>
+  add_row(
+    Clustering = "primary",
+    NbCluster = clusterstat_prim$cluster.number,
+    AvgBtwCluster = clusterstat_prim$average.between,
+    AvgWthCluster = clusterstat_prim$average.within,
+    WthClusterSs = clusterstat_prim$within.cluster.ss,
+    DunnIndex = clusterstat_prim$dunn,
+    AdjRandIndex = clusterstat_prim$corrected.rand,
+    AdjWallaceIndex = mri::MAW1(clusterwd_prim, clusterexp_prim)
+  ) |>
+  add_row(
+    Clustering = "secondary",
+    NbCluster = clusterstat_sec$cluster.number,
+    AvgBtwCluster = clusterstat_sec$average.between,
+    AvgWthCluster = clusterstat_sec$average.within,
+    WthClusterSs = clusterstat_sec$within.cluster.ss,
+    DunnIndex = clusterstat_sec$dunn,
+    AdjRandIndex = clusterstat_sec$corrected.rand,
+    AdjWallaceIndex = mri::MAW1(clusterwd_sec, clusterexp_sec)
+  )
 
 #
 ## Ordination clusters
 
 # NMDS -> one-dimension
 nmds_sheep <- metaMDS(dist_sheep)
-# ordiplot(nmds_sheep, type = 'n')
-# points(nmds_sheep, pch = clusterwd+20, bg = clusterwd)
-# legend('topright', legend = 1:5, pch = (1:5)+20, pt.bg = 1:5)
-
-# Colour grouping
-#clusterwd # see order
-# col_clusters <- c("pink", "orange4", "orange", "pink4")
-# col_clusters[clusterwd_sec]
-# 
-# # Plot ordination with base
-# cluster_ord <- ordiplot(nmds_sheep, type = 'n')
-# cluster_ord <- points(nmds_sheep, 
-#        col = col_clusters[clusterwd_sec], 
-#        pch = clusterwd_sec+20)
-# cluster_ord <- text(nmds_sheep, 
-#      col = col_clusters[clusterwd_sec], 
-#      labels=rownames(data_sheep_sc),
-#      cex = 0.7,
-#      pos = 1)
-# cluster_ord <- legend( 
-#        legend = paste("Cluster", 1:4),
-#        x = 1.2,
-#        y = 3,
-#        #horiz = TRUE,
-#        text.width = 1,
-#        x.intersp = 1,
-#        y.intersp = 0.3,
-#        col = col_clusters, 
-#        pt.bg = col_clusters,
-#        bty = "n", 
-#        pch = (1:4)+20)
-# cluster_ord <- ordihull(nmds_sheep, 
-#          groups = clusterwd_sec, 
-#          display = "sites")
-# cluster_ord
-
-#
-## Ordination cluster ggplot
 
 # Extraction scores
 nmds_scores <- as.data.frame(scores(nmds_sheep))
@@ -340,6 +337,91 @@ ggcluster_ord <- ggplot(data = nmds_scores, aes(x = NMDS1, y = NMDS2)) +
 ggcluster_ord
 ggsave(filename = "outputs/cluster_NMDS.png", plot = ggcluster_ord, width = 18, height = 10, units = "cm")
 
+
+#### VARIABLE CORRELATION ####
+
+# Data table preparation
+data_sheep_cor <- data_sheep_sc |> 
+  mutate(FieldID = rownames(data_sheep_sc))
+data_sheep_cor <- left_join(data_sheep_cor, subset(data_sheep, select = c(FieldID, EcoZone, FieldType)))
+
+# # Function summary stat table
+# lm_addrow <- function(data, func, ...){
+#   lm_stat <- add_row(
+#     xvar = xvar,
+#     yvar = yvar,
+#     RsqAdj = summary(lm)$adj.r.squared,
+#     Fstat = summary(lm)$fstatistic[1, 1],
+#     df = paste(summary(lm)$fstatistic[, 2], summary(lm)$fstatistic[, 3], sep = ","),
+#     pval = summary(lm)$coefficient[2, 4]
+#   )
+#   lm_stat
+# }
+
+# # Empty table for summary statistics
+# cor_stat <- data.frame(xvar = as.character(),
+#                       yvar = as.character(),
+#                       rho = as.numeric(),   
+#                       Sstat = as.numeric(),
+#                       pval = as.numeric(),
+#                       stringsAsFactors = FALSE)
+# 
+# # LOI x ab acari
+# cor <- cor.test(data_sheep_cor$ab_acari, data_sheep_cor$LOI, method = "spearman")
+# cor_stat <- cor_stat |> 
+#   add_row(xvar = "ABUa", yvar = "LOI",
+#           rho = cor$estimate,
+#           Sstat = cor$statistic,
+#           pval = cor$p.value)
+# 
+# # woody diversity x forb diversity
+# lm <- lm(div_woody ~ div_forbs, data = data_sheep_lm)
+# lm_stat <- lm_stat |> 
+#   add_row(xvar = "DIVf", yvar = "DIVw",
+#           RsqAdj = summary(lm)$adj.r.squared,
+#           Fstat = summary(lm)$fstatistic[1],
+#           dfnum = summary(lm)$fstatistic[2],
+#           dfden = summary(lm)$fstatistic[3],
+#           pval = summary(lm)$coefficient[2, 4])
+
+# Base lm plot function
+plot_cor <- function(data, mapping, ...){
+  p <- ggplot(data = data, mapping = mapping) + 
+    geom_point(
+    aes(
+      shape = EcoZone,
+      colour = FieldType
+      ), 
+    size = 3) + 
+    scale_colour_manual(values = c("infield" = "gray", "outfield" = "black")) +
+    geom_smooth(method = "lm", color="navy", fill = "navy", se = TRUE) +
+    theme(panel.background = element_blank(),
+          legend.background = element_blank(),
+          panel.grid.major = element_blank(),  #remove major-grid labels
+          panel.grid.minor = element_blank(),  #remove minor-grid labels
+          plot.background = element_blank())
+  p
+}
+
+# Correlation panel
+cor_panel <- ggpairs(
+  data = data_sheep_cor,
+  columns = c("biom_woody", "biom_forbs", "biom_monocotyledons", "biom_cryptogams", "div_woody", "div_forbs", "div_monocotyledons", "div_cryptogams", "ab_acari", "ab_collembola", "LOI"),
+  columnLabels = c("AGBw", "AGBf", "AGBm", "AGBc", "DIVw", "DIVf", "Divm", "DIVc", "ABa", "ABc", "LOI"),
+  switch = "both",
+  upper = list(continuous = wrap("cor", method = "spearman")),
+  lower = list(continuous = plot_cor)
+)
+cor_panel
+
+# Posthoc
+# LOI outlier CI5 - very high LOI for infield category (area type verified) -> Risøyna ~ wet grassland
+# verification relationships LOI with other factors excluding CI5 -> (+)* correlated with woody & crypto div & (-)* correlated with forb div
+# filter(data_sheep_lm, FieldID != "CI5")
+#ggpairs
+# data_sheep_panel <- subset(filter(data_sheep_lm, FieldID != "CI5"), select = c(biom_woody, biom_forbs, div_woody, div_forbs, div_cryptogams, LOI, EcoZone, FieldType))
+
+
 #### ANALYSIS OF CLUSTERS ####
 
 # Extraction primary & secondary cluster group
@@ -354,190 +436,203 @@ data_sheep_sc <- data_sheep_sc |>
 wcxprim_stat <- data.frame(var = as.character(),
                        W = as.numeric(),
                        pval = as.numeric(),
+                       rg = as.numeric(),
                        stringsAsFactors = FALSE)
 
 # LOI
 wcx <- wilcox.test(LOI ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$LOI, g = data_sheep_sc$cluster_prim))
 
 # Abundance collembola
 wcx <- wilcox.test(ab_collembola ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$ab_collembola, g = data_sheep_sc$cluster_prim))
 
 # Abundance acari
 wcx <- wilcox.test(ab_acari ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$ab_acari, g = data_sheep_sc$cluster_prim))
 
 # Biomass cryptogams
 wcx <- wilcox.test(biom_cryptogams ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$biom_cryptogams, g = data_sheep_sc$cluster_prim))
 
 # Biomass monocotyledons
 wcx <- wilcox.test(biom_monocotyledons ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$biom_monocotyledons, g = data_sheep_sc$cluster_prim))
 
 # Biomass forbs
 wcx <- wilcox.test(biom_forbs ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$biom_forbs, g = data_sheep_sc$cluster_prim))
 
 # Biomass woody
 wcx <- wilcox.test(biom_woody ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$biom_woody, g = data_sheep_sc$cluster_prim))
 
 # Diversity cryptogams
 wcx <- wilcox.test(div_cryptogams ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$div_cryptogams, g = data_sheep_sc$cluster_prim))
 
 # Diversity monocotyledons
 wcx <- wilcox.test(div_monocotyledons ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$div_monocotyledons, g = data_sheep_sc$cluster_prim))
 
 # Diversity forbs
 wcx <- wilcox.test(div_forbs ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$div_forbs, g = data_sheep_sc$cluster_prim))
 
 # Diversity woody
 wcx <- wilcox.test(div_woody ~ cluster_prim, data = data_sheep_sc)
 wcxprim_stat <- wcxprim_stat |> 
-  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value)
-
-#
-## Comparison secondary clusters infield group (n=2) - unpaired non-parametric Mann-Whitney test
-
-# Empty table for summary statistics
-wcxsecB_stat <- data.frame(var = as.character(),
-                       W = as.numeric(),
-                       pval = as.numeric(),
-                       stringsAsFactors = FALSE)
-
-# LOI
-wcx <- wilcox.test(LOI ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value)
-
-# Abundance collembola
-wcx <- wilcox.test(ab_collembola ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value)
-
-# Abundance acari
-wcx <- wilcox.test(ab_acari ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value)
-
-# Biomass cryptogams
-wcx <- wilcox.test(biom_cryptogams ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value)
-
-# Biomass monocotyledons
-wcx <- wilcox.test(biom_monocotyledons ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
-
-# Biomass forbs
-wcx <- wilcox.test(biom_forbs ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value)
-
-# Biomass woody
-wcx <- wilcox.test(biom_woody ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value)
-
-# Diversity cryptogams
-wcx <- wilcox.test(div_cryptogams ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value)
-
-# Diversity monocotyledons
-wcx <- wilcox.test(div_monocotyledons ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
-
-# Diversity forbs
-wcx <- wilcox.test(div_forbs ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value)
-
-# Diversity woody
-wcx <- wilcox.test(div_woody ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3))
-wcxsecB_stat <- wcxsecB_stat |> 
-  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_sc$div_woody, g = data_sheep_sc$cluster_prim))
 
 #
 ## Comparison secondary clusters outfield group (n=2) - unpaired non-parametric Mann-Whitney test
 
 # Empty table for summary statistics
 wcxsec_statA <- data.frame(var = as.character(),
-                          W = as.numeric(),
-                          pval = as.numeric(),
-                          stringsAsFactors = FALSE)
+                           W = as.numeric(),
+                           pval = as.numeric(),
+                           rg = as.numeric(),
+                           stringsAsFactors = FALSE)
+
+# Format data table adapted to rg test (group# 1-2)
+data_sheep_scA <- filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4)
+data_sheep_scA <- data_sheep_scA |> 
+  mutate(cluster = ifelse(data_sheep_scA$cluster_sec == 1, 1, 2))
 
 # LOI
-wcx <- wilcox.test(LOI ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(LOI ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$LOI, g = data_sheep_scA$cluster))
 
 # Abundance collembola
-wcx <- wilcox.test(ab_collembola ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(ab_collembola ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$ab_collembola, g = data_sheep_scA$cluster))
 
 # Abundance acari
-wcx <- wilcox.test(ab_acari ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(ab_acari ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$ab_acari, g = data_sheep_scA$cluster))
 
 # Biomass cryptogams
-wcx <- wilcox.test(biom_cryptogams ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(biom_cryptogams ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$biom_cryptogams, g = data_sheep_scA$cluster))
 
 # Biomass monocotyledons
-wcx <- wilcox.test(biom_monocotyledons ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(biom_monocotyledons ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$biom_monocotyledons, g = data_sheep_scA$cluster))
 
 # Biomass forbs
-wcx <- wilcox.test(biom_forbs ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(biom_forbs ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$biom_forbs, g = data_sheep_scA$cluster))
 
 # Biomass woody
-wcx <- wilcox.test(biom_woody ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(biom_woody ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$biom_woody, g = data_sheep_scA$cluster))
 
 # Diversity cryptogams
-wcx <- wilcox.test(div_cryptogams ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(div_cryptogams ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$div_cryptogams, g = data_sheep_scA$cluster))
 
 # Diversity monocotyledons
-wcx <- wilcox.test(div_monocotyledons ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(div_monocotyledons ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$div_monocotyledons, g = data_sheep_scA$cluster))
 
 # Diversity forbs
-wcx <- wilcox.test(div_forbs ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(div_forbs ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$div_forbs, g = data_sheep_scA$cluster))
 
 # Diversity woody
-wcx <- wilcox.test(div_woody ~ cluster_sec, data = filter(data_sheep_sc, cluster_sec == 1 | cluster_sec == 4))
+wcx <- wilcox.test(div_woody ~ cluster_sec, data = data_sheep_scA)
 wcxsec_statA <- wcxsec_statA |> 
-  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value)
+  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scA$div_woody, g = data_sheep_scA$cluster))
+
+#
+## Comparison secondary clusters infield group (n=2) - unpaired non-parametric Mann-Whitney test
+
+# Empty table for summary statistics
+wcxsec_statB <- data.frame(var = as.character(),
+                       W = as.numeric(),
+                       pval = as.numeric(),
+                       rg = as.numeric(),
+                       stringsAsFactors = FALSE)
+
+# Format data table adapted to rg test (group# 1-2)
+data_sheep_scB <- filter(data_sheep_sc, cluster_sec == 2 | cluster_sec == 3)
+data_sheep_scB <- data_sheep_scB |> 
+  mutate(cluster = ifelse(data_sheep_scB$cluster_sec == 2, 1, 2))
+
+# LOI
+wcx <- wilcox.test(LOI ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "LOI", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$LOI, g = data_sheep_scB$cluster))
+
+# Abundance collembola
+wcx <- wilcox.test(ab_collembola ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "ab_collembola", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$ab_collembola, g = data_sheep_scB$cluster))
+
+# Abundance acari
+wcx <- wilcox.test(ab_acari ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "ab_acari", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$ab_acari, g = data_sheep_scB$cluster))
+
+# Biomass cryptogams
+wcx <- wilcox.test(biom_cryptogams ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "biom_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$biom_cryptogams, g = data_sheep_scB$cluster))
+
+# Biomass monocotyledons
+wcx <- wilcox.test(biom_monocotyledons ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "biom_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$biom_monocotyledons, g = data_sheep_scB$cluster))
+
+# Biomass forbs
+wcx <- wilcox.test(biom_forbs ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "biom_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$biom_forbs, g = data_sheep_scB$cluster))
+
+# Biomass woody
+wcx <- wilcox.test(biom_woody ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "biom_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$biom_woody, g = data_sheep_scB$cluster))
+
+# Diversity cryptogams
+wcx <- wilcox.test(div_cryptogams ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "div_cryptogams", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$div_cryptogams, g = data_sheep_scB$cluster))
+
+# Diversity monocotyledons
+wcx <- wilcox.test(div_monocotyledons ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "div_monocotyledons", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$div_monocotyledons, g = data_sheep_scB$cluster))
+
+# Diversity forbs
+wcx <- wilcox.test(div_forbs ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "div_forbs", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$div_forbs, g = data_sheep_scB$cluster))
+
+# Diversity woody
+wcx <- wilcox.test(div_woody ~ cluster_sec, data = data_sheep_scB)
+wcxsec_statB <- wcxsec_statB |> 
+  add_row(var = "div_woody", W = wcx$statistic, pval = wcx$p.value, rg = wilcoxonRG(data_sheep_scB$div_woody, g = data_sheep_scB$cluster))
 
 
 #
@@ -663,17 +758,18 @@ wcxsec_statA <- wcxsec_statA |>
 # Stat summary
 # dunsig_summary <- purrr::reduce(list(dunnsig_LOI, dunnsig_acari, dunnsig_collembola, dunnsig_biom.cryptogams, dunnsig_biom.forbs, dunnsig_biom.monocotyledons, dunnsig_biom.woody, dunnsig_div.cryptogams, dunnsig_div.forbs, dunnsig_div.monocotyledons, dunnsig_div.woody), dplyr::full_join)
 
-#
 ## Visual representation
 
-# Make variable group - Productivity, Diversity, Carbon, Soil nutrients
+# Make variable group - Aboveground productivity, Diversity, Belowground productivity, Carbon storage
 data_sheep_plot <- data_sheep_sc |> 
   pivot_longer(cols = -c(cluster_prim, cluster_sec),
                names_to = "variables",
                values_to = "sc_val") |> 
   mutate(var_group = ifelse(
     grepl("div_", variables), "diversity", ifelse(
-      variables == "ab_acari" | variables == "ab_collembola" | variables == "LOI", "decomposition", "production"
+      grepl("ab_", variables), "belowprod", ifelse(
+        variables == "LOI", "carbon", "aboveprod"
+      )
     )
   )) |> 
   # rearrange by variable group for ggplot
@@ -725,7 +821,7 @@ clusterplot_A <- filter(data_sheep_plot, cluster_prim == 1) |>
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
   xlab("") +
-  ylab("Cluster A") +
+  ylab("Division A") +
   labs("") +
   ylim(-4, 4) +
   coord_flip() +
@@ -749,7 +845,7 @@ clusterplot_B <- filter(data_sheep_plot, cluster_prim == 2) |>
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_boxplot() +
   xlab("") +
-  ylab("Cluster B") +
+  ylab("Division B") +
   labs("") +
   ylim(-4, 4) +
   coord_flip() +
@@ -827,7 +923,7 @@ clusterplot_1 <- filter(data_sheep_plot, cluster_sec == 1) |>
     axis.title.x = element_text(colour = "pink", size = 8),
     legend.title = element_blank(),
     legend.position = "none"
-    ) +
+  ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_1
 
@@ -1003,227 +1099,3 @@ sheep_summary_sec <- sheep_summary |>
   dplyr::group_by(cluster_sec) |>
   select_if(is.numeric) |>
   summarise(across(.cols = everything(), list(mean = mean, sd = sd)))
-
-
-# #### LM AGAINST TEMP, PRECI & PHOSPHORUS ####
-# 
-# # New table for LM
-# data_sheep_lm <- subset(data_sheep, select = -c(fieldtype, SiteID))
-# 
-# # Distribution explanatory variables
-# hist(data_sheep_lm$annualprecipitation)
-# hist(data_sheep_lm$avgtempJuly)
-# hist(data_sheep_lm$phosphorus) # one outlier -> to be removed
-# 
-# #
-# ## Correlation explanatory variables
-# 
-# # Precipitation x temperature
-# lm <- lm(annualprecipitation ~ avgtempJuly, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$avgtempJuly, data_sheep_lm$annualprecipitation, pch = 16, col = "red")
-# abline(lm)
-# 
-# # Precipitation x phosphorus
-# lm <- lm(phosphorus ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$phosphorus, pch = 16, col = "red")
-# abline(lm)
-# 
-# # Remove phosphorus outlier & temperature (highly correlated with precipitation)
-# data_sheep_lm <- filter(data_sheep_lm, phosphorus < 20)
-# data_sheep_lm <- subset(data_sheep_lm, select = -c(avgtempJuly))
-# 
-# #
-# ## LOI
-# 
-# # Against precipitation simple
-# lm <- lm(LOI ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$LOI, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(LOI ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$LOI, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Abundance collembola
-# 
-# # Against precipitation simple
-# lm <- lm(ab_collembola ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$ab_collembola, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(ab_collembola ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$ab_collembola, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Abundance acari
-# 
-# # Against precipitation simple
-# lm <- lm(ab_acari ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$ab_acari, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(ab_acari ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$ab_acari, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Summary plot lm soil
-# 
-# 
-# #
-# ## Biomass cryptogams
-# 
-# # Against precipitation simple
-# lm <- lm(biom_cryptogams ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_cryptogams, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(biom_cryptogams ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_cryptogams, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Biomass monocotyledons
-# 
-# # Against precipitation simple
-# lm <- lm(biom_monocotyledons ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_monocotyledons, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(biom_monocotyledons ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_monocotyledons, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Biomass forbs
-# 
-# # Against precipitation simple
-# lm <- lm(biom_forbs ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_forbs, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(biom_forbs ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_forbs, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Biomass woody
-# 
-# # Against precipitation simple
-# lm <- lm(biom_woody ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$biom_woody, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(biom_woody ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$biom_woody, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Diversity bryophytes
-# 
-# # Against precipitation simple
-# lm <- lm(div_cryptogams ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_cryptogams, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(div_cryptogams ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$div_cryptogams, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Diversity monocotyledons
-# 
-# # Against precipitation simple
-# lm <- lm(div_monocotyledons ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_monocotyledons, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(div_monocotyledons ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$div_monocotyledons, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Diversity forbs
-# 
-# # Against precipitation simple
-# lm <- lm(div_forbs ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_forbs, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(div_forbs ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$div_forbs, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Diversity woody
-# 
-# # Against precipitation simple
-# lm <- lm(div_woody ~ annualprecipitation, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$annualprecipitation, data_sheep_lm$div_woody, pch = 16, col = "blue")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# # Against phosphorus simple
-# lm <- lm(div_woody ~ phosphorus, data = data_sheep_lm)
-# summary(lm)
-# plot(data_sheep_lm$phosphorus, data_sheep_lm$div_woody, pch = 16, col = "green")
-# abline(lm)
-# plot(lm$residuals)
-# 
-# #
-# ## Plot summary
-# 
