@@ -284,13 +284,15 @@ landuse_full <- subset(landuse_raw, select = -c(Locality, Postcode, Grazingdensi
 # Livestock1
 #unique(landuse_full$Livestock1) # villsau should be in sheep category
 landuse_full <- landuse_full |> 
-  mutate(Livestock1 = dplyr::recode(Livestock1, "villsau" = "sheep"))
+  mutate(Livestock1 = dplyr::recode(Livestock1, "villsau" = "sheep")) |> 
+  mutate(Livestock1 = dplyr::recode(Livestock1, "cow" = "cattle"))
 #table(landuse_full$Livestock1) # correct number of sites per livestock category - validated
 
 # Livestock2
 #unique(landuse_full$Livestock2) # villsau should be in sheep category
 landuse_full <- landuse_full |> 
-  mutate(Livestock2 = dplyr::recode(Livestock2, "villsau" = "sheep"))
+  mutate(Livestock2 = dplyr::recode(Livestock2, "villsau" = "sheep")) |> 
+  mutate(Livestock1 = dplyr::recode(Livestock1, "cow" = "cattle"))
 #table(landuse_full$Livestock2) # Only 5 farmers with another livestock -> not to be included in the analysis
 
 # Period without grazing
@@ -2120,17 +2122,22 @@ biomass_full <- biomass_full |>
   summarise(DWbiomass_g = sum(DWbiomass_g, na.rm = TRUE)) |> 
   ungroup()
 
+# New biomass value per m^2^
+biomass_full <- biomass_full |> 
+  mutate(Biomass.m2 = DWbiomass_g*4)
+biomass_full <- subset(biomass_full, select = -c(DWbiomass_g))
+
 #
 ## Prepare data for vegan
 
 # Select 3 replicates per site
 biomass_full <- biomass_full |> 
   group_by(SiteID, PlotID) |>
-  pivot_wider(names_from = FunctionalType, values_from = DWbiomass_g) |> 
+  pivot_wider(names_from = FunctionalType, values_from = Biomass.m2) |> 
   # Select randomly one row which match unique combination of site & plot IDs
   slice(1) |>
   ungroup() |>
-  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "DWbiomass_g")
+  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "Biomass.m2")
 
 # Export clean data in new excel file
 write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
