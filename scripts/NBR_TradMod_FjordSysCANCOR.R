@@ -330,10 +330,10 @@ landscape_sc <- landscape |>
 # Dummy numeric for original character variables
 landuse_infield <- landuse_infield |> 
   mutate(Sheep = ifelse(Livestock1 == "sheep",1,0)) |> 
-  mutate(Cow = ifelse(Livestock1 == "cow", 1,0))
+  mutate(Cattle = ifelse(Livestock1 == "cattle", 1,0))
 
 # Selection variables
-grazing <- subset(landuse_infield, select = c(SiteID, Sheep, Cow, FlockSize1_adults, SelectedFieldArea_ha, FarmInfieldArea_ha, AvgStockDensity_perha))
+grazing <- subset(landuse_infield, select = c(SiteID, Sheep, Cattle, FlockSize1_adults, SelectedFieldArea_ha, FarmInfieldArea_ha, AvgStockDensity_perha))
 
 # Variable renaming
 names(grazing) <- gsub("FlockSize1_adults", "NbAdults", names(grazing))
@@ -450,7 +450,7 @@ contin_landscape <- xtabs(formula = Values ~ SiteID + Factors, data = landscape_
 # Grazing
 grazing_long <- grazing_sc |> 
   pivot_longer(
-    cols = c(Sheep, Cow, FieldSize, FarmInfield, StockDens),
+    cols = c(Sheep, Cattle, FieldSize, FarmInfield, StockDens),
     names_to = "Factors",
     values_to = "Values")
 contin_grazing <- xtabs(formula = Values ~ SiteID + Factors, data = grazing_long)
