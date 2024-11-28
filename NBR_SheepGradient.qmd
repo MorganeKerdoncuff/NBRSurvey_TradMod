@@ -1,5 +1,5 @@
 ---
-title: "Infield and outfield management provides complementary ecosystem services along a productivity gradient"
+title: "Adapted grazing management along a productivity gradient provides complementary ecosystem services between semi-natural grasslands and heathlands"
 format:
   html:
     embed-resources: true
@@ -31,62 +31,37 @@ source("scripts/NBR_TradMod_SheepFunc.R", local = knitr::knit_global())
 ```
 
 ```{r setup, include=FALSE}
-
-# Register an inline hook:
-knitr::knit_hooks$set(inline = function(x) {
-  x <- sprintf("%1.2f", x)
-  paste(x, collapse = ", ")
-})
-
-# Define a generic
-custom_print <- function(x, ...) {
-  UseMethod("custom_print", x)
-}
-
-# Define a method for p-values
-custom_print.p.value <- function(x, ...) paste(sprintf("%1.3f", x), collapse = ", ")
-# Define a method for t-statistics
-custom_print.stat <- function(x, ...) paste(sprintf("%1.2f", x), collapse = ", ")
-
+op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
 ```
 
 
-```{r}
-i <- runif(1)
-class(i) <- "p.value"
-i
+<!-- ```{r} -->
+<!-- i <- runif(1) -->
+<!-- class(i) <- "p.value" -->
+<!-- i -->
 
-mod <- lm(Sepal.Length ~ Species, iris)
-mod_tidy <- broom::tidy(mod)
+<!-- mod <- lm(Sepal.Length ~ Species, iris) -->
+<!-- mod_tidy <- broom::tidy(mod) -->
 
-format.pval(0.011111, eps = 0.001, digits = 2)
-```
+<!-- format.pval(0.011111, eps = 0.001, digits = 2) -->
+<!-- ``` -->
+
 
 # ABSTRACT
 
+The sharp transition from subsistence farming to productivist agriculture globally has simultaneously driven the intensification of fertile lands and the abandonment of less-productive areas, leading to substantial loss of biodiversity and habitats of high ecological value. In Western Norway, the rationalisation of livestock production has transformed the traditional infield-outfield system by focusing the grazing pressure on productive infields at the expense of durable management on coastal and mountain outfields. Encouraging conservation policies towards these remote lands requires to drift from productivity-centered assessments towards a more holistic approach considering biodiversity, ecosystem functions and nature's contributions to people. In an exploratory study of 23 sheep-grazed fields of the Nordhordland UNESCO Biosphere Reserve, we aimed to investigate the ecological synergies and trade-offs aboveground and belowground between infields and outfields along the fjord system environmental gradient. Overall, locally-adapted management on coastal and mountain outfields have ensured the preservation of cryptogam diversity and carbon sequestration potential, while the low between-site disparity between infields suggests an ongoing homogenisation of more productive farming systems following the intensification of management. Suitable agricultural policies are necessary to support the conservation of multifunctional landscapes at both ends of the productivity gradient and ensure the viability of associated farming systems.
+
+<!-- We found that outfields had higher diversity of shrubs and cryptogams, which was positively correlated with total plant species richness, as well as higher soil carbon content. Infields on the other hand had higher biomass and diversity of forbs, but showed particularly low between-site disparity compared with outfields. -->
+
 # INTRODUCTION
 
-- Agriculture has been the main factor of nature transformation since the first forest clearings by fire [@prosch-danielsenPalaeoecologicalInvestigationsReconstruction2000]
-- Agriculture has been the main factor of nature transformation that humans have used to ensure their self-subsistence
-- Agriculture has transformed nature since the first forest clearings by fire
-- Humans have transformed nature since the first forest clearings by fire 
-- Since the first forest clearings by fire, humans have used agriculture to transform nature and ensure their self-subsistence
-
-Since the first forest clearings [@prosch-danielsenPalaeoecologicalInvestigationsReconstruction2000] humans have ensured their self-subsistence by transforming nature with a wide range of agricultural practices adapted to the environmental constraints [@ellisLandUseEcological2021; @plieningerTraditionalLanduseNature2006]. To overcome the discrepancy of resources, farmer communities around the world have resorted to remarkably similar strategies based on complementary crop and animal husbandry systems: livestock grazing on low-productive areas provides manure for the edible crops grown on more productive fields, while the crop residues can be recycled as mulch or animal feed [@christiansenInfieldoutfieldSystemsCharacteristics1978; @sekaranRoleIntegratedCroplivestock2021; @yangResearchTrendsCrop2022]. These spatially extensive transfers of energy and nutrients shaped heterogeneous landscapes that have supported a high level of biodiversity and ensured the resilience of the whole agro-ecological system [@altieriLinkingEcologistsTraditional2004; @kremenLandscapesThatWork2018; @tscharntkeOrganicFarmingHarnessing2021]. However these management practices have drastically declined after the Green Revolution, as the introduction of fertiliser and machinery led to the over-intensification of productive lands while remote areas were gradually abandoned [@billenReshapingEuropeanAgrofood2021; @ramankuttyTrendsGlobalAgricultural2018; @reybenayasAbandonmentAgriculturalLand2007; @xieConservationOpportunitiesUncontested2019]. These two concurring trends resulted into an overall homogenisation and degradation of the agricultural landscape, with subsequent loss of the associated biodiversity [@beckmannConventionalLandUse2019; @flynnLossFunctionalDiversity2009; @newboldGlobalEffectsLand2015] and ecosystem functions [@allanLandUseIntensification2015; @isbellNutrientEnrichmentBiodiversity2013] and services [@foleyGlobalConsequencesLand2005; @kwonGlobalEstimatesImpacts2016]. In reaction, the past decades have seen a regained interest towards locally rooted, mixed agricultural systems inherited from the pre-productivist era that would ensure both sustainable land use and socio-economical well-being [@douwevanderploegPeasantriesTwentyfirstCentury2010; @garibaldiFarmingApproachesGreater2017]. 
+Since the first forest clearings [@prosch-danielsenPalaeoecologicalInvestigationsReconstruction2000], humans have ensured their self-subsistence by transforming nature with a wide range of agricultural practices adapted to the environmental constraints [@ellisLandUseEcological2021; @plieningerTraditionalLanduseNature2006]. To overcome the discrepancy of resources, farmer communities around the world have resorted to remarkably similar strategies based on complementary crop and animal husbandry systems: livestock grazing on low-productive areas provides manure for the edible crops grown on more productive fields, while the crop residues can be recycled as mulch or animal feed [@christiansenInfieldoutfieldSystemsCharacteristics1978; @sekaranRoleIntegratedCroplivestock2021; @yangResearchTrendsCrop2022]. These spatially extensive transfers of energy and nutrients shaped heterogeneous landscapes that have supported a high level of biodiversity and ensured the resilience of the whole agro-ecological system [@altieriLinkingEcologistsTraditional2004; @kremenLandscapesThatWork2018; @tscharntkeOrganicFarmingHarnessing2021]. However these management practices have drastically declined after the Green Revolution, as the introduction of fertiliser and machinery led to the over-intensification of productive lands while remote areas were gradually abandoned [@billenReshapingEuropeanAgrofood2021; @ramankuttyTrendsGlobalAgricultural2018; @reybenayasAbandonmentAgriculturalLand2007; @xieConservationOpportunitiesUncontested2019]. These two concurring trends resulted into an overall homogenisation and degradation of the agricultural landscape, with subsequent loss of the associated biodiversity [@beckmannConventionalLandUse2019; @flynnLossFunctionalDiversity2009; @newboldGlobalEffectsLand2015] and ecosystem functions [@allanLandUseIntensification2015; @isbellNutrientEnrichmentBiodiversity2013] and services [@foleyGlobalConsequencesLand2005; @kwonGlobalEstimatesImpacts2016]. In reaction, the past decades have seen a regained interest towards locally rooted, mixed agricultural systems inherited from the pre-productivist era that would ensure both sustainable land use and socio-economical well-being [@douwevanderploegPeasantriesTwentyfirstCentury2010; @garibaldiFarmingApproachesGreater2017]. 
 
 In Western Norway, the agro-ecological landscape has been safeguarded from severe intensification [@dramstadTenancyNorwegianAgriculture2010; @fjellstadPatternsChangeTwo1999] mainly because of the limiting fjord environment [@ketzlerClimateNorway2021; @nesjeFjordsNorwayComplex2009]. Farmer-fisher communities used to rely on mixed crop-livestock systems, referred as infield-outfield systems [@christiansenInfieldoutfieldSystemsCharacteristics1978], involving transhumance and rotational management to maximise the land use potential from the coast to the mountains [@austadHumaninfluencedVegetationTypes1991; @hjelleHesitantHuntersReview2006; @olssonAgroecosystemsNeolithicTime1991]. Atlantic wet heathland on the flat, notched coastal area would be grazed all year-round and regularly rejuvenated with rotational prescribed burning to improve fodder palatability [@thorvaldsenGammalnorskSauOg2017; @vandvikManagementdrivenEvolutionDomesticated2014]. In mountain areas, subalpine heathlands would be used for sheep and goat summer farming to provide temporary rest for grazing fields in the lowlands [@olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004]. In-between the least productive outfields (*utmark*) [@lillehammerPresentLandscapePerception2007], the large intermediate stretch of more fertile lands would see the development of pluriactive farms encompassing arable lands, grazing fields, hay-meadows and woodlands within a finely grained landscape mosaic of high ecological and cultural values [@haugeGaldaneLaerdalWestern1988; @hetlandPluriactivityStrategyEmployment1986; @olssonAgroecosystemsNeolithicTime1991]. The productivism trend emerging after WWII led to the rationalisation of livestock production, with a shift of grazing animals to fertilised infields (*innmark*) and a subsequent increase of farm size [@dramstadTenancyNorwegianAgriculture2010; @forbordDriversChangeNorwegian2014; @jonesLandtenureLandscapeChange1988]. On the other hand remote outfields were gradually abandoned [@fjellstadPatternsChangeTwo1999; @hamreLandcoverStructuralChanges2007a], causing the joint loss of cultural knowledge and ecological diversity associated with traditional management of hay-meadows [@norderhaugBiotopePatternsAbundance2000; @wehnAdaptiveBiodiversityManagement2018], coastal heathlands [@lundbergAustevollChangingCoastal1991; @webbTraditionalManagementEuropean1998] and mountain summer farms [@noelEffectsAbandonmentAlpine2010; @olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004]. The deep and lasting socio-economic decline of the countryside that followed has made particularly challenging any policy attempt to halt the land abandonment process, let alone reverse it [@blekesauneAgricultureImportanceViability1999; @daugstadAgricultureUpholderCultural2006; @forbordDriversChangeNorwegian2014].
 
 In this context, the nature's contributions to people (NCP) framework offers a useful toolbox for facilitating conservation measures towards less productive areas [@diazAssessingNatureContributions2018]: as a more inclusive update of the ecosystem service framework [@ellisEcosystemServicesNature2019; @haines-youngCommonInternationalClassification2018], it provides 1) quantitative assessments of the direct and indirect benefits driven by the farmers and their management [@bengtssonGrasslandsMoreImportant2019; @bernuesSeeingNorthernEuropean2016], 2) theoretical support for policy-oriented concepts such as multifunctionality [@bjorkhaugMultifunctionalAgriculturePolicy2008; @wilsonWeakStrongMultifunctionality2008] and 3) intuitive methodology for engaging stakeholders and the general public through participatory approaches [@cusensParticipatoryMappingReveals2022]. Examining semi-natural habitats beyond the productivity lenses allows to highlight the values of less fertile areas [@patru-stupariuReviewChangesMountain2020; @walmsleyEnsuringLongtermProvision2021] while identifying the ecological trade-offs generated by different grazing regimes [@geertsemaActionableKnowledgeEcological2016; @germanRelationshipsMultipleAspects2017]. In coastal and subalpine heathlands, slower nutrient cycling process due water saturation and/or cold temperature limit primary production but in return enhance carbon sequestration in the soil [@liLongtermTemporalPatterns2023; @quinCallunaVulgarisdominatedUpland2015]. The very low grazing pressure creates a structurally heterogeneous and colorful landscape highly appreciated for outdoor activities [@tilleyAnthropologyLandscape2017] and maintains a thick and highly functionally diverse bryophyte layer [@austrheimPlantDiversityPatterns2002] that contributes to freshwater supply and regulation [@huStructuralCharacteristicsMoss2023].
 
-The recent designation of the Nordhordland UNESCO Biosphere Reserve (NBR) as model area for experimenting and implementing the Sustainable Development Goals in Western Norway [@unescoNewRoadmapMan2017] has supported ecosystem services-based research in both agricultural and non-agricultural habitats [@cusensSocioculturalValuesBiophysical2024; @demeauxJustGrazeIt2024]. In this paper, we focused on the land uses inherited from the infield-outfield system, which is familiar to both policymakers and the general public, to investigate ecological trade-offs along the coast-to-mountain gradient. We first verified whether characterising grazing areas into either infield or outfield was still ecologically relevant through clustering analysis (Q1): as field type reflects both inherent productivity and associated past and current management, we predict it to be the main factor of site aggregation (H1-A). Considering the wide geographical range of our study area, we also expected secondary discrimination between, for instance, coastal and mountain outfields (H1-B).
-
-- Secondly, we tested for trade-offs that should be reflected between field types both aboveground, between primary production and plant functional group diversity (Q2-A), and belowground between soil productivity and carbon sequestration (Q2-B).
-- We expected more productive sites to be dominated by more palatable groups such as forbs and monocotyledons and to have higher soil mesofauna abundance, while low-productive sites should be characterised by more stress-tolerant groups such as .
-
-<!-- Hyp 1 - infield-outfield classification representative ecological context, with site aggregation according to 1) field type and 2) geographical location -> clustering + NMDS + chi^2^ -->
-<!-- Hyp 2 - trade-offs between variables -> Mann-Whitney comparison + lm -->
-<!-- Hyp 2A - infields with higher palatable biomass (monoc + forbs), higher forb diversity, lower LOI & higher mesofauna -->
-<!-- Hyp 2B - outfields with higher woody and cryptogam biomass & diversity, higher LOI & lower mesofauna -->
+The recent designation of the Nordhordland UNESCO Biosphere Reserve (NBR) as model area for experimenting and implementing the Sustainable Development Goals in Western Norway [@unescoNewRoadmapMan2017] has supported ecosystem services-based research in both agricultural and non-agricultural habitats [@cusensSocioculturalValuesBiophysical2024; @demeauxJustGrazeIt2024]. In this paper, we focused on the land uses inherited from the infield-outfield system, which is familiar to both policymakers and the general public, to investigate ecological trade-offs along the coast-to-mountain gradient. We first verified whether characterising grazing areas into either infield or outfield was still ecologically relevant through clustering analysis (Q1): as field type reflects both inherent productivity and associated past and current management, we predicted it to be the main factor of site aggregation (H1-A), followed by the geographical area (H1-B). Secondly, we relied on the clustering results to investigate trade-offs between primary production and plant functional group diversity aboveground (Q2-A), and between soil productivity and carbon sequestration belowground (Q2-B). We expected fertile sites to be less diverse, dominated by more palatable groups (forbs, monocotyledons) and with abundant soil mesofauna, and low-productive sites to be characterised by a more species-rich, stress-tolerant vegetation (shrubs, cryptogams) and a high rate of soil oragnic carbon.
 
 <!-- and heath also used to be scythed for both hay and domestic use [@lundbergAustevollChangingCoastal1991] -->
 <!-- direct incomes through cheese production -->
@@ -95,16 +70,36 @@ The recent designation of the Nordhordland UNESCO Biosphere Reserve (NBR) as mod
 <!-- - grazing effects interact with environmental gradient [@fynnManagingBrowsingGrazing2019] and habitat productivity [@mcnaughtonEcosystemlevelPatternsPrimary1989; @pakemanConsistencyPlantSpecies2004] -->
 <!-- - herbivore effect on plant species richness depends on site productivity -> (+) high vs (-) low [@bakkerHerbivoreImpactGrassland2006] -->
 
-
 # MATERIAL AND METHODS
 
 ## Study area
 
-The Nordhordland UNESCO Biosphere Reserve (NBR) encompasses in a nutshell the main features of the fjord system in Western Norway [@kalandNordhordlandBiosphereReserve2018]: the sharp elevation gradient creates a tight transition between the mild, oceanic regime on the west and the alpine regime on the east with decreasing temperatures and increasing precipitations [@ketzlerClimateNorway2021]. Between the coast and the mountains, mean annual precipitation can vary up to twice as much (from 1550 to 4800 mm) and mean July temperature can drop by almost half (from 15.9 to 8.3°C), along with increasing annual temperature range [@meteorologiskinstituttNorskKlimaservicesenter2023]. The region can thus be coarsely divided into three main ecological zones (adapted from @uttakleivLandskapskartleggingNorge2011): the coastal area, mostly made of flat islets and peninsulas, which have been used for both outfields and infields; the fjord area, characterised by productive infields in the valleys while the sharp slopes are covered by forests; the mountain area, up to 1300 masl, essentially used for summer outfields.
+```{r zoneclimate, include=FALSE}
 
-In summer 2019 and 2020. we conducted an ecological survey on 23 grazing fields spread along the whole elevation gradient of the NBR, with 11 infields in the coastal and fjord areas and 12 outfields mainly located in the coastal and mountain areas (@fig-sitemap). The sites were selected according to the Norwegian "areal type" AR5 classification system [@ahlstromAR5Klassifikasjonssystem2019], which defines infields (*innmarksbeite*) as "*agricultural lands that cannot be harvested mechanically* \[with\] *at least 50% of the area* \[...\] *covered with cultured grass or pasture-tolerant herbs*". There is no specific areal category for outfields, but they were located on "open permanent lands" (*åpen fastmark*) which are described as "*areas that are neither a bog, agricultural, forest or infrastructure*". Information on the sites management were collected from phone interviews with farmers, conducted from October 2021 to January 2022.
+# Packages
+library(tidyverse) # R language
+library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 
-Coastal outfields (under 150 masl) were *Calluna vulgaris* dominated heathlands, grazed all year round by rustic sheep breeds such as the Norwegian old sheep (*Gammel Norsk Sau*) or the Cheviot sheep from Scotland (*Sjeviotsau*). Three of them (CO1-3) were still managed with rotational prescribed burning and showed different stages of heath regeneration. The only outfield visited in the fjord area and the resulted from a former forest clearing and was dominated by *Vaccinium myrtillus* and *Galium saxatile*. In the mountain area, outfields were large areas that could be grazed by several sheep flocks from both the rustic breeds and the conventional Norwegian white sheep (*Norsk Kvit Sau*) for at most 4 months during the summer season. Our sites were located between 600 and 875 masl and dominated by ericaceous shrubs (*Vaccinium* spp) with a well-developed bryophyte layer. Infields were permanent grasslands (under 200 masl) dominated by *Agrostis capillaris*-*Poa pratensis* assemblages in the more productive sites and by *Festuca rubra* in less productive areas. In both cases the layer of creeping vegetation was well-represented, with species such as *Galium saxatile* and *Potentilla erecta*. The management was highly variable between farms: the fields were grazed from 3 to 12 months with both rustic and conventional breeds and 7 out of 11 sites were enriched with either artificial fertiliser, manure and/or shell/sand-lime mix.
+# Data loading
+siteinfo_full <- read.csv("data/cleandata/NBR_FullSiteInfo.csv", sep=",") # Clean site info data
+climate_full <- read.csv("data/cleandata/NBR_FullClimate.csv", sep=",") # Clean climate data
+landuse_full <- read.csv("data/cleandata/NBR_FullLanduse.csv", sep=",") # Clean field management data
+
+# Relevant variables
+zoneclimate <- purrr::reduce(list(subset(siteinfo_full, select = c(SiteID, EcoZone)), subset(landuse_full, select = c(SiteID, FieldType)), subset(climate_full, select = c(SiteID, annualprecipitation, avgtempJuly))), dplyr::left_join)
+
+# Filter according to landscape zone
+coastal <- filter(zoneclimate, EcoZone == "coastal")
+fjord <- filter(zoneclimate, EcoZone == "fjord")
+mountain <- filter(zoneclimate, EcoZone == "mountain")
+
+```
+
+The Nordhordland UNESCO Biosphere Reserve (NBR) encompasses in a nutshell the main features of the fjord system in Western Norway [@kalandNordhordlandBiosphereReserve2018]: the sharp elevation gradient creates a tight transition between the mild, oceanic regime on the west and the alpine regime on the east with decreasing temperatures and increasing precipitations [@ketzlerClimateNorway2021]. Between the coast and the mountains, mean annual precipitation can vary up to twice as much (from 1550 to 4800 mm) and mean July temperature can drop by almost half (from 15.9 to 8.3°C), along with increasing annual temperature range [@meteorologiskinstituttNorskKlimaservicesenter2023]. The region can thus be coarsely divided into three main ecological zones (adapted from @uttakleivLandskapskartleggingNorgeLandscape2011): the coastal area, mostly made of flat islets and peninsulas, which have been used for both outfields and infields; the fjord area, characterised by productive infields in the valleys while the sharp slopes are covered by forests; the mountain area, up to 1300 masl, essentially used for summer outfields.
+
+In summer 2019 and 2020. we conducted an ecological survey on 23 grazing fields spread along the whole elevation gradient of the NBR, with 11 infields in the coastal and fjord areas and 12 outfields mainly located in the coastal and mountain areas (@fig-sitemap). Coastal and fjord sites were all located below 200 masl and showed on average similar July temperature (`r op(mean(coastal$avgtempJuly))`-`r op(mean(fjord$avgtempJuly))`°C) and annual precipitation (`r op(mean(coastal$annualprecipitation), 0)`-`r op(mean(fjord$annualprecipitation), 0)` mm) ranges. Mountain sites were located between 600 and 875 masl and characterised by colder climate (`r op(mean(mountain$avgtempJuly))`°C) and higher precipitation level (`r op(mean(mountain$annualprecipitation), 0)` mm) [@meteorologiskinstituttNorskKlimaservicesenter2023]. The fields were selected according to the Norwegian "areal type" AR5 classification system [@ahlstromAR5Klassifikasjonssystem2019], which defines infields (*innmarksbeite*) as "*agricultural lands that cannot be harvested mechanically* \[with\] *at least 50% of the area* \[...\] *covered with cultured grass or pasture-tolerant herbs*". There is no specific areal category for outfields, but they were located on "open permanent lands" (*åpen fastmark*) which are described as "*areas that are neither a bog, agricultural, forest or infrastructure*". Information on the sites management were collected from phone interviews with farmers, conducted from October 2021 to January 2022.
+
+Coastal outfields were *Calluna vulgaris* dominated heathlands, grazed all year round by rustic sheep breeds such as the Norwegian old sheep (*Gammel Norsk Sau*) or the Cheviot sheep from Scotland (*Sjeviotsau*). Three of them (CO1-3) were still managed with rotational prescribed burning and showed different stages of heath regeneration. The only outfield visited in the fjord area resulted from a former forest clearing and was dominated by *Vaccinium myrtillus* and *Galium saxatile*. In the mountain area, outfields were large areas that could be grazed by several sheep flocks from both the rustic breeds and the conventional Norwegian white sheep (*Norsk Kvit Sau*) for at most 4 months during the summer season. Our sites were dominated by ericaceous shrubs (*Vaccinium* spp) with a well-developed bryophyte layer. Infields were permanent grasslands dominated by *Agrostis capillaris*-*Poa pratensis* assemblages in the more fertile sites and by *Festuca rubra* in less productive areas. In both cases the layer of creeping vegetation was well-represented by species such as *Galium saxatile* and *Potentilla erecta*. The management was highly variable between farms: the fields were grazed from 3 to 12 months with both rustic and conventional breeds and 7 out of 11 sites were enriched with either artificial fertiliser, manure and/or shell/sand-lime mix.
 
 ![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (NBR), Western Norway. Shapes and colours indicate ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; white: outfield) respectively. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background topographic layer (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](illustrations/NBR_SheepMap.png){#fig-sitemap}
 
@@ -120,21 +115,54 @@ All vascular plants and bryophyte species within each non-destructive quadrat we
 
 All analyses were performed on R (v.4.4.1) with R-Studio (v.2023.12.1+402) [@positteamRStudioIntegratedDevelopment2023; @rcoreteamLanguageEnvironmentStatistical2024], using the *fpc* [@hennigFpcFlexibleProcedures2024] and *mri* [@cugmasMriModifiedRand2019] packages for clustering validation, the *rcompanion* package for effect size statistics [@mangiaficoRcompanionFunctionsSupport2024] and the *ggplot2* package for visualisation [@wickhamGgplot2CreateElegant2024]. All our variables were scaled prior to analysis to account for unit differences.
 
-To check if the observed site distribution reflected the field type classification (H1-A) and/or the geographical area (H1-B), we performed Ward's hierarchical agglomerative clustering on Euclidean-based distance matrix, which minimises within-group dispersion by computing squared dissimilarities [@murtaghWardHierarchicalAgglomerative2014]. We compared the observed primary (first-level branching) and secondary (second-level branching) clusters with the expected clustering according to field type and the combination field type x geographical area respectively using both the more common adjusted Rand index [@gordonClassification1999] and the adjusted Wallace index which is not sensitive to cluster size [@warrensUnderstandingAdjustedRand2022]. The secondary clusters were projected on Non-Metric Multidimensional Scaling (NMDS) for visual representation [@minchinEvaluationRelativeRobustness1987].
+To check if the observed site distribution reflected the field type classification (H1-A) and/or the geographical area (H1-B), we performed Ward's hierarchical agglomerative clustering on Euclidean-based distance matrix, which minimises within-group dispersion by computing squared dissimilarities [@murtaghWardHierarchicalAgglomerative2014]. We compared the observed primary (first-level branching) and secondary (second-level branching) clusters with the expected clustering according to field type and the combination field type x geographical area respectively using both the more common adjusted Rand index [@gordonClassification1999] and the adjusted Wallace index which is not sensitive to cluster size [@warrensUnderstandingAdjustedRand2022]. The secondary clusters were projected on Non-Metric Multidimensional Scaling (NMDS) for visual representation [@minchinEvaluationRelativeRobustness1987]. 
 
-- For ecological synergies and trade-offs, we first investigated correlations between variables independently of site affiliation using Spearman's rank test [@hollanderNonparametricStatisticalMethods2015].
-- We made pairwise comparisons between groups from the same hierarchical division using non-parametric unpaired Mann-Whitney tests [@lehmannNonparametricsStatisticalMethods2006].
-- effect size Glass rank biserial correlation coefficient [@kingStatisticalReasoningBehavioral2018]
+For ecological synergies and trade-offs (Q2), we first investigated correlations between variables independently of site affiliation using Spearman's rank test [@hollanderNonparametricStatisticalMethods2015]. We then made pairwise comparisons between primary and secondary clusters using non-parametric unpaired Mann-Whitney tests [@lehmannNonparametricsStatisticalMethods2006]. We assessed the magnitude of the effect size with the Glass rank biserial correlation coefficient, which is not affected by sample size [@kingStatisticalReasoningBehavioral2018].
 
 <!-- and were classified into three categories: 1) diversity, including average species richness of cryptogams (bryophytes and lycophytes), monocotyledons, forbs and woody plants per m^2^; 2) production, including average aboveground biomass of cryptogams, monocotyledons, forbs and woody plants per m^2^; 3) decomposition, including average abundance of collembola and acari per m^2^ and average LOI. -->
 
 # RESULTS
 
-We registered a total of `r totplantsp` plant species, among which `r nrow(totforbsp)` forbs, `r nrow(totmonocsp)` monocotyledons, `r nrow(totbryosp)` bryophytes, including mosses and liverworts, and `r nrow(totwoodysp)` shrubs and woody species. We also collected a total of `r totacari` acari and `r totcollem` collembola across all sites.
+
+```{r numberspecies, include=FALSE}
+
+# Overall plant species
+totplantsp <- plantspecies_sheep |>
+  group_by(Species) |>
+  summarise(Abundance = mean(Abundance))
+
+# Total forb species
+totforbsp <- plantspecies_sheep |>
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |>
+  filter(FunctionalGroup == "DIV_forbs")
+
+# Total monocotyledon species
+totmonocsp <- plantspecies_sheep |>
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |>
+  filter(FunctionalGroup == "DIV_monocotyledons")
+
+# Total woody species
+totwoodysp <- plantspecies_sheep |>
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |>
+  filter(FunctionalGroup == "DIV_woody")
+
+# Total cryptogam species
+totcryptosp <- plantspecies_sheep |>
+  group_by(Species, FunctionalGroup) |>
+  summarise(Abundance = mean(Abundance)) |>
+  filter(FunctionalGroup == "DIV_cryptogams")
+
+```
+
+
+We registered a total of `r op(nrow(totplantsp), 0)` plant species, among which `r op(nrow(totforbsp), 0)` forbs, `r op(nrow(totmonocsp), 0)` monocotyledons, `r op(nrow(totcryptosp), 0)` cryptogams, including mosses, liverworts and lycophytes, and `r op(nrow(totwoodysp), 0)` shrubs and woody species. We also collected a total of `r op(sum(mesobio_sheep$Acari), 0)` acari and `r op(sum(mesobio_sheep$Collembola), 0)` collembola across all sites.
 
 ## Hierarchical clustering
 
-We obtained two primary clusters (A-B) and four secondary clusters (CL1-4) (@fig-clustertree) which show relatively consistent compactness and separation (see @tbl-clusterquality in SI). Outfields (A) were clearly separated from infields (B) in the first branching (adjusted Rand Index = `r filter(clusterstat, Clustering == "primary")$AdjRandIndex`; adjusted Wallace Index = `r clusterstat$AdjWallaceIndex[1]`), with only two mismatched infields (FI6, CI5) and one mismatched outfield (FO1) (@fig-clustertree). The influence of the geographical area was on the other hand less straightforward (adjusted Rand Index = `r clusterstat$AdjRandIndex[2]`; adjusted Wallace Index = `r clusterstat$AdjWallaceIndex[2]`) as only visible among outfields (CL1 and CL4) which were distinctly less compacted than infields (@fig-clusterord).
+We obtained two primary clusters (A-B) and four secondary clusters (CL1-4) (@fig-clustertree) which show relatively consistent compactness and separation (see @tbl-clusterquality in SI). Outfields (A) were clearly separated from infields (B) in the first branching (adjusted Rand Index = `r op(filter(clusterstat, Clustering == "primary")$AdjRandIndex, 2)`; adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[1], 2)`), with only two mismatched infields (FI6, CI5) and one mismatched outfield (FO1) (@fig-clustertree). The influence of the geographical area was on the other hand less straightforward  as only visible among outfields (adjusted Rand Index = `r op(clusterstat$AdjRandIndex[2], 2)`; adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[2], 2)`) which were distinctly less compacted than infields (@fig-clusterord).
 
 ::: {layout-ncol=1}
 ![Dendrogram of site hierarchical clustering with Ward's criterion based on Euclidean distance (k = 5). Sites are identified according to ecological zone (C: coast; F: fjord; M: mountain) and field type (O: outfield; I: infield). Primary clusters A and B from the first division are characterised by pink and orange gradients respectively. Secondary clusters 1, 5 and 4 are represented with light, medium and dar pink respectively, and secondary clusters 3 and 2 are represented with light and dark orange respectively. ](outputs/cluster_tree.png){#fig-clustertree}
@@ -144,145 +172,151 @@ We obtained two primary clusters (A-B) and four secondary clusters (CL1-4) (@fig
 
 ## Ecological trade-offs and synergies
 
-Outfields had an average higher soil organic content (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$LOI_mean` &plusmn; sd~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$LOI_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$LOI_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$LOI_sd`), higher richness of cryptogams (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$div_cryptogams_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 1)$div_cryptogams_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$div_cryptogams_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$div_cryptogams_sd`) and higher woody biomass (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$biom_woody_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 1)$biom_woody_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$biom_woody_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$biom_woody_sd`) and species richness (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$div_woody_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 1)$div_woody_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$div_woody_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$div_woody_sd`). On the other hand, infields had higher forb biomass (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$biom_forbs_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 1)$biom_forbs_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$biom_forbs_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$biom_forbs_sd`) and species richness (mean~DivA~ = `r filter(sheep_summary_prim, cluster_prim == 1)$div_forbs_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 1)$div_forbs_sd`; mean~DivB~ = `r filter(sheep_summary_prim, cluster_prim == 2)$div_forbs_mean` &plusmn; `r filter(sheep_summary_prim, cluster_prim == 2)$div_forbs_sd`) (@fig-clusterplots A).
+```{r averagespfield, include=FALSE}
 
-Outfields were overall discriminated into mountain (CL4) and coastal (CL1) clusters, but the sites were relatively scattered on the ordination space (@fig-clusterord). Coastal outfields showed on average higher biomass of cryptogams (mean~Cl1~ = `r filter(sheep_summary_sec, cluster_sec == 1)$biom_cryptogams_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 1)$biom_cryptogams_sd`; mean~Cl4~ = `r filter(sheep_summary_sec, cluster_sec == 4)$biom_cryptogams_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 4)$biom_cryptogams_sd`) and woody plants (mean~Cl1~ = `r filter(sheep_summary_sec, cluster_sec == 1)$biom_woody_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 1)$biom_woody_sd`; mean~Cl4~ = `r filter(sheep_summary_sec, cluster_sec == 4)$biom_woody_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 4)$biom_woody_sd`) compared with mountain outfields (@fig-clusterplots B). On the other hand, infield clusters were more compact and did not show any geographical patterns (@fig-clusterord). The only factor distinguishing the three sites of CL3 from the other infields was the abundance of acari, which was distinctly higher (mean~Cl2~ = `r filter(sheep_summary_sec, cluster_sec == 1)$ab_acari_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 2)$ab_acari_sd`; mean~Cl4~ = `r filter(sheep_summary_sec, cluster_sec == 3)$ab_acari_mean` &plusmn; `r filter(sheep_summary_sec, cluster_sec == 3)$ab_acari_sd`) (@fig-clusterplots C).
+avgrichness <- left_join(subset(landuse_sheep, select = c(SiteID, FieldType)), plantrichness_sheep)
 
-- Outliers
-- Infields in division A:
-- CI5 (OS8) wet almost flooded meadow (Risøyna) -> very high LOI (2.95) -> highest LOI
-- FI6 (IS5) former clearing/woodland surrounded grassland patch (Ostereidet, bicycle) -> high LOI (0.71) while grassland LOI all (-)
-- Outfield in division B:
-- FO1 (IS2) former clearing with mixed heath vegetation -> high forb richness (1.1)
+# Average infield richness
+avginfieldsp <- filter(avgrichness, FieldType == "infield")
 
-![Comparison of decomposition, diversity and productivity variables between primary divisions (A) and between secondary clusters from the same division (B and C) with non-parametric unpaired Mann-Whitney tests. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001](outputs/clusterplot_all.png){#fig-clusterplots}
+# Average outfield richness
+avgoutfieldsp <- filter(avgrichness, FieldType == "outfield")
+```
 
+Independently of field type and geographical area, woody biomass, woody species richness, cryptogam species richness, total plant species richness and loss of ignition were strongly positively correlated and were overall negatively correlated with forb diversity (@fig-corpanel). Average plant species richness was `r op(mean(avginfieldsp$DIV_tot))` for infields and `r op(mean(avgoutfieldsp$DIV_tot))` for outfields.
+
+When comparing primary clusters A and B, outfields had higher soil organic content (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$C_LOI_mean)` &plusmn; sd~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$C_LOI_sd)` % dry weight; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$C_LOI_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$C_LOI_sd)` % dry weight), higher woody biomass (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_woody_sd)` g.m^-2^; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_woody_sd)` g.m^-2^), and higher species richness of cryptogams (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_cryptogams_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_cryptogams_sd)`) and shrubs (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_woody_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_woody_sd)`). On the other hand, infields had higher forb biomass (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_forbs_sd)` g.m^-2^; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_forbs_sd)` g.m^-2^) and species richness (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_sd)`) (@fig-clusterplots A). Coastal outfields from secondary cluster 1 showed on average higher biomass of cryptogams (mean~Cl1~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_cryptogams_sd)` g.m^-2^; mean~Cl4~ = `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_cryptogams_sd)` g.m^-2^) and shrubs (mean~Cl1~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_sd)`; mean~Cl4~ = `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_sd)` g.m^-2^) compared with mountain outfields in cluster 4 (@fig-clusterplots B). Regarding infields, the only factor distinguishing the three sites of cluster 3 from the other sites gathered in cluster 2 was the distinctly higher density of acari (mean~Cl2~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 2)$BGP_acari_sd)` m^-2^; mean~Cl3~ = `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_sd)` m^-2^) (@fig-clusterplots C).
+
+![Comparison of decomposition, diversity and productivity variables between primary (A) and secondary (B and C) clusters with non-parametric unpaired Mann-Whitney tests. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001](outputs/clusterplot_all.png){#fig-clusterplots}
+
+```{r wcxtest}
+#| label: tbl-wcxtest
+#| tbl-cap: "Results from the unpaired Mann-Whitney tests (W-stat) and associated Glass rank biserial correlation coefficient (rg) for effect size between primary clusters A and B, secondary clusters 1 and 4, and secondary cluster 2 and 3."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+wcxtest <- wcx_stat
+wcxtest <- wcxtest |> 
+  pivot_longer(cols = c(W, pval, rg), names_to = "stat", values_to = "val") |> 
+  mutate(statclus = ifelse(
+    cluster == "primary", paste(stat, 1, sep = ""), ifelse(
+      cluster == "secondaryA", paste(stat, "2A", sep = ""), paste(stat, "2B", sep = "")
+    )
+  ))
+
+wcxtest <- subset(wcxtest, select = c(var, statclus, val))
+wcxtest <- wcxtest |> 
+  pivot_wider(names_from = statclus, values_from = val)
+
+wcxtest |> 
+  gt() |> 
+  # gt(rowname_col = "var") |> 
+  cols_label(
+    W1 = "W-stat",
+    pval1 = "p.value",
+    rg1 = "rg",
+    W2A = "W-stat",
+    pval2A = "p.value",
+    rg2A = "rg",
+    W2B = "W-stat",
+    pval2B = "p.value",
+    rg2B = "rg",
+    var = ""
+  ) |>
+  fmt_number(
+    columns = c("pval1", "pval2A", "pval2B"),
+    decimals = 3
+  ) |> 
+  fmt_number(
+    columns = c("rg1", "rg2A", "rg2B"),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = c("W1", "W2A", "W2B"),
+    decimals = 0
+  ) |>
+    tab_spanner(
+      label = "ClA vs ClB",
+      columns = c("W1", "pval1", "rg1")
+    ) |> 
+    tab_spanner(
+      label = "Cl1 vs Cl4",
+      columns = c("W2A", "pval2A", "rg2A")
+    ) |> 
+    tab_spanner(
+      label = "Cl2 vs Cl3",
+      columns = c("W2B", "pval2B", "rg2B")
+    ) |> 
+    opt_stylize(style = 1, color = 'gray')
+
+```
 
 # DISCUSSION
 
-- The primary aggregation of grazing fields mostly matched with the Norwegian land cover classification (H1-A), with substantially higher between-site dispersion for outfields compared with infields.
-- The influence of geographical location partially showed through the secondary aggregation of outfields, but was completely absent for infields (H1-B).
-- As expected, higher productivity and fodder production potential was associated with lower plant diversity (H2-A), which was closely correlated with cryptogam and woody species richness, except for forbs
-- Finally carbon sequestration was clearly more efficient in outfields compared with infields, but it was not inversely related to the abundance of soil mesofauna (H2-B).
+The first clustering level of grazing fields mostly matched with the Norwegian land cover classification (H1-A), with substantially higher between-site dispersion for outfields compared with infields. The influence of geographical area partially showed in the outfield group, but was completely absent for infields (H1-B). As expected, higher fodder production in infields was associated with higher forb species richness but overall lower plant diversity (H2-A), which was closely correlated with cryptogam and shrub species richness, while carbon sequestration was clearly more efficient in outfields (H2-B). However soil mesofauna was not related to any other variable and did not show any clear pattern according to field type or geographical area.
 
+## Productivity-diversity trade-offs in the current NBR farming system
 
-## Understanding the productivity-diversity trade-off in the current NBR farming system
+The land type dichotomy resulting from the "traditional" infield-outfield system of Western Norway durably imprinted the fjord agro-ecological landscape and still reflects rather accurately the divergence of community assembly processes according to nutrient availability. In enriched grasslands, plant-plant interactions are determined by strong light competition [@conradiResourceAvailabilityDetermines2017; @grimeCompetitiveExclusionHerbaceous1973] and higher grazing and trampling pressures [@buzhdyganDirectIndirectEffects2020], which tend to the dominance of fast-growing and short-lived species [@gaujourFactorsProcessesAffecting2012; @koernerChangeDominanceDetermines2018; @pakemanConsistencyPlantSpecies2004]. In nutrient-poor heathland habitats, grazing at very low intensity locally overcomes the light competition driven by shrubs [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998] and creates patch-like structural heterogeneity [@parsonsSpatialHeterogeneityGrazing2003; @tonnGrazingInducedPatchiness2019] that particularly favours cryptogam diversity in subalpine environment [@aldayEffectsLongtermRemoval2021; @milliganWinnersLosersLongterm2016].
 
-Even if the "traditional" outfield-infield system of Western Norway mostly belongs to the past, the resulting land type dichotomy was durably imprinted in the fjord agro-ecological landscape and still reflects rather accurately current ecological trade-offs, starting with the productivity-diversity relationship. In more productive grasslands, plant-plant interactions are dominated by first strong light competition [@grimeCompetitiveExclusionHerbaceous1973], and second higher grazing and trampling pressures [@buzhdyganDirectIndirectEffects2020], which both combined tend to the dominance of fast-growing and short-lived species [@gaujourFactorsProcessesAffecting2012; @koernerChangeDominanceDetermines2018; @pakemanConsistencyPlantSpecies2004]. Soil enrichment not only exacerbates this competitive process [@conradiResourceAvailabilityDetermines2017] but also adds another selective pressure by lowering soil pH and consequently increasing the concentration of toxic compounds such as ammonium and ionic aluminium [@brittoNH4ToxicityHigher2002; @kochianCellularMechanismsAluminum1995]. Bryophytes and rare vascular species are particularly sensitive to the application of mineral fertilisers [@kiddImpacts120Years2017; @kleijnSearchKeyBiogeochemical2008], and even if manure was reported to be less impactful [@caiIntensifiedSoilAcidification2015; @xuModelbasedOptimalManagement2023] it mostly depends on the applied amount [@koningerManureManagementSoil2021]. On the other hand, low-intensity grazing in nutrient-poor heathland habitats locally overcomes the light competition driven by shrubs [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998] and creates patch-like structural heterogeneity [@parsonsSpatialHeterogeneityGrazing2003; @tonnGrazingInducedPatchiness2019] that favour cryptogams, which are the main driver of diversity in the sub-alpine environment [@aldayEffectsLongtermRemoval2021; @milliganWinnersLosersLongterm2016].
+We can however question whether this productivity-diversity trade-off observed between field types solely relates to the intrinsic nutrient status of grassland and heathland habitats, or if the intensification of land use, even if only up to a moderate range, has impoverished the NBR semi-natural grasslands over time [@beckmannConventionalLandUse2019]. In that sense, the striking homogeneity displayed within the infield group compared with outfields suggests the latter. Even if infields are not distributed across such a large environmental gradient as outfields, a clear distinction between oceanic and boreal meadows was described by @losvikHayMeadowCommunities1993 but has yet to be reported in more recent studies [@demeauxJustGrazeIt2024]. More generally, a stronger between-site disparity should be expected from the inherent heterogeneity of the NBR agro-ecological system [@steinEnvironmentalHeterogeneityUniversal2014] stemming from both environmental (e.g. topography) and management (e.g. grazing periodicity) factors [@fynnManagingBrowsingGrazing2019; @hesterForagingBehaviourSheep1999; @ravettoenriBiodiversityfriendlyRotationalGrazing2017]. Increasing grazing pressure up to moderate levels has so far shown very mixed results on either species richness [@herrero-jaureguiEffectsGrazingIntensity2018; @scohierHowSheepAffect2012; @wangGlobalMetaanalysesResponse2019] or community composition [@marriottLongtermImpactsExtensive2009; @pakemanLongTermImpacts2019], but in Western Norway the effects could be aggravated by the very low grassland carrying capacity (under 5 animals per km^2^/y) [@piipponenGlobalTrendsGrassland2022] and the dominance of steep slopes [@dorroughPlantNeighbourhoodLandscape2007]. More importantly, the generalised application of mineral fertilisers, or even manure [@koningerManureManagementSoil2021], was shown to be particularly detrimental to bryophytes and rare vascular species [@kiddImpacts120Years2017; @kleijnSearchKeyBiogeochemical2008; @kleijnRelationshipFarmlandBiodiversity2009].
 
-- Even if cryptogam is a good indicator of multidiversity [@manningGrasslandManagementIntensification2015]
+On the contrary, the high disparity between outfields suggests that current management strategies are adapted to local conditions and enhance the regional diversity of semi-natural heathlands [@speedResponsePlantDiversity2013]. In cold-stressed subalpine habitats, extensive summer grazing by free-ranging sheep generates enough disturbance to contain the progress of the tree line [@brynElevationalTreelineForest2018; @hofgaardTreeRecruitmentTreeline2009] while preserving the cryptogam species richness [@austrheimPlantSpeciesDiversity2001; @kaufmannEffectsClimateChange2021] and the nutritive quality of the fodder [@marrsReleaseSheepGrazing2020; @niuTradeoffsForageQuality2016]. Under the mild Southern coastal climate though, the vegetation grows more rapidly into mature, shrub-dominated heath stands which require more active management to prevent encroachment [@velleDoesPrescribedBurning2014]. Rather than increasing the overall stocking density that could lead to nutrient depletion and landscape homogenisation [@gilhausSeasonalVariationsFodder2016; @pakemanIncreasedGrazingDrives2021], farmers rely on rotational prescribed burning to regularly rejuvenate patches of heath into more palatable pioneer stages [@hobbsStudiesFireScottish1984; @mallikRegenerationHeathlandPlants1983; @thorvaldsenGammalnorskSauOg2017], locally altering ecological niches [@velleSuccessionPrescribedBurning2014] and successional processes [@marenChangingContributionsStochastic2018]. Over time, this practice creates temporally and spatially dynamic mosaics of heath stands under different regeneration stages [@bargmannSpeciesTraitSelection2016] which shape ecological heterogeneity at both local and regional scales [@smithResolvingHeatedDebate2023; @vandvikManagingHeterogeneityImportance2005]. 
 
-- Beyond fundamental community assembly processes that could explain the difference in diversity driven by cryptogams, infields 
-- If the difference in species richness between infields and outfields could thus be explained solely by fundamental community assembly processes, the relative homogeneity among infields still questions whether the intensification of land use, even if only up to a moderate range, has impoverished the overall diversity of semi-natural grasslands in the NBR [@beckmannConventionalLandUse2019; @lezamaVariationGrazinginducedVegetation2014].
-- in Western Norway, low carrying capacity of grasslands (under 5 animals per km^2^/y) that would be overstocked with stocking densities which are considered "moderate" in more productive southern regions [@piipponenGlobalTrendsGrassland2022]
-- For instance, the clear distinction between oceanic and boreal meadows that was reported by @losvikHayMeadowCommunities1993 30 years ago was nowhere to be found not only in our analysis but also in other recent studies led in the NBR [@demeauxJustGrazeIt2024 + NBRgradient].
-- Even if infields were not distributed across such a large environmental gradient as outfields, a stronger between-site disparity should be expected from the inherent heterogeneity of the agro-ecological system [@steinEnvironmentalHeterogeneityUniversal2014], showing through the wide extent of topographical conditions, including well-drained slopes and flat, well-irrigated areas [@fynnManagingBrowsingGrazing2019; @hesterForagingBehaviourSheep1999], or the highly variable grazing periodicity, ranging from 2 months to all year round [@ravettoenriBiodiversityfriendlyRotationalGrazing2017].
-
-- Semi-natural meadows in the NBR can be still considered as species-rich habitats, particularly with a high diversity of forbs which cannot be reached in less productive habitats, but the convergence may threaten their long-term resilience 
-
-- The negative effect of increasing sheep grazing intensity on species richness is not as consistent in the literature [@scohierHowSheepAffect2012], and we still observed significant forb species richness
-- However the effect of increasing grazing intensity on community divergence for *Agrostis-Festuca* communities is not consistent across the literature: either increase [@pakemanLongTermImpacts2019] or slow process/marginal difference [@marriottLongtermImpactsExtensive2009]
-- not to the point of very intensive grassland, but still negative in comparison with former habitats [@norderhaugBiotopePatternsAbundance2000]
-- Increasing grazing intensity would decrease heterogeneity, especially on steep areas [@dorroughPlantNeighbourhoodLandscape2007]
-
-- On the other hand, the high disparity between outfields suggests that current management strategies are mostly adapted to local conditions and maintain the ecological state [@speedResponsePlantDiversity2013].
-- Such heterogeneity is also emphasized by other practices complementary to grazing such as rotational prescribed burning, that creates a both temporally and spatially dynamic mosaic of different heath regeneration stages [@mallikRegenerationHeathlandPlants1983; @vandvikManagingHeterogeneityImportance2005].
-- But careful intensification/abandonment -> even more sensitive [@austrheimPlantSpeciesDiversity2001]
-
-
-- different grazing capacities depending on the habitat type as it is limited by available biomass in nutrient-rich habitats and by nutrient content in nutrient-poor habitats [@gilhausSeasonalVariationsFodder2016]
-- stability of aboveground biomass production in Tibetan alpine meadows correlated with high-palatability herbage stability, which AGB is stimulated by rotational grazing against exclusion, & asynchrony between high & low palatability [@liRotationalGrazingPromotes2020] -> importance of maintaining grazing in upland systems
-- [check @austrheimPlantSpeciesDiversity2001 & @liangGrazingInducedBiodiversity2021]
-
-
+<!-- - the management balance to prevent both encroachment and overgrazing is substantially tighter and therefore requires [@austrheimSynergiesTradeoffsEcosystem2016].   -->
+<!-- - the application of mineral fertilisers acidify the soil and increase the concentration of ammonium and ionic aluminium [@brittoNH4ToxicityHigher2002; @kochianCellularMechanismsAluminum1995]. Manure is usually reported to be less impactful [@caiIntensifiedSoilAcidification2015; @xuModelbasedOptimalManagement2023], but only up to a certain amount [@koningerManureManagementSoil2021].  -->
 <!-- This process is particularly aggravating in Norway where the soil pH is already the lowest in Europe because of the predominance of acid crystalline rocks and colder climate [@fabianGEMASSpatialDistribution2014; @norgesgeologiskeundersokelseNasjonalBerggrunnsdatabase2023]. -->
+<!-- showing for instance through the wide extent of topographical conditions from steep, well-drained slopes to flat, well-irrigated areas [@fynnManagingBrowsingGrazing2019; @hesterForagingBehaviourSheep1999; @ravettoenriBiodiversityfriendlyRotationalGrazing2017] or the highly variable grazing periodicity from 2 months to all year round [@ravettoenriBiodiversityfriendlyRotationalGrazing2017]. -->
+<!-- - Even if cryptogams are good indicators of multidiversity [@manningGrasslandManagementIntensification2015] -->
+<!-- - different grazing capacities depending on the habitat type as it is limited by available biomass in nutrient-rich habitats and by nutrient content in nutrient-poor habitats [@gilhausSeasonalVariationsFodder2016] -->
 
-- discrimination according to geographical area not so sharp, but maybe explained by heath stage
-- coastal: higher cryptogam biomass (positively correlated with woody biomass) & woody diversity + consistently low monocotyledon biomass -> older heath stage
-- coastal outfield in the mountain outfield group (Hopøyna) is most recently burnt site 
-- need more comparison between mountain & coastal outfields
+## Soil carbon and biotic-abiotic interactions
 
+As expected, heathlands showed better carbon sequestration potential than grasslands [@quinCallunaVulgarisdominatedUpland2015], independently of geographical area. Because of low drainage capacity and/or very high precipitation levels, both coastal and subalpine soils are under anoxic, water-saturated conditions that hinder the microbial activity driving the decomposition of organic matter [@boyeThermodynamicallyControlledPreservation2017; @hobbieControlsCarbonStorage2000]. Furthermore, the litter from shrubs and especially bryophytes was shown to decompose considerably slower [@langExperimentalComparisonChemical2009], especially on acidic substrate [@vanzuijlenDecomposabilityLichensBryophytes2020]. Carbon stabilisation in the soil is however highly context-dependent [@dungaitSoilOrganicMatter2012; @schmidtPersistenceSoilOrganic2011] and relies on a very sensitive flux balance favoured by active management, such as the regular rejunevation of coastal *Calluna* communities [@liLongtermTemporalPatterns2023] or the seasonal low-intensity grazing in mountain habitats [@martinsenCarbonStorageLowalpine2011; @poeplauTemporalDynamicsSoil2011].
 
-## Belowground
+Surprisingly though, soil organic carbon concentration was completely unrelated to the density of Collembola or Acari, which neither showed any pattern associated with aboveground biomass, plant diversity, field type or geographical area. Soil mesofauna would be expected to stimulate the decomposition process [@garcia-palaciosClimateLitterQuality2013; @kampichlerRoleMicroarthropodsTerrestrial2009; @songContributionsSoilMesofauna2020] both directly, as feeders releasing feces that generate more microbial activity than litter when fresh [@jolyDetritivoreConversionLitter2020; @nakatsukaSoilFaunalEffect2020], and indirectly, by connecting the stationary micro-organisms with nutrients and thus triggering pulses of microbial activity [@brionesSerendipitousValueSoil2018; @erktanPhysicalStructureSoil2020]. However, depending on the context these processes can also deliver opposing effects [@angstConceptualizingSoilFauna2024; @frouzEffectsSoilMacro2018], such as the drop of decomposition rate of fecal pellets with time due to aggregate formation [@maassFunctionalRoleMicroarthropods2015] or the priming effect favouring mineralisation after a sudden increase in dissolved organic carbon [@frouzSoilFaunaReduce2020]. With such contradicting interactions being more rules than exceptions in the soil system, formally interpreting the relationship between mesofauna and soil organic matter is particularly challenging [@angstConceptualizingSoilFauna2024; @frouzEffectsSoilMacro2018; @lehmannPersistenceSoilOrganic2020].
 
-### Carbon sequestration
+Additional uncertainties are to be expected from the variation in nutrient availability both between and among field types, especially considering the high discrepancy of enrichment practices in infields. Fertilisation can either increase microbial biomass by enhancing nutrient supply [@geisselerLongtermEffectsMineral2014], or on the contrary limit it by for instance acidifying the soil or reaching nitrogen saturation [@tresederNitrogenAdditionsMicrobial2008; @wallensteinNitrogenFertilizationDecreases2006], both impacting soil fauna through bottom-up processes [@schmitzTrophicExploitationGrassland1993; @sunEffectNitrogenPhosphorus2017; @zhangPhosphorusAdditionIncreases2023]. Overall, organic fertilisers have been more consistently reported to increase mesofauna density compared with artificial fertilisers [@betancur-corredorOrganicNitrogenFertilization2023; @heinenCombiningOrganicFertilisation2023; @jiangDiversityAbundanceSoil2015], which negative impacts seem to prevail [@degraaffEffectsAgriculturalIntensification2019]. The enhancing effect of soil enrichment in grasslands however seems to reach a plateau within a few years [@bittmanResponsesBacterialFungal2005; @betancur-corredorOrganicNitrogenFertilization2023], while the loss in abundance and diversity of soil fauna appears rather long-lasting [@birkhoferFertilizationRapidlyAlters2022].
 
-- As expected, heathland habitats offered better carbon sequestration potential than grassland habitats [@quinCallunaVulgarisdominatedUpland2015].
-- The rate of litter decomposition depends on temperature, moisture and characteristics of the litter [@hobbieControlsCarbonStorage2000].
-- slower in cold environment
-- slower with woody & mosses species
-- bryophyte with lowest decomposition rate compared with vascular, and amongst bryophyte *Sphagnum* and *Racomitrium* species with lowest decomposition rate [@langExperimentalComparisonChemical2009]
-- slower in saturated environment
-- Two infields in the outfield group associated because of their high LOI: on one hand a field very close to the underground water table that flood easily after precipitation, and one field being probably a former forest opening (but we unfortunately do not have more information as the farmer did not participate to the interview)
+From a methodological perspective though, neither the relationships of soil mesofauna with soil carbon or nutrient enrichment are uniform across taxa, and solely relying on total Collembola and Acari density undoubtedly limited the interpretation range of our study. For instance, Acari response to either soil organic matter [@arnottUplandGrasslandHabitats2021; @fergusonChangesTrophicAbundance2001; @georgeEvaluationMesofaunaCommunities2017] or fertilisation [@betancur-corredorOrganicNitrogenFertilization2023; @birkhoferFertilizationRapidlyAlters2022; @caoChangesAbundanceStructure2011] mostly reflects the dominance between the essentially fungivorous Oribatida and the predatory Mesostigmata in the community. Distinguishing these two groups may have provided hints on why three infields distinctly showed higher Acari densities, which did not appear like sampling artifacts as all samples shared similar approximate sizes. Similarly to Acari, fungivorous Collembola were shown to be accurate indicators of labile carbon availability [@devriesSoilFoodWeb2013] when total abundance only marginally varies across habitat types [@cluzeauIntegrationBiodiversitySoil2012; @sousaChangesCollembolaRichness2006]. Detritivores and bacterivores also responded differently to phosphorus addition, showing hump-shaped and linear patterns respectively [@zhangPhosphorusAdditionIncreases2023], suggesting a shift in the community composition which may not affect the overall density at coarse taxonomic level [@arnottUplandGrasslandHabitats2021; @cluzeauIntegrationBiodiversitySoil2012]. Thus, in order to have a better understand of the sensitivity of soil fauna to land use changes, more research is needed on trophic interactions and the biotic control of carbon and nutrient fluxes [@lozanofondonIndirectEffectsTrophic2023], by relying on innovative methodologies suitable for the specific spatio-temporal dynamics of the soil system [@bardgettBelowgroundBiodiversityEcosystem2014; @geisenMethodologicalFrameworkEmbrace2019].
 
-- young *Calluna* communities (4-15y) carbon sinks while other stages sources [@liLongtermTemporalPatterns2023]
-- grassland encroachement on mineral soil decreases C sequestration potential [@poeplauTemporalDynamicsSoil2011]
-- Calluna plant communities better carbon sinks than grass-dominated communities in upland because of higher total respiration for grass-dominated [@quinCallunaVulgarisdominatedUpland2015]
-- impact of sheep grazing on carbon stocks in nutrient-poor sub-alpine habitat limited if low intensity, but can lead to stock depletion with too many sheep density [@martinsenCarbonStorageLowalpine2011]
-
-### Nutrient cycling
-
-- no trend according to field type or to environmental factors
-- Acari group
-- highest abundance across all fields FI4 (IS3 - Eikemo) - CI1 (OS2 - Morken) - FI1 (IV1 - Hopsdal) -> nothing to compare (and it shows as sites are quite far from each other)
-- sampling bias ? Collembola abundance also relatively high
-- mesofauna activity/sampling limitation & challenges
-
-- On one hand more mesofauna expected in more fertile and less stressed soils, but on the other hand negative effect of artificial fertilisation
-
-- Collembola density fertilised > unfertilised [@scohierHowSheepAffect2012]
-- overall negative effect of artificial N fertilisation on soil fauna community [@degraaffEffectsAgriculturalIntensification2019]
-- dominance shifted from Acari to Collembola with elevation (780-2480 masl) across mixed habitats [@jiangCompositionSpatialDistribution2015]
-- different effects fertilisers on soil microbial community @leechComparativeEffectAlternative2019
-- direct increase species richness with elevation, but indirect negative effect through decrease soil pH & subsequent decrease earthworms biomass [@buzhdyganDirectIndirectEffects2020]
-- collembola abundance as good proxy of soil mesofauna feeding activity [@birkhoferSoilFaunaFeeding2011]
-- legume & grass species richness enhance mesofauna feeding activity independently of management or regional conditions [@birkhoferSoilFaunaFeeding2011]
-
-
+<!-- - Colder climate in the subalpine region should amplify this process [@hobbieControlsCarbonStorage2000], but the elevation range of our study (below 900 masl) may have been too limited to show a clear temperature effect.  -->
+<!-- - even though neutral or positive effects were also observed [@betancur-corredorOrganicNitrogenFertilization2023] for instance when combined with lime [@coleRelatingMicroarthropodCommunity2005]. -->
+<!-- - combination of organic nitrogen fertilisation and mineral phosphorus fertilisation increased both Collembola & Acari density compared with unfertilised [@sunEffectNitrogenPhosphorus2017] -->
+<!-- - while the cover of grasses and legumes in the infields should have enhanced feeding activity [@birkhoferSoilFaunaFeeding2011; @sabaisPlantSpeciesRichness2011]. -->
+<!-- - Acari decreased with elevation, leading to a dominance shift towards Collembola [@jiangCompositionSpatialDistribution2015] -->
+<!-- - collembola abundance as good proxy of soil mesofauna feeding activity [@birkhoferSoilFaunaFeeding2011] -->
+<!-- - highest abundance across all fields FI4 (IS3 - Eikemo) - CI1 (OS2 - Morken) - FI1 (IV1 - Hopsdal) -> nothing to compare (and it shows as sites are quite far from each other) -->
+<!-- - but the insights on biochemical recalcitrance grained from experimental individual decomposition rates do not match/cannot explained long-term turn-over patterns and summarising litter quality is reductive and non-representative [@dungaitSoilOrganicMatter2012; @schmidtPersistenceSoilOrganic2011] -->
+<!-- - belowground allocation of the biomass, which has a better carbon stabilisation potential [@schmidtPersistenceSoilOrganic2011] -->
 
 ## Conservation perspectives
 
-### Infields
+Despite the evolution of practices following the rationalisation of livestock production, the infield-outfield terminology is still an ecologically and socially relevant reference for guiding agricultural policies in Western Norway [@asheimPolicyMeasuresPreserve2020; @huberFarmTypologiesUnderstanding2024]. Beyond the formal classification of grazing fields, it reflects locally adapted farming systems which complementarity allows to maximise the agro-ecological potential of the whole fjord gradient [@billenReshapingEuropeanAgrofood2021]. For instance summer transhumance, which was initiated as a mean to release grazing pressure from the lowland by making use of the tight productivity peak in the mountain ranges [@gilhausSeasonalVariationsFodder2016; @potthoffChangeMountainSummer2004], has shaped the remote upland areas into multifunctional landscapes of high ecological interest [@koernerChangeDominanceDetermines2018; @speedResponsePlantDiversity2013], providing among other: additional sources of income through cheese production [@daugstadAgricultureUpholderCultural2006]; key regulating services of water quality and carbon storage [@huStructuralCharacteristicsMoss2023; @liLongtermTemporalPatterns2023]; deep-rooted cultural heritage bringing a sense of belonging and artistic inspiration to the local community [@beleHeritageBoundariesNatureculture2024]. With the decline of family farming, what spontaneously emerged as secondary benefits has become the main motive for the conservation of remote areas and their associated management practices [@bernuesQuantifyingMultifunctionalityFjord2015; @wilsonWeakStrongMultifunctionality2008]. 
 
-- Overall richness higher in low-intensity farming compared to high-intensity farming [@gonthierBiodiversityConservationAgriculture2014]
-- correlation patches with high richness typical semi-natural grassland species, remnant semi-natural grassland patches & man-made structure with long continuity -> restoration former grassland favour both ecological and cultural values [@hamrePlantSpeciesRichness2010]
-- Productivity can be stable or decline under more intensive sheep grazing, while extensive sheep grazing did not increase the proportion of undesirable species such as Cirsium, Juncus, Rumex [@marriottLongtermImpactsExtensive2009]
-- effect of grazing intensity on grass, forb & shrub production depends on temperature & precipitation during growing season, but overall light to moderate grazing intensity maximise forage production [@pattonEffectsGrazingIntensity2007]
+Emphasizing highly valued biodiversity and multifunctionality on coastal and mountain outfields should however not be at the cost of reducing infields to their fodder production role. Semi-natural grasslands in Western Norway result from a long history of low-intensity, rotational-based grazing management, deeply socially-anchored [@cusensParticipatoryMappingReveals2022; @johansenCeasedGrazingManagement2019], which has ensured the viability of the agrosystem over time [@isbellBenefitsIncreasingPlant2017; @marriottLongtermImpactsExtensive2009] while promoting high level of diversity across scales [@hamrePlantSpeciesRichness2010; @hendrickxHowLandscapeStructure2007; @lichtenbergGlobalSynthesisEffects2017]. The high proportion of forb species especially, which represented on average about 40% of the total plant richness in our infields, is a major nectar resource for pollinators [@goulnikFloralTraitFunctional2020; @woodcockEnhancingFloralResources2014] that cannot be replicated in any other habitat type within the agricultural landscape [@ockingerSeminaturalGrasslandsPopulation2007]. Species-rich grasslands also show higher carbon sequestration potential [@baiGrasslandSoilCarbon2022; @pastoreSensitivityGrasslandCarbon2021; @yangSoilCarbonSequestration2019], further maintained if not enhanced by low stocking rate [@soussanaMitigatingGreenhouseGas2010; @viglizzoReassessingRoleGrazing2019], nitrogen fertilisation [@ceniniChronicNitrogenFertilization2015; @fornaraMultinutrientVsNitrogenonly2013] or local environmental context [@hobbieControlsCarbonStorage2000; @poeplauTemporalDynamicsSoil2011]. For example in our study, even if on average soil organic matter content was higher in outfields the maxima were actually recorded in two infields, respectively a coastal flood plain (CI5) and a former forest clearing (FI6). Emphasizing the multifunctionality potential of more productive grazing systems is thus as essential to control if not counteract the concurring intensification and homogenisation processes [@hectorBiodiversityEcosystemMultifunctionality2007; @wilsonWeakStrongMultifunctionality2008] which, even though "moderate" to current standards, have durably impacted the NBR agro-ecological landscape [@auneLossSeminaturalGrassland2018; @norderhaugBiotopePatternsAbundance2000].
 
-
-### Outfields
-
-- positive effect of grazing on low-productive habitat diversity and productivity [@koernerChangeDominanceDetermines2018]
-- maintaining grazing in upland areas would ensure plant community stability & preservation plant species richness over time [@speedResponsePlantDiversity2013]
-- heaths in uplands very important for biodiversity conservation - carabid species [@eyreRelationshipBritishGround2003]
-- in upland areas, overall decrease in species richness over time for both grazed and ungrazed treatments, usually associated with decrease of cryptogam species [@aldayEffectsLongtermRemoval2021]
-- biodiversity impoverishment in upland areas mostly regarding abundance of lichens and liverworts despite change in management practices [@milliganWinnersLosersLongterm2016]
-- effect bryophyte cover on alpine microclimate @jaroszynskaBryophytesDominatePlant2023
-
-
-## Study limitations
-
-- biomass in itself not perfect proxy of nutritive feeding for animals, as chemical composition & plant strategy also affected by climatic gradient -> more defence mechanisms, thus less efficient energy & nutrient uptake under high precipitations conditions [@hopcraftHerbivoresResourcesRisks2010]
-- trade-off grazing intensity with forage quality & animal performance in upland (420 masl) meadows [@pavluEffectContinuousGrazing2006]
-
-- time window very small, and potentially not able to capture processes of either biomass production, where rate over year more appropriate than static measurement [@brownImportanceScaleEvaluating1989], and soil fauna activity [**ref from soil course**]
-- effect of grazing intensity on biomass production & interaction with temperature & precipitations varied according to time of sampling within grazing season [@pattonEffectsGrazingIntensity2007] -> we did not have control of the timing when the animals where put into the field
-
-## Perspectives
-
-- trade-off - increase grazing intensity does not always increase productivity, as light & moderate grazing usually maximise fodder production [@pattonEffectsGrazingIntensity2007]
-- small-scale farming more likely to have sharper shifts along the multifunctionality gradient due to a narrower range of opportunities, while transition has more chance to be more gradual on large capitalised farms [@wilsonWeakStrongMultifunctionality2008]
-- positive relationship between biodiversity and multifunctionality up to a certain level of redundancy which potentially varies according to local conditions [@hectorBiodiversityEcosystemMultifunctionality2007]
-- challenge to preserve habitat quality and diversity in areas where farming/management is not anymore economically viable [@kohlerChangesSpeciesComposition2005]
-- purpose of rotation & transhumance: to optimise the use of habitats of different productivity, with digestibility & nutrient highest earlier (spring & summer) in nutrient-rich habitats and later (summer & fall) in nutrient-poor habitats [@gilhausSeasonalVariationsFodder2016]
-- infield-outfield strategy regaining popularity for control over the N cycle in agriculture by limiting import and leakages [@billenReshapingEuropeanAgrofood2021]
+<!-- - Overall richness higher in low-intensity farming compared to high-intensity farming [@gonthierBiodiversityConservationAgriculture2014] -->
+<!-- - correlation patches with high richness typical semi-natural grassland species, remnant semi-natural grassland patches & man-made structure with long continuity -> restoration former grassland favour both ecological and cultural values [@hamrePlantSpeciesRichness2010] -->
+<!-- - Productivity can be stable or decline under more intensive sheep grazing, while extensive sheep grazing did not increase the proportion of undesirable species such as Cirsium, Juncus, Rumex [@marriottLongtermImpactsExtensive2009] -->
+<!-- - effect of grazing intensity on grass, forb & shrub production depends on temperature & precipitation during growing season, but overall light to moderate grazing intensity maximise forage production [@pattonEffectsGrazingIntensity2007] -->
+<!-- - Outfield in division B: FO1 (IS2) former clearing with mixed heath vegetation -> high forb richness (1.1) -->
+<!-- - heaths in uplands very important for biodiversity conservation - carabid species [@eyreRelationshipBritishGround2003] -->
+<!-- - in upland areas, overall decrease in species richness over time for both grazed and ungrazed treatments, usually associated with decrease of cryptogam species [@aldayEffectsLongtermRemoval2021] -->
+<!-- - biodiversity impoverishment in upland areas mostly regarding abundance of lichens and liverworts despite change in management practices [@milliganWinnersLosersLongterm2016] -->
+<!-- - effect bryophyte cover on alpine microclimate @jaroszynskaBryophytesDominatePlant2023 -->
+<!-- - infield-outfield strategy regaining popularity for control over the N cycle in agriculture by limiting import and leakages [@billenReshapingEuropeanAgrofood2021] -->
+<!-- - biomass in itself not perfect proxy of nutritive feeding for animals, as chemical composition & plant strategy also affected by climatic gradient -> more defence mechanisms, thus less efficient energy & nutrient uptake under high precipitations conditions [@hopcraftHerbivoresResourcesRisks2010] -->
+<!-- - trade-off grazing intensity with forage quality & animal performance in upland (420 masl) meadows [@pavluEffectContinuousGrazing2006] -->
 
 # CONCLUSION
 
-TAKE-HOME: field type relatively robust appreciation of ES trade-offs, even if locally exceptional sites & outfield management offers higher ecological heterogeneity
+Considering the latent erosion of the ecological state of the agro-ecological landscape in Western Norway, either due to intensification or abandonment, it is necessary to redirect agricultural subsidies schemes towards conservation-driven farming [@asheimPolicyMeasuresPreserve2020]. Infields and outfields could be used as familiar, culturally-rooted references, which are associated to concrete management practices and provide a fair appreciation of the current ecological synergies and trade-offs across farming systems. Several knowledge gaps have however yet to be thoroughly addressed, especially regarding the biotic-abiotic interactions in the soil system which drive the response of soil fauna to land use changes [@geisenMethodologicalFrameworkEmbrace2019]. The Nordhordland UNESCO Biosphere Reserve opens the door for holistic, trans-disciplinary approaches that should pave the way towards sustainable agriculture ensuring both the viability of farming activity and the preservation of multifunctional landscapes [@cusensSocioculturalValuesBiophysical2024].
 
-
-# ACKOWLEDGEMENTS
+# ACKNOWLEDGEMENTS
 
 # SUPPLEMENTARY INFORMATION
 
@@ -331,6 +365,13 @@ clusterqcheck <- clusterqcheck |>
 
 clusterqcheck |>
  gt() |>
+    fmt_number(
+    columns = -c("NbCluster"),
+    decimals = 2
+  ) |> 
   sub_missing(missing_text = "-") |>
   opt_stylize(style = 1, color = 'gray')
 ```
+
+
+![Correlation panel](outputs/corpanel_sigonly.png){#fig-corpanel}
