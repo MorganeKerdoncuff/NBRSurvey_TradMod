@@ -29,3 +29,7 @@ illustrations/*
 *.json
 NBR_SmallScaleFjordFarming_files/*
 NBR_SheepGradient_files/*
+# Testing & error monitoring
+*.log
+*.tex
+test.qmd
