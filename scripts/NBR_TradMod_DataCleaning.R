@@ -130,7 +130,7 @@ siteinfo_full <- siteinfo_full |>
 # Homogeneous character writing - removing capital letters for common nouns
 siteinfo_full <- siteinfo_full |> 
   mutate(Type_livestock = dplyr::recode(Type_livestock, "Sheep" = "sheep")) |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Cows" = "cow")) |> 
+  mutate(Type_livestock = dplyr::recode(Type_livestock, "Cows" = "cattle")) |> 
   mutate(Type_livestock = dplyr::recode(Type_livestock, "Goats" = "goat"))
 #table(siteinfo_full$Type_livestock) # correct number of sites per livestock category - validated
 
@@ -1650,7 +1650,7 @@ vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |>
   mutate(Species = dplyr::recode(Species, "Carex sp2 US2-P2" = "Carex sp")) |> 
   mutate(Species = dplyr::recode(Species, "Chamaepericlymenum suecica" = "Chamaepericlymenum suecicum")) |> 
-  mutate(Species = dplyr::recode(Species, "Chiloscytinus pallenscens" = "Chiloscytinus pallescens")) |> 
+  mutate(Species = dplyr::recode(Species, "Chiloscytinus pallenscens" = "Chiloscyphus pallescens")) |> 
   mutate(Species = dplyr::recode(Species, "Cuppy moss UC1" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Gnaphlium sylvaticum" = "Gnaphalium sylvaticum")) |> 
   mutate(Species = dplyr::recode(Species, "Golden curly fern UG2-P1" = "Bryophyte sp")) |> 
@@ -1669,6 +1669,7 @@ vege_raw <- vege_raw |>
   mutate(Species = dplyr::recode(Species, "Rhacomitrium canescens" = "Racomitrium canescens")) |> 
   mutate(Species = dplyr::recode(Species, "Rhacomitrium sudeticum" = "Racomitrium sudeticum")) |> 
   mutate(Species = dplyr::recode(Species, "Rhacomitrium affine" = "Racomitrium affine")) |> 
+  mutate(Species = dplyr::recode(Species, "Saniona uncinata" = "Sanionia uncinata")) |> 
   mutate(Species = dplyr::recode(Species, "Skinny pleurocarp IS5-P1" = "Bryophyte sp")) |> 
   mutate(Species = dplyr::recode(Species, "Sphagunm compactum" = "Sphagnum compactum")) |>
   mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Bryophyte sp")) |> 
