@@ -281,15 +281,20 @@ ggcluster_ord <- ggplot(data = nmds_scores, aes(x = NMDS1, y = NMDS2)) +
   #   x = NMDS1,
   #   y = NMDS2,
   #   label = FieldID
-  # ))
-  theme(axis.text.x = element_blank(),  # remove x-axis text
-        axis.text.y = element_blank(), # remove y-axis text
-        axis.ticks = element_blank(),  # remove axis ticks
+  # ), 
+  # nudge_y = 0.15,
+  # size = 0.3,
+  # size.unit = "cm") +
+  theme(
+    # axis.text.x = element_blank(),  # remove x-axis text
+    #     axis.text.y = element_blank(), # remove y-axis text
+    #     axis.ticks = element_blank(),  # remove axis ticks
         panel.background = element_blank(),
         legend.background = element_blank(),
         panel.grid.major = element_blank(),  #remove major-grid labels
         panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
+        plot.background = element_blank()
+    )
 ggcluster_ord
 ggsave(filename = "outputs/cluster_NMDS.png", plot = ggcluster_ord, width = 18, height = 10, units = "cm")
 
