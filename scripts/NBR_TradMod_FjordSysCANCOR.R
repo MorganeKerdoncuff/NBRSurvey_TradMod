@@ -149,7 +149,17 @@ filter(vege_freq, n > 9 & n < 20)
 vege_average <- vege_infield |>
   group_by(Species) |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
-  dplyr::arrange(desc(PlantSp_cover)) # filtering by average value across sites
+  dplyr::arrange(desc(PlantSp_cover)) |> 
+  # filtering by average value across sites
+  mutate(FunctionalGroup = case_when(
+    grepl("Achillea|Alchemilla|Anagalis|Anemone|Angelica|Anthriscus|Armeria|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Euphrasia|Fraxinus|Galeopsis|Galium|Geranium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Myosotis|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Prunella|Ranunculus|Rumex|Sagina|Sedum|Senecio|Silene|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Urtica|Valeriana|Veronica|Vicia|Viola", Species) ~ "forbs",
+    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Bromopsis|Calamagrostis|Dactylis|Danthonia|Deschampsia|Festuca|Holcus|Lolium|Molinia|Nardus|Phleum|Poa", Species) ~ "grasses",
+    grepl("Carex|Eriophorum|Juncus|Luzula|Trichophorum", Species) ~ "monocotyledons",
+    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "woody",
+    grepl("Athyrium|Blechnum|Dryopteris|Gymnocarpium|Phegopteris|Polypodium|Pteridium", Species) ~ "ferns",
+    .default = "cryptogams"
+  ))
+
 filter(vege_average, PlantSp_cover >= 3)
 # 7 grass species over 3 % A. capillaris; F. rubra; H. lanatus; P. pratensis; D. cespitosa; A. odoratum; L. perenne
 # 3 forb species over 3 % T. repens; R. acetosa; G. saxatile
@@ -178,7 +188,7 @@ contin_grass <- decostand(contin_grass, method = "hellinger")
 
 # Wide table
 grass <- as.data.frame(contin_grass)
-grass <- grass |> 
+grass <- grass |>
   pivot_wider(names_from = Species, values_from = Freq)
 
 #
@@ -200,7 +210,7 @@ contin_forb <- decostand(contin_forb, method = "hellinger")
 
 # Wide table
 forb <- as.data.frame(contin_forb)
-forb <- forb |> 
+forb <- forb |>
   pivot_wider(names_from = Species, values_from = Freq)
 
 #
@@ -242,7 +252,7 @@ contin_beetle <- decostand(contin_beetle, method = "hellinger")
 
 # Wide table
 beetle <- as.data.frame(contin_beetle)
-beetle <- beetle |> 
+beetle <- beetle |>
   pivot_wider(names_from = BeetleFamilies, values_from = Freq)
 
 #
@@ -257,6 +267,9 @@ beetle <- beetle |>
 
 # Selection variables
 fjordsys <- full_join(area20x20_infield, climate_infield)
+# fjordsys <- fjordsys |> 
+#   mutate(temprange = maxtempJuly - mintempJan)
+# fjordsys <- subset(fjordsys, select = c(SiteID, Elevation, annualprecipitation, avgtempJuly, avgtempJan, temprange, DistanceToSea_m))
 fjordsys <- subset(fjordsys, select = c(SiteID, Elevation, annualprecipitation, maxtempJuly, mintempJan, DistanceToSea_m))
 
 # Variable renaming
@@ -264,6 +277,9 @@ names(fjordsys) <- gsub("Elevation", "Elev", names(fjordsys))
 names(fjordsys) <- gsub("annualprecipitation", "AnnPreci", names(fjordsys))
 names(fjordsys) <- gsub("maxtempJuly", "JulTemp", names(fjordsys))
 names(fjordsys) <- gsub("mintempJan", "JanTemp", names(fjordsys))
+# names(fjordsys) <- gsub("avgtempJuly", "JulTemp", names(fjordsys))
+# names(fjordsys) <- gsub("avgtempJan", "JanTemp", names(fjordsys))
+# names(fjordsys) <- gsub("temprange", "TempRange", names(fjordsys))
 names(fjordsys) <- gsub("DistanceToSea_m", "SeaDist", names(fjordsys))
 
 # Check distribution
@@ -271,6 +287,7 @@ names(fjordsys) <- gsub("DistanceToSea_m", "SeaDist", names(fjordsys))
 #hist(fjordsys$AnnPreci) # Normal-like distribution, with some gaps -> validated
 #hist(fjordsys$JulTemp) # Normal-like distribution -> validated
 #hist(fjordsys$JanTemp) # Reverse Poisson distribution -> validated
+#hist(fjordsys$TempRange) # Normal-like distribution -> validated
 #hist(fjordsys$SeaDist) # Poisson-like distribution, with one gap -> validated
 
 # Scaling
@@ -834,7 +851,7 @@ ggrda <- function (ord_in, grp_in = NULL, axes = c("1", "2"), ...)
 ## Fine-scale x beetles NS
 
 #
-## Fjord x landscape
+## Region x landscape
 
 # Redundancy analysis and plot
 rda <- rda(subset(landscape_sc, select = -c(SiteID)) ~ ., data = subset(fjordsys_sc, select = -c(SiteID)))
@@ -893,8 +910,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordlandscape <- rdatable |> 
-  mutate(model = "FjordxLandscape", explanatory = "Fjord", response = "Landscape") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxLandscape", explanatory = "Regional", response = "Landscape") |>
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fjord x grazing (CANCOR NS)
@@ -952,8 +970,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordgrazing <- rdatable |>
-  mutate(model = "FjordxGrazing", explanatory = "Fjord", response = "Grazing") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxField", explanatory = "Regional", response = "Field") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Fjord x locenvi (CANCOR NS)
@@ -1013,8 +1032,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordlocenvi <- rdatable |> 
-  mutate(model = "FjordxFinescale", explanatory = "Fjord", response = "Finescale") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxFine", explanatory = "Regional", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x grazing
@@ -1074,8 +1094,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalandscapegrazing <- rdatable |> 
-  mutate(model = "LandscapexGrazing", explanatory = "Landscape", response = "Grazing") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "LandscapexField", explanatory = "Landscape", response = "Field") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Landscape x local environment
@@ -1135,8 +1156,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalandscapelocenvi <- rdatable |> 
-  mutate(model = "LandscapexFinescale", explanatory = "Landscape", response = "Finescale") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "LandscapexFine", explanatory = "Landscape", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Grazing x local environment (CANCOR NS)
@@ -1196,8 +1218,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdagrazinglocenvi <- rdatable |>
-  mutate(model = "GrazingxFinescale", explanatory = "Grazing", response = "Finescale") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FieldxFine", explanatory = "Field", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
 
 #
 ## Environmental data summary
@@ -1206,12 +1229,12 @@ rdagrazinglocenvi <- rdatable |>
 rdastat_envi <- purrr::reduce(list(rdafjordlandscape, rdafjordgrazing, rdafjordlocenvi, rdalandscapegrazing, rdalandscapelocenvi, rdagrazinglocenvi), dplyr::full_join)
 
 # Plot grouping
-rda_envi <- ggarrange(plotrda_fjordxlandscape, plotrda_fjordxgrazing, plotrda_fjordxlocenvi, plotrda_landscapexgrazing, plotrda_landscapexlocenvi, plotrda_grazingxlocenvi, 
+rda_envi <- ggarrange(plotrda_fjordxlandscape, plotrda_fjordxgrazing, plotrda_fjordxlocenvi, plotrda_landscapexgrazing, plotrda_landscapexlocenvi, plotrda_grazingxlocenvi,
                    labels = c("A", "B", "C", "D", "E", "F"),
                    ncol = 2,
                    nrow = 3)
 rda_envi
-ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 19, height = 26, units = "cm", bg = "white")
+ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 15, height = 22, units = "cm", bg = "white")
 
 
 #### RDA grass community data ####
@@ -1277,8 +1300,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordgrass <- rdatable |>
-  mutate(model = "FjordxGrass", explanatory = "Fjord", response = "Grass") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxGrass", explanatory = "Regional", response = "Grass") |> 
+  # filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Landscape x grass
@@ -1342,7 +1366,8 @@ names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalandscapegrass <- rdatable |>
   mutate(model = "LandscapexGrass", explanatory = "Landscape", response = "Grass") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Grazing management x grass
@@ -1405,8 +1430,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdagrazinggrass <- rdatable |>
-  mutate(model = "GrazingxGrass", explanatory = "Grazing", response = "Grass") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FieldxGrass", explanatory = "Field", response = "Grass") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Fine-scale environment x grass
@@ -1453,9 +1479,9 @@ testaxis <- testaxis |>
   filter(dim != "Residual")
 
 # Individual term significance
-testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
 testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "term") |> 
+  mutate(dim = row.names(testerm), type = "margin") |> 
   mutate(eigenval = Variance) |> 
   mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
   filter(dim != "Residual")
@@ -1469,8 +1495,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalocenvigrass <- rdatable |>
-  mutate(model = "FinescalexGrass", explanatory = "Finescale", response = "Grass") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Grass model summary
@@ -1479,12 +1506,12 @@ rdalocenvigrass <- rdatable |>
 rdastat_grass <- purrr::reduce(list(rdafjordgrass, rdalandscapegrass, rdagrazinggrass, rdalocenvigrass), dplyr::full_join)
 
 # Plot Grouping
-rda_grass <- ggarrange(plotrda_fjordxgrass, plotrda_landscapexgrass, plotrda_grazingxgrass, plotrda_locenvixgrass, 
+rda_grass <- ggarrange(plotrda_fjordxgrass, plotrda_landscapexgrass, plotrda_grazingxgrass, plotrda_locenvixgrass,
                       labels = c("A", "B", "C", "D"),
                       ncol = 2,
                       nrow = 2)
 rda_grass
-ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 13, units = "cm", bg = "white")
+ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 15, units = "cm", bg = "white")
 
 
 #### RDA forb community data ####
@@ -1550,8 +1577,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordforb <- rdatable |>
-  mutate(model = "FjordxForb", explanatory = "Fjord", response = "Forb") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxForb", explanatory = "Regional", response = "Forb") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Landscape x forb (NS)
@@ -1615,7 +1643,8 @@ names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalandscapeforb <- rdatable |>
   mutate(model = "LandscapexForb", explanatory = "Landscape", response = "Forb") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Grazing management x forb
@@ -1678,8 +1707,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdagrazingforb <- rdatable |>
-  mutate(model = "GrazingxForb", explanatory = "Grazing", response = "Forb") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FieldxForb", explanatory = "Field", response = "Forb") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Fine-scale environment x forb
@@ -1742,8 +1772,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalocenviforb <- rdatable |>
-  mutate(model = "FinescalexForb", explanatory = "Finescale", response = "Forb") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FinexForb", explanatory = "Fine", response = "Forb") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Forb model summary
@@ -1752,12 +1783,12 @@ rdalocenviforb <- rdatable |>
 rdastat_forb <- purrr::reduce(list(rdafjordforb, rdalandscapeforb, rdagrazingforb, rdalocenviforb), dplyr::full_join)
 
 # Plot Grouping
-rda_forb <- ggarrange(plotrda_fjordxforb, plotrda_landscapexforb, plotrda_grazingxforb, plotrda_locenvixforb, 
+rda_forb <- ggarrange(plotrda_fjordxforb, plotrda_landscapexforb, plotrda_grazingxforb, plotrda_locenvixforb,
                        labels = c("A", "B", "C", "D"),
                        ncol = 2,
                        nrow = 2)
 rda_forb
-ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 13, units = "cm", bg = "white")
+ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 15, units = "cm", bg = "white")
 
 
 #### RDA beetle community data ####
@@ -1820,8 +1851,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdafjordbeetle <- rdatable |>
-  mutate(model = "FjordxBeetle", explanatory = "Fjord", response = "Beetle") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "RegionalxBeetle", explanatory = "Regional", response = "Beetle") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Landscape x beetle (NS)
@@ -1865,9 +1897,9 @@ testaxis <- testaxis |>
   filter(dim != "Residual")
 
 # Individual term significance
-testerm <- as.data.frame(anova.cca(rda, by = "term")) 
+testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
 testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "term") |> 
+  mutate(dim = row.names(testerm), type = "margin") |> 
   mutate(eigenval = Variance) |> 
   mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
   filter(dim != "Residual")
@@ -1882,7 +1914,8 @@ names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalandscapebeetle <- rdatable |>
   mutate(model = "LandscapexBeetle", explanatory = "Landscape", response = "Beetle") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Grazing management x beetle (NS)
@@ -1942,8 +1975,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdagrazingbeetle <- rdatable |>
-  mutate(model = "GrazingxBeetle", explanatory = "Grazing", response = "Beetle") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FieldxBeetle", explanatory = "Field", response = "Beetle") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Fine-scale environment x beetle
@@ -2003,8 +2037,9 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 rdalocenvibeetle <- rdatable |>
-  mutate(model = "FinescalexBeetle", explanatory = "Finescale", response = "Beetle") |> 
-  filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  mutate(model = "FinexBeetle", explanatory = "Fine", response = "Beetle") |> 
+  #filter(type == "model" | PrF < 0.1 | dim == "RDA1")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 #
 ## Beetle model summary
@@ -2012,33 +2047,35 @@ rdalocenvibeetle <- rdatable |>
 # Stat summary
 rdastat_beetle <- purrr::reduce(list(rdafjordbeetle, rdalandscapebeetle, rdagrazingbeetle, rdalocenvibeetle), dplyr::full_join)
 
-# Plot Grouping
-rda_beetle <- ggarrange(plotrda_fjordxbeetle, plotrda_landscapexbeetle, plotrda_grazingxbeetle, plotrda_locenvixbeetle, 
+#Plot Grouping
+rda_beetle <- ggarrange(plotrda_fjordxbeetle, plotrda_landscapexbeetle, plotrda_grazingxbeetle, plotrda_locenvixbeetle,
                         labels = c("A", "B", "C", "D"),
                         ncol = 2,
                         nrow = 2)
 rda_beetle
-ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 13, units = "cm", bg = "white")
+ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 15, units = "cm", bg = "white")
 
 
 #### Significant RDA results ####
 
 # Significant models
-filter(rdastat_envi, PrF < 0.1 & type == "model")
-filter(rdastat_grass, PrF < 0.1 & type == "model")
-filter(rdastat_forb, PrF < 0.1 & type == "model")
-filter(rdastat_beetle, PrF < 0.1 & type == "model")
-
-# Summary significant RDA stat
-rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
+# filter(rdastat_envi, PrF < 0.1 & type == "model")
+# filter(rdastat_grass, PrF < 0.1 & type == "model")
+# filter(rdastat_forb, PrF < 0.1 & type == "model")
+# filter(rdastat_beetle, PrF < 0.1 & type == "model")
+# 
+# # Summary significant RDA stat
+# rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
 
 # Plot
-rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_grazingxlocenvi, plotrda_locenvixgrass, plotrda_locenvixforb, 
-                   labels = c("A", "B", "C", "D"),
+rdall <- ggarrange(plotrda_fjordxlandscape, plotrda_grazingxlocenvi, plotrda_locenvixgrass, plotrda_locenvixforb, plotrda_landscapexbeetle,
+                   labels = c("A", "B", "C", "D", "E"),
                    ncol = 2,
-                   nrow = 2)
+                   nrow = 3,
+                   font.label = list(size = 12),
+                   hjust = -2.7)
 rdall
-ggsave("outputs/RDAresults.png", plot = rdall, width = 15, height = 15, units = "cm", bg = "white")
+ggsave("outputs/RDAresults.png", plot = rdall, width = 15, height = 22, units = "cm", bg = "white")
 
 
 
