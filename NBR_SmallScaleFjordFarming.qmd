@@ -1,10 +1,10 @@
 ---
 title: "The farmers and the fjord: cross-scale interactions between environmental gradients and management in small-scale grazing systems"
-format: 
+format:
   pdf:
     mainfont: "Times New Roman"
     linestretch: 1.15
-    include-in-header: 
+    include-in-header:
       text: |
         \usepackage{lscape}
         \newcommand{\blandscape}{\begin{landscape}}
@@ -55,6 +55,16 @@ op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
 
 ^4^ Department of Geoecology, Institute of Botany of the Czech Academy of Sciences, Czech Republic
 
+<!-- # REVISION SUMMARY -->
+
+<!-- - *Introduction* - I revised most of the structure of the Introduction following Adam' suggestion to make the hierarchical description of the different scales of influence clearer. Now the cross-scale approach stands out more as the main focus of the paper as it should be. I also decided to remove the mention to ecosystem services as this topic was never built upon in the rest of the manuscript (and I think we have enough material to work with already). -->
+<!-- - *Clarification regarding the naming of explanatory sets of variables* - The former terms (fjord, landscape, grazing, fine-scale environment) brought confusion because they were mixing scales and causes. I thus decided to only refer to scale, using namely regional, landscape, field and fine. -->
+<!-- - *Conceptual figure* - was modified to meet the police size requirements (min 7 pt) for submission, as the text was barely readable in the previous version. I also modified the fine environment icon to make roots more realistic as you suggested Adam. **Are rhizomes visible enough or do you think they have to stand out more ?** -->
+<!-- - *NBR study map* - I corrected the size of the points for site location (there was indeed a difference, my mistake), changed the colour of the border, and adapted the map frame to include Bergen. **However** the background layer was unfortunately not available anymore, so I had to rely on orthophotogaphy instead. I also attached version only based on the relief, **please tell me which one you think is best**. -->
+<!-- - *Material and methods* - two main changes regarding the variable selection in the regional and field sets for the sake of relevance and accuracy. While running exploratory analyses on climate data for writing the context section of the PhD thesis, I found that **annual temperature range showed a surprisingly clean linear increase with longitude, thus offering a good proxy for the oceanity gradient**. I therefore ran once more the variable selection process for the regional set including average July temperature, average January temperature, and annual temperature range calculated as max July - min January. Only average January temperature and annual temperature range showed strong colinearity, and the former was thus discarded. This modification in the regional set did not lead to any substantial change of the results, except for the significance of individual terms in the regional x landscape RDA model. Distance to the closest fjord became significant instead of annual precipitation, which previous p-value was only around 0.044 (so basically not a strongly supported influence). Regarding the field set, I discarded the variable representing total infield area of the farm, which conflicted with the field scale and was potentially redundant with the relative infield area in the landscape matrix. This modification had no consequence on the results. -->
+<!-- - *Results* - the main change in this section is the marginally significant relationship between beetle dominant assemblage and the landscape matrix. **This result is not new or related to any changes described above**. I just failed to notice it previously due to my way of filtering statistics in my script. -->
+<!-- - *Discussion* - adapted accordingly to the above modifications, and also overall shortened and more straightforward. The manuscript might still be on the lengthy side though, so please do not hesitate to point out unnecessary information. -->
+<!-- - *Tables* - I have tried every possible alternative for tables to look at least readable on Word while writing on Quarto, but it is truly a lost cause. It is possible to submit a LaTex document, so this is what I will go for (see PDF version for accurate output).  -->
 
 # ABSTRACT
 
@@ -69,6 +79,17 @@ We observed several inconsistencies regarding the influences of the regional env
 
 Keywords: agroecology; livestock; plant community; beetle community
 
+# HIGHLIGHTS
+
+- We performed the first analysis of cross-scale interactions between environmental gradients and grazing management in the agroecological landscape of the fjord region of Western Norway.
+
+- Dominant plant species were affected by concurring gradients of decreasing pH and soil resistance to penetration, which have yet to be thoroughly investigated in ecological studies.
+
+- The relative abundance of main beetle families was more affected by landscape factors than local factors, and the Staphylinidae family was largely dominant in the dung-associated assemblages.
+
+- Fjord proximity was associated with a gradient of land use intensity in the landscape, but did not affect local-scale and fine-scale conditions.
+
+
 # INTRODUCTION
 
 Industrialised agriculture and globalized food chains have pushed the capacity of the Earth system beyond its limits [@ipbesThematicAssessmentReport2024; @richardsonEarthSixNine2023], leading human societies towards alarming scenarios if business-as-usual is to continue [@egliWinnersLosersNational2018; @foleySolutionsCultivatedPlanet2011; @hunterAgriculture2050Recalibrating2017].
@@ -78,7 +99,7 @@ Multiple models of small-scale agriculture have developed across a wide range of
 The structure and composition of agricultural habitats are influenced by multiple ecological processes intervening at different spatial scales [@denglerBiodiversityPalaearcticGrasslands2014; @marenChangingContributionsStochastic2018; @redlichDisentanglingEffectsClimate2022].
 At the regional scale, the variation in climate and elevation creates different conditions of abiotic stress and resource availability, affecting species distribution through habitat filtering and mitigating biotic interactions within communities [@conradiResourceAvailabilityDetermines2017; @fridleyLongerGrowingSeasons2016; @klanderudImportanceBioticVs2015].
 The resulting patterns of primary productivity determine the ecosystem resilience to disturbance, and by extension its inherent capacity for sustaining different types of land use [@piipponenGlobalTrendsGrassland2022].
-At the landscape scale, the connectivity between semi-natural habitats contribute to the diversification of species pools [@billeterIndicatorsBiodiversityAgricultural2007; @zulkaSpeciesRichnessDry2014] and ensure the stability of functional networks [@fantinatoCooccurrenceDifferentGrassland2019; @neffCrossscaleEffectsLand2019].
+At the landscape scale, the connectivity between semi-natural habitats contributes to the diversification of species pools [@billeterIndicatorsBiodiversityAgricultural2007; @zulkaSpeciesRichnessDry2014] and ensures the stability of functional networks [@fantinatoCooccurrenceDifferentGrassland2019; @neffCrossscaleEffectsLand2019].
 Agricultural intensification disrupts species migration flows and the continuity of the landscape matrix, leading to the simplification of natural communities and their ecological interactions [@kareivaConnectingLandscapePatterns1995; @leprovostContrastingResponsesBelowground2021; @seiboldArthropodDeclineGrasslands2019].
 At the field scale, the strongest selective pressure usually comes from land use [@neffCrossscaleEffectsLand2019] and varies in direction and magnitude according to the type and intensity of management [@gaujourFactorsProcessesAffecting2012].
 In grazing systems for instance, multiple factors such as stocking density, grazer selectivity or fertilisation, can affect species dominance by favouring competitive and/or ruderal strategies [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998; @torokManagingSpeciesComposition2016; @tothLivestockTypeMore2016].
@@ -124,7 +145,7 @@ Grazing intensity was low, with a maximum stocking rate of 0.6 yearly unit per h
 Twenty-one sites were enriched at least occasionally with individual or simultaneous use of artificial fertiliser, manure or shellsand-lime mix. 
 To the knowledge of the farmers, no field had been resown and/or plowed since at least the 1970s, and only four out of the 29 sites received upgraded drainage between 1990 and 2010.
 
-![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (white line), Western Norway. Colour indicates the type of livestock on the grazing fields: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background topographic layer (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0](illustrations/NBR_GrazersMap.png){#fig-sitemap width=100%}
+![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (blue line), Western Norway. Colour indicates the type of livestock on the grazing fields: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0](illustrations/NBR_GrazersMap.png){#fig-sitemap width=100%}
 
 \newpage
 
@@ -190,8 +211,9 @@ We sent 0.5 L of each pooled sample to a certified analysis laboratory to determ
 ### Environmental data
 
 On site, we recorded field coordinates (SCR EPSG:25832), elevation, and field slope angle with a compass clinometer. 
-We determined slope aspect degree and distance to closest marine water body from a Digital Elevation Model of 10 m x 10 m cell size retrieved from the GeoNorge online map catalog of the Norwegian Mapping Authority [@kartverketGeoNorgeKartkatalogen2023]. 
-Average annual precipitation, July maximum temperatures and January minimum temperatures were calculated from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
+We determined slope aspect degree and distance to the closest fjord from a Digital Elevation Model of 10 m x 10 m cell size retrieved from the GeoNorge online map catalog of the Norwegian Mapping Authority [@kartverketGeoNorgeKartkatalogen2023]. 
+Average annual precipitation, maximum and average July temperatures, and minimum and average January temperatures, were obtained from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
+Average annual temperature range was calculated as the difference between maximum July temperature and minimum January temperature, and was used as a proxy for the oceanity gradient.
 For sites not covered by the raster layer, data were extrapolated from averaging values of neighbouring cells with the R software package *terra* (v. 1.7.29) [@hijmansTerraSpatialData2023; @rcoreteamLanguageEnvironmentStatistical2024].
 
 For the composition of the landscape matrix, we calculated land use percent cover in a 1 km radius area around each field from land cover data provided by the Norwegian Institute of Bioeconomy Research (NIBIO) [@norskinstituttforbiookonominibioKildenArealinformasjon2023].
@@ -261,16 +283,17 @@ The redundancy analyses were performed with the *vegan* package [@oksanenVeganCo
 
 ```{r VarSum}
 #| label: tbl-varsum
-#| tbl-cap: "Summary table of variables selected for the regional-scale, landscape-scale, field-scale and fine-scale explanatory sets after data filtering."
+#| tbl-cap: "Summary statistics of variables selected for the regional-scale, landscape-scale, field-scale and fine-scale explanatory sets after data filtering. Not applicable for Sheep and Cattle variables which are dummy numeric."
 #| message: false
 #| warning: false
 
 # Packages
 library(gt)
 library(tidyverse)
+library(kableExtra)
 
 # Join all variables
-allvar <- purrr::reduce(list(subset(fjordsys, select = -c(JanTemp)), landscape, subset(grazing, select = -c(Sheep, Cattle)), subset(locenvi, select = -c(GWC, LOI, Humus, Nitrog))), dplyr::full_join)
+allvar <- purrr::reduce(list(subset(regional, select = -c(JanTemp)), landscape, field, subset(fine, select = -c(GWC, LOI, Humus, Nitrog))), dplyr::full_join)
 
 # Summary statistics
 varsum <- allvar |> 
@@ -283,7 +306,8 @@ varsum <- allvar |>
   pivot_longer(everything(), names_sep = "_", names_to = c( "Variable", ".value")) |>
   mutate(Set = ifelse(Variable == "AnnPreci" |
                         Variable == "Elev" |
-                        Variable == "SeaDist" | 
+                        Variable == "FjordDist" |
+                        Variable == "TempRange" |
                         Variable == "JulTemp", "Regional", ifelse(
                           Variable == "Cultivated" |
                           Variable == "Forest" | 
@@ -291,9 +315,10 @@ varsum <- allvar |>
                           Variable == "Artificial" |
                           Variable == "Outfield" |
                           Variable == "Wetland", "Landscape", ifelse(
-                            Variable == "FieldSize" |
+                            Variable == "FieldArea" |
                             Variable == "StockDens" |
-                            Variable == "FarmInfield", "Field", "Fine"
+                            Variable == "Cattle" |
+                            Variable == "Sheep", "Field", "Fine"
     )
   ))) |> 
   mutate(
@@ -302,25 +327,27 @@ varsum <- allvar |>
           "Elev" = "Elevation (masl)",
     "AnnPreci" = "Annual precipitation (mm)",
     "JulTemp" = "Maximum July temperature (°C)",
-    "SeaDist" = "Distance to water body (m)",
+    "TempRange" = "Annual temperature range (°C)",
+    "FjordDist" = "Fjord proximity (m)",
     "Cultivated" = "Cultivated area (%)",
     "Forest" = "Forest area (%)",
     "Infield" = "Infield area (%)",
     "Outfield" = "Outfield area (%)",
     "Artificial" = "Infrastructure area (%)",
     "Wetland" = "Wetland area (%)",
-    "FieldSize" = "Field site area (ha)",
-    "FarmInfield" = "Total farm infield area (ha)",
+    "FieldArea" = "Field site area (ha)",
     "StockDens" = "Stocking density (LU/ha)",
     "Bryo" = "Bryophyte cover (%)",
     "MeanHeight" = "Sward height (cm)",
-    "BD" = "Bulk_density",
+    "BD" = "Bulk density (g/cm3)",
+    "pH" = "pH",
     "Phosph" = "Available phosphorus (mg/100g)",
     "SoilPene" = "Soil penetration (cm)",
     "Aspect" = "Slope aspect (°)",
     "Slope" = "Slope angle (°)"
     )
-  )
+  ) |> 
+  arrange(Variable)
 
 varsum |>
  # gt(groupname_col = "explanatory", rowname_col = "response") |>
@@ -332,28 +359,32 @@ varsum |>
   #   Df = "df",
   #   adj.r.squared = "adjRsq"
   # ) |>
-  # text_replace(
-  #   pattern = "^left$",
-  #   replacement = "("
-  # ) |> 
   fmt_number(
     decimals = 1,
   ) |>
   fmt_number(
     decimals = 0,
     sep_mark = " ",
-    rows = c("Elevation (masl)", "Annual precipitation (mm)", "Distance to water body (m)", "Slope aspect (°)")
-  ) |> 
+    rows = c("Elevation (masl)", "Annual precipitation (mm)", "Fjord proximity (m)", "Slope aspect (°)")
+  ) |>
   fmt_number(
     decimals = 2,
     rows = c("Stocking density (LU/ha)")
+  ) |>
+  sub_values(
+    rows = c("Sheep", "Cattle"),
+    fn = function(x) x >=0 & x <= 1,
+    replacement = "-"
   ) |> 
   sub_missing(missing_text = "-") |>
-  opt_stylize(style = 3, color = 'gray') |> 
+  row_group_order(
+    groups = c("Regional", "Landscape", "Field", "Fine")
+  ) |> 
+  opt_stylize(style = 3, color = 'gray') |>
   tab_options(
     table.font.size = 11
   )
-  
+
 
 ```
 
@@ -401,14 +432,14 @@ the Carabidae family (1 058 individuals, `r op(filter(beetle_average, BeetleFami
 <!-- ``` -->
 
 
-![Ordination plots of RDA models (A) between the regional environment and the landscape matrix; (B) between the field management and the fine-scale environment; (C) between the fine-scale environment and the dominant grass assemblage; (D) between the fine-scale environment and the dominant forb assemblage; and (E) between the landscape matrix and the dominant beetle assemblage. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDAresults.png){#fig-rda width=80%}
+![Ordination plots of RDA models (A) between the regional environment and the landscape matrix; (B) between the field management and the fine-scale environment; (C) between the fine-scale environment and the dominant grass assemblage; (D) between the fine-scale environment and the dominant forb assemblage; and (E) between the landscape matrix and the dominant beetle assemblage. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](illustrations/RDAmodelsIcons.png){#fig-rda width=100%}
 
 ## Cross-scale interactions between environmental gradients and grazing management
 
-Only the relationship between the fjord climate and the composition of the landscape matrix showed was significant, with a correlation coefficient rho of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~24,70~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@fig-cancor A; SI: @tbl-cancorenv) and an adjusted R^2^ of `r op(rdastat_envi$adj.r.squared[1], 2)` (F~4~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)`) (SI: @tbl-rdaregio).
-The most important factor was annual precipitation (F = `r op(rdastat_envi$F[6], 2)`, p-value = `r op(rdastat_envi$PrF[6], 3)`), with more cultivated lands and infields in wetter areas (@fig-rda A).
-The RDA model between grazing management and the fine-scale environment was marginally significant, but had low explanatory power (R~adj~^2^ = `r op(rdastat_envi$adj.r.squared[45], 2)`, F~5~ = `r op(rdastat_envi$F[45], 2)`, p-value = `r op(rdastat_envi$PrF[45], 3)`) (SI: @tbl-rdafield).
-Most variance was explained by livestock type (F = `r op(rdastat_envi$F[49], 2)`, p-value = `r op(rdastat_envi$PrF[49], 3)`) and field size (F = `r op(rdastat_envi$F[51], 2)`, p-value = `r op(rdastat_envi$PrF[51], 3)`), with bigger fields and/or fields grazed by sheep associated with higher cover of bryophytes, more compact soil and lower vegetation height (@fig-rda B).
+Only the relationship between the climate-landform gradient and the composition of the landscape matrix was found significant in both canonical correlation and redundancy analyses, with a correlation coefficient rho of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~24,70~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@fig-cancor A; SI: @tbl-cancorenv) and an adjusted R^2^ of `r op(rdastat_envi$adj.r.squared[1], 2)` (F~4~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)`) (SI: @tbl-rdaregio).
+The most important factor was fjord proximity (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`), associated with a decrease of forest and outfield areas and an increase of cultivated and infield areas (@fig-rda A).
+The relationship between field management and the fine-scale environment was found significant in the redundancy analysis only, with the RDA model explaining a limited amount of variance (R~adj~^2^ = `r op(rdastat_envi$adj.r.squared[47], 2)`, F~5~ = `r op(rdastat_envi$F[47], 2)`, p-value = `r op(rdastat_envi$PrF[47], 3)`) (@fig-cancor A; SI: @tbl-rdafield).
+The most important factors were livestock type (F = `r op(rdastat_envi$F[51], 2)`, p-value = `r op(rdastat_envi$PrF[51], 3)`) and field size (F = `r op(rdastat_envi$F[53], 2)`, p-value = `r op(rdastat_envi$PrF[53], 3)`), with bigger fields and/or fields grazed by sheep associated with higher cover of bryophytes, more compact soil and lower vegetation height (@fig-rda B).
 
 ## Influence of the environmental gradients and grazing management on dominant grassland assemblages
 
@@ -432,7 +463,8 @@ correlation coefficients were at least marginally significant (@fig-cancor; SI: 
 # DISCUSSION
 
 We found no clear evidence of the influence of the regional environment or the field management on the dominant plant and beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, due to inconsistent outcomes between canonical correlation analyses and redundancy analyses.
-Plant assemblages were instead correlated with the fine-scale environment and responded to two similar gradients, one a combination of sward height against bryophyte cover, and the other a combination of soil resistance to penetration against soil acidity.
+However, land use was affected by fjord proximity, with an increase of more intensively managed areas (infields, croplands) towards fjords' shores.
+Plant assemblages were correlated with the fine-scale environment and responded to two similar gradients, one a combination of sward height against bryophyte cover, and the other a combination of soil resistance to penetration against soil acidity.
 Beetle assemblage was not correlated with local factors, but the relative abundance of Carabidae and Hydrophilidae was associated with increasing cover of forested areas in the surrounding landscape.
 
 ## Grass and forb assemblages determined by the fine-scale environment
@@ -497,16 +529,16 @@ Second and more importantly, the above-listed taxa are not exclusive to the copr
 Narrowing down ecological assessments to the dung-beetle group only could create critical research biases [@tonelliEffectsProgressiveAbandonment2018], particularly in the Nordic region where Scarabaeinae and Aphodiinae are poorly represented [@artsdatabankenArtsdatabankenKunnskapsbankNaturmangfold2023]. 
 Investigating the overall dung-associated community would undoubtedly require considerably more time and expertise, but it should nevertheless be encouraged [@daoudiCompositionPhenologyBeetle2022], especially with the tremendous potential offered now by DNA-based methods [e.g. @sigsgaardEnvironmentalDNAMetabarcoding2021].
 
-## Limited influence of the environmental gradient driven by the fjord context
+## Limited influence of the west-east gradient
 
-In the lowlands of the Nordhordland UNESCO Biosphere Reserve, the magnitude of the environmental variation associated with the climate gradient of the fjord region does not appear strong enough to generate a divergence in the dominant assemblages of semi-natural grasslands [@clelandSensitivityGrasslandPlant2013].
-On the other hand though, the sensitivity of our analysis to broader gradients was probably limited by the exploratory approach of our ecological study, which relied on a simplified conceptual design of cross-scale interactions within this fjord region.
+The current agroecological landscape of the Nordhordland UNESCO Biosphere Reserve is still determined by the fjord environment, as the protected shores offer more suitable conditions for cultivated lands and meadows.
+However, the magnitude of the variation associated with the west-east gradient does not appear strong enough to generate a divergence in the dominant assemblages of semi-natural grasslands [@clelandSensitivityGrasslandPlant2013].
+The sensitivity of our analysis to broader gradients was probably limited by the exploratory approach of our ecological study, which relied on a simplified conceptual design of cross-scale interactions within this fjord region.
 First, our choice of variables for the regional-scale explanatory set may not have been as representative of the environmental heterogeneity driven by the fjord context [@beylichLandscapesLandformsNorway2021; @nesjeFjordsNorwayComplex2009].
 A measure of topographic complexity for instance, such as the variance of elevation or slope [e.g. @yuMultiscaleComparisonTopographic2015], may have been a better indicator of climate variation at low elevation [@graaeStayGoHow2018].
 Second, we investigated plant and beetle response across a limited spatial range, for which local variables would have stronger influence than regional processes [@fieldSpatialSpeciesrichnessGradients2009; @siefertScaleDependenceVegetationenvironment2012].
 Finally, we assumed linear relationships between our sets of variables while these dynamics are not easily verified for cross-scale interactions, especially in a context of high spatio-temporal variability [@dixonhamilCrossscaleContradictionsEcological2016; @petersCrossScaleInteractions2007]. 
-
-Even if our study undoubtedly had limitations for accurately assessing the influence of the regional environment on the grassland communities of the Nordhordland UNESCO Biosphere Reserve, it also showed the potential of the unique context of the fjord region as model area for investigating cross-scale processes in agroecological systems. 
+Despite our study's limitations though, we showed the potential of the unique context of the fjord region as model area for investigating cross-scale processes in agroecological systems. 
 Such research requires both substantial resources and expertise for designing robust and reproducible methodological frameworks [@petersCrossScaleInteractions2007; @redlichDisentanglingEffectsClimate2022], but is becoming increasingly relevant in the current context of global climate and land use changes [@bardgettCombattingGlobalGrassland2021; @kremenLandscapesThatWork2018].
 
 <!-- Likewise, the region is not affected by a strong intensification process that would disrupt the continuity of the landscape matrix [such as in @burelDifferentialResponseSelected2004 or @neffCrossscaleEffectsLand2019 for example], which remains consistently mosaic-like across the study area [@cusensParticipatoryMappingReveals2022] (@tbl-varsum). -->
@@ -570,7 +602,7 @@ We therefore recommend to pursue research effort in designing suitable methodolo
 # ACKNOWLEDGEMENTS
 
 We thank our technicians Linn Voldstad and Silje Östman for administrative support and logistical organisation, and for their help in data collection in the field and in the lab.
-We also thank the many interns and volunteers who participated to the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea Keith McInturff and Johan Måren.
+We also thank the many interns and volunteers who participated to the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea, Keith McInturff, Johan Måren and Dan **needs family name**.
 We are grateful to the farmers and landowners of the study sites for allowing access to their fields and for their time during the phone interviews.
 We also thank Peter Manning for his pertinent insights on the conceptual design, as well as Michael Patten and Richard Telford for their valuable guidance on the data analysis.
 
