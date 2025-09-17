@@ -391,7 +391,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr")
   on.exit(par(usr))
   par(usr = c(0, 1, 0, 1))
-  Cor <- abs(cor(x, y)) # Remove abs function if desired
+  Cor <- abs(cor(x, y, method = "spearman")) # Remove abs function if desired
   txt <- paste0(prefix, format(c(Cor, 0.123456789), digits = digits)[1])
   if(missing(cex.cor)) {
     cex.cor <- 0.4 / strwidth(txt)
