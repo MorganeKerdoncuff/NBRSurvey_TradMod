@@ -71,23 +71,23 @@ op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
 
 ^4^ Department of Geoecology, Institute of Botany of the Czech Academy of Sciences, Czech Republic
 
-# REVISION SUMMARY
+<!-- # REVISION SUMMARY -->
 
-- *Title* - Inger' suggestion, which I quite like even if I feel something is missing, so do not hesitate to propose more options
-- *Introduction* - I revised most of the structure of the Introduction following Adam' suggestion to make the hierarchical description of the different scales of influence clearer. Now the cross-scale approach stands out more as the main focus of the paper as it should be. I also decided to remove the mention to ecosystem services as this topic was never built upon in the rest of the manuscript (and I think we have enough material to work with already).
-- *Clarification regarding the naming of explanatory sets of variables* - The former terms (fjord, landscape, grazing, fine-scale environment) brought confusion because they were mixing scales and causes. I thus decided to only refer to scale, using namely regional, landscape, field and fine.
-- *Conceptual figure* - was modified to meet the police size requirements (min 7 pt) for submission, as the text was barely readable in the previous version.
-- *NBR study map* - I corrected the size of the points for site location (there was indeed a difference, my mistake), changed the colour of the border, and adapted the map frame to include Bergen. **However** the background layer was unfortunately not available anymore, so I had to rely on orthophotogaphy instead. I also attached version only based on the relief, **please tell me which one you think is best**.
-- *Material and methods* - two main changes regarding the variable selection in the regional and field sets for the sake of relevance and accuracy. 
-  1) Regional set - While running exploratory analyses on climate data for writing the context section of the PhD thesis, I found that **annual temperature range showed a surprisingly clean linear increase with longitude, thus offering a good proxy for the oceanity gradient**. I therefore ran once more the variable selection process for the regional set including average July temperature, average January temperature, and annual temperature range calculated as max July - min January. Only average January temperature and annual temperature range showed strong colinearity, and the former was thus discarded. This modification in the regional set did not lead to any substantial change of the results, except for the significance of individual terms in the regional x landscape RDA model. Distance to the closest fjord became significant instead of annual precipitation, which previous p-value was only around 0.044 (so basically not a strongly supported influence). **I have kept "temperature range" as variable name, please tell me if you think it is best to change it to "oceanity"** (as oceanity is what I refer to in the Discussion). 
-  2) Field set - I discarded the variable representing total infield area of the farm, which conflicted with the field scale and was potentially redundant with the relative infield area in the landscape matrix. This modification had no consequence on the results.
-- *Results* - the main change in this section is the relationship between beetle dominant assemblage and the landscape matrix. **This result is not new or related to any changes described above**. I just failed to notice it previously due to my way of filtering statistics in my script.
-- *Discussion* - new structure better matching the rest of the paper with 1) Fjord x landscape, 2) Fine-scale x plant, 3) Landscape x beetle, 4) Grazing. Each section has been rearranged according to Adam's last review, and content has now been considerably thinned down to key outcomes. Key modifications in each section: 
-  1) First some explanation on fjord x land use history, and then I included the critical discussion on "broad-scale gradients"; 
-  2) First stronger emphasis on fine-scale x plant, second individual predictors (vegetation structure and soil), and I decided to discard the paragraph discussing why nutrients did not show as important predictor - **please tell me if you think it is too much to discard it all and if you still thinks mentioning it is important**
-  3) More detailed interpretation on the landscape x beetle, and then I merged the two sections discussing methods. Again much shorter, **please tell if it was too much of a cut.**
-  4) Similar as above: more detailed interpretation on grazing effect and a bit shorter in the methods/perspectives
-- *Tables* - I have tried every possible alternative for tables to look at least readable on Word while writing on Quarto, but it is truly a lost cause. It is possible to submit a LaTex document, so this is what I will go for (see PDF version for accurate output).
+<!-- - *Title* - Inger' suggestion, which I quite like even if I feel something is missing, so do not hesitate to propose more options -->
+<!-- - *Introduction* - I revised most of the structure of the Introduction following Adam' suggestion to make the hierarchical description of the different scales of influence clearer. Now the cross-scale approach stands out more as the main focus of the paper as it should be. I also decided to remove the mention to ecosystem services as this topic was never built upon in the rest of the manuscript (and I think we have enough material to work with already). -->
+<!-- - *Clarification regarding the naming of explanatory sets of variables* - The former terms (fjord, landscape, grazing, fine-scale environment) brought confusion because they were mixing scales and causes. I thus decided to only refer to scale, using namely regional, landscape, field and fine. -->
+<!-- - *Conceptual figure* - was modified to meet the police size requirements (min 7 pt) for submission, as the text was barely readable in the previous version. -->
+<!-- - *NBR study map* - I corrected the size of the points for site location (there was indeed a difference, my mistake), changed the colour of the border, and adapted the map frame to include Bergen. **However** the background layer was unfortunately not available anymore, so I had to rely on orthophotogaphy instead. I also attached version only based on the relief, **please tell me which one you think is best**. -->
+<!-- - *Material and methods* - two main changes regarding the variable selection in the regional and field sets for the sake of relevance and accuracy.  -->
+<!--   1) Regional set - While running exploratory analyses on climate data for writing the context section of the PhD thesis, I found that **annual temperature range showed a surprisingly clean linear increase with longitude, thus offering a good proxy for the oceanity gradient**. I therefore ran once more the variable selection process for the regional set including average July temperature, average January temperature, and annual temperature range calculated as max July - min January. Only average January temperature and annual temperature range showed strong colinearity, and the former was thus discarded. This modification in the regional set did not lead to any substantial change of the results, except for the significance of individual terms in the regional x landscape RDA model. Distance to the closest fjord became significant instead of annual precipitation, which previous p-value was only around 0.044 (so basically not a strongly supported influence). **I have kept "temperature range" as variable name, please tell me if you think it is best to change it to "oceanity"** (as oceanity is what I refer to in the Discussion).  -->
+<!--   2) Field set - I discarded the variable representing total infield area of the farm, which conflicted with the field scale and was potentially redundant with the relative infield area in the landscape matrix. This modification had no consequence on the results. -->
+<!-- - *Results* - the main change in this section is the relationship between beetle dominant assemblage and the landscape matrix. **This result is not new or related to any changes described above**. I just failed to notice it previously due to my way of filtering statistics in my script. -->
+<!-- - *Discussion* - new structure better matching the rest of the paper with 1) Fjord x landscape, 2) Fine-scale x plant, 3) Landscape x beetle, 4) Grazing. Each section has been rearranged according to Adam's last review, and content has now been considerably thinned down to key outcomes. Key modifications in each section:  -->
+<!--   1) First some explanation on fjord x land use history, and then I included the critical discussion on "broad-scale gradients";  -->
+<!--   2) First stronger emphasis on fine-scale x plant, second individual predictors (vegetation structure and soil), and I decided to discard the paragraph discussing why nutrients did not show as important predictor - **please tell me if you think it is too much to discard it all and if you still thinks mentioning it is important** -->
+<!--   3) More detailed interpretation on the landscape x beetle, and then I merged the two sections discussing methods. Again much shorter, **please tell if it was too much of a cut.** -->
+<!--   4) Similar as above: more detailed interpretation on grazing effect and a bit shorter in the methods/perspectives -->
+<!-- - *Tables* - I have tried every possible alternative for tables to look at least readable on Word while writing on Quarto, but it is truly a lost cause. It is possible to submit a LaTex document, so this is what I will go for (see PDF version for accurate output). -->
 
 # ABSTRACT
 
@@ -98,10 +98,10 @@ Here we present an attempt at disentangling these interactions in an exploratory
 We used both canonical correlation analyses and redundancy analyses to investigate 
 1) links between the regional environment, the landscape matrix, the field management and the fine-scale environment of the grazing fields, and 
 2) links between these factors and dominant grass, forb and dung-associated beetle assemblages.
-The composition of the landscape matrix was correlated with the regional environment, with an increase of land use intensity along with closer proximity to fjords.
+The composition of the landscape matrix was correlated with the regional environment, showing an increase of land use intensity with closer proximity to fjords.
 Dominant grass and forb assemblages were correlated with the fine-scale environment of the grazing fields, according to gradients of vegetation structure and soil resistance to penetration.
 Dominant dung-associated beetle assemblages were correlated with the landscape matrix, mostly related to the percent cover of forested areas around the grazing fields.
-Relationships involving the field management were the least consistent, highlighting the challenge of accurately capturing the independent effect of farming practices in small-scale grazing systems.
+Relationships involving field management were the least consistent, highlighting the challenge of accurately capturing the independent effect of farming practices in small-scale grazing systems.
 
 Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community
 
@@ -109,30 +109,38 @@ Keywords: agroecology; livestock; semi-natural grassland; plant community; dung 
 
 - We performed the first analysis of cross-scale interactions between environmental gradients and grazing management in the agroecological landscape of the fjord region of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
 
-- Land use at landscape-scale was more affected by the distance to the closest fjord than broad gradients of temperature and precipitation.
+- Land use at landscape-scale was more affected by the distance to the closest fjord than regional gradients of temperature and precipitation.
 
 - The strongest edaphic predictor of dominant grass and forb assemblages was soil resistance to penetration, while soil moisture and nutrient availability only showed negligible contribution.
 
-- Dung-associated beetle assemblages were largely dominated by the Staphylinidae family and were more affected by landscape-scale factors than local-scale factors.
+- Dung-associated beetle assemblages, which were largely dominated by the Staphylinidae family, were more affected by landscape-scale factors than local-scale factors.
 
-- As field-scale assessment and standard grazing indicators showed limitation to capture the inherent spatio-temporal variability of rotational management, we recommend to develop farm-scale, more flexible methodological designs for small-scale grazing systems.
+- Field-scale assessment and standard grazing indicators showed limitations in capturing the inherent spatio-temporal variability of rotational management.
+We therefore recommend developing farm-scale approaches and more flexible methodological designs for small-scale grazing systems.
 
 # INTRODUCTION
 
 Industrialised agriculture and globalized food chains have pushed the capacity of the Earth system beyond its limits [@ipbesThematicAssessmentReport2024; @richardsonEarthSixNine2023], leading human societies towards alarming scenarios if business-as-usual is to continue [@egliWinnersLosersNational2018; @foleySolutionsCultivatedPlanet2011; @hunterAgriculture2050Recalibrating2017].
 Following the repeated calls for a sustainable transition of agriculture, farming systems based on small-scale agronomic production and diversified management strategies have received growing attention [@altieriPerspectivesChallengesAgroecology2024; @gardnerAgriculturalResiliencePerspectives2019; @rasmussenJointEnvironmentalSocial2024].
 Multiple models of small-scale agriculture have been developed across a wide range of ecosystems, based on the common principle that farming is part of an integrative agroecological system involving tight relationships between land use and the local environment [@cunninghamCloseYieldgapSaving2013; @holt-gimenezAgroecologyFoodSovereignty2012].
-With such strong context-dependency though, assessing the independent effect of management on biodiversity requires a good understanding of the underlying ecological processes which drive the responses of plant and animal communities [@denglerBiodiversityPalaearcticGrasslands2014; @petersCrossScaleInteractions2007; @sinclairOptionsContextApproach2019].
+With such strong context-dependency, assessing the independent effect of management on biodiversity requires a good understanding of the underlying ecological processes which drive the responses of plant and animal communities [@denglerBiodiversityPalaearcticGrasslands2014; @petersCrossScaleInteractions2007; @sinclairOptionsContextApproach2019].
 
-At the regional scale, the variation in climate and elevation generates gradients of abiotic stress and resource availability, affecting species distribution through habitat filtering and mitigating biotic interactions within communities [@conradiResourceAvailabilityDetermines2017; @fridleyLongerGrowingSeasons2016; @klanderudImportanceBioticVs2015].
-The resulting patterns of primary productivity determine the ecosystem resilience to disturbance, and by extension its inherent capacity for sustaining different types of land use [@piipponenGlobalTrendsGrassland2022].
-At the landscape scale, the connectivity between semi-natural habitats contributes to the diversification of species pools [@billeterIndicatorsBiodiversityAgricultural2007; @zulkaSpeciesRichnessDry2014] and ensures the stability of functional networks [@fantinatoCooccurrenceDifferentGrassland2019; @neffCrossscaleEffectsLand2019].
-Agricultural intensification disrupts species migration flows and the continuity of the landscape matrix, leading to the simplification of natural communities and their ecological interactions [@kareivaConnectingLandscapePatterns1995; @leprovostContrastingResponsesBelowground2021; @seiboldArthropodDeclineGrasslands2019].
+- Addressing such strong context-dependency to determine 
+- Assessing 
+
+- Extra sentence: these underlying ecological processes are however challenging to untangle because they operate at different scales and also interact with one another
+
+At the regional scale, variation in climate and elevation generates gradients of abiotic stress and resource availability, affecting species distribution through habitat filtering and mitigating biotic interactions within communities [@conradiResourceAvailabilityDetermines2017; @fridleyLongerGrowingSeasons2016; @klanderudImportanceBioticVs2015].
+The resulting patterns of primary productivity determine ecosystems' resilience to disturbance, and by extension their capacity for sustaining different types of land use [@piipponenGlobalTrendsGrassland2022].
+At the landscape scale, connectivity between semi-natural habitats contributes to the diversification of species pools [@billeterIndicatorsBiodiversityAgricultural2007; @zulkaSpeciesRichnessDry2014] and ensures the stability of functional networks [@fantinatoCooccurrenceDifferentGrassland2019; @neffCrossscaleEffectsLand2019].
+Agricultural intensification disrupts species migration and the continuity of the landscape matrix, leading to the simplification of natural communities and their ecological interactions [@kareivaConnectingLandscapePatterns1995; @leprovostContrastingResponsesBelowground2021; @seiboldArthropodDeclineGrasslands2019].
 At the field scale, the strongest selective pressure usually comes from land use [@neffCrossscaleEffectsLand2019] and varies in direction and magnitude according to the type and intensity of the management [@gaujourFactorsProcessesAffecting2012].
-In grazing systems for instance, multiple factors such as stocking density, grazer selectivity or fertilisation, can affect species dominance by favouring competitive and/or ruderal strategies [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998].
-Manure deposition and animal excreta also support the activity of a diversified dung-associated beetle community [@daoudiCompositionPhenologyBeetle2022; @sigsgaardEnvironmentalDNAMetabarcoding2021], which facilitates the nutrient cycling process between the livestock, the soil and the vegetation [@nicholsEcologicalFunctionsEcosystem2008].
+In grazing systems, multiple factors such as stocking density, grazer selectivity or fertilisation can affect species dominance by favouring competitive or ruderal strategies [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998].
+Manure deposition and animal excreta also support the activity of a diversified coprophilous beetle community [@daoudiCompositionPhenologyBeetle2022; @sigsgaardEnvironmentalDNAMetabarcoding2021], which facilitates the nutrient cycling process between the livestock, the soil and the vegetation [@nicholsEcologicalFunctionsEcosystem2008].
 Lastly, the fine-scale environment in the fields, including gradients of topographic (e.g. slope angle, aspect), edaphic (e.g. soil moisture, bulk density, nutrient availability) and biotic (e.g. vegetation height, litter cover) parameters, determines plant resource availability [@fayGrasslandProductivityLimited2015; @klimekPlantSpeciesRichness2007] and arthropod ecological niches [@broseBottomupControlCarabid2003; @coleInfluenceFinescaleHabitat2010].
-Some factors, such as topography, are inherent to the local context, while other factors such as soil chemicophysical properties or vegetation structure are also influenced by the management, with for instance livestock trampling and grazing affecting soil compaction and vegetation height respectively [@mayelHowDoesGrassland2021; @zhangSoilPhysicalChemical2019].
+Some factors, such as topography, are inherent to the local context, while other factors such as soil physicochemical properties or vegetation structure are also influenced by the management, with for instance livestock trampling and grazing affecting soil compaction and vegetation height respectively [@mayelHowDoesGrassland2021; @zhangSoilPhysicalChemical2019].
+
+*Amy: Again, this doesn’t link explicitly, but I think you could do so by giving another example, perhaps of a larger-scale interaction, and explicitly calling it a cross-scale interaction.*
 
 A suitable framework for investigating cross-scale interactions within agroecological systems is the UNESCO World Network of Biosphere Reserves (WNBR) and its associated Man and Biosphere (MAB) program [@unescoManBiosphereProgramme2025; @unescoNewRoadmapMan2017], which offer a platform of international collaboration and knowledge-sharing for the regional implementation of the Agenda 2030 Sustainable Development Goals [@barracloughGlobalKnowledgeAction2023; @unitednationsTransformingOurWorld2015].
 As model areas, Biosphere Reserves promote applied research targeting food security, locally adapted agricultural production and sustainable land use in many rural regions around the world [e.g. @anderzenEffectsOnfarmDiversification2020; @kratzerRuralInnovationsBiosphere2019; @tamouPastoralistsChangingEnvironment2018].
@@ -141,7 +149,10 @@ The strong topography gradient has limited the mechanisation and intensification
 The small-scale grazing systems of the Nordhordland UNESCO Biosphere Reserve can ba charactersied by low stocking density, local adaptation of livestock breeds and high grazer mobility across fields [@indrelidFarmingSystemIts1988; @potthoffNorwegianLowintensityOvine2023].
 Plant and animal communities of semi-natural grasslands are thus likely affected by multiple interactions between grazing management and different levels of environmental variation, which, to our knowledge, have yet to be investigated in the agroecological landscape of the fjord region.
 
-In this study, we aim to explore the respective influences of environmental gradients and grazing management on the dominant grass, forb and dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+In this study, we aim to explore the cross-scale interactions between the regional environment, the landscape matrix, field management and the fine-scale environment
+
+
+the dominant grass, forb and dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
 We investigated the primacy of spatial scales and individual gradients for explaining community variance, based on a spatially-explicit conceptual representation of the small-scale grazing systems in the fjord region of Western Norway, including four explanatory sets (@fig-fjordconcept):
 the **regional scale**, representing the climate and landform gradient associated with the fjord context; 
 the **landscape scale**, related to the composition of the landscape matrix surrounding the grazing fields; 
