@@ -12,7 +12,7 @@ library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
 library(ggplot2) # Visual representation
-library(ggord) # Ordination plot with ggplot2
+# library(ggord) # Ordination plot with ggplot2
 library(ggpubr) # Function ggarrange for several plots on same file
 library(GGally) # Extension ggplot
 library(car) # Visualisation lm residuals plots
