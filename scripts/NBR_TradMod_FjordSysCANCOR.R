@@ -1928,7 +1928,7 @@ rdall <- ggarrange(plotrda_regiolandscape, plotrda_fieldfine, plotrda_finegrass,
                    font.label = list(size = 12),
                    hjust = -2.7)
 rdall
-ggsave("outputs/RDAresults.png", plot = rdall, width = 18, height = 25, units = "cm", bg = "white")
+ggsave("outputs/RDAresults.png", plot = rdall, width = 16, height = 20, units = "cm", bg = "white")
 
 
 
