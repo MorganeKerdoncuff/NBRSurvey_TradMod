@@ -366,7 +366,7 @@ In semi-natural grasslands, plant-plant interactions are determined by stronger 
 In nutrient-poor heathland habitats, grazing at very low intensity locally overcomes the competition for light driven by shrubs [@koernerChangeDominanceDetermines2018; @olffEffectsHerbivoresGrassland1998] and creates patch-like structural heterogeneity [@parsonsSpatialHeterogeneityGrazing2003; @tonnGrazingInducedPatchiness2019], which particularly enhances cryptogam diversity in subalpine environments [@aldayEffectsLongtermRemoval2021; @milliganWinnersLosersLongterm2016].
 
 Beyond the intrinsic nutrient status of semi-natural grasslands and heathlands, we can still question whether the intensification of land use in infields has strengthened the productivity-diversity trade-off over time [@beckmannConventionalLandUse2019].
-According to our biodiversity indicators though, it does not appear to be the case:
+According to our biodiversity indicators, it does not appear to be the case:
 regardless of cryptogams, which outweighed the contribution of other groups to total species richness, infields showed on average high plant diversity, with a consistently high richness of forb species.
 Still, it would be relevant to verify this assumption by investigating how the composition of plant communities has changed since the comprehensive study led by @losvikHayMeadowCommunities1993, who reported a clear divergence between oceanic and boreal meadows mostly driven by gradients of topography and land use.
 In Western Norway, where the grassland carrying capacity is particularly low [@piipponenGlobalTrendsGrassland2022], even a moderate intensification of grazing pressure and/or the generalised application of mineral fertiliser could drive an homogenisation of plant communities [@gossnerLanduseIntensificationCauses2016; @pakemanIncreasedGrazingDrives2021].
@@ -388,7 +388,7 @@ By altering ecological niches and successional processes [@marenChangingContribu
 The species-rich cryptogam layer of semi-natural heathlands contributes to multiple ecosystem services, both complementary and additive to the cover of vascular plants [@eldridgeGlobalContributionSoil2023].
 These benefits include for instance water retention capacity, enhanced by the structural diversity of the bryophyte cushion [@huStructuralCharacteristicsMoss2023; @michelSpeciesTraitsTheir2012], or soil stability after fire disturbance [@silvaEffectMossCrusts2019].
 Similarly, both coastal and subalpine heathlands showed higher carbon content than semi-natural grasslands [@quinCallunaVulgarisdominatedUpland2015].
-The decomposition process is impeded by on the one hand the low drainage capacity on the coastal strandflats and on the mountain plateau [@boyeThermodynamicallyControlledPreservation2017; @hobbieControlsCarbonStorage2000], and on the other the lower decomposition rate of shrub and bryophyte litter [@langExperimentalComparisonChemical2009], especially on acidic substrate [@vanzuijlenDecomposabilityLichensBryophytes2020].
+The decomposition process is impeded by both the low drainage capacity on the coastal strandflats and mountain plateau [@boyeThermodynamicallyControlledPreservation2017; @hobbieControlsCarbonStorage2000] and the lower decomposition rate of shrub and bryophyte litter [@langExperimentalComparisonChemical2009], especially on acidic substrate [@vanzuijlenDecomposabilityLichensBryophytes2020].
 The carbon sequestration potential of heathland habitats however depends on the age of the community:
 @liLongtermTemporalPatterns2023 estimated that *Calluna vulgaris* heathlands were carbon sinks between 4 and 16 years of growth, and shifted to carbon source in older stages.
 
@@ -397,7 +397,7 @@ Increasing stocking density in subalpine habitats could for instance lead to the
 Regarding prescribed burning, the optimal time interval between fires in order to minimise annual carbon loss depends on climate conditions: 
 for example, @santanaModellingCarbonEmissions2016 observed that a 10 years interval between fire in British heahtlands maximised carbon loss in wetter and colder sites but minimised it in warmer and drier sites.
 
-## Soil mesofauna abundance driven by independent factors
+## No consistent trends of soil mesofauna abundance
 
 We expected the abundance of Acari and Collembola to be representative of soil biological activity, which should be enhanced by the higher resource availability and the lower environmental constraints of infields [@birkhoferSoilFaunaFeeding2011; @ceniniLinkagesExtracellularEnzyme2016].
 However, the relationship between habitat productivity and mesofauna abundance seems largely driven by the trophic structure of the community [@georgeEvaluationMesofaunaCommunities2017].
@@ -419,11 +419,11 @@ The observed pattern is also unlikely to be caused by sampling artifacts, as bot
 
 Despite the evolution of the farming system in Western Norway, we showed that the infield-outfield strategy is still a relevant reference for agricultural policies as a model of management complementarity across a productivity gradient [@billenReshapingEuropeanAgrofood2021].
 Livestock transhumance for instance is a very representative example of resource maximisation during the short summer growth in the mountain ranges in order to release grazing pressure from the lowlands [@gilhausSeasonalVariationsFodder2016; @potthoffChangeMountainSummer2004]. 
-This strategy has shaped the remote upland areas into diverse and multifunctional landscapes [@koernerChangeDominanceDetermines2018; @speedResponsePlantDiversity2013], providing e.g. 
+This strategy has shaped the upland areas into diverse and multifunctional landscapes [@koernerChangeDominanceDetermines2018; @speedResponsePlantDiversity2013], providing e.g. 
 additional sources of income through cheese production [@daugstadAgricultureUpholderCultural2006]; 
 key regulating services of water quality and carbon storage [@huStructuralCharacteristicsMoss2023; @liLongtermTemporalPatterns2023]; 
 and deeply rooted cultural heritage bringing a sense of belonging and artistic inspiration to the local community [@beleHeritageBoundariesNatureculture2024]. 
-With the decline of family farming, the ecosystem services which emerged as secondary benefits have now become the main motive for the conservation of remote areas and their associated management practices [@bernuesQuantifyingMultifunctionalityFjord2015; @walmsleyEnsuringLongtermProvision2021; @wilsonWeakStrongMultifunctionality2008].
+With the decline of family farming, ecosystem services which emerged as secondary benefits have now become the main motive for the conservation of outer areas and their associated management practices [@bernuesQuantifyingMultifunctionalityFjord2015; @walmsleyEnsuringLongtermProvision2021; @wilsonWeakStrongMultifunctionality2008].
 
 On the other hand, we also showed that infields should not be reduced to their forage production role only [@bengtssonGrasslandsMoreImportant2019]. 
 Semi-natural grasslands in Western Norway result from a long history of low-intensity and diversified grazing management, which has promoted plant diversity without impacting livestock forage resource [@demeauxJustGrazeIt2024; @hamrePlantSpeciesRichness2010].
