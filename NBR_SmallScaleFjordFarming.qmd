@@ -1,30 +1,28 @@
 ---
 title: "Grazing the fjord landscape: Environmental and management interactions across scales"
-format: docx
-  # html: 
-  #   embed-resources: true
-  # pdf:
-  #   keep-tex: true
-  #   mainfont: "Times New Roman"
-  #   linestretch: 1.15
-  #   include-in-header:
-  #     text: |
-  #       \usepackage{lscape}
-  #       \newcommand{\blandscape}{\begin{landscape}}
-  #       \newcommand{\elandscape}{\end{landscape}}
-crossref: 
-  custom: 
-    - kind: float
-      key: suppfig
-      latex-env: suppfig
-      reference-prefix: Figure S
-      space-before-numbering: false
-    - kind: float
-      key: supptbl
-      latex-env: supptbl
-      caption-location: top
-      reference-prefix: Table S
-      space-before-numbering: false
+format:
+  pdf:
+    keep-tex: true
+    mainfont: "Times New Roman"
+    linestretch: 1.15
+    include-in-header:
+      text: |
+        \usepackage{lscape}
+        \newcommand{\blandscape}{\begin{landscape}}
+        \newcommand{\elandscape}{\end{landscape}}
+# crossref: 
+#   custom: 
+#     - kind: float
+#       key: suppfig
+#       latex-env: suppfig
+#       reference-prefix: Figure S
+#       space-before-numbering: false
+#     - kind: float
+#       key: supptbl
+#       latex-env: supptbl
+#       caption-location: top
+#       reference-prefix: Table S
+#       space-before-numbering: false
 author:
   - name: Morgane Kerdoncuff^1,3^
     orcid: https://orcid.org/0000-0003-2223-1857
@@ -100,7 +98,7 @@ We used both canonical correlation analyses and redundancy analyses to investiga
 2) links between these factors and dominant grass, forb and dung-associated beetle assemblages.
 The composition of the landscape matrix was correlated with the regional environment, showing an increase of land use intensity with closer proximity to fjords.
 Dominant grass and forb assemblages were correlated with the fine-scale environment of the grazing fields, according to gradients of vegetation structure and soil resistance to penetration.
-Dominant dung-associated beetle assemblages were correlated with the landscape matrix, mostly related to the percent cover of forested areas around the grazing fields.
+Dominant dung-associated beetle assemblages were weakly correlated with the landscape matrix, mostly related to the percent cover of forested areas around the grazing fields.
 Relationships involving field management were the least consistent, highlighting the challenge of accurately capturing the independent effect of farming practices in small-scale grazing systems.
 
 Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community
@@ -159,7 +157,7 @@ the **landscape scale**, related to the composition of the landscape matrix surr
 the **field scale**, characterising the grazing management of the field; 
 and finally the **fine scale**, including variables related to vegetation and soil structure, topography and nutrients.
 
-![Conceptual representation of expected cross-scale interactions between the regional environment, the landscape matrix, field management, the fine-scale environment and dominant grass, forb and dung-associated beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, Norway. Explanatory variables included in the analysis after selection are in black typeface and those excluded are in grey. For description and selection of explanatory variables and response assemblages, see the Material and Methods section. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org)](illustrations/NBR_FjordConcept.png){#fig-fjordconcept width=100%}
+![Conceptual representation of expected cross-scale interactions between the regional environment, the landscape matrix, field management, the fine-scale environment and dominant grass, forb and dung-associated beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, Norway. Explanatory variables included in the analysis after selection are in black typeface and those excluded are in grey. For description and selection of explanatory variables and response assemblages, see the Material and Methods section. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](illustrations/NBR_FjordConcept.png){#fig-fjordconcept width=100%}
 
 <!-- - In Europe, the semi-natural grasslands shaped/created by extensive livestock grazing are amongst the last biodiversity hotspots [@habelEuropeanGrasslandEcosystems2013], but their conservation is impaired by the poor economic viability of the associated agronomic production/farm structure/farming system [@mcginlayThreatAbandonmentSocioecological2017; @stensekeBiodiversityLocalContext2006]. -->
 <!-- - Currently threatened due to limited/poor economic viability, need for thorough research to understand the functioning of the agro-ecosystem, especially in a way that would support farmer ability and willingness to pursue their activity [@mcginlayThreatAbandonmentSocioecological2017; @sinclairOptionsContextApproach2019; @stensekeBiodiversityLocalContext2006]. -->
@@ -181,7 +179,7 @@ Grazing intensity was low, with a maximum stocking rate of 0.6 yearly unit per h
 Twenty-one sites were enriched at least occasionally with individual or simultaneous use of artificial fertiliser, manure or shellsand-lime mix. 
 To the knowledge of the farmers, no field had been resown and/or plowed since at least the 1970s, and only four out of the 29 sites received upgraded drainage between 1990 and 2010.
 
-![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (blue line), Western Norway. Colour indicates the type of livestock on the grazing fields: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0](illustrations/NBR_GrazersMap.png){#fig-sitemap width=100%}
+![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (blue line), Western Norway. Colour indicates the type of livestock on the grazing fields: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](illustrations/NBR_GrazersMap.png){#fig-sitemap width=100%}
 
 \newpage
 
@@ -192,7 +190,7 @@ On each site, we laid out a nested sampling design within a representative area 
 According to the same exclusion rules, we set three plots of 3 m x 3 m in the sampling area, at least 6 m apart from each other (@fig-sampling). 
 Each plot was divided into nine subplots of 1 m^2^, five of them dedicated to non-destructive plant community observations, and the remaining four used for destructive sampling of the dung-associated beetle community and soil.
 
-![Schematic representation of the nested sampling design applied in a representative area of each site. Field sampling was carried out on the same day except for beetle trapping. Credits: figure created using Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org)](illustrations/NBR_GrazersSamplingDesign.png){#fig-sampling width=100%}
+![Schematic representation of the nested sampling design applied in a representative area of each site. Field sampling was carried out on the same day except for beetle trapping. Credits: figure created using Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](illustrations/NBR_GrazersSamplingDesign.png){#fig-sampling width=100%}
 
 ### Plant and beetle assemblages
 
@@ -329,8 +327,7 @@ The redundancy analyses were performed with the *vegan* package [@oksanenVeganCo
 
 \scriptsize
 
-```{r VarSum}
-#| label: tbl-varsum
+```{r tbl-varsum}
 #| tbl-cap: "Summary statistics of variables selected for the regional-scale, landscape-scale, field-scale and fine-scale explanatory sets after data filtering. Not applicable for Sheep and Cattle variables which are dummy numeric."
 #| message: false
 #| warning: false
@@ -464,49 +461,102 @@ the Hydrophilidae family (6 322 individuals, `r op(filter(beetle_average, Beetle
 the Scarabaeidae family (1 128 individuals, `r op(filter(beetle_average, BeetleFamilies == "Scarabaeidae")$BeetleFam_abundance)`% of the catches) and
 the Carabidae family (1 058 individuals, `r op(filter(beetle_average, BeetleFamilies == "Carabidae")$BeetleFam_abundance)`% of the catches).
 
-<!-- ``` {r FigRDA} -->
-<!-- #| label: fig-rda -->
-<!-- #| fig-cap: "Ordination plots of RDA models (A) between the regional environment and the landscape matrix; (B) between the field management and the fine-scale environment; (C) between the fine-scale environment and the dominant grass assemblage; (D) between the fine-scale environment and the dominant forb assemblage; and (E) between the landscape matrix and the dominant beetle assemblage. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration." -->
-<!-- #| fig-asp: 1.2 -->
-<!-- #| fig-width: 6.5 -->
-<!-- #| message: false -->
-<!-- #| warning: false -->
-<!-- #| echo: false -->
-
-<!-- rdall -->
-<!-- ``` -->
-
 ## Cross-scale interactions between environmental gradients and management
 
-The landscape matrix was significantly correlated with the regional environment, with a correlation coefficient rho of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@fig-cancor A; @supptbl-cancorenv) and an adjusted R^2^ of `r op(rdastat_envi$adj.r.squared[1], 2)` (F~5~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)`) (@supptbl-rdaregio).
+The landscape matrix was significantly correlated with the regional environment, with a correlation coefficient rho of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@fig-cancor A; @tbl-cancorenv) and an adjusted R^2^ of `r op(rdastat_envi$adj.r.squared[1], 2)` (F~5~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)`) (@tbl-rdaregio).
 The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[3], 2)`, p-value = `r op(rdastat_envi$PrF[3], 3)`) and mainly driven by fjord proximity (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`), which was associated with a decrease of forest and outfield areas and an increase of cultivated and infield areas (@fig-rda A).
 
-The relationship between field management and the fine-scale environment was found significant in the redundancy analysis only, with the RDA model explaining a low proportion of variance (R~adj~^2^ = `r op(rdastat_envi$adj.r.squared[48], 2)`, F~4~ = `r op(rdastat_envi$F[48], 2)`, p-value = `r op(rdastat_envi$PrF[48], 3)`) (@fig-cancor A; @supptbl-rdafield).
+The relationship between field management and the fine-scale environment was found significant in the redundancy analysis only, with the RDA model explaining a low proportion of variance (R~adj~^2^ = `r op(rdastat_envi$adj.r.squared[48], 2)`, F~4~ = `r op(rdastat_envi$F[48], 2)`, p-value = `r op(rdastat_envi$PrF[48], 3)`) (@fig-cancor A; @tbl-rdafield).
 The first axis of the RDA model was marginally significant (F = `r op(rdastat_envi$F[51], 2)`, p-value = `r op(rdastat_envi$PrF[51], 3)`) and mostly driven by livestock type (F = `r op(rdastat_envi$F[52], 2)`, p-value = `r op(rdastat_envi$PrF[52], 3)`) and field area (F = `r op(rdastat_envi$F[54], 2)`, p-value = `r op(rdastat_envi$PrF[54], 3)`), with bigger fields and/or fields grazed by sheep weakly associated with higher cover of bryophytes, more compact soil and lower vegetation height (@fig-rda B).
 
 ![Summary of canonical correlation analyses (A) between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment), and between explanatory sets and (B) dominant grass assemblage, (C) dominant forb assemblage and (D) dominant beetle assemblage in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve. Correlation coefficient rho is provided for the first dimension per default and for all other significant dimensions. Dotted lines represent non-significant relationships, and arrow thickness is proportional to the rho value. Significance levels are: ° for p-value \< 0.1; \* for p-value \< 0.05; \*\* for p-value \< 0.01; \*\*\* for p-value \< 0.001.](illustrations/NBR_CancorResults.png){#fig-cancor width=100%}
 
-![Ordination plots of selected RDA models (A) between the regional environment and the landscape matrix; (B) between the field management and the fine-scale environment; (C) between the fine-scale environment and the dominant grass assemblage; (D) between the fine-scale environment and the dominant forb assemblage; and (E) between the landscape matrix and the dominant beetle assemblage. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; FjordDist: distance to the closest fjord; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration; TempRange: annual temperature range between maximum July temperature and minimum January temperature. For the ordination plots of all RDA models, see Supplementary Information.](illustrations/RDAmodelsIcons.png){#fig-rda width=100%}
+![Ordination plots of selected RDA models (A) between the regional environment and the landscape matrix; (B) between the field management and the fine-scale environment; (C) between the fine-scale environment and the dominant grass assemblage; (D) between the fine-scale environment and the dominant forb assemblage; and (E) between the landscape matrix and the dominant beetle assemblage. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; FjordDist: distance to the closest fjord; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration; TempRange: annual temperature range between maximum July temperature and minimum January temperature. For the ordination plots of all RDA models, see Supplementary Information.](illustrations/RDAmodelsIcons.png){#fig-rda width=80%}
+
+:::{#fig-rdaenvi layout-ncol=2}
+
+``` {r RDAregiolandscape}
+#| fig-asp: 1
+#| fig-width: 3
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_regiolandscape
+```
+
+``` {r RDAfieldfine}
+#| fig-asp: 1
+#| fig-width: 3
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_fieldfine
+```
+
+![](illustrations/Icons/icon_regional.png)
+![](illustrations/Icons/icon_landscape.png)
+![](illustrations/Icons/icon_field.png)
+![](illustrations/Icons/icon_fine.png)
+
+Ordination plots of RDA models (A) between the regional environment and the landscape matrix and (B) between the field management and the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
+:::
 
 ## Influence of the environmental gradients and management on dominant grass, forb and dung-associated beetle assemblages
 
-According to the canonical correlation analyses, dominant grass assemblages were significantly correlated with the fine-scale environment (rho = `r op(comvar$rho[4], 2)`, F~56,86~ = `r op(comvar$approx[4], 2)`, p-value = `r op(comvar$p.value[4], 3)`) and the regional environment (rho = `r op(comvar$rho[1], 2)`, F~35,77~ = `r op(comvar$approx[1], 2)`, p-value = `r op(comvar$p.value[1], 3)`), and marginally correlated with the field management (rho = `r op(comvar$rho[3], 2)`, F~28,66~ = `r op(comvar$approx[3], 2)`, p-value = `r op(comvar$p.value[3], 3)`) (@fig-cancor; @supptbl-cancorcom).
-However, only the fine-scale environment explained a significant proportion of the grass assemblage variance in the corresponding redundancy analysis (R~adj~^2^ = `r op(rdastat_grass$adj.r.squared[28], 2)`, F~8~ = `r op(rdastat_grass$F[28], 2)`, p-value = `r op(rdastat_grass$PrF[28], 3)`) (@supptbl-rdagrass).
+According to the canonical correlation analyses, dominant grass assemblages were significantly correlated with the fine-scale environment (rho = `r op(comvar$rho[4], 2)`, F~56,86~ = `r op(comvar$approx[4], 2)`, p-value = `r op(comvar$p.value[4], 3)`) and the regional environment (rho = `r op(comvar$rho[1], 2)`, F~35,77~ = `r op(comvar$approx[1], 2)`, p-value = `r op(comvar$p.value[1], 3)`), and marginally correlated with the field management (rho = `r op(comvar$rho[3], 2)`, F~28,66~ = `r op(comvar$approx[3], 2)`, p-value = `r op(comvar$p.value[3], 3)`) (@fig-cancor; @tbl-cancorcom).
+However, only the fine-scale environment explained a significant proportion of the grass assemblage variance in the corresponding redundancy analysis (R~adj~^2^ = `r op(rdastat_grass$adj.r.squared[28], 2)`, F~8~ = `r op(rdastat_grass$F[28], 2)`, p-value = `r op(rdastat_grass$PrF[28], 3)`) (@tbl-rdagrass).
 The first axis was significant (F = `r op(rdastat_grass$F[30], 2)`, p-value = `r op(rdastat_grass$PrF[30], 3)`) and essentially driven by a gradient of vegetation structure, with increasing vegetation height in one direction along the axis (F = `r op(rdastat_grass$F[33], 2)`, p-value = `r op(rdastat_grass$PrF[33], 3)`) and increasing bryophyte cover in the opposite direction (F = `r op(rdastat_grass$F[32], 2)`, p-value = `r op(rdastat_grass$PrF[32], 3)`) (@fig-rda C).
 *Deschampsia cespitosa* and *Holcus lanatus* were associated with taller vegetation, while at the opposite end *Poa pratensis* was associated with higher bryophyte cover.
 The second axis was marginally significant (F = `r op(rdastat_grass$F[31], 2)`, p-value = `r op(rdastat_grass$PrF[31], 3)`) and represented an edaphic gradient linking high soil acidity (F = `r op(rdastat_grass$F[36], 2)`, p-value = `r op(rdastat_grass$PrF[36], 3)`) with low resistance to penetration (F = `r op(rdastat_grass$F[37], 2)`, p-value = `r op(rdastat_grass$PrF[37], 3)`). 
 *Deschampsia flexuosa* was associated with softer and more acidic soils, while *Festuca rubra* and *Holcus lanatus* were associated with greater soil resistance to penetration and lower acidity level.
 
 The fine-scale environment was also correlated with dominant forb assemblages, with a correlation coefficient rho of `r op(comvar$rho[9], 2)` (F~56,86~ = `r op(comvar$approx[9], 2)`, p-value = `r op(comvar$p.value[9], 3)`).
-The fine-scale environment explained `r op(rdastat_forb$adj.r.squared[28]*100)`% of the forb assemblage variance (RDA model: F~8~ = `r op(rdastat_forb$F[28], 2)`, p-value = `r op(rdastat_forb$PrF[28], 3)`) (@supptbl-rdaforb). 
+The fine-scale environment explained `r op(rdastat_forb$adj.r.squared[28]*100)`% of the forb assemblage variance (RDA model: F~8~ = `r op(rdastat_forb$F[28], 2)`, p-value = `r op(rdastat_forb$PrF[28], 3)`) (@tbl-rdaforb). 
 The first axis was significant (F = `r op(rdastat_forb$F[30], 2)`, p-value = `r op(rdastat_forb$PrF[30], 3)`) and mainly driven by soil penetration (F = `r op(rdastat_forb$F[37], 2)`, p-value = `r op(rdastat_forb$PrF[37], 3)`), which was inversely related to soil pH and available phosphorus concentration (@fig-rda D).
 *Potentilla erecta* and *Galium saxatile* were associated with softer and more acidic soils, while *Ranunculus acris* and *Trifolium repens* were associated with stronger soil resistance to penetration and lower acidity level.
 The gradient of vegetation structure was represented by the second axis, non-significant (F = `r op(rdastat_forb$F[31], 2)`, p-value = `r op(rdastat_forb$PrF[31], 3)`).
 Average vegetation height was the most important factor (F = `r op(rdastat_forb$F[33], 2)`, p-value = `r op(rdastat_forb$PrF[33], 2)`), with *Trifolium repens* associated with shorter vegetation (@fig-rda D).
 
-According to the canonical correlation analyses, dung-associated beetle assemblages were significantly correlated with the regional environment (rho = `r op(comvar$rho[11], 2)`, F~25,87~ = `r op(comvar$approx[11], 2)`, p-value = `r op(comvar$p.value[11], 3)`), the landscape matrix (rho = `r op(comvar$rho[12], 2)`, F~30,82~ = `r op(comvar$approx[12], 2)`, p-value = `r op(comvar$p.value[12], 3)`) and the field management (rho = `r op(comvar$rho[13], 2)`, F~20,74~ = `r op(comvar$approx[13], 2)`, p-value = `r op(comvar$p.value[13], 3)`) (@fig-cancor D; @supptbl-cancorcom). 
-However, none of the corresponding RDA models were significant, and only the landscape matrix explained a fair share of variance (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@supptbl-rdabeetle).
+According to the canonical correlation analyses, dung-associated beetle assemblages were significantly correlated with the regional environment (rho = `r op(comvar$rho[11], 2)`, F~25,87~ = `r op(comvar$approx[11], 2)`, p-value = `r op(comvar$p.value[11], 3)`), the landscape matrix (rho = `r op(comvar$rho[12], 2)`, F~30,82~ = `r op(comvar$approx[12], 2)`, p-value = `r op(comvar$p.value[12], 3)`) and the field management (rho = `r op(comvar$rho[13], 2)`, F~20,74~ = `r op(comvar$approx[13], 2)`, p-value = `r op(comvar$p.value[13], 3)`) (@fig-cancor D; @tbl-cancorcom). 
+However, none of the corresponding RDA models were significant, and only the landscape matrix explained a fair share of variance (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
 The first axis was essentially driven by the proportion of forested areas (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`), which was associated with a higher relative abundance of Carabidae and Hydrophilidae (@fig-rda E).
+
+:::{#fig-rdacom layout-ncol=2}
+``` {r RDAfinegrass}
+#| fig-asp: 1
+#| fig-width: 3
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_finegrass
+```
+
+``` {r RDAfineforb}
+#| fig-asp: 1
+#| fig-width: 3
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_fineforb
+```
+
+``` {r RDAlandscapebeetle}
+#| fig-asp: 1
+#| fig-width: 3
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_landscapebeetle
+```
+
+Ordination plots of RDA models (A) between the fine-scale environment and the dominant grass assemblage; (B) between the fine-scale environment and the dominant forb assemblage; and (C) between the landscape matrix and the dominant beetle assemblage. Abbreviations: Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
+:::
+
 
 # DISCUSSION
 
@@ -703,14 +753,21 @@ The dataset for this manuscript is planned to be submitted to DataverseNO (https
 
 # SUPPLEMENTARY INFORMATION
 
-\newpage
-\scriptsize
+```{=tex}
+\appendix
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+```
+
+<!-- \newpage -->
+<!-- \scriptsize -->
 
 <!-- ## S1 - Summary of the asymptotic approximation of Hotelling-Lawley Trace for the canonical correlation analyses between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) -->
 
-::: {#supptbl-cancorenv}
-
-```{r CancorEnv}
+```{r tbl-cancorenv}
+#| tbl-cap: "Summary of the asymptotic approximation of Hotelling-Lawley Trace of canonical correlation analyses for investigating links between the regional environment, the landscape matrix, field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -718,45 +775,43 @@ library(gt)
 library(tidyverse)
 
 cancorenv <- subset(envar, select = -c(id, stat))
-cancorenv |> 
-  gt(groupname_col = "explanatory", rowname_col = "response") |> 
+cancorenv |>
+  gt(groupname_col = "explanatory", rowname_col = "response") |>
   cols_move_to_start(
     columns = c("rho", "dim")
-  ) |> 
+  ) |>
   cols_move(
     columns = rho,
     after = dim
-  ) |> 
+  ) |>
   cols_label(
     #stat = "statistic",
     approx = "F-approx",
     p.value = "p-value",
     dim = "dimension"
-  ) |> 
+  ) |>
   fmt_number(
     columns = c("approx", "rho"),
     decimals = 2
-  ) |> 
+  ) |>
   fmt_number(
     columns = p.value,
     decimals = 4
-  ) |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+  ) |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the asymptotic approximation of Hotelling-Lawley Trace of canonical correlation analyses investigating the cross-scale interactions between the regional environment, the landscape matrix, the field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
-
-:::
 
 <!-- ## S2 - Summary of the asymptotic approximation of Hotelling-Lawley Trace for the canonical correlation analyses between explanatory sets and dominant grass, forb and beetle assemblages. -->
 
-::: {#supptbl-cancorcom}
+<!-- ::: {#supptbl-cancorcom} -->
 
-```{r CancorCom}
+```{r tbl-cancorcom}
+#| tbl-cap: "Summary of the asymptotic approximation of Hotelling-Lawley Trace of canonical correlation analyses for investigating links between explanatory sets (the regional environment, the landscape matrix, field management and the fine-scale environment) on dominant grass, forb and dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -764,48 +819,49 @@ library(gt)
 library(tidyverse)
 
 cancorcom <- subset(comvar, select = -c(id, stat))
-cancorcom |> 
-  gt(groupname_col = "explanatory", rowname_col = "response") |> 
+cancorcom |>
+  gt(groupname_col = "explanatory", rowname_col = "response") |>
   cols_move_to_start(
     columns = c("rho", "dim")
-  ) |> 
+  ) |>
   cols_move(
     columns = rho,
     after = dim
-  ) |> 
+  ) |>
   cols_label(
     #stat = "statistic",
     approx = "F-approx",
     p.value = "p-value",
     dim = "dimension"
-  ) |> 
+  ) |>
   fmt_number(
     columns = c("approx", "rho"),
     decimals = 2
-  ) |> 
+  ) |>
   fmt_number(
     columns = p.value,
     decimals = 4
-  ) |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+  ) |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the asymptotic approximation of Hotelling-Lawley Trace of canonical correlation analyses investigating the cross-scale influence of the regional environment, the landscape matrix, the field management and the fine-scale environment on the dominant grass, forb and beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the asymptotic approximation of Hotelling-Lawley Trace of canonical correlation analyses investigating the cross-scale influence of the regional environment, the landscape matrix, the field management and the fine-scale environment on the dominant grass, forb and beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
 <!-- ## S3 - Summary of the RDA permutation tests for relationships between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) -->
 
 \newpage
 \blandscape
 
-::: {#supptbl-rdaregio}
+<!-- ::: {#supptbl-rdaregio} -->
 
-```{r RDAregio}
+```{r tbl-rdaregio}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating links between the regional environment and the landscape matrix, field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -817,8 +873,8 @@ rdafjord <- subset(rdastat_envi, select = -c(r.squared, type, eigenval))
 rdafjord <- filter(rdafjord, explanatory == "Regional")
 
 # New columns for table spanner
-rdafjord <- rdafjord |> 
-    pivot_longer(cols = c(adj.r.squared, Variance, F, Df, PrF), names_to = "stat", values_to = "val") |> 
+rdafjord <- rdafjord |>
+    pivot_longer(cols = c(adj.r.squared, Variance, F, Df, PrF), names_to = "stat", values_to = "val") |>
   mutate(statset = ifelse(
     response == "Landscape", paste(stat, "lands", sep = ""), ifelse(
       response == "Field", paste(stat, "field", sep = ""), paste(stat, "fine", sep = "")
@@ -827,10 +883,10 @@ rdafjord <- rdafjord |>
 
 # New table
 rdafjord <- subset(rdafjord, select = c(dim, statset, val))
-rdafjord <- rdafjord |> 
+rdafjord <- rdafjord |>
   pivot_wider(names_from = statset, values_from = val)
 
-rdafjord |> 
+rdafjord |>
   # gt() |>
   gt(rowname_col = "dim") |>
   cols_move_to_start(
@@ -880,30 +936,31 @@ rdafjord |>
       tab_spanner(
       label = "Regional x landscape",
       columns = c("Variancelands", "Flands", "PrFlands", "Dflands", "adj.r.squaredlands")
-    ) |> 
+    ) |>
     tab_spanner(
       label = "Regional x field",
       columns = c("Variancefield", "Ffield", "PrFfield", "Dffield", "adj.r.squaredfield")
-    ) |> 
+    ) |>
     tab_spanner(
       label = "Regional x fine",
       columns = c("Variancefine", "Ffine", "PrFfine", "Dffine", "adj.r.squaredfine")
-    ) |> 
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+    ) |>
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the cross-scale influence of the regional environment on the landscape matrix, the field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the cross-scale influence of the regional environment on the landscape matrix, the field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
-::: {#supptbl-rdalandscape}
+<!-- ::: {#supptbl-rdalandscape} -->
 
-```{r RDAlandscape}
+```{r tbl-rdalandscape}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating links between the landscape matrix and field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -915,18 +972,18 @@ rdalandscape <- subset(rdastat_envi, select = -c(r.squared, type, eigenval))
 rdalandscape <- filter(rdalandscape, explanatory == "Landscape")
 
 # New columns for table spanner
-rdalandscape <- rdalandscape |> 
-    pivot_longer(cols = c(adj.r.squared, Variance, F, Df, PrF), names_to = "stat", values_to = "val") |> 
+rdalandscape <- rdalandscape |>
+    pivot_longer(cols = c(adj.r.squared, Variance, F, Df, PrF), names_to = "stat", values_to = "val") |>
   mutate(statset = ifelse(
     response == "Field", paste(stat, "field", sep = ""), paste(stat, "fine", sep = "")
   ))
 
 # New table
 rdalandscape <- subset(rdalandscape, select = c(dim, statset, val))
-rdalandscape <- rdalandscape |> 
+rdalandscape <- rdalandscape |>
   pivot_wider(names_from = statset, values_from = val)
 
-rdalandscape |> 
+rdalandscape |>
   gt(rowname_col = "dim") |>
   cols_move(
     columns = Dffine,
@@ -963,28 +1020,29 @@ rdalandscape |>
     tab_spanner(
       label = "Landscape x field",
       columns = c("Variancefield", "Ffield", "PrFfield", "Dffield", "adj.r.squaredfield")
-    ) |> 
+    ) |>
     tab_spanner(
       label = "Landscape x fine",
       columns = c("Variancefine", "Ffine", "PrFfine", "Dffine", "adj.r.squaredfine")
-    ) |> 
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+    ) |>
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
   tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the cross-scale influence of the landscape matrix on the field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the cross-scale influence of the landscape matrix on the field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
 \elandscape
 
-::: {#supptbl-rdafield}
+<!-- ::: {#supptbl-rdafield} -->
 
-```{r RDAfield}
+```{r tbl-rdafield}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating links between field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -997,7 +1055,7 @@ rdafield <- filter(rdafield, explanatory == "Field")
 rdafield <- subset(rdafield, select = -c(explanatory, model, response))
 
 # Gt table
-rdafield |> 
+rdafield |>
   gt(rowname_col = "dim") |>
   cols_move(
     columns = Df,
@@ -1025,28 +1083,40 @@ rdafield |>
     tab_spanner(
       label = "Field x fine",
       columns = c("Variance", "F", "PrF", "Df", "adj.r.squared")
-    ) |> 
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+    ) |>
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the cross-scale influence of the field management on the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the cross-scale influence of the field management on the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
-<!-- ## S4 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) -->
+<!-- <!-- ## S4 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) --> -->
 
-![Ordination plots for the RDA models between the regional environment and (A) the landscape matrix, (B) the grazing management and (C) the fine-scale environment, between the landscape matrix and (D) the grazing management and (E) the fine-scale environment, and (F) between the grazing management and the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_envi.png){#suppfig-rdaenv}
+<!-- ![Ordination plots for the RDA models between the regional environment and (A) the landscape matrix, (B) the grazing management and (C) the fine-scale environment, between the landscape matrix and (D) the grazing management and (E) the fine-scale environment, and (F) between the grazing management and the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_envi.png){#fig-rdaenv} -->
 
-<!-- ## S5 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant grass assemblage -->
+``` {r fig-rdaenv}
+#| fig-cap: "Ordination plots for the RDA models between the regional environment and (A) the landscape matrix, (B) field management and (C) the fine-scale environment; between the landscape matrix and (D) field management and (E) the fine-scale environment; and (F) between field management and the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration."
+#| fig-height: 22
+#| fig-width: 15
+#| message: false
+#| warning: false
+#| echo: false
 
-::: {#supptbl-rdagrass}
+rda_envi
+```
 
-```{r RDAGrass}
+<!-- <!-- ## S5 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant grass assemblage --> -->
+
+<!-- ::: {#supptbl-rdagrass} -->
+
+```{r tbl-rdagrass}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on dominant grass assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -1054,8 +1124,8 @@ library(gt)
 library(tidyverse)
 
 rdagrass <- subset(rdastat_grass, select = -c(r.squared, type, eigenval, explanatory, response))
-rdagrass |> 
-  gt(groupname_col = "model", rowname_col = "dim") |> 
+rdagrass |>
+  gt(groupname_col = "model", rowname_col = "dim") |>
   cols_move_to_start(
     columns = c("adj.r.squared")
   ) |>
@@ -1077,28 +1147,40 @@ rdagrass |>
     columns = PrF,
     decimals = 4
   ) |>
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
   tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant grass assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant grass assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
-<!-- ## S6 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant grass assemblage -->
+<!-- <!-- ## S6 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant grass assemblage --> -->
 
-![Ordination plots for the RDA models between the dominant grass assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_grass.png){#suppfig-rdagrass}
+<!-- ![Ordination plots for the RDA models between the dominant grass assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_grass.png){#suppfig-rdagrass} -->
+
+``` {r fig-rdagrass}
+#| fig-cap: "Ordination plots for the RDA models between dominant grass assemblages and (A) the regional environment, (B) the landscape matrix, (C) field management and (D) the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration."
+#| fig-height: 22
+#| fig-width: 15
+#| message: false
+#| warning: false
+#| echo: false
+
+rda_grass
+```
 
 
-<!-- ## S7 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant forb assemblage -->
+<!-- <!-- ## S7 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant forb assemblage --> -->
 
-::: {#supptbl-rdaforb}
+<!-- ::: {#supptbl-rdaforb} -->
 
-```{r RDAForb}
+```{r tbl-rdaForb}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on dominant forb assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -1106,8 +1188,8 @@ library(gt)
 library(tidyverse)
 
 rdaforb <- subset(rdastat_forb, select = -c(r.squared, type, eigenval, explanatory, response))
-rdaforb |> 
-  gt(groupname_col = "model", rowname_col = "dim") |> 
+rdaforb |>
+  gt(groupname_col = "model", rowname_col = "dim") |>
   cols_move_to_start(
     columns = c("adj.r.squared")
   ) |>
@@ -1129,28 +1211,39 @@ rdaforb |>
     columns = PrF,
     decimals = 4
   ) |>
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant forb assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant forb assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
-<!-- ## S8 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant forb assemblage -->
+<!-- <!-- ## S8 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant forb assemblage --> -->
 
-![Ordination plots for the RDA models between the dominant forb assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_forb.png){#suppfig-rdaforb}
+<!-- ![Ordination plots for the RDA models between the dominant forb assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_forb.png){#suppfig-rdaforb} -->
 
+``` {r fig-rdaforb}
+#| fig-cap: "Ordination plots for the RDA models between dominant forb assemblages and (A) the regional environment, (B) the landscape matrix, (C) field management and (D) the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration."
+#| fig-height: 22
+#| fig-width: 15
+#| message: false
+#| warning: false
+#| echo: false
 
-<!-- ## S9 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant beetle assemblage -->
+rda_forb
+```
 
-::: {#supptbl-rdabeetle}
+<!-- <!-- ## S9 - Summary of the RDA permutation tests for relationships between explanatory sets and dominant beetle assemblage --> -->
 
-```{r RDABeetle}
+<!-- ::: {#supptbl-rdabeetle} -->
+
+```{r tbl-rdabeetle}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on dominant dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -1158,8 +1251,8 @@ library(gt)
 library(tidyverse)
 
 rdabeetle <- subset(rdastat_beetle, select = -c(r.squared, type, eigenval, explanatory, response))
-rdabeetle |> 
-  gt(groupname_col = "model", rowname_col = "dim") |> 
+rdabeetle |>
+  gt(groupname_col = "model", rowname_col = "dim") |>
   cols_move_to_start(
     columns = c("adj.r.squared")
   ) |>
@@ -1181,21 +1274,32 @@ rdabeetle |>
     columns = PrF,
     decimals = 4
   ) |>
-  sub_missing(missing_text = "-") |> 
-  opt_stylize(style = 3, color = 'gray') |> 
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
     tab_options(
     table.font.size = 11
   )
 
 ```
 
-Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant beetle assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve.
+<!-- Summary of the RDA permutation tests for investigating the influence of regional environment, landscape matrix, field management and fine-scale environment on the dominant beetle assemblage of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. -->
 
-:::
+<!-- ::: -->
 
 \normalsize
 
 
-<!-- ## S10 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant beetle assemblage -->
+<!-- <!-- ## S10 - Redundancy analysis (RDA) plots between explanatory sets (regional environment, landscape matrix, field management, fine-scale environment) and dominant beetle assemblage --> -->
 
-![Ordination plots for the RDA models between the dominant beetle assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_beetle.png){#suppfig-rdabeetle}
+```{r fig-rdabeetle}
+#| fig-cap: "Ordination plots for the RDA models between dominant dung-associated beetle assemblages and (A) the regional environment, (B) the landscape matrix, (C) field management and (D) the fine-scale environment of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration."
+#| fig-height: 22
+#| fig-width: 15
+#| message: false
+#| warning: false
+#| echo: false
+
+rda_beetle
+```
+
+<!-- ![Ordination plots for the RDA models between the dominant beetle assemblage and (A) the regional environment, (B) the landscape matrix, (C) the grazing management and (D) the fine-scale environment. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.](outputs/RDA_beetle.png){#suppfig-rdabeetle} -->
