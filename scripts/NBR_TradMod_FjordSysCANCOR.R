@@ -12,9 +12,12 @@ library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
 library(ggplot2) # Visual representation
-# library(ggord) # Ordination plot with ggplot2
+library(ggord) # Ordination plot with ggplot2
+library(ggvegan) # Function autoplot.rda for ordination plot with ggplot2
 library(ggpubr) # Function ggarrange for several plots on same file
 library(GGally) # Extension ggplot
+library(ggimage) # Include image in figures
+library(rsvg) # SVG format for figures
 library(car) # Visualisation lm residuals plots
 library(CCA) # Canonical correlation
 library(CCP) # Statistical test canonical correlation
@@ -183,6 +186,16 @@ grass <- as.data.frame(contin_grass)
 grass <- grass |>
   pivot_wider(names_from = Species, values_from = Freq)
 
+## Suitable variable names
+names(grass) <- gsub("Agrostis capillaris", "A.capillaris", names(grass))
+names(grass) <- gsub("Festuca rubra", "F.rubra", names(grass))
+names(grass) <- gsub("Holcus lanatus", "H.lanatus", names(grass))
+names(grass) <- gsub("Poa pratensis", "P.pratensis", names(grass))
+names(grass) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass))
+names(grass) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass))
+names(grass) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass))
+names(grass) <- gsub("Poa trivialis", "P.trivialis", names(grass))
+
 # Selection and transformation forb assemblage
 
 ## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
@@ -203,6 +216,15 @@ contin_forb <- decostand(contin_forb, method = "hellinger")
 forb <- as.data.frame(contin_forb)
 forb <- forb |>
   pivot_wider(names_from = Species, values_from = Freq)
+
+## Suitable variable names
+names(forb) <- gsub("Trifolium repens", "T.repens", names(forb))
+names(forb) <- gsub("Rumex acetosa", "R.acetosa", names(forb))
+names(forb) <- gsub("Galium saxatile", "G.saxatile", names(forb))
+names(forb) <- gsub("Potentilla erecta", "P.erecta", names(forb))
+names(forb) <- gsub("Ranunculus acris", "R.acris", names(forb))
+names(forb) <- gsub("Ranunculus repens", "R.repens", names(forb))
+names(forb) <- gsub("Achillea millefolium", "A.millefolium", names(forb))
 
 ## Transformation beetle assemblage data
 
@@ -817,18 +839,44 @@ rda <- rda(subset(landscape_sc, select = -c(SiteID)) ~ ., data = subset(regional
 
 ## RDA plot
 plotrda_regiolandscape <- ggrda(rda,
-      txt = 3,
+      txt = 4,
       ptslab = TRUE,
       addcol = "chartreuse4",
-      addsize = 2.5,
-      size = 1,
+      addsize = 3.5,
+      size = 2,
       arrow = 0.2,
       repel = TRUE,
       veccol = "cyan4",
       labcol = "cyan4",
       xlims = c(-1.1, 1.1),
-      ylims = c(-1.1, 1.1))
+      ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  )
 plotrda_regiolandscape
+
+# plot <- autoplot(
+#   rda,
+#   axes = c(1, 2),
+#   geom = c("point", "text"),
+#   layers = c("species", "sites", "biplot", "centroids"),
+#   arrows = TRUE,
+#   const = 1
+# ) +
+#   geom_image(
+#     # data = tibble(x = 1, y = 1),
+#     aes(x = 1, y = 1, image = "illustrations/Icons/icon_regional.png")
+#   )
+# plot
+
+ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -878,18 +926,29 @@ rda <- rda(subset(field_sc, select = -c(SiteID)) ~ ., data = subset(regional_sc,
 
 ## RDA plot
 plotrda_regiofield <- ggrda(rda,
-                               txt = 3,
+                               txt = 4,
                                ptslab = TRUE,
                                addcol = "darkgoldenrod3",
-                               addsize = 2.5,
+                               addsize = 3.5,
                                size = 1,
                                arrow = 0.2,
                                #repel = TRUE,
                                veccol = "cyan4",
                                labcol = "cyan4",
                                 xlims = c(-1.4, 1.4),
-                                ylims = c(-1.4, 1.4))
+                                ylims = c(-1.4, 1.4)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = -1.15, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  )
 plotrda_regiofield
+ggsave("outputs/singleRDA/plotrda_regiofield.png", plot = plotrda_regiofield, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -934,18 +993,29 @@ rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(regional_sc, 
 
 ## RDA plot
 plotrda_regiofine <- ggrda(rda,
-                               txt = 3,
+                               txt = 4,
                                ptslab = TRUE,
                                addcol = "darkred",
-                               addsize = 2.5,
+                               addsize = 3.5,
                                size = 1,
                                arrow = 0.2,
                                #repel = TRUE,
                                veccol = "cyan4",
                                labcol = "cyan4",
-                               xlims = c(-1, 1),
-                               ylims = c(-1, 1))
+                               xlims = c(-1.1, 1.1),
+                               ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  )
 plotrda_regiofine
+ggsave("outputs/singleRDA/plotrda_regiofine.png", plot = plotrda_regiofine, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -990,18 +1060,29 @@ rda <- rda(subset(field_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc
 
 ## RDA plot
 plotrda_landscapefield <- ggrda(rda,
-                                   txt = 3,
+                                   txt = 4,
                                    ptslab = TRUE,
                                    addcol = "darkgoldenrod3",
-                                   addsize = 2.5,
+                                   addsize = 3.5,
                                    size = 1,
                                    arrow = 0.2,
                                    repel = TRUE,
                                    veccol = "chartreuse4",
                                    labcol = "chartreuse4",
-                                   xlims = c(-1, 1),
-                                   ylims = c(-1, 1))
+                                   xlims = c(-1.1, 1.1),
+                                   ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  )
 plotrda_landscapefield
+ggsave("outputs/singleRDA/plotrda_landscapefield.png", plot = plotrda_landscapefield, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1046,18 +1127,29 @@ rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc,
 
 ## RDA plot
 plotrda_landscapefine <- ggrda(rda,
-                                  txt = 3,
+                                  txt = 4,
                                    ptslab = TRUE,
                                    addcol = "darkred",
-                                   addsize = 2.5,
+                                   addsize = 3.5,
                                    size = 1,
                                    arrow = 0.2,
                                    repel = TRUE,
                                    veccol = "chartreuse4",
                                    labcol = "chartreuse4",
                                  xlims = c(-1.2, 1.2),
-                                 ylims = c(-1.2, 1.2))
+                                 ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  )
 plotrda_landscapefine
+ggsave("outputs/singleRDA/plotrda_landscapefine.png", plot = plotrda_landscapefine, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1102,18 +1194,29 @@ rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(field_sc, sel
 
 ## Plot RDA
 plotrda_fieldfine <- ggrda(rda,
-                                 txt = 3,
+                                 txt = 4,
                                  ptslab = TRUE,
                                  addcol = "darkred",
-                                 addsize = 2.5,
+                                 addsize = 3.5,
                                  size = 1,
                                  arrow = 0.2,
                                  repel = TRUE,
                                  veccol = "darkgoldenrod3",
                                  labcol = "darkgoldenrod3",
                                    xlims = c(-1.1, 1.1),
-                                   ylims = c(-1.1, 1.1))
+                                   ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  )
 plotrda_fieldfine
+ggsave("outputs/singleRDA/plotrda_fieldfine.png", plot = plotrda_fieldfine, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1157,38 +1260,48 @@ rdafieldfine <- rdatable |>
 rdastat_envi <- purrr::reduce(list(rdaregiolandscape, rdaregiofield, rdaregiofine, rdalandscapefield, rdalandscapefine, rdafieldfine), dplyr::full_join)
 
 ## Plot summary
-rda_envi <- ggarrange(plotrda_regiolandscape, plotrda_regiofield, plotrda_regiofine, plotrda_landscapefield, plotrda_landscapefine, plotrda_fieldfine,
-                   labels = c("A", "B", "C", "D", "E", "F"),
-                   ncol = 2,
-                   nrow = 3)
-rda_envi
-ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 15, height = 22, units = "cm", bg = "white")
-
+# rda_envi <- ggarrange(plotrda_regiolandscape, plotrda_regiofield, plotrda_regiofine, plotrda_landscapefield, plotrda_landscapefine, plotrda_fieldfine,
+#                    labels = c("A", "B", "C", "D", "E", "F"),
+#                    ncol = 2,
+#                    nrow = 3)
+# rda_envi
+# ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 15, height = 22, units = "cm", bg = "white")
 
 #### RDA grass community data ####
 
 # Regional x grass
 
-## Remove space within plant names to avoid parse error in plot
-names(grass) <- gsub(" ", ".", names(grass))
+# ## Remove space within plant names to avoid parse error in plot
+# names(grass) <- gsub(" ", ".", names(grass))
 
 ## Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
 
 ## RDA plot
 plotrda_regiograss <- ggrda(rda,
-                             txt = 3,
+                             txt = 4,
                              ptslab = TRUE,
                              addcol = "black",
-                             addsize = 2.5,
+                             addsize = 3.5,
                              size = 1,
                              arrow = 0.2,
                              repel = TRUE,
                              veccol = "cyan4",
                              labcol = "cyan4",
                                xlims = c(-1.2, 1.2),
-                               ylims = c(-1.2, 1.2))
+                               ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
 plotrda_regiograss
+ggsave("outputs/singleRDA/plotrda_regiograss.png", plot = plotrda_regiograss, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1228,26 +1341,34 @@ rdaregiograss <- rdatable |>
 
 # Landscape x grass
 
-## Remove space within plant names to avoid parse error in plot
-names(grass) <- gsub(" ", ".", names(grass))
-
 ## Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 
 ## RDA plot
 plotrda_landscapegrass <- ggrda(rda,
-                                 txt = 3,
+                                 txt = 4,
                                  ptslab = TRUE,
                                  addcol = "black",
-                                 addsize = 2.5,
+                                 addsize = 3.5,
                                  size = 1,
                                  arrow = 0.2,
                                  repel = TRUE,
                                  veccol = "chartreuse4",
                                  labcol = "chartreuse4",
                              xlims = c(-1.1, 1.1),
-                             ylims = c(-1.1, 1.1))
+                             ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
 plotrda_landscapegrass
+ggsave("outputs/singleRDA/plotrda_landscapegrass.png", plot = plotrda_landscapegrass, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1287,26 +1408,34 @@ rdalandscapegrass <- rdatable |>
 
 # Field x grass
 
-## Remove space within plant names (otherwise parse error in plot)
-names(grass) <- gsub(" ", ".", names(grass))
-
 ## Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
 
 ## RDA plot
 plotrda_fieldgrass <- ggrda(rda,
-                               txt = 3,
+                               txt = 4,
                                ptslab = TRUE,
                                addcol = "black",
-                               addsize = 2.5,
+                               addsize = 3.5,
                                size = 1,
                                arrow = 0.2,
                                repel = TRUE,
                                veccol = "darkgoldenrod3",
                                labcol = "darkgoldenrod3",
                                xlims = c(-1.3, 1.3),
-                               ylims = c(-1.3, 1.3))
+                               ylims = c(-1.3, 1.3)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1, y = -1.05, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
 plotrda_fieldgrass
+ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1346,26 +1475,35 @@ rdafieldgrass <- rdatable |>
 
 # Fine x grass
 
-## Remove space within plant names (otherwise parse error in plot)
-names(grass) <- gsub(" ", ".", names(grass))
-
 ## Redundancy analysis
 rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(fine_sc, select = -c(SiteID)))
 
 ## Plot RDA
 plotrda_finegrass <- ggrda(rda,
-                               txt = 3,
-                               ptslab = TRUE,
-                               addcol = "black",
-                               addsize = 2.5,
-                               size = 1,
-                               arrow = 0.2,
-                               repel = TRUE,
-                               veccol = "darkred",
-                               labcol = "darkred",
-                               xlims = c(-1.2, 1.2),
-                               ylims = c(-1.2, 1.2))
+                           txt = 4,
+                           ptslab = TRUE,
+                           addcol = "black",
+                           addsize = 3.5,
+                           size = 1,
+                           arrow = 0.2,
+                           repel = TRUE,
+                           force = 2,
+                           veccol = "darkred",
+                           labcol = "darkred",
+                           xlims = c(-1.2, 1.2),
+                           ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
 plotrda_finegrass
+ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1409,38 +1547,46 @@ rdafinegrass <- rdatable |>
 rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgrass, rdafinegrass), dplyr::full_join)
 
 ## Plot summary
-rda_grass <- ggarrange(plotrda_regiograss, plotrda_landscapegrass, plotrda_fieldgrass, plotrda_finegrass,
-                      labels = c("A", "B", "C", "D"),
-                      ncol = 2,
-                      nrow = 2)
-rda_grass
-ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 15, units = "cm", bg = "white")
+# rda_grass <- ggarrange(plotrda_regiograss, plotrda_landscapegrass, plotrda_fieldgrass, plotrda_finegrass,
+#                       labels = c("A", "B", "C", "D"),
+#                       ncol = 2,
+#                       nrow = 2)
+# rda_grass
+# ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 15, units = "cm", bg = "white")
 
 
 #### RDA forb community data ####
 
 # Regional x forb
 
-## Remove space within plant names (otherwise parse error in plot)
-names(forb) <- gsub(" ", ".", names(forb))
-
 ## Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
 
 ## Plot RDA
 plotrda_regioforb <- ggrda(rda,
-                            txt = 3,
+                            txt = 4,
                             ptslab = TRUE,
                             addcol = "black",
-                            addsize = 2.5,
+                            addsize = 3.5,
                             size = 1,
                             arrow = 0.2,
-                            #repel = TRUE,
+                            # repel = TRUE,
                             veccol = "cyan4",
                             labcol = "cyan4",
                              xlims = c(-1.2, 1.2),
-                             ylims = c(-1.2, 1.2))
+                             ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_forb.png"),
+    size = 0.2
+  )
 plotrda_regioforb
+ggsave("outputs/singleRDA/plotrda_regioforb.png", plot = plotrda_regioforb, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1480,26 +1626,34 @@ rdaregioforb <- rdatable |>
 
 # Landscape x forb
 
-## Remove space within plant names (otherwise parse error in plot)
-names(forb) <- gsub(" ", ".", names(forb))
-
 ## Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
 
 ## Plot RDA
 plotrda_landscapeforb <- ggrda(rda,
-                                txt = 3,
+                                txt = 4,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 2.5,
+                                addsize = 3.5,
                                 size = 1,
                                 arrow = 0.2,
                                 #repel = TRUE,
                                 veccol = "chartreuse4",
                                 labcol = "chartreuse4",
-                                 xlims = c(-1, 1),
-                                 ylims = c(-1, 1))
+                                 xlims = c(-1.1, 1.1),
+                                 ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_forb.png"),
+    size = 0.2
+  )
 plotrda_landscapeforb
+ggsave("outputs/singleRDA/plotrda_landscapeforb.png", plot = plotrda_landscapeforb, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1539,26 +1693,34 @@ rdalandscapeforb <- rdatable |>
 
 # Field x forb
 
-## Remove space within plant names (otherwise parse error in plot)
-names(forb) <- gsub(" ", ".", names(forb))
-
 ## Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
 
 ## RDA plot
 plotrda_fieldforb <- ggrda(rda,
-                              txt = 3,
+                              txt = 4,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 2.5,
+                              addsize = 3.5,
                               size = 1,
                               arrow = 0.2,
                               #repel = TRUE,
                               veccol = "darkgoldenrod3",
                               labcol = "darkgoldenrod3",
                                xlims = c(-1.2, 1.2),
-                               ylims = c(-1.2, 1.2))
+                               ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_forb.png"),
+    size = 0.2
+  )
 plotrda_fieldforb
+ggsave("outputs/singleRDA/plotrda_fieldforb.png", plot = plotrda_fieldforb, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1598,26 +1760,34 @@ rdafieldforb <- rdatable |>
 
 # Fine x forb
 
-## Remove space within plant names (otherwise parse error in plot)
-names(forb) <- gsub(" ", ".", names(forb))
-
 ## Redundancy analysis
 rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(fine_sc, select = -c(SiteID)))
 
 ## RDA plot
 plotrda_fineforb <- ggrda(rda,
-                              txt = 3,
+                              txt = 4,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 2.5,
+                              addsize = 3.5,
                               size = 1,
                               arrow = 0.2,
-                              #repel = TRUE,
+                              repel = TRUE,
                               veccol = "darkred",
                               labcol = "darkred",
                               xlims = c(-1.2, 1.2),
-                              ylims = c(-1.2, 1.2))
+                              ylims = c(-1.2, 1.2)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_forb.png"),
+    size = 0.2
+  )
 plotrda_fineforb
+ggsave("outputs/singleRDA/plotrda_fineforb.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1661,13 +1831,12 @@ rdafineforb <- rdatable |>
 rdastat_forb <- purrr::reduce(list(rdaregioforb, rdalandscapeforb, rdafieldforb, rdafineforb), dplyr::full_join)
 
 ## Plot summary
-rda_forb <- ggarrange(plotrda_regioforb, plotrda_landscapeforb, plotrda_fieldforb, plotrda_fineforb,
-                       labels = c("A", "B", "C", "D"),
-                       ncol = 2,
-                       nrow = 2)
-rda_forb
-ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 15, units = "cm", bg = "white")
-
+# rda_forb <- ggarrange(plotrda_regioforb, plotrda_landscapeforb, plotrda_fieldforb, plotrda_fineforb,
+#                        labels = c("A", "B", "C", "D"),
+#                        ncol = 2,
+#                        nrow = 2)
+# rda_forb
+# ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 15, units = "cm", bg = "white")
 
 #### RDA beetle community data ####
 
@@ -1678,18 +1847,29 @@ rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(regional_sc, s
 
 ## RDA plot
 plotrda_regiobeetle <- ggrda(rda,
-                              txt = 3,
+                              txt = 4,
                               ptslab = TRUE,
                               addcol = "black",
-                              addsize = 2.5,
+                              addsize = 3.5,
                               size = 1,
                               arrow = 0.2,
                               #repel = TRUE,
                               veccol = "cyan4",
                               labcol = "cyan4",
                             xlims = c(-1.8, 1.8),
-                            ylims = c(-1.8, 1.8))
+                            ylims = c(-1.8, 1.8)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.4, y = 1.5, image = "illustrations/Icons/icon_regional.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.4, y = -1.5, image = "illustrations/Icons/icon_beetle.png"),
+    size = 0.2
+  )
 plotrda_regiobeetle
+ggsave("outputs/singleRDA/plotrda_regiobeetle.png", plot = plotrda_regiobeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1734,18 +1914,30 @@ rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(landscape_sc, 
 
 ## RDA plot
 plotrda_landscapebeetle <- ggrda(rda,
-                                  txt = 3,
+                                  txt = 4,
                                   ptslab = TRUE,
                                   addcol = "black",
-                                  addsize = 2.5,
+                                  addsize = 3.5,
                                   size = 1,
                                   arrow = 0.2,
-                                  #repel = TRUE,
+                                  repel = TRUE,
+                                 force = 1,
                                   veccol = "chartreuse4",
                                   labcol = "chartreuse4",
                                 xlims = c(-1.4, 1.4),
-                                ylims = c(-1.4, 1.4))
+                                ylims = c(-1.4, 1.4)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = -1.15, image = "illustrations/Icons/icon_beetle.png"),
+    size = 0.2
+  )
 plotrda_landscapebeetle
+ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1790,18 +1982,29 @@ rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(field_sc, sele
 
 ## RDA plot
 plotrda_fieldbeetle <- ggrda(rda,
-                                txt = 3,
+                                txt = 4,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 2.5,
+                                addsize = 3.5,
                                 size = 1,
                                 arrow = 0.2,
-                                #repel = TRUE,
+                                repel = TRUE,
                                 veccol = "darkgoldenrod3",
                                 labcol = "darkgoldenrod3",
                               xlims = c(-1.3, 1.3),
-                              ylims = c(-1.3, 1.3))
+                              ylims = c(-1.3, 1.3)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1, y = -1.05, image = "illustrations/Icons/icon_beetle.png"),
+    size = 0.2
+  )
 plotrda_fieldbeetle
+ggsave("outputs/singleRDA/plotrda_fieldbeetle.png", plot = plotrda_fieldbeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1846,18 +2049,30 @@ rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(fine_sc, selec
 
 ## RDA plot
 plotrda_finebeetle <- ggrda(rda,
-                                txt = 3,
+                                txt = 4,
                                 ptslab = TRUE,
                                 addcol = "black",
-                                addsize = 2.5,
+                                addsize = 3.5,
                                 size = 1,
                                 arrow = 0.2,
                                 repel = TRUE,
+                            force = 2,
                                 veccol = "darkred",
                                 labcol = "darkred",
-                              xlims = c(-1, 1),
-                              ylims = c(-1, 1))
+                              xlims = c(-1.1, 1.1),
+                              ylims = c(-1.1, 1.1)) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_fine.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_beetle.png"),
+    size = 0.2
+  )
 plotrda_finebeetle
+ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 ## Adjusted variance explained by the RDA model
 rsq <- as.data.frame(RsquareAdj(rda)) |> 
@@ -1897,17 +2112,17 @@ rdafinebeetle <- rdatable |>
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
-## Stat summary
+# Stat summary
 rdastat_beetle <- purrr::reduce(list(rdaregiobeetle, rdalandscapebeetle, rdafieldbeetle, rdafinebeetle), dplyr::full_join)
-
-## Plot summary
-rda_beetle <- ggarrange(plotrda_regiobeetle, plotrda_landscapebeetle, plotrda_fieldbeetle, plotrda_finebeetle,
-                        labels = c("A", "B", "C", "D"),
-                        ncol = 2,
-                        nrow = 2)
-rda_beetle
-ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 15, units = "cm", bg = "white")
-
+# 
+# ## Plot summary
+# rda_beetle <- ggarrange(plotrda_regiobeetle, plotrda_landscapebeetle, plotrda_fieldbeetle, plotrda_finebeetle,
+#                         labels = c("A", "B", "C", "D"),
+#                         font.label = list(size = 12),
+#                         ncol = 2,
+#                         nrow = 2)
+# rda_beetle
+# ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 15, units = "cm", bg = "white")
 
 #### Significant RDA results ####
 
@@ -1921,16 +2136,14 @@ ggsave("outputs/RDA_beetle.png", plot = rda_beetle, width = 15, height = 15, uni
 # rdastat_all <- purrr::reduce(list(rdafjordlandscape, rdagrazinglocenvi, rdalocenvigrass, rdalocenviforb), dplyr::full_join)
 
 # Plot
-rdall <- ggarrange(plotrda_regiolandscape, plotrda_fieldfine, plotrda_finegrass, plotrda_fineforb, plotrda_landscapebeetle,
-                   labels = c("A", "B", "C", "D", "E"),
-                   ncol = 2,
-                   nrow = 3,
-                   font.label = list(size = 12),
-                   hjust = -2.7)
-rdall
-ggsave("outputs/RDAresults.png", plot = rdall, width = 16, height = 20, units = "cm", bg = "white")
-
-
+# rdall <- ggarrange(plotrda_regiolandscape, plotrda_fieldfine, plotrda_finegrass, plotrda_fineforb, plotrda_landscapebeetle,
+#                    labels = c("A", "B", "C", "D", "E"),
+#                    ncol = 2,
+#                    nrow = 3,
+#                    font.label = list(size = 12),
+#                    hjust = -2.7)
+# rdall
+# ggsave("outputs/RDAresults.png", plot = rdall, width = 16, height = 20, units = "cm", bg = "white")
 
 #
 ## Distribution residuals for significant relationships with terms
