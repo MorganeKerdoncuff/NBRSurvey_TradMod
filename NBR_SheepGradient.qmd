@@ -2,8 +2,12 @@
 title: "Adaptive grazing management along a productivity gradient supports ecosystem service complementarity"
 format:
   pdf:
+    keep-tex: true
+    documentclass: scrartcl
     mainfont: "Times New Roman"
+    sansfont: "Times New Roman"
     linestretch: 1.15
+    fig-dpi: 800
     include-in-header: 
       text: |
         \usepackage{lscape}
@@ -28,7 +32,7 @@ author:
       - UNESCO Chair on Sustainable Heritage and Environmental Management, University of Bergen, Norway
       - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
 date: today
-bibliography: NBR_survey.bib
+bibliography: NBR_TRADMOD.bib
 execute: 
   echo: false
 ---
@@ -39,7 +43,12 @@ source("scripts/NBR_TradMod_SheepFunc.R", local = knitr::knit_global())
 ```
 
 ```{r setup, include=FALSE}
+
+# Decimal numbers
 op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
+
+# ggplot font size
+# theme_set(theme_bw(base_size = 18))
 ```
 
 ^1^ Department of Biological Sciences, University of Bergen, Norway
@@ -60,7 +69,7 @@ In coastal and mountain outfields, low-intensity management have favoured crypto
 Infields and outfields showed both complementary and additive contributions to multiple ecosystem services, including carbon storage, water retention and pollination. 
 In order to ensure the resilience of the food production systems, agricultural policies should aim to support the multifunctionality of agroecological landscapes at both ends of the productivity gradient.
 
-Keywords: semi-natural grasslands; semi-natural heathlands; plant diversity; low-intensity grazing
+Keywords: semi-natural grasslands; semi-natural heathlands; diversity; aboveground biomass; soil carbon; mesofauna
 
 
 # INTRODUCTION
@@ -72,8 +81,8 @@ These farming models have shaped diversified semi-natural habitats and heterogen
 However, such models have drastically declined since the introduction of fertiliser and machinery, which have led to the intensification of management in fertile fields while nutrient-poor habitats were gradually abandoned [@billenReshapingEuropeanAgrofood2021; @ramankuttyTrendsGlobalAgricultural2018].
 These two concurring trends resulted in generalised loss and degradation of grazing habitats and a subsequent homogenisation of agricultural landscapes [@bardgettCombattingGlobalGrassland2021; @newboldGlobalEffectsLand2015], which have been especially severe in Europe [@gossnerLanduseIntensificationCauses2016; @jongmanHomogenisationFragmentationEuropean2002].
 
-In this context, the ecosystem service framework offers a useful toolbox for facilitating conservation measures, as it encompass the contribution to an extensive range of benefits beyond productivity-oriented perspectives.
-Semi-natural habitats can be assessed and compared not only according to their productivity but to their contribution to an extensive range of benefits [@geertsemaActionableKnowledgeEcological2016; @germanRelationshipsMultipleAspects2017].
+In this context, the ecosystem service framework offers a useful toolbox for facilitating conservation measures beyond productivity-oriented perspectives [@bardgettCombattingGlobalGrassland2021; @bengtssonGrasslandsMoreImportant2019].
+Semi-natural habitats can be assessed and compared according to their contributions to an extensive range of benefits, which are supported by different ecosystem functions [@geertsemaActionableKnowledgeEcological2016; @germanRelationshipsMultipleAspects2017].
 <!-- For example, semi-natural grasslands and heathlands greatly differ in their capacity to provide palatable biomass for livestock. -->
 In semi-natural grasslands, higher soil fertility enhances soil fauna activity through bottom-up processes [@sunEffectNitrogenPhosphorus2017; @zhangPhosphorusAdditionIncreases2023].
 Faster nutrient cycling favours the aboveground allocation of organic carbon [@clelandBelowgroundBiomassResponse2019], enhancing the production of biomass of higher quality and palatability for the livestock [@garciaEffectCompetitionIntensity2020].
@@ -81,41 +90,42 @@ However, stronger competition for light filter fast-growing species and may nega
 In semi-natural heathlands, abiotic constraints such as low nutrient availability, water saturation and/or short growing season limit soil biological activity [@wallGlobalDecompositionExperiment2008] and favour stress-tolerance strategies in plant communities [@maGlobalDistributionEnvironmental2021; @pierceLeafEconomicsSpectrum2007].
 Aboveground biomass is slower to regenerate and of lower nutritional quality [@nelsonPlantFactorsAffecting1994].
 On the other hand, slower decomposition and nutrient cycling processes enhance soil carbon sequestration [@liLongtermTemporalPatterns2023; @quinCallunaVulgarisdominatedUpland2015], while weaker competitive interactions favour the growth of a functionally diverse cryptogam layer [@austrheimPlantDiversityPatterns2002].
-
-- Lower forage production can thus be weighted against greater contributions to regulating services [@eldridgeGlobalContributionSoil2023; @walmsleyEnsuringLongtermProvision2021].
-- Important to investigate 
+Lower forage production can thus be weighted against greater contributions to regulating services, such as climate regulation or water storage [@eldridgeGlobalContributionSoil2023; @walmsleyEnsuringLongtermProvision2021].
+Investigating how different semi-natural habitats support ecosystem service delivery in agroecological landscapes is crucial to highlight the values of less fertile areas [@cusensSocioculturalValuesBiophysical2024; @patru-stupariuReviewChangesMountain2020; @walmsleyEnsuringLongtermProvision2021] and identify trade-offs generated by different land uses [@geertsemaActionableKnowledgeEcological2016; @germanRelationshipsMultipleAspects2017].
 
 <!-- In semi-natural heathlands, the slower soil biological process caused by water saturation and/or cold temperature limits primary production, but in return enhances carbon sequestration in the soil [@liLongtermTemporalPatterns2023; @quinCallunaVulgarisdominatedUpland2015].  -->
 <!-- The low grazing pressure creates a structurally heterogeneous and visually attractive landscape [@tilleyAnthropologyLandscape2017], and maintains a thick and highly functionally diverse bryophyte layer [@austrheimPlantDiversityPatterns2002] which contributes to freshwater supply and regulation [@huStructuralCharacteristicsMoss2023]. -->
-
 <!-- In semi-natural grasslands, higher soil fertility enhance soil biological activity and increase mesofauna abundance through bottom-up processes [@sunEffectNitrogenPhosphorus2017; @zhangPhosphorusAdditionIncreases2023]. -->
 <!-- Faster nutrient cycling processes favour the aboveground allocation of organic carbon [@clelandBelowgroundBiomassResponse2019], enhancing the production of biomass of higher quality and palatability for the livestock [@garciaEffectCompetitionIntensity2020]. -->
-
 <!-- These two concurring trends resulted in a generalised homogenisation and degradation of agricultural landscapes [@bardgettCombattingGlobalGrassland2021], with subsequent loss of biodiversity [@beckmannConventionalLandUse2019; @newboldGlobalEffectsLand2015], productivity [@isbellNutrientEnrichmentBiodiversity2013; @kwonGlobalEstimatesImpacts2016] and ecosystem services [@allanLandUseIntensification2015; @leprovostSupplyMultipleEcosystem2022]. -->
 <!-- In response, the past decades have seen a regained interest for diversified agricultural systems, that would support at the same time the ecological integrity of ecosystems, the sustainable use of land resources and the well-being of local communities [@altieriPerspectivesChallengesAgroecology2024; @garibaldiFarmingApproachesGreater2017]. -->
-
 <!-- In this context, the ecosystem service framework offers a useful toolbox for facilitating conservation measures towards less productive areas [@bardgettCombattingGlobalGrassland2021], as it provides:  -->
 <!-- 1) quantitative assessments of the direct and indirect benefits generated by the farmer management [@bengtssonGrasslandsMoreImportant2019; @bernuesSeeingNorthernEuropean2016];  -->
 <!-- 2) theoretical support for policy-oriented concepts such as multifunctionality [@kremenLandscapesThatWork2018; @wilsonWeakStrongMultifunctionality2008]; and  -->
 <!-- 3) intuitive methodology for engaging stakeholders and the general public through participatory approaches [@barracloughMappingStakeholderNetworks2022; @cusensParticipatoryMappingReveals2022].  -->
 <!-- Examining semi-natural habitats beyond the productivity lens allows us to highlight the values of less fertile areas [@cusensSocioculturalValuesBiophysical2024; @patru-stupariuReviewChangesMountain2020; @walmsleyEnsuringLongtermProvision2021] and to identify the trade-offs generated by different grazing regimes [@geertsemaActionableKnowledgeEcological2016; @germanRelationshipsMultipleAspects2017]. -->
 
-In Western Norway, the agroecological landscape has been safeguarded from severe intensification [@dramstadTenancyNorwegianAgriculture2010; @fjellstadPatternsChangeTwo1999], mainly because of the limiting environment of the fjord region [@ketzlerClimateNorway2021; @nesjeFjordsNorwayComplex2009].
+In Western Norway, agriculture has been safeguarded from severe intensification [@dramstadTenancyNorwegianAgriculture2010; @fjellstadPatternsChangeTwo1999], mainly because of the limiting environment of the fjord region [@ketzlerClimateNorway2021; @nesjeFjordsNorwayComplex2009].
 Fisher-farmer communities used to rely on mixed crop-livestock systems, referred as infield-outfield systems [@christiansenInfieldoutfieldSystemsCharacteristics1978], involving transhumance and rotational management across the whole fjord landscape [@austadHumaninfluencedVegetationTypes1991; @hjelleHesitantHuntersReview2006; @olssonAgroecosystemsNeolithicTime1991].
-Atlantic heathlands on the flat, indented coastal area, were grazed all year-round and regularly rejuvenated with rotational prescribed burning to improve fodder quality and palatability [@thorvaldsenGammalnorskSauOg2017; @vandvikManagementdrivenEvolutionDomesticated2014].
-The mountain ranges were exploited during the short growing season for cattle, sheep and goat summer farming to provide temporary rest for the hay fields in the lowlands [@olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004].
-In-between the least productive outfields (*utmark*) [@lillehammerPresentLandscapePerception2007], the more fertile central area was suitable for the management of infields (*innmark*) in pluriactive farms, encompassing arable lands, grazing fields and hay-meadows, as well as woodlands [@haugeGaldaneLaerdalWestern1988; @olssonAgroecosystemsNeolithicTime1991].
-This farming model based on energy transfers between infields and outfields has shaped a mosaic-like landscape of unprecedented ecological diversity, which is still valued as cultural heritage in present days [@olssonAgroecosystemsNeolithicTime1991].
-The productivist trend emerging after WWII led to the rationalisation of livestock production, with a transfer of domestic grazers to fertilised infields and a subsequent increase of farm size [@dramstadTenancyNorwegianAgriculture2010; @forbordDriversChangeNorwegian2014].
-On the other hand, outfields were gradually abandoned [@fjellstadPatternsChangeTwo1999; @hamreLandcoverStructuralChanges2007], causing the joint loss of cultural knowledge and ecological diversity associated with the traditional management of hay-meadows [@norderhaugBiotopePatternsAbundance2000; @wehnAdaptiveBiodiversityManagement2018], coastal heathlands [@lundbergAustevollChangingCoastal1991; @webbTraditionalManagementEuropean1998] and mountain summer farms [@olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004].
+<!-- Atlantic heathlands on the flat, indented coastal area, were grazed all year-round and regularly rejuvenated with rotational prescribed burning to improve fodder quality and palatability [@thorvaldsenGammalnorskSauOg2017; @vandvikManagementdrivenEvolutionDomesticated2014]. -->
+<!-- The mountain ranges were exploited during the short growing season for cattle, sheep and goat summer farming to provide temporary rest for the hay fields in the lowlands [@olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004]. -->
+<!-- In-between the least productive outfields (*utmark*) [@lillehammerPresentLandscapePerception2007], the more fertile central area was suitable for the management of infields (*innmark*) in pluriactive farms, encompassing arable lands, grazing fields and hay-meadows, as well as woodlands [@haugeGaldaneLaerdalWestern1988; @olssonAgroecosystemsNeolithicTime1991]. -->
+This farming model based on energy transfers between infields (*innmark*) and outfields (*utmark*) has shaped a mosaic-like landscape of unprecedented ecological diversity, which is still valued as cultural heritage in present days [@olssonAgroecosystemsNeolithicTime1991].
+The productivist trend emerging after WWII led to the rationalisation of livestock production, with a transfer of domestic grazers to fertilised grasslands and a subsequent increase of farm size [@dramstadTenancyNorwegianAgriculture2010; @forbordDriversChangeNorwegian2014].
+On the other hand, nutrient-poor heathlands on the coast and in the mountain ranges were gradually abandoned [@fjellstadPatternsChangeTwo1999; @hamreLandcoverStructuralChanges2007], causing a joint loss of cultural knowledge and ecological diversity [@lundbergAustevollChangingCoastal1991; @olssonLandscapeChangePatterns2000; @potthoffChangeMountainSummer2004].
 The socioeconomic decline that followed in rural areas has made any policy attempt to halt the land abandonment process particularly challenging [@daugstadAgricultureUpholderCultural2006; @forbordDriversChangeNorwegian2014].
 
 The designation of the Nordhordland UNESCO Biosphere Reserve in 2019, as a model area for the implementation of the Agenda 2030 the Sustainable Development Goals in Western Norway [@unescoNewRoadmapMan2017; @unescoManBiosphereProgramme2025], has supported ecosystem services-based research in both agricultural and non-agricultural habitats [e.g. @cusensSocioculturalValuesBiophysical2024; @demeauxJustGrazeIt2024].
-In this paper, we relied on the land use types inherited from the traditional infield-outfield system to investigate synergies and trade-offs between indicators of diversity (plant richness), aboveground production (aboveground biomass), soil biological activity (Collembola and Acari abundances) and soil carbon content (Loss on ignition) across the fjord landscape of the Nordhordland UNESCO Biosphere Reserve.
+In this paper, we relied on the land use types inherited from the traditional infield-outfield system to investigate synergies and trade-offs between contributions to ecosystem service delivery across the fjord landscape of the Nordhordland UNESCO Biosphere Reserve.
+We compared indicators of
+(1) diversity, i.e. total species richness of plant functional groups,
+(2) aboveground production, i.e. standing biomass of plant functional groups,
+(3) soil biological activity, i.e. abundances of soil Collembola and Acari,
+and (4) soil carbon storage, i.e. loss on ignition.
 Firstly, we verified whether the land cover classification into infield or outfield was still ecologically relevant, despite land use changes, using clustering analysis (Q1).
 We predicted field type to be the main factor of site aggregation as an indicator of inherent productivity and land use history (H1-A), and we expected geographical area (coast, fjord, mountain) to drive a secondary aggregation within field types (H1-B).
 Secondly, we relied on the clustering results to investigate trade-offs between primary production and plant functional group diversity aboveground, and between mesofauna abundance and carbon content belowground (Q2).
-We expected the sward of fertile sites to show lower species richness and higher proportion of palatable groups (forbs, monocotyledons), and the sward of nutrient-limited sites to be more diverse, especially for cryptogam species, and dominated by stress-tolerant groups (shrubs, cryptogams) (H2-A).
+We expected the vegetation of fertile sites to show lower species richness and higher proportion of palatable groups (forbs, monocotyledons), and the vegetation of nutrient-limited sites to be more diverse, especially for cryptogam species, and dominated by stress-tolerant groups (shrubs, cryptogams) (H2-A).
 We also predicted the soil of fertile sites to show lower organic carbon content but higher abundance of Acari and Collembola compared with nutrient-limited sites (H2-B).
 
 <!-- and heath also used to be scythed for both hay and domestic use [@lundbergAustevollChangingCoastal1991] -->
@@ -184,7 +194,7 @@ The sampling area was when possible a 20 m x 20 m square, if not a 40 m x 10 m s
 Within this area, we nested three plots of 3 m x 3 m separated by at least 6 m from each other and themselves divided into nine subplots of 1 m^2^.
 Five subplots were dedicated to the non-destructive inventory of plant species and the remaining four subplots were used for biomass and/or soil sampling (@fig-sampling).
 
-![Nested sampling design applied to a representative 400 m^2^ area of each grazing field. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org)](illustrations/NBR_SheepSamplingDesign.png){#fig-sampling width=100%}
+![Nested sampling design applied to a representative 400 m^2^ area of each grazing field. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](illustrations/NBR_SheepSamplingDesign.png){#fig-sampling width=100%}
 
 In each non-destructive subplot (15 per site), we identified all vascular and cryptogam species (except lichens) using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed them a percent cover by one of the same two observers.
 When necessary, specimens were collected, coded and brought for microscopic or expert identification.
@@ -195,13 +205,13 @@ Finally, in each destructive subplot we sampled soil with a stainless steel cyli
 For each plot, one core out of four (3 per site) was used for Berlese-Tullgren extraction of mesofauna [@tullgrenSehrEinfacherAusleseapparat1918], with aluminium funnels of 62 cm height, 33.5 cm top diameter and 5.3 cm exit diameter.
 The soil was kept on 2 cm mesh size grids under heating lamps (50 W) for 96 hours at a distance of approximately 40 cm from the bulb to allow the surface to slowly dry.
 The extracted samples were stored in 70% ethanol for sorting and counting of Acari and Collembola. 
-The three remaining soil cores were sieved and merged at the plot level (3 per site) for the determination of loss of ignition (LOI) in a certified analysis laboratory.
+The three remaining soil cores were sieved and merged at the plot level (3 per site) for the determination of loss on ignition (LOI) in a certified analysis laboratory.
 
 ## Data analysis
 
 All analyses were performed in R (v.4.4.1) with R-Studio (v.2024.04.2+764) [@positteamRStudioIntegratedDevelopment2024; @rcoreteamLanguageEnvironmentStatistical2024].
 We used the *fpc* [@hennigFpcFlexibleProcedures2024] and *mri* [@cugmasMriModifiedRand2019] packages for clustering validation, the *rcompanion* package for effect size statistics [@mangiaficoRcompanionFunctionsSupport2024] and the *ggplot2* package for visualisation [@wickhamGgplot2CreateElegant2024].
-All our variables were scaled prior to analysis to account for unit differences.
+Prior to analyses, all data except species richness data were averaged at the site level, and all data were standardised to 0 mean and standard deviation 1.
 
 We first performed a Ward's hierarchical agglomerative clustering on an Euclidean-based distance matrix, which minimises within-group dispersion by computing squared dissimilarities [@murtaghWardHierarchicalAgglomerative2014].
 We verified the quality of our clustering with the Dunn index, which is the ratio between the minimum distance between clusters and the maximum distance within clusters [@halkidiClusteringValidationTechniques2001].
@@ -215,7 +225,7 @@ We then made pairwise comparisons between primary and secondary clusters using n
 <!-- and were classified into three categories: 1) diversity, including average species richness of cryptogams (bryophytes and lycophytes), monocotyledons, forbs and woody plants per m^2^; 2) production, including average aboveground biomass of cryptogams, monocotyledons, forbs and woody plants per m^2^; 3) decomposition, including average abundance of collembola and acari per m^2^ and average LOI. -->
 
 ```{r tbl-varsum}
-#| tbl-cap: "Summary statistics of indicator variables."
+#| tbl-cap: "Summary statistics of indicator variables characterising diversity, aboveground production, soil activity and carbon content in semi-natural grasslands and heathlands of the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -223,8 +233,12 @@ We then made pairwise comparisons between primary and secondary clusters using n
 library(gt)
 library(tidyverse)
 
+# Selection variables
+varsum <- subset(data_sheep, select = -c(DIV_tot, fieldclass))
+names(varsum) <- gsub("_", "", names(varsum))
+
 # Summary statistics
-varsum <- data_sheep |> 
+varsum <- varsum |> 
   summarise(across(where(is.numeric), .fns = 
                      list(Mean = mean,
                           sd = sd,
@@ -232,47 +246,32 @@ varsum <- data_sheep |>
                           Max = max
                      ))) |> 
   pivot_longer(everything(), names_sep = "_", names_to = c( "Variable", ".value")) |>
-  mutate(Set = ifelse(Variable == "AnnPreci" |
-                        Variable == "Elev" |
-                        Variable == "FjordDist" |
-                        Variable == "TempRange" |
-                        Variable == "JulTemp", "Regional", ifelse(
-                          Variable == "Cultivated" |
-                          Variable == "Forest" | 
-                          Variable == "Infield" | 
-                          Variable == "Artificial" |
-                          Variable == "Outfield" |
-                          Variable == "Wetland", "Landscape", ifelse(
-                            Variable == "FieldArea" |
-                            Variable == "StockDens" |
-                            Variable == "Cattle" |
-                            Variable == "Sheep", "Field", "Fine"
+  mutate(Set = ifelse(Variable == "DIVcryptogams" |
+                        Variable == "DIVforbs" |
+                        Variable == "DIVmonocotyledons" |
+                        Variable == "DIVwoody", "Diversity", ifelse(
+                          Variable == "AGPcryptogams" |
+                          Variable == "AGPforbs" | 
+                          Variable == "AGPmonocotyledons" | 
+                          Variable == "AGPwoody", "Aboveground production", ifelse(
+                            Variable == "BGPacari" |
+                            Variable == "BGPcollembola", "Soil activity", "Carbon content"
     )
   ))) |> 
   mutate(
     Variable = dplyr::recode(
       Variable,
-          "Elev" = "Elevation (masl)",
-    "AnnPreci" = "Annual precipitation (mm)",
-    "JulTemp" = "Maximum July temperature (°C)",
-    "TempRange" = "Annual temperature range (°C)",
-    "FjordDist" = "Distance to fjord (m)",
-    "Cultivated" = "Cultivated area (%)",
-    "Forest" = "Forest area (%)",
-    "Infield" = "Infield area (%)",
-    "Outfield" = "Outfield area (%)",
-    "Artificial" = "Infrastructure area (%)",
-    "Wetland" = "Wetland area (%)",
-    "FieldArea" = "Field site area (ha)",
-    "StockDens" = "Stocking density (LU/ha)",
-    "Bryo" = "Bryophyte cover (%)",
-    "MeanHeight" = "Sward height (cm)",
-    "BD" = "Bulk density (g/cm3)",
-    "pH" = "pH",
-    "Phosph" = "Available phosphorus (mg/100g)",
-    "SoilPene" = "Soil penetration (cm)",
-    "Aspect" = "Slope aspect (°)",
-    "Slope" = "Slope angle (°)"
+    "DIVcryptogams" = "Cryptogam species richness",
+    "DIVforbs" = "Forb species richness",
+    "DIVmonocotyledons" = "Monocotyledon species richness",
+    "DIVwoody" = "Woody species richness",
+    "AGPcryptogams" = "Cryptogam dry weight (g/m2)",
+    "AGPmonocotyledons" = "Monocotyledon dry weight (g/m2)",
+    "AGPwoody" = "Woody dry weight (g/m2)",
+    "AGPforbs" = "Forb dry weight (g/m2)",
+    "BGPacari" = "Acari density (/m2)",
+    "BGPcollembola" = "Collembola density (/m2)",
+    "CLOI" = "Loss on ignition (% dry weight)"
     )
   ) |> 
   arrange(Variable)
@@ -290,23 +289,23 @@ varsum |>
   fmt_number(
     decimals = 1,
   ) |>
-  fmt_number(
-    decimals = 0,
-    sep_mark = " ",
-    rows = c("Elevation (masl)", "Annual precipitation (mm)", "Distance to fjord (m)", "Slope aspect (°)")
-  ) |>
-  fmt_number(
-    decimals = 2,
-    rows = c("Stocking density (LU/ha)")
-  ) |>
-  sub_values(
-    rows = c("Sheep", "Cattle"),
-    fn = function(x) x >=0 & x <= 1,
-    replacement = "-"
-  ) |> 
-  sub_missing(missing_text = "-") |>
+  # fmt_number(
+  #   decimals = 0,
+  #   sep_mark = " ",
+  #   rows = c("Elevation (masl)", "Annual precipitation (mm)", "Distance to fjord (m)", "Slope aspect (°)")
+  # ) |>
+  # fmt_number(
+  #   decimals = 2,
+  #   rows = c("Stocking density (LU/ha)")
+  # ) |>
+  # sub_values(
+  #   rows = c("Sheep", "Cattle"),
+  #   fn = function(x) x >=0 & x <= 1,
+  #   replacement = "-"
+  # ) |> 
+  # sub_missing(missing_text = "-") |>
   row_group_order(
-    groups = c("Regional", "Landscape", "Field", "Fine")
+    groups = c("Diversity", "Aboveground production", "Soil activity", "Carbon content")
   ) |> 
   opt_stylize(style = 3, color = 'gray') |>
   tab_options(
@@ -363,22 +362,48 @@ avgoutfieldsp <- filter(avgrichness, FieldType == "outfield")
 We registered a total of `r op(nrow(totplantsp), 0)` plant species, among which `r op(nrow(totforbsp), 0)` were forbs, `r op(nrow(totmonocsp), 0)` were monocotyledons, `r op(nrow(totcryptosp), 0)` were cryptogams, including mosses, liverworts and lycophytes, and `r op(nrow(totwoodysp), 0)` were shrubs and woody species.
 We also collected a total of `r op(sum(mesobio_sheep$Acari), 0)` acari and `r op(sum(mesobio_sheep$Collembola), 0)` collembola across all sites.
 Average plant species richness was `r op(mean(avginfieldsp$DIV_tot))` for infields and `r op(mean(avgoutfieldsp$DIV_tot))` for outfields.
-Woody biomass, woody species richness, cryptogam species richness, total plant species richness and loss of ignition were strongly positively correlated with each other, and were overall negatively correlated with forb diversity (SI: @fig-cor).
+Woody biomass, woody species richness, cryptogam species richness, total plant species richness and loss on ignition were strongly positively correlated with each other, and were overall negatively correlated with forb diversity (@fig-corpanel).
 
 ## Hierarchical clustering
 
 We obtained two primary clusters ClA and ClB from the first branching, encompassing 13 and 10 sites respectively (Dunn index = `r op(clusterstat$DunnIndex[1], 2)`) (@tbl-clusterquality).
-Outfields (ClA) were clearly separated from infields (ClB) (adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[1], 2)`), with only two mismatched infields (FI6, CI5) in ClA, and one mismatched outfield (FO1), the only fjord outfield, in ClB (@fig-clustertree).
+Outfields (ClA) were clearly separated from infields (ClB) (adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[1], 2)`), with only two mismatched infields (FI6, CI5) in ClA, and one mismatched outfield (FO1), the only fjord outfield, in ClB (@fig-dendrogram).
 The second branching resulted in four secondary clusters (Dunn index = `r op(clusterstat$DunnIndex[2], 2)`), with Cl1 (4 sites) and Cl4 (9 sites) from the outfield group, and Cl2 (3 sites) and Cl3 (9 sites) for the infield group.
-Overall, outfield clusters showed higher within-group dispersion than infield clusters (@fig-clusterord).
+Overall, outfield clusters showed higher within-group dispersion than infield clusters (@fig-nmds).
 The influence of geographical area on site aggregation was relatively clear for outfields, with only coastal outfields in Cl1, and all mountain outfields, with only one mismatched coastal outfield (CO2), in Cl4.
-For infields however, there was no consistent aggregation according to geographical area (adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[2], 2)`).
+For infields however, there was no consistent aggregation according to geographical area (adjusted Wallace Index = `r op(clusterstat$AdjWallaceIndex[2], 2)`) (@tbl-clusterquality).
 
-::: {layout-ncol=1}
-![Dendrogram of site hierarchical clustering with Ward's criterion based on Euclidean distance (k = 5). Sites are identified according to ecological zone (C: coast; F: fjord; M: mountain) and field type (O: outfield; I: infield). Primary clusters A and B from the first branching are characterised by pink and orange gradients respectively. Secondary clusters 1, 5 and 4 are represented with light, medium and dar pink respectively, and secondary clusters 3 and 2 are represented with light and dark orange respectively. ](outputs/cluster_tree.png){#fig-clustertree}
+:::{#fig-clustering}
+```{r fig-dendrogram}
+#| fig-height: 4
+#| fig-width: 8
+#| fig-cap: "Dendrogram of site hierarchical clustering with Ward's criterion based on Euclidean distance (k = 5). Sites are identified according to ecological zone (C: coast; F: fjord; M: mountain) and field type (O: outfield; I: infield). Primary clusters A and B from the first branching are characterised by pink and orange gradients respectively. Secondary clusters 1, 5 and 4 are represented with light, medium and dar pink respectively, and secondary clusters 3 and 2 are represented with light and dark orange respectively."
+#| message: false
+#| warning: false
+#| echo: false
 
-![Projection of the hierarchical clustering using Non-Metric Multidimensional Scaling (NMDS). Point shape and colour represents ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; grey: outfield) respectively.](outputs/cluster_NMDS.png){#fig-clusterord}
+plot(dendro_sheep)
+```
+
+```{r fig-nmds}
+#| fig-height: 4
+#| fig-width: 8
+#| fig-cap: "Projection of the hierarchical clustering using Non-Metric Multidimensional Scaling (NMDS). Point shape and colour represents ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; grey: outfield) respectively."
+#| message: false
+#| warning: false
+#| echo: false
+
+ggcluster_ord
+```
 :::
+
+<!-- ::: {layout-ncol=1} -->
+<!-- ![Dendrogram of site hierarchical clustering with Ward's criterion based on Euclidean distance (k = 5). Sites are identified according to ecological zone (C: coast; F: fjord; M: mountain) and field type (O: outfield; I: infield). Primary clusters A and B from the first branching are characterised by pink and orange gradients respectively. Secondary clusters 1, 5 and 4 are represented with light, medium and dar pink respectively, and secondary clusters 3 and 2 are represented with light and dark orange respectively. ](outputs/cluster_tree.png){#fig-clustertree} -->
+
+<!-- ![Projection of the hierarchical clustering using Non-Metric Multidimensional Scaling (NMDS). Point shape and colour represents ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; grey: outfield) respectively.](outputs/cluster_NMDS.png){#fig-clusterord} -->
+<!-- ::: -->
+
+\newpage
 
 ## Ecological trade-offs and synergies
 
@@ -387,84 +412,47 @@ higher woody biomass (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim 
 and higher species richness of cryptogams (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_cryptogams_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_cryptogams_sd)`)
 and shrubs (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_woody_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_woody_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_woody_sd)`).
 On the other hand, infields had higher forb biomass (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$AGP_forbs_sd)` g.m^-2^; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$AGP_forbs_sd)` g.m^-2^)
-and species richness (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_sd)`) (@fig-clusterplots A).
+and species richness (mean~ClA~ = `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 1)$DIV_forbs_sd)`; mean~ClB~ = `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_mean)` &plusmn; `r op(filter(sheep_summary_prim, cluster_prim == 2)$DIV_forbs_sd)`) (@fig-clusterprim).
 Coastal outfields from secondary cluster Cl1 showed on average higher biomass of cryptogams (mean~Cl1~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_cryptogams_sd)` g.m^-2^; mean~Cl4~ = `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_cryptogams_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_cryptogams_sd)` g.m^-2^)
-and shrubs (mean~Cl1~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_sd)`; mean~Cl4~ = `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_sd)` g.m^-2^) compared with mountain outfields in Cl4 (@fig-clusterplots B).
-Regarding infields, the only significant factor distinguishing the three sites in Cl2 was higher Acari abundance (mean~Cl2~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 2)$BGP_acari_sd)` m^-2^; mean~Cl3~ = `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_sd)` m^-2^) (@fig-clusterplots C).
+and shrubs (mean~Cl1~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 1)$AGP_woody_sd)`; mean~Cl4~ = `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 4)$AGP_woody_sd)` g.m^-2^) compared with mountain outfields in Cl4 (@fig-clusterseca).
+Regarding infields, the only significant factor distinguishing the three sites in Cl2 was higher Acari abundance (mean~Cl2~ = `r op(filter(sheep_summary_sec, cluster_sec == 1)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 2)$BGP_acari_sd)` m^-2^; mean~Cl3~ = `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_mean)` &plusmn; `r op(filter(sheep_summary_sec, cluster_sec == 3)$BGP_acari_sd)` m^-2^) (@fig-clustersecb).
 
-![Comparison of decomposition, diversity and productivity variables between (A) primary and (B and C) secondary clusters with non-parametric unpaired Mann-Whitney tests. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001](outputs/clusterplot_all.png){#fig-clusterplots}
-
-\scriptsize
-
-```{r wcxtest}
-#| label: tbl-wcxtest
-#| tbl-cap: "Results from the unpaired Mann-Whitney tests (W-stat) and associated Glass rank biserial correlation coefficient (rg) for effect size between primary clusters A and B, secondary clusters 1 and 4, and secondary cluster 2 and 3."
+```{r fig-clusterprim}
+#| fig-height: 4
+#| fig-width: 8
+#| fig-cap: "Comparison of decomposition, diversity and productivity variables between primary clusters A and B with non-parametric unpaired Mann-Whitney tests. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001."
 #| message: false
 #| warning: false
+#| echo: false
 
-library(gt)
-library(tidyverse)
-
-wcxtest <- wcx_stat
-wcxtest <- wcxtest |> 
-  pivot_longer(cols = c(W, pval, rg), names_to = "stat", values_to = "val") |> 
-  mutate(statclus = ifelse(
-    cluster == "primary", paste(stat, 1, sep = ""), ifelse(
-      cluster == "secondaryA", paste(stat, "2A", sep = ""), paste(stat, "2B", sep = "")
-    )
-  ))
-
-wcxtest <- subset(wcxtest, select = c(var, statclus, val))
-wcxtest <- wcxtest |> 
-  pivot_wider(names_from = statclus, values_from = val)
-
-wcxtest |> 
-  gt() |> 
-  # gt(rowname_col = "var") |> 
-  cols_label(
-    W1 = "W-stat",
-    pval1 = "p.value",
-    rg1 = "rg",
-    W2A = "W-stat",
-    pval2A = "p.value",
-    rg2A = "rg",
-    W2B = "W-stat",
-    pval2B = "p.value",
-    rg2B = "rg",
-    var = ""
-  ) |>
-  fmt_number(
-    columns = c("pval1", "pval2A", "pval2B"),
-    decimals = 3
-  ) |> 
-  fmt_number(
-    columns = c("rg1", "rg2A", "rg2B"),
-    decimals = 2
-  ) |>
-  fmt_number(
-    columns = c("W1", "W2A", "W2B"),
-    decimals = 0
-  ) |>
-    tab_spanner(
-      label = "ClA vs ClB",
-      columns = c("W1", "pval1", "rg1")
-    ) |> 
-    tab_spanner(
-      label = "Cl1 vs Cl4",
-      columns = c("W2A", "pval2A", "rg2A")
-    ) |> 
-    tab_spanner(
-      label = "Cl2 vs Cl3",
-      columns = c("W2B", "pval2B", "rg2B")
-    ) |> 
-  opt_stylize(style = 3, color = 'gray') |> 
-    tab_options(
-    table.font.size = 11
-  )
-
+clusterplot_prim
 ```
 
-\normalsize
+:::{#fig-clustersec}
+```{r fig-clusterseca}
+#| fig-height: 4
+#| fig-width: 8
+#| message: false
+#| warning: false
+#| echo: false
+
+clusterplot_secA
+```
+
+```{r fig-clustersecb}
+#| fig-height: 4
+#| fig-width: 8
+#| message: false
+#| warning: false
+#| echo: false
+
+clusterplot_secB
+```
+
+Comparison of decomposition, diversity and productivity variables between (a) secondary clusters 1 and 4 and (b) secondary clusters 2 and 3 with non-parametric unpaired Mann-Whitney tests. Significance levels are: ° for p-value < 0.1; * for p-value < 0.05; ** for p-value < 0.01; *** for p-value < 0.001.
+:::
+
+\newpage
 
 # DISCUSSION
 
@@ -511,7 +499,7 @@ Increasing stocking density in subalpine habitats could for instance lead to the
 Regarding prescribed burning, the optimal time interval between fires in order to minimise annual carbon loss depends on climate conditions:
 for example, @santanaModellingCarbonEmissions2016 observed that a 10 years interval between fire in British heahtlands maximised carbon loss in wetter and colder sites but minimised it in warmer and drier sites.
 
-## No consistent trends of soil mesofauna abundance
+## Soil mesofauna abundance showed not related to habitat productivity
 
 We expected the abundance of Acari and Collembola to be representative of soil biological activity, which should be enhanced by the higher resource availability and the lower environmental constraints of infields [@birkhoferSoilFaunaFeeding2011; @ceniniLinkagesExtracellularEnzyme2016].
 However, the relationship between habitat productivity and mesofauna abundance seems largely driven by the trophic structure of the community [@georgeEvaluationMesofaunaCommunities2017].
@@ -622,11 +610,18 @@ The dataset for this manuscript is planned to be submitted to DataverseNO (https
 
 # SUPPLEMENTARY INFORMATION
 
+```{=tex}
+\appendix
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+```
+
 \newpage
 \blandscape
 
-``` {r Figcor}
-#| label: fig-cor
+``` {r fig-corpanel}
 #| fig-cap: "Correlations between indicators of diversity, aboveground production, soil activity and soil carbon content in sheep-grazed grasslands and heathlands in the fjord landscape of the Nordhordland UNESCO Biosphere Reserve."
 #| fig-asp: 0.7
 #| fig-width: 10
@@ -641,8 +636,7 @@ cor_panel
 
 \scriptsize
 
-```{r clusterquality}
-#| label: tbl-clusterquality
+```{r tbl-clusterquality}
 #| tbl-cap: "Internal validation measures and adjusted Wallace index for the first and second branching of the hierarchical clustering with Ward's criterion (k = 5) between sheep-grazed grasslands and heathlands in the fjord landscape of the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
@@ -695,6 +689,73 @@ clusterqcheck |>
     tab_options(
     table.font.size = 11
   )
+```
+
+```{r tbl-wcxtest}
+#| tbl-cap: "Results from the unpaired Mann-Whitney tests (W-stat) and associated Glass rank biserial correlation coefficient (rg) for effect size between primary clusters A and B, secondary clusters 1 and 4, and secondary cluster 2 and 3."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+wcxtest <- wcx_stat
+wcxtest <- wcxtest |> 
+  pivot_longer(cols = c(W, pval, rg), names_to = "stat", values_to = "val") |> 
+  mutate(statclus = ifelse(
+    cluster == "primary", paste(stat, 1, sep = ""), ifelse(
+      cluster == "secondaryA", paste(stat, "2A", sep = ""), paste(stat, "2B", sep = "")
+    )
+  ))
+
+wcxtest <- subset(wcxtest, select = c(var, statclus, val))
+wcxtest <- wcxtest |> 
+  pivot_wider(names_from = statclus, values_from = val)
+
+wcxtest |> 
+  gt() |> 
+  # gt(rowname_col = "var") |> 
+  cols_label(
+    W1 = "W-stat",
+    pval1 = "p.value",
+    rg1 = "rg",
+    W2A = "W-stat",
+    pval2A = "p.value",
+    rg2A = "rg",
+    W2B = "W-stat",
+    pval2B = "p.value",
+    rg2B = "rg",
+    var = ""
+  ) |>
+  fmt_number(
+    columns = c("pval1", "pval2A", "pval2B"),
+    decimals = 3
+  ) |> 
+  fmt_number(
+    columns = c("rg1", "rg2A", "rg2B"),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = c("W1", "W2A", "W2B"),
+    decimals = 0
+  ) |>
+    tab_spanner(
+      label = "ClA vs ClB",
+      columns = c("W1", "pval1", "rg1")
+    ) |> 
+    tab_spanner(
+      label = "Cl1 vs Cl4",
+      columns = c("W2A", "pval2A", "rg2A")
+    ) |> 
+    tab_spanner(
+      label = "Cl2 vs Cl3",
+      columns = c("W2B", "pval2B", "rg2B")
+    ) |> 
+  opt_stylize(style = 3, color = 'gray') |> 
+    tab_options(
+    table.font.size = 11
+  )
+
 ```
 
 \normalsize
