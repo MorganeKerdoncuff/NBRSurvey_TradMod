@@ -661,8 +661,8 @@ data_sheep_plot <- data_sheep_sc |>
                values_to = "sc_val") |> 
   mutate(var_group = ifelse(
     grepl("DIV_", variables), "diversity", ifelse(
-      grepl("BGP_", variables), "belowground production", ifelse(
-        variables == "C_LOI", "C sequestration", "aboveground production"
+      grepl("BGP_", variables), "soil activity", ifelse(
+        variables == "C_LOI", "carbon content", "aboveground production"
       )
     )
   )) |> 
@@ -683,7 +683,7 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
   ggplot(aes(x = variables)) +
   xlab("") +
   ylab("") +
-  labs("") +
+  # labs("") +
   coord_flip() +
   theme_bw() +
   theme(
@@ -692,21 +692,21 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.x = element_blank(),
-    axis.text.y = element_text(size = 8),
+    axis.text.y = element_text(size = 10),
     legend.title = element_blank()
   ) +
   scale_x_discrete(limits = c("DIV_woody", "DIV_forbs", "DIV_monocotyledons", "DIV_cryptogams", "AGP_woody", "AGP_forbs", "AGP_monocotyledons", "AGP_cryptogams", "BGP_acari", "BGP_collembola", "C_LOI")) +
-  annotate("text", x = "C_LOI", y = 0, label = "***", size = 2.5) +
-  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "BGP_acari", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_cryptogams", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_forbs", y = 0, label = "**", size = 2.5) +
-  annotate("text", x = "AGP_woody", y = 0, label = "***", size = 2.5) +
-  annotate("text", x = "DIV_cryptogams", y = 0, label = "***", size = 2.5) +
-  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_forbs", y = 0, label = "**", size = 2.5) +
-  annotate("text", x = "DIV_woody", y = 0, label = "***", size = 2.5)
+  annotate("text", x = "C_LOI", y = 0, label = "***", size = 3) +
+  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "BGP_acari", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_cryptogams", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_forbs", y = 0, label = "**", size = 3) +
+  annotate("text", x = "AGP_woody", y = 0, label = "***", size = 3) +
+  annotate("text", x = "DIV_cryptogams", y = 0, label = "***", size = 3) +
+  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_forbs", y = 0, label = "**", size = 3) +
+  annotate("text", x = "DIV_woody", y = 0, label = "***", size = 3)
 clusterplot_axis
 
 # Primary cluster A
@@ -716,7 +716,7 @@ clusterplot_A <- filter(data_sheep_plot, cluster_prim == 1) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster A") +
-  labs("") +
+  # labs("") +
   ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
@@ -726,9 +726,10 @@ clusterplot_A <- filter(data_sheep_plot, cluster_prim == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "pink3", size = 8),
-    legend.title = element_blank()
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "pink3", size = 10),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 10)
   ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_A
@@ -740,7 +741,6 @@ clusterplot_B <- filter(data_sheep_plot, cluster_prim == 2) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster B") +
-  labs("") +
   ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
@@ -750,8 +750,8 @@ clusterplot_B <- filter(data_sheep_plot, cluster_prim == 2) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "orange2", size = 8),
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "orange2", size = 10),
     legend.title = element_blank()
   ) +
   scale_fill_grey(start = 0.5, end = 1)
@@ -770,7 +770,6 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
   ggplot(aes(x = variables)) +
   xlab("") +
   ylab("") +
-  labs("") +
   coord_flip() +
   theme_bw() +
   theme(
@@ -779,21 +778,21 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.x = element_blank(),
-    axis.text.y = element_text(size = 7),
+    axis.text.y = element_text(size = 10),
     legend.title = element_blank()
   ) +
   scale_x_discrete(limits = c("DIV_woody", "DIV_forbs", "DIV_monocotyledons", "DIV_cryptogams", "AGP_woody", "AGP_forbs", "AGP_monocotyledons", "AGP_cryptogams", "BGP_acari", "BGP_collembola", "C_LOI")) +
-  annotate("text", x = "C_LOI", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "BGP_acari", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_cryptogams", y = 0, label = "*", size = 2.5) +
-  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_forbs", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_woody", y = 0, label = "*", size = 2.5) +
-  annotate("text", x = "DIV_cryptogams", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_forbs", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_woody", y = 0, label = "°", size = 2.5)
+  annotate("text", x = "C_LOI", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "BGP_acari", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_cryptogams", y = 0, label = "*", size = 3) +
+  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_forbs", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_woody", y = 0, label = "*", size = 3) +
+  annotate("text", x = "DIV_cryptogams", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_forbs", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_woody", y = 0, label = "°", size = 3)
 clusterplot_axis
 
 # Secondary cluster 1
@@ -803,7 +802,6 @@ clusterplot_1 <- filter(data_sheep_plot, cluster_sec == 1) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster 1") +
-  labs("") +
   ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
@@ -813,10 +811,10 @@ clusterplot_1 <- filter(data_sheep_plot, cluster_sec == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "pink", size = 8),
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "pink", size = 10),
     legend.title = element_blank(),
-    legend.position = "none"
+    legend.text = element_text(size = 10)
   ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_1
@@ -837,10 +835,10 @@ clusterplot_4 <- filter(data_sheep_plot, cluster_sec == 4) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "pink4", size = 8),
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "pink4", size = 10),
     legend.title = element_blank(),
-    legend.position = "none"
+    legend.text = element_text(size = 10)
   ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_4
@@ -871,7 +869,7 @@ clusterplot_4
 # clusterplot_5
 
 # Arrange plots
-clusterplot_secA <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, nrow = 1)
+clusterplot_secA <- ggarrange(clusterplot_axis, clusterplot_1, clusterplot_4, nrow = 1, common.legend = TRUE)
 clusterplot_secA
 ggsave(filename = "outputs/clusterplot_secA.png", plot = clusterplot_secA, width = 16, height = 8, units = "cm")
 
@@ -883,7 +881,6 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
   ggplot(aes(x = variables)) +
   xlab("") +
   ylab("") +
-  labs("") +
   coord_flip() +
   theme_bw() +
   theme(
@@ -892,21 +889,21 @@ clusterplot_axis <- filter(data_sheep_plot, cluster_prim == 1) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.x = element_blank(),
-    axis.text.y = element_text(size = 8),
+    axis.text.y = element_text(size = 9),
     legend.title = element_blank()
   ) +
   scale_x_discrete(limits = c("DIV_woody", "DIV_forbs", "DIV_monocotyledons", "DIV_cryptogams", "AGP_woody", "AGP_forbs", "AGP_monocotyledons", "AGP_cryptogams", "BGP_acari", "BGP_collembola", "C_LOI")) +
-  annotate("text", x = "C_LOI", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "BGP_acari", y = 0, label = "*", size = 2.5) +
-  annotate("text", x = "AGP_cryptogams", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_forbs", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "AGP_woody", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_cryptogams", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_forbs", y = 0, label = "ns", size = 2.5) +
-  annotate("text", x = "DIV_woody", y = 0, label = "ns", size = 2.5)
+  annotate("text", x = "C_LOI", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "BGP_collembola", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "BGP_acari", y = 0, label = "*", size = 3) +
+  annotate("text", x = "AGP_cryptogams", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_forbs", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "AGP_woody", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_cryptogams", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_monocotyledons", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_forbs", y = 0, label = "ns", size = 3) +
+  annotate("text", x = "DIV_woody", y = 0, label = "ns", size = 3)
 clusterplot_axis
 
 
@@ -918,7 +915,6 @@ clusterplot_2 <- filter(data_sheep_plot, cluster_sec == 2) |>
   xlab("") +
   ylab("Cluster 2") +
   ylim(-4, 4) +
-  labs("") +
   coord_flip() +
   theme_bw() +
   theme(
@@ -927,10 +923,10 @@ clusterplot_2 <- filter(data_sheep_plot, cluster_sec == 2) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "orange4", size = 8),
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "orange4", size = 10),
     legend.title = element_blank(),
-    legend.position = "none"
+    legend.text = element_text(size = 10)
   ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_2
@@ -942,7 +938,6 @@ clusterplot_3 <- filter(data_sheep_plot, cluster_sec == 3) |>
   geom_boxplot() +
   xlab("") +
   ylab("Cluster 3") +
-  labs("") +
   ylim(-4, 4) +
   coord_flip() +
   theme_bw() +
@@ -952,16 +947,16 @@ clusterplot_3 <- filter(data_sheep_plot, cluster_sec == 3) |>
     panel.border = element_blank(),
     axis.ticks = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(size = 7),
-    axis.title.x = element_text(colour = "orange", size = 8),
+    axis.text.x = element_text(size = 9),
+    axis.title.x = element_text(colour = "orange", size = 10),
     legend.title = element_blank(),
-    legend.position = "none"
+    legend.text = element_text(size = 10)
   ) +
   scale_fill_grey(start = 0.5, end = 1)
 clusterplot_3
 
 # Arrange plots
-clusterplot_secB <- ggarrange(clusterplot_axis, clusterplot_2, clusterplot_3, nrow = 1)
+clusterplot_secB <- ggarrange(clusterplot_axis, clusterplot_2, clusterplot_3, nrow = 1, common.legend = TRUE)
 clusterplot_secB
 ggsave(filename = "outputs/clusterplot_secB.png", plot = clusterplot_secB, width = 16, height = 8, units = "cm")
 
