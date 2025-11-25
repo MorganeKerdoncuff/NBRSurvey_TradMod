@@ -705,11 +705,16 @@ nvar_field <- length(select_if(field_sc, is.numeric))
 nvar_fine <- length(select_if(fine_sc, is.numeric))
 nvar_beetle <- length(select_if(beetle, is.numeric))
 
-## Regional x beetle
+# Regional x beetle
+
+## Canonical correlation analysis
 cancor <- cc(contin_regional, contin_beetle)
+## Extraction canonical correlation coefficient
 rhocancor <- cancor$cor
 rhocancor
+## Asymptotic approximation of Hotelling-Lawley
 test <- p.asym(rhocancor, nobs, nvar_regional, nvar_beetle, tstat = "Hotelling")
+## Extraction statistics
 ccaregiobeetle <- as.data.frame(test) |> 
   mutate(rho = rhocancor, explanatory = "Regional", response = "Beetle", dim = "dim") |>  
   mutate(dim = paste(dim, row_number(), sep = ""))
@@ -775,81 +780,72 @@ ggrda <- function (ord_in, grp_in = NULL, axes = c("1", "2"), ...)
                 ...)
 }
 
-## Example regular plotting
+#### RDA stat summary function ####
 
-# Extraction axis significance
-#perc <- round(100*(summary(rda)$cont$importance[2, 1:2]), 2)
-
-# # Extraction scores
-# sc_si <- scores(rda, display = "sites", choices = c(1,2), scaling=2)
-# sc_sp <- scores(rda, display = "species", choices = c(1,2), scaling=2)
-# sc_bp <- scores(rda, display = "bp", choices = c(1, 2), scaling=2)
-# 
-# 
-# plot(rda,
-#      scaling = 2, # set scaling type 
-#      type = "none", # this excludes the plotting of any points from the results
-#      frame = FALSE,
-#      # set axis limits
-#      #xlim = c(-1,1), 
-#      #ylim = c(-1,1),
-#      # label the plot (title, and axes)
-#      main = "",
-#      xlab = paste0("RDA1 (", perc[1], "%)"), 
-#      ylab = paste0("RDA2 (", perc[2], "%)") 
-# )
-# # add points for site scores
-# points(sc_si, 
-#        #pch = 21, # set shape (here, circle with a fill colour)
-#        #col = "black", # outline colour
-#        #bg = "steelblue", # fill colour
-#        cex = 0.8) # size
-# # add points for species scores
-# points(sc_sp, 
-#        pch = 22, # set shape (here, square with a fill colour)
-#        col = "black",
-#        bg = "chartreuse4", 
-#        cex = 1.2)
-# # add text labels for species abbreviations
-# text(sc_sp + c(0.1, 0.1), # adjust text coordinates to avoid overlap with points 
-#      labels = rownames(sc_sp), 
-#      col = "chartreuse4", 
-#      font = 1, # bold
-#      cex = 0.6)
-# # add arrows for effects of the explanatory variables
-# arrows(0,0, # start them from (0,0)
-#        sc_bp[,1]*2, sc_bp[,2]*2, # end them at the score value
-#        col = "cyan4", 
-#        lwd = 2)
-# # add text labels for arrows
-# text(x = sc_bp[,1]*2 -0.1, # adjust text coordinate to avoid overlap with arrow tip
-#      y = sc_bp[,2]*2 - 0.1, 
-#      labels = rownames(sc_bp), 
-#      col = "cyan4", 
-#      cex = 0.8, 
-#      font = 2)
-
+statrda <- function(rda) {
+  
+  ## Adjusted variance explained by the RDA model
+  rsq <- as.data.frame(RsquareAdj(rda)) |> 
+    mutate(type = "model", dim = "Model")
+  
+  ## ANOVA permutation test on RDA model
+  testrda <- as.data.frame(anova.cca(rda)) 
+  testrda <- testrda |> 
+    mutate(dim = rownames(testrda), type = "model") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi)
+  
+  ## ANOVA permutation test on individual axes
+  testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
+  testaxis <- testaxis |> 
+    mutate(dim = row.names(testaxis), type = "axis") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## ANOVA permutation test on margins (relative importance terms)
+  testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
+  testerm <- testerm |> 
+    mutate(dim = row.names(testerm), type = "margin") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## Summary statistics
+  rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+  names(rdatable) <- gsub("\\(", "", names(rdatable))
+  names(rdatable) <- gsub("\\)", "", names(rdatable))
+  names(rdatable) <- gsub(">", "", names(rdatable))
+  
+  rdatable
+}
 
 #### Redundancy analyses between explanatory sets ####
 
 # Region x landscape
 
-## Redundancy analysis
-rda <- rda(subset(landscape_sc, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(landscape_sc, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiolandscape <- statrda(rda) |> 
+  mutate(model = "RegionalxLandscape", explanatory = "Regional", response = "Landscape") |>
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_regiolandscape <- ggrda(rda,
-      txt = 4,
-      ptslab = TRUE,
-      addcol = "chartreuse4",
-      addsize = 3.5,
-      size = 2,
-      arrow = 0.2,
-      repel = TRUE,
-      veccol = "cyan4",
-      labcol = "cyan4",
-      xlims = c(-1.1, 1.1),
-      ylims = c(-1.1, 1.1)) +
+plotrda_regiolandscape <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "chartreuse4",
+    addsize = 3.5,
+    size = 2,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_regional.png"),
@@ -861,6 +857,7 @@ plotrda_regiolandscape <- ggrda(rda,
     size = 0.2
   )
 plotrda_regiolandscape
+ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
 
 # plot <- autoplot(
 #   rda,
@@ -868,75 +865,45 @@ plotrda_regiolandscape
 #   geom = c("point", "text"),
 #   layers = c("species", "sites", "biplot", "centroids"),
 #   arrows = TRUE,
-#   const = 1
+#   const = 1,
 # ) +
-#   geom_image(
-#     # data = tibble(x = 1, y = 1),
-#     aes(x = 1, y = 1, image = "illustrations/Icons/icon_regional.png")
-#   )
+#   xlim(-1, 1) +
+#   ylim(-1, 1) +
+#   theme_bw() +
+#   theme(
+#     legend.position = "none"
+#   ) +
+#   geom
+#   # geom_image(
+#   #   data = tibble(x = 1, y = 1),
+#   #   aes(x = 1, y = 1, image = "illustrations/Icons/icon_regional.png")
+#   # )
 # plot
-
-ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |>
-  # "variance" output from cca is actually eigenval
-  mutate(eigenval = Variance) |>
-  # calculate proportion explained variance from eigvenval and inertia
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |>
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Residual variation using Kaiser-Guttman criterion
-#resid <- as.data.frame(rda$CA$eig[rda$CA$eig > mean(rda$CA$eig)])
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregiolandscape <- rdatable |> 
-  mutate(model = "RegionalxLandscape", explanatory = "Regional", response = "Landscape") |>
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 # Regional x field
 
-## Redundancy analysis
-rda <- rda(subset(field_sc, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(field_sc, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiofield <- statrda(rda) |>
+  mutate(model = "RegionalxField", explanatory = "Regional", response = "Field") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_regiofield <- ggrda(rda,
-                               txt = 4,
-                               ptslab = TRUE,
-                               addcol = "darkgoldenrod3",
-                               addsize = 3.5,
-                               size = 1,
-                               arrow = 0.2,
-                               #repel = TRUE,
-                               veccol = "cyan4",
-                               labcol = "cyan4",
-                                xlims = c(-1.4, 1.4),
-                                ylims = c(-1.4, 1.4)) +
+plotrda_regiofield <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "darkgoldenrod3",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    #repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.4, 1.4),
+    ylims = c(-1.4, 1.4)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_regional.png"),
@@ -950,60 +917,30 @@ plotrda_regiofield <- ggrda(rda,
 plotrda_regiofield
 ggsave("outputs/singleRDA/plotrda_regiofield.png", plot = plotrda_regiofield, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |>
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |>
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregiofield <- rdatable |>
-  mutate(model = "RegionalxField", explanatory = "Regional", response = "Field") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Regional x fine
 
-## Redundancy analysis
-rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(fine_sc, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiofine <- statrda(rda) |>
+  mutate(model = "RegionalxFine", explanatory = "Regional", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_regiofine <- ggrda(rda,
-                               txt = 4,
-                               ptslab = TRUE,
-                               addcol = "darkred",
-                               addsize = 3.5,
-                               size = 1,
-                               arrow = 0.2,
-                               #repel = TRUE,
-                               veccol = "cyan4",
-                               labcol = "cyan4",
-                               xlims = c(-1.1, 1.1),
-                               ylims = c(-1.1, 1.1)) +
+plotrda_regiofine <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "darkred",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    #repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_regional.png"),
@@ -1017,60 +954,30 @@ plotrda_regiofine <- ggrda(rda,
 plotrda_regiofine
 ggsave("outputs/singleRDA/plotrda_regiofine.png", plot = plotrda_regiofine, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregiofine <- rdatable |> 
-  mutate(model = "RegionalxFine", explanatory = "Regional", response = "Fine") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Landscape x field
 
-## Redundancy analysis
-rda <- rda(subset(field_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(field_sc, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapefield <- statrda(rda) |>
+  mutate(model = "LandscapexField", explanatory = "Landscape", response = "Field") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_landscapefield <- ggrda(rda,
-                                   txt = 4,
-                                   ptslab = TRUE,
-                                   addcol = "darkgoldenrod3",
-                                   addsize = 3.5,
-                                   size = 1,
-                                   arrow = 0.2,
-                                   repel = TRUE,
-                                   veccol = "chartreuse4",
-                                   labcol = "chartreuse4",
-                                   xlims = c(-1.1, 1.1),
-                                   ylims = c(-1.1, 1.1)) +
+plotrda_landscapefield <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "darkgoldenrod3",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "chartreuse4",
+    labcol = "chartreuse4",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
@@ -1084,60 +991,30 @@ plotrda_landscapefield <- ggrda(rda,
 plotrda_landscapefield
 ggsave("outputs/singleRDA/plotrda_landscapefield.png", plot = plotrda_landscapefield, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdalandscapefield <- rdatable |> 
-  mutate(model = "LandscapexField", explanatory = "Landscape", response = "Field") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Landscape x fine
 
-## Redundancy analysis
-rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(fine_sc, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapefine <- statrda(rda) |>
+  mutate(model = "LandscapexFine", explanatory = "Landscape", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_landscapefine <- ggrda(rda,
-                                  txt = 4,
-                                   ptslab = TRUE,
-                                   addcol = "darkred",
-                                   addsize = 3.5,
-                                   size = 1,
-                                   arrow = 0.2,
-                                   repel = TRUE,
-                                   veccol = "chartreuse4",
-                                   labcol = "chartreuse4",
-                                 xlims = c(-1.2, 1.2),
-                                 ylims = c(-1.2, 1.2)) +
+plotrda_landscapefine <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "darkred",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "chartreuse4",
+    labcol = "chartreuse4",
+    xlims = c(-1.2, 1.2),
+    ylims = c(-1.2, 1.2)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_landscape.png"),
@@ -1151,60 +1028,30 @@ plotrda_landscapefine <- ggrda(rda,
 plotrda_landscapefine
 ggsave("outputs/singleRDA/plotrda_landscapefine.png", plot = plotrda_landscapefine, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdalandscapefine <- rdatable |> 
-  mutate(model = "LandscapexFine", explanatory = "Landscape", response = "Fine") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Field x fine
 
-## Redundancy analysis
-rda <- rda(subset(fine_sc, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(fine_sc, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldfine <- statrda(rda) |>
+  mutate(model = "FieldxFine", explanatory = "Field", response = "Fine") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## Plot RDA
-plotrda_fieldfine <- ggrda(rda,
-                                 txt = 4,
-                                 ptslab = TRUE,
-                                 addcol = "darkred",
-                                 addsize = 3.5,
-                                 size = 1,
-                                 arrow = 0.2,
-                                 repel = TRUE,
-                                 veccol = "darkgoldenrod3",
-                                 labcol = "darkgoldenrod3",
-                                   xlims = c(-1.1, 1.1),
-                                   ylims = c(-1.1, 1.1)) +
+plotrda_fieldfine <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "darkred",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "darkgoldenrod3",
+    labcol = "darkgoldenrod3",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_field.png"),
@@ -1217,42 +1064,6 @@ plotrda_fieldfine <- ggrda(rda,
   )
 plotrda_fieldfine
 ggsave("outputs/singleRDA/plotrda_fieldfine.png", plot = plotrda_fieldfine, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafieldfine <- rdatable |>
-  mutate(model = "FieldxFine", explanatory = "Field", response = "Fine") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 # Summary statistics for RDA analyses between explanatory sets
 
@@ -1271,162 +1082,31 @@ rdastat_envi <- purrr::reduce(list(rdaregiolandscape, rdaregiofield, rdaregiofin
 
 # Regional x grass
 
-# ## Remove space within plant names to avoid parse error in plot
-# names(grass) <- gsub(" ", ".", names(grass))
-
-## Redundancy analysis
-rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
-
-## RDA plot
-plotrda_regiograss <- ggrda(rda,
-                             txt = 4,
-                             ptslab = TRUE,
-                             addcol = "black",
-                             addsize = 3.5,
-                             size = 1,
-                             arrow = 0.2,
-                             repel = TRUE,
-                             veccol = "cyan4",
-                             labcol = "cyan4",
-                               xlims = c(-1.2, 1.2),
-                               ylims = c(-1.2, 1.2)) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_regional.png"),
-    size = 0.2
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_grass.png"),
-    size = 0.2
-  )
-plotrda_regiograss
-ggsave("outputs/singleRDA/plotrda_regiograss.png", plot = plotrda_regiograss, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregiograss <- rdatable |>
+## RDA model
+rda <- rda(select_if(grass, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiograss <- statrda(rda) |>
   mutate(model = "RegionalxGrass", explanatory = "Regional", response = "Grass") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-# Landscape x grass
-
-## Redundancy analysis
-rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
-
 ## RDA plot
-plotrda_landscapegrass <- ggrda(rda,
-                                 txt = 4,
-                                 ptslab = TRUE,
-                                 addcol = "black",
-                                 addsize = 3.5,
-                                 size = 1,
-                                 arrow = 0.2,
-                                 repel = TRUE,
-                                 veccol = "chartreuse4",
-                                 labcol = "chartreuse4",
-                             xlims = c(-1.1, 1.1),
-                             ylims = c(-1.1, 1.1)) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
-    size = 0.2
+plotrda_regiograss <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.3, 1.3),
+    ylims = c(-1.3, 1.3)
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.85, y = -0.9, image = "illustrations/Icons/icon_grass.png"),
-    size = 0.2
-  )
-plotrda_landscapegrass
-ggsave("outputs/singleRDA/plotrda_landscapegrass.png", plot = plotrda_landscapegrass, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdalandscapegrass <- rdatable |>
-  mutate(model = "LandscapexGrass", explanatory = "Landscape", response = "Grass") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-# Field x grass
-
-## Redundancy analysis
-rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
-
-## RDA plot
-plotrda_fieldgrass <- ggrda(rda,
-                               txt = 4,
-                               ptslab = TRUE,
-                               addcol = "black",
-                               addsize = 3.5,
-                               size = 1,
-                               arrow = 0.2,
-                               repel = TRUE,
-                               veccol = "darkgoldenrod3",
-                               labcol = "darkgoldenrod3",
-                               xlims = c(-1.3, 1.3),
-                               ylims = c(-1.3, 1.3)) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_field.png"),
+    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_regional.png"),
     size = 0.2
   ) +
   geom_image(
@@ -1434,64 +1114,109 @@ plotrda_fieldgrass <- ggrda(rda,
     aes(x = 1, y = -1.05, image = "illustrations/Icons/icon_grass.png"),
     size = 0.2
   )
-plotrda_fieldgrass
-ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
+plotrda_regiograss
+ggsave("outputs/singleRDA/plotrda_regiograss.png", plot = plotrda_regiograss, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
 
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
+# Landscape x grass
 
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
+## RDA model
+rda <- rda(select_if(grass, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapegrass <- statrda(rda) |>
+  mutate(model = "LandscapexGrass", explanatory = "Landscape", response = "Grass") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
+## RDA plot
+plotrda_landscapegrass <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "chartreuse4",
+    labcol = "chartreuse4",
+    xlims = c(-1.2, 1.2),
+    ylims = c(-1.2, 1.2)
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_landscape.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
+plotrda_landscapegrass
+ggsave("outputs/singleRDA/plotrda_landscapegrass.png", plot = plotrda_landscapegrass, width = 6, height = 6, units = "cm", bg = "white")
 
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafieldgrass <- rdatable |>
+# Field x grass
+
+## RDA model
+rda <- rda(select_if(grass, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldgrass <- statrda(rda) |>
   mutate(model = "FieldxGrass", explanatory = "Field", response = "Grass") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
+## RDA plot
+plotrda_fieldgrass <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "darkgoldenrod3",
+    labcol = "darkgoldenrod3",
+    xlims = c(-1.4, 1.4),
+    ylims = c(-1.4, 1.4)
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_field.png"),
+    size = 0.2
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 1.05, y = -1.15, image = "illustrations/Icons/icon_grass.png"),
+    size = 0.2
+  )
+plotrda_fieldgrass
+ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
+
 # Fine x grass
 
-## Redundancy analysis
-rda <- rda(subset(grass, select = -c(SiteID)) ~ ., data = subset(fine_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(grass, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafinegrass <- statrda(rda) |>
+  mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## Plot RDA
-plotrda_finegrass <- ggrda(rda,
-                           txt = 4,
-                           ptslab = TRUE,
-                           addcol = "black",
-                           addsize = 3.5,
-                           size = 1,
-                           arrow = 0.2,
-                           repel = TRUE,
-                           force = 2,
-                           veccol = "darkred",
-                           labcol = "darkred",
-                           xlims = c(-1.2, 1.2),
-                           ylims = c(-1.2, 1.2)) +
+plotrda_finegrass <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    force = 2,
+    veccol = "darkred",
+    labcol = "darkred",
+    xlims = c(-1.2, 1.2),
+    ylims = c(-1.2, 1.2)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_fine.png"),
@@ -1504,42 +1229,6 @@ plotrda_finegrass <- ggrda(rda,
   )
 plotrda_finegrass
 ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafinegrass <- rdatable |>
-  mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
 
@@ -1559,22 +1248,28 @@ rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgr
 
 # Regional x forb
 
-## Redundancy analysis
-rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(forb, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregioforb <- statrda(rda) |>
+  mutate(model = "RegionalxForb", explanatory = "Regional", response = "Forb") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## Plot RDA
-plotrda_regioforb <- ggrda(rda,
-                            txt = 4,
-                            ptslab = TRUE,
-                            addcol = "black",
-                            addsize = 3.5,
-                            size = 1,
-                            arrow = 0.2,
-                            # repel = TRUE,
-                            veccol = "cyan4",
-                            labcol = "cyan4",
-                             xlims = c(-1.2, 1.2),
-                             ylims = c(-1.2, 1.2)) +
+plotrda_regioforb <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    # repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.2, 1.2),
+    ylims = c(-1.2, 1.2)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_regional.png"),
@@ -1588,60 +1283,30 @@ plotrda_regioforb <- ggrda(rda,
 plotrda_regioforb
 ggsave("outputs/singleRDA/plotrda_regioforb.png", plot = plotrda_regioforb, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregioforb <- rdatable |>
-  mutate(model = "RegionalxForb", explanatory = "Regional", response = "Forb") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Landscape x forb
 
-## Redundancy analysis
-rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(forb, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapeforb <- statrda(rda) |>
+  mutate(model = "LandscapexForb", explanatory = "Landscape", response = "Forb") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## Plot RDA
-plotrda_landscapeforb <- ggrda(rda,
-                                txt = 4,
-                                ptslab = TRUE,
-                                addcol = "black",
-                                addsize = 3.5,
-                                size = 1,
-                                arrow = 0.2,
-                                #repel = TRUE,
-                                veccol = "chartreuse4",
-                                labcol = "chartreuse4",
-                                 xlims = c(-1.1, 1.1),
-                                 ylims = c(-1.1, 1.1)) +
+plotrda_landscapeforb <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    #repel = TRUE,
+    veccol = "chartreuse4",
+    labcol = "chartreuse4",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_landscape.png"),
@@ -1655,127 +1320,67 @@ plotrda_landscapeforb <- ggrda(rda,
 plotrda_landscapeforb
 ggsave("outputs/singleRDA/plotrda_landscapeforb.png", plot = plotrda_landscapeforb, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdalandscapeforb <- rdatable |>
-  mutate(model = "LandscapexForb", explanatory = "Landscape", response = "Forb") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Field x forb
 
-## Redundancy analysis
-rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(forb, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldforb <- statrda(rda) |>
+  mutate(model = "FieldxForb", explanatory = "Field", response = "Forb") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_fieldforb <- ggrda(rda,
-                              txt = 4,
-                              ptslab = TRUE,
-                              addcol = "black",
-                              addsize = 3.5,
-                              size = 1,
-                              arrow = 0.2,
-                              #repel = TRUE,
-                              veccol = "darkgoldenrod3",
-                              labcol = "darkgoldenrod3",
-                               xlims = c(-1.2, 1.2),
-                               ylims = c(-1.2, 1.2)) +
+plotrda_fieldforb <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    #repel = TRUE,
+    veccol = "darkgoldenrod3",
+    labcol = "darkgoldenrod3",
+    xlims = c(-1.3, 1.3),
+    ylims = c(-1.3, 1.3)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_field.png"),
+    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_field.png"),
     size = 0.2
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.9, y = -1, image = "illustrations/Icons/icon_forb.png"),
+    aes(x = 1, y = -1.05, image = "illustrations/Icons/icon_forb.png"),
     size = 0.2
   )
 plotrda_fieldforb
 ggsave("outputs/singleRDA/plotrda_fieldforb.png", plot = plotrda_fieldforb, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafieldforb <- rdatable |>
-  mutate(model = "FieldxForb", explanatory = "Field", response = "Forb") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Fine x forb
 
-## Redundancy analysis
-rda <- rda(subset(forb, select = -c(SiteID)) ~ ., data = subset(fine_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(forb, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafineforb <- statrda(rda) |>
+  mutate(model = "FinexForb", explanatory = "Fine", response = "Forb") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_fineforb <- ggrda(rda,
-                              txt = 4,
-                              ptslab = TRUE,
-                              addcol = "black",
-                              addsize = 3.5,
-                              size = 1,
-                              arrow = 0.2,
-                              repel = TRUE,
-                              veccol = "darkred",
-                              labcol = "darkred",
-                              xlims = c(-1.2, 1.2),
-                              ylims = c(-1.2, 1.2)) +
+plotrda_fineforb <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "darkred",
+    labcol = "darkred",
+    xlims = c(-1.2, 1.2),
+    ylims = c(-1.2, 1.2)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.9, y = 1, image = "illustrations/Icons/icon_fine.png"),
@@ -1788,42 +1393,6 @@ plotrda_fineforb <- ggrda(rda,
   )
 plotrda_fineforb
 ggsave("outputs/singleRDA/plotrda_fineforb.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafineforb <- rdatable |>
-  mutate(model = "FinexForb", explanatory = "Fine", response = "Forb") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
@@ -1842,22 +1411,28 @@ rdastat_forb <- purrr::reduce(list(rdaregioforb, rdalandscapeforb, rdafieldforb,
 
 # Regional x beetle
 
-## Redundancy analysis
-rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(regional_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiobeetle <- statrda(rda) |>
+  mutate(model = "RegionalxBeetle", explanatory = "Regional", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_regiobeetle <- ggrda(rda,
-                              txt = 4,
-                              ptslab = TRUE,
-                              addcol = "black",
-                              addsize = 3.5,
-                              size = 1,
-                              arrow = 0.2,
-                              #repel = TRUE,
-                              veccol = "cyan4",
-                              labcol = "cyan4",
-                            xlims = c(-1.8, 1.8),
-                            ylims = c(-1.8, 1.8)) +
+plotrda_regiobeetle <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    #repel = TRUE,
+    veccol = "cyan4",
+    labcol = "cyan4",
+    xlims = c(-1.8, 1.8),
+    ylims = c(-1.8, 1.8)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 1.4, y = 1.5, image = "illustrations/Icons/icon_regional.png"),
@@ -1871,61 +1446,31 @@ plotrda_regiobeetle <- ggrda(rda,
 plotrda_regiobeetle
 ggsave("outputs/singleRDA/plotrda_regiobeetle.png", plot = plotrda_regiobeetle, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdaregiobeetle <- rdatable |>
-  mutate(model = "RegionalxBeetle", explanatory = "Regional", response = "Beetle") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Landscape x beetle
 
-## Redundancy analysis
-rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(landscape_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapebeetle <- statrda(rda) |>
+  mutate(model = "LandscapexBeetle", explanatory = "Landscape", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_landscapebeetle <- ggrda(rda,
-                                  txt = 4,
-                                  ptslab = TRUE,
-                                  addcol = "black",
-                                  addsize = 3.5,
-                                  size = 1,
-                                  arrow = 0.2,
-                                  repel = TRUE,
-                                 force = 1,
-                                  veccol = "chartreuse4",
-                                  labcol = "chartreuse4",
-                                xlims = c(-1.4, 1.4),
-                                ylims = c(-1.4, 1.4)) +
+plotrda_landscapebeetle <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    force = 1,
+    veccol = "chartreuse4",
+    labcol = "chartreuse4",
+    xlims = c(-1.4, 1.4),
+    ylims = c(-1.4, 1.4)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_landscape.png"),
@@ -1939,128 +1484,68 @@ plotrda_landscapebeetle <- ggrda(rda,
 plotrda_landscapebeetle
 ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdalandscapebeetle <- rdatable |>
-  mutate(model = "LandscapexBeetle", explanatory = "Landscape", response = "Beetle") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Field x beetle
 
-## Redundancy analysis
-rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(field_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldbeetle <- statrda(rda) |>
+  mutate(model = "FieldxBeetle", explanatory = "Field", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_fieldbeetle <- ggrda(rda,
-                                txt = 4,
-                                ptslab = TRUE,
-                                addcol = "black",
-                                addsize = 3.5,
-                                size = 1,
-                                arrow = 0.2,
-                                repel = TRUE,
-                                veccol = "darkgoldenrod3",
-                                labcol = "darkgoldenrod3",
-                              xlims = c(-1.3, 1.3),
-                              ylims = c(-1.3, 1.3)) +
+plotrda_fieldbeetle <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    veccol = "darkgoldenrod3",
+    labcol = "darkgoldenrod3",
+    xlims = c(-1.4, 1.4),
+    ylims = c(-1.4, 1.4)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 1, y = 1.05, image = "illustrations/Icons/icon_field.png"),
+    aes(x = 1.05, y = 1.15, image = "illustrations/Icons/icon_field.png"),
     size = 0.2
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 1, y = -1.05, image = "illustrations/Icons/icon_beetle.png"),
+    aes(x = 1.05, y = -1.15, image = "illustrations/Icons/icon_beetle.png"),
     size = 0.2
   )
 plotrda_fieldbeetle
 ggsave("outputs/singleRDA/plotrda_fieldbeetle.png", plot = plotrda_fieldbeetle, width = 6, height = 6, units = "cm", bg = "white")
 
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafieldbeetle <- rdatable |>
-  mutate(model = "FieldxBeetle", explanatory = "Field", response = "Beetle") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
 # Fine x beetle
 
-## Redundancy analysis
-rda <- rda(subset(beetle, select = -c(SiteID)) ~ ., data = subset(fine_sc, select = -c(SiteID)))
+## RDA model
+rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafinebeetle <- statrda(rda) |>
+  mutate(model = "FinexBeetle", explanatory = "Fine", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## RDA plot
-plotrda_finebeetle <- ggrda(rda,
-                                txt = 4,
-                                ptslab = TRUE,
-                                addcol = "black",
-                                addsize = 3.5,
-                                size = 1,
-                                arrow = 0.2,
-                                repel = TRUE,
-                            force = 2,
-                                veccol = "darkred",
-                                labcol = "darkred",
-                              xlims = c(-1.1, 1.1),
-                              ylims = c(-1.1, 1.1)) +
+plotrda_finebeetle <- 
+  ggrda(
+    rda,
+    txt = 4,
+    ptslab = TRUE,
+    addcol = "black",
+    addsize = 3.5,
+    size = 1,
+    arrow = 0.2,
+    repel = TRUE,
+    force = 2,
+    veccol = "darkred",
+    labcol = "darkred",
+    xlims = c(-1.1, 1.1),
+    ylims = c(-1.1, 1.1)
+  ) +
   geom_image(
     data = tibble(x = 1, y = 1),
     aes(x = 0.85, y = 0.9, image = "illustrations/Icons/icon_fine.png"),
@@ -2073,42 +1558,6 @@ plotrda_finebeetle <- ggrda(rda,
   )
 plotrda_finebeetle
 ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, width = 6, height = 6, units = "cm", bg = "white")
-
-## Adjusted variance explained by the RDA model
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
-  mutate(type = "model", dim = "Model")
-
-## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi)
-
-## ANOVA permutation test on individual axes
-testaxis <- as.data.frame(anova.cca(rda, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-  filter(dim != "Residual")
-
-## Summary statistics
-rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-names(rdatable) <- gsub("\\(", "", names(rdatable))
-names(rdatable) <- gsub("\\)", "", names(rdatable))
-names(rdatable) <- gsub(">", "", names(rdatable))
-rdafinebeetle <- rdatable |>
-  mutate(model = "FinexBeetle", explanatory = "Fine", response = "Beetle") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
@@ -2144,51 +1593,3 @@ rdastat_beetle <- purrr::reduce(list(rdaregiobeetle, rdalandscapebeetle, rdafiel
 #                    hjust = -2.7)
 # rdall
 # ggsave("outputs/RDAresults.png", plot = rdall, width = 16, height = 20, units = "cm", bg = "white")
-
-#
-## Distribution residuals for significant relationships with terms
-
-# Ordination community data
-# DCA_grass <- decorana(contin_grass)
-# DCA_grass # Axis length of 1.9 -> run PCA
-# PCA_grass <- prcomp(contin_grass)
-# PCA_grass
-# biplot(PCA_grass)
-# DCA_forb <- decorana(contin_forb)
-# DCA_forb # Axis length of 3.1 -> keep DCA
-# plot(DCA_forb)
-# 
-# # Extraction grass species scores from PCA
-# scores_grass <- as.data.frame(scores(PCA_grass, choices = c(1,2), display = "sites"))
-# names(scores_grass) <- gsub("PC1", "GrassPCA1", names(scores_grass))
-# names(scores_grass) <- gsub("PC2", "GrassPCA2", names(scores_grass))
-# scores_grass <- scores_grass |>
-#   mutate(SiteID = row.names(scores_grass)) # PlotID as column for future binding
-# 
-# # Extraction forb species scores from DCA
-# scores_forb <- as.data.frame(scores(DCA_forb, choices = c(1,2), display = "sites"))
-# names(scores_forb) <- gsub("DCA1", "ForbDCA1", names(scores_forb))
-# names(scores_forb) <- gsub("DCA2", "ForbDCA2", names(scores_forb))
-# scores_forb <- scores_forb |>
-#   mutate(SiteID = row.names(scores_forb)) # PlotID as column for future binding
-# 
-# # Table binding
-# allvar <- purrr::reduce(list(scores_grass, scores_forb, fjordsys_sc, landscape_sc, grazing_sc, locenvi_sc), dplyr::left_join)
-
-# Distribution residuals fjord x landscape
-# residualPlots(lm(Forest~JulTemp, data = allvar)) # random -> validated
-# residualPlots(lm(Forest~SeaDist, data = allvar)) # random -> validated
-# residualPlots(lm(Wetland~JulTemp, data = allvar)) # random -> validated
-# residualPlots(lm(Wetland~SeaDist, data = allvar)) # random -> validated
-# residualPlots(lm(Outfield~JulTemp, data = allvar)) # random -> validated
-# residualPlots(lm(Outfield~SeaDist, data = allvar)) # random -> validated
-
-# Distribution residuals finescale x grass
-# residualPlots(lm(GrassPCA1~pH, data = allvar)) # random -> validated
-# residualPlots(lm(GrassPCA1~Bryo, data = allvar)) # random -> validated
-# residualPlot(lm(GrassPCA1~MeanHeight, data = allvar)) # random -> validated
-# residualPlots(lm(GrassPCA1~SoilPene, data = allvar)) # random -> validated
-
-# Distribution residuals finescale x forb
-# residualPlots(lm(ForbDCA1~SoilPene, data = allvar)) # random -> validated
-# residualPlot(lm(ForbDCA1~MeanHeight, data = allvar)) # random -> validated
