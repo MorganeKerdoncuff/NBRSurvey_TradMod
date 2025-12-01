@@ -20,32 +20,6 @@ format:
       model: 3p
       layout: onecolumn
       cite-style: authoryear
-      # highlights:
-      #   - We performed the first analysis of cross-scale interactions between environmental gradients, grazing management and community composition in the agroecological landscape of the fjord region of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
-      #   - Land use at landscape-scale was more affected by the distance to the closest fjord than regional gradients of temperature and precipitation.
-      #   - The strongest edaphic predictor of dominant grass and forb assemblages was soil resistance to penetration, while soil moisture and nutrient availability showed only negligible contribution.
-      #   - Dung-associated beetle assemblages, which were dominated by the Staphylinidae family, were more affected by landscape-scale factors than local-scale factors.
-      #   - Using standard grazing indicators and fields as the unit of assessment showed limitations in capturing the inherent spatiotemporal variability of rotational management. Nevertheless, our approach helped untangle some of the interactions operating between spatial scales, improving our understanding of small-scale grazing systems.
-author:
-  - name: Morgane Kerdoncuff
-    orcid: https://orcid.org/0000-0003-2223-1857
-    email: morgane.kerdoncuff@pm.me
-    affiliations:
-      - Department of Biological Sciences, University of Bergen, Norway
-      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
-  - name: Amy Elizabeth Eycott
-    orcid: https://orcid.org/0000-0002-8609-1091
-    affiliations: 
-      - Faculty of Biosciences and Aquaculture, Nord University, Norway
-      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
-  - name: Adam Klimes
-    orcid: https://orcid.org/0000-0002-3749-6906
-    affiliations: Department of Geoecology, Institute of Botany of the Czech Academy of Sciences, Czech Republic
-  - name: Inger Elisabeth Måren
-    orcid: https://orcid.org/0000-0002-3964-9144
-    affiliations:
-      - Department of Biological Sciences, University of Bergen, Norway
-      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
 ---
 
 ```{r ScriptSource}
@@ -72,7 +46,7 @@ Dominant grass and forb assemblages were correlated with the fine-scale environm
 Dominant dung-associated beetle assemblages were weakly correlated with the landscape matrix, mostly related to the percent cover of forested areas around the grazing fields.
 Relationships involving field management were the least consistent, highlighting the challenge of accurately capturing the independent effect of farming practices in small-scale grazing systems.
 
-Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community
+<!-- Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community -->
 
 \setcounter{section}{1}
 
@@ -592,50 +566,50 @@ Therefore, our analyses indicate that, in small-scale grazing systems, the effec
 Overall, we highlighted the complexity of interactions between the farmer, the environment and the livestock in small-scale grazing systems.
 A more nuanced unraveling of this complexity could be achieved through explicitly addressing the spatiotemporal variability of rotational management, developing transdisciplinary approaches with farmers, and integrating the outcomes of local studies as part of large-scale knowledge-sharing networks, such as the UNESCO World Network of Biosphere Reserves.
 
-# ACKNOWLEDGEMENTS
+<!-- # ACKNOWLEDGEMENTS -->
 
-We thank our technicians Linn Voldstad and Silje Östman for administrative support and logistical organisation, and for their help in data collection in the field and in the lab.
-We also thank the many interns and volunteers who participated in the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea, Keith McInturff, Johan Måren and Dan Andersson.
-We are grateful to the farmers and landowners of the study sites for allowing access to their fields and for their time during the phone interviews.
-We also thank Peter Manning for his pertinent insights on the conceptual design, as well as Michael Patten and Richard Telford for their valuable guidance on the data analysis.
+<!-- We thank our technicians Linn Voldstad and Silje Östman for administrative support and logistical organisation, and for their help in data collection in the field and in the lab. -->
+<!-- We also thank the many interns and volunteers who participated in the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea, Keith McInturff, Johan Måren and Dan Andersson. -->
+<!-- We are grateful to the farmers and landowners of the study sites for allowing access to their fields and for their time during the phone interviews. -->
+<!-- We also thank Peter Manning for his pertinent insights on the conceptual design, as well as Michael Patten and Richard Telford for their valuable guidance on the data analysis. -->
 
-# STATEMENTS AND DECLARATIONS
+<!-- # STATEMENTS AND DECLARATIONS -->
 
-## FUNDING
+<!-- ## FUNDING -->
 
-This study was part of the TradMod project at the University of Bergen, funded by the Research Council of Norway (NFR; project number 280299).
+<!-- This study was part of the TradMod project at the University of Bergen, funded by the Research Council of Norway (NFR; project number 280299). -->
 
-## AUTHOR CONTRIBUTION
+<!-- ## AUTHOR CONTRIBUTION -->
 
-Conceptualization, A.E.E., M.K.;
-Methodology, A.E.E., M.K.;
-Validation, I.E.M, A.E.E., A.K., M.K.;
-Formal analysis, M.K., A.E.E., A.K.;
-Data collection, M.K., A.E.E.;
-Writing - original draft preparation, M.K.;
-Writing - review and editing, I.E.M, A.E.E., A.K.;
-Visualization, M.K.;
-Supervision, I.E.M., A.E.E.;
-Project administration, I.E.M.;
-Funding acquisition, I.E.M.
+<!-- Conceptualization, A.E.E., M.K.; -->
+<!-- Methodology, A.E.E., M.K.; -->
+<!-- Validation, I.E.M, A.E.E., A.K., M.K.; -->
+<!-- Formal analysis, M.K., A.E.E., A.K.; -->
+<!-- Data collection, M.K., A.E.E.; -->
+<!-- Writing - original draft preparation, M.K.; -->
+<!-- Writing - review and editing, I.E.M, A.E.E., A.K.; -->
+<!-- Visualization, M.K.; -->
+<!-- Supervision, I.E.M., A.E.E.; -->
+<!-- Project administration, I.E.M.; -->
+<!-- Funding acquisition, I.E.M. -->
 
-All authors have read and agreed to the final version of the manuscript.
+<!-- All authors have read and agreed to the final version of the manuscript. -->
 
-## CONSENT TO PUBLISH
+<!-- ## CONSENT TO PUBLISH -->
 
-All authors have given consent to publish.
+<!-- All authors have given consent to publish. -->
 
-## COMPETING INTERESTS
+<!-- ## COMPETING INTERESTS -->
 
-The authors declare no competing interests.
+<!-- The authors declare no competing interests. -->
 
-## DATA AVAILABILITY
+<!-- ## DATA AVAILABILITY -->
 
-The dataset used in this manuscript is planned to be submitted to DataverseNO (https://dataverse.no/).
+<!-- The dataset used in this manuscript is planned to be submitted to DataverseNO (https://dataverse.no/). -->
 
-## CODE AVAILABILITY
+<!-- ## CODE AVAILABILITY -->
 
-The codes of the data curation and analyses are available at https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
+<!-- The codes of the data curation and analyses are available at https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod. -->
 
 \newpage
 
