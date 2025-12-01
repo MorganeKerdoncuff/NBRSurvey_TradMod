@@ -1,7 +1,7 @@
 ---
 title: "Grazing the fjord landscape: Environmental and management interactions across scales"
 date: today
-bibliography: NBR_TRADMOD.bib
+bibliography: NBR_bibliography.bib
 number-sections: true
 execute: 
   echo: false
@@ -33,7 +33,7 @@ op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
 theme_set(theme_bw(base_size = 25))
 ```
 
-# ABSTRACT
+# ABSTRACT {.unnumbered}
 
 Pasture-based husbandry has shaped plant and animal communities of high diversity that support multiple ecosystem functions.
 However, the direct impact of grazing management on the composition of these communities is not as straightforward, due to complex interactions between management and underlying environmental gradients.
@@ -48,7 +48,7 @@ Relationships involving field management were the least consistent, highlighting
 
 <!-- Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community -->
 
-\setcounter{section}{1}
+\setcounter{section}{0}
 
 # INTRODUCTION
 
