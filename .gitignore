@@ -11,6 +11,7 @@
 
 # RStudio files
 .Rproj.user/
+_quarto.yml
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
@@ -36,17 +37,28 @@ illustrations/*
 # Bibliography (exclude all bibtex files)
 *.bib
 *.json
+
+# Embedded files
 NBR_SmallScaleFjordFarming_files/*
 NBR_SheepGradient_files/*
 NBR_SmallScaleFjordFarmingTables_files/*
+test_files/*
 
 # Testing & error monitoring
 *.log
 *.tex
 *.aux
 test.qmd
+test.spl
 scripts/TrySumVarTable.R
 NBR_SmallScaleFjordFarmingTables.qmd
+oldfiles/
 
 # Repo try (will be in new project)
 scripts/TradMod_RepoDataCleaning.R
+/.quarto/
+
+# Extensions
+_extensions/*
+elsarticle.cls
+elsarticle-harv.bst
