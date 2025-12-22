@@ -30,7 +30,7 @@ source("scripts/NBR_TradMod_FjordSysCANCOR.R", local = knitr::knit_global())
 
 ```{r setup, include=FALSE}
 op = function(x, d=1) sprintf(paste0("%1.",d,"f"), x)
-theme_set(theme_bw(base_size = 25))
+theme_set(theme_bw(base_size = 5))
 ```
 
 # ABSTRACT {.unnumbered}
@@ -566,50 +566,50 @@ Therefore, our analyses indicate that, in small-scale grazing systems, the effec
 Overall, we highlighted the complexity of interactions between the farmer, the environment and the livestock in small-scale grazing systems.
 A more nuanced unraveling of this complexity could be achieved through explicitly addressing the spatiotemporal variability of rotational management, developing transdisciplinary approaches with farmers, and integrating the outcomes of local studies as part of large-scale knowledge-sharing networks, such as the UNESCO World Network of Biosphere Reserves.
 
-<!-- # ACKNOWLEDGEMENTS -->
+# ACKNOWLEDGEMENTS
 
-<!-- We thank our technicians Linn Voldstad and Silje Östman for administrative support and logistical organisation, and for their help in data collection in the field and in the lab. -->
-<!-- We also thank the many interns and volunteers who participated in the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea, Keith McInturff, Johan Måren and Dan Andersson. -->
-<!-- We are grateful to the farmers and landowners of the study sites for allowing access to their fields and for their time during the phone interviews. -->
-<!-- We also thank Peter Manning for his pertinent insights on the conceptual design, as well as Michael Patten and Richard Telford for their valuable guidance on the data analysis. -->
+We thank our technicians Linn Voldstad and Silje Östman for administrative support and logistical organisation, and for their help in data collection in the field and in the lab.
+We also thank the many interns and volunteers who participated in the field season and helped with lab work: Morgane Demeaux, Micah Elias, Astrid Bjørnsen, Ingrid Vaksvik, Kristi Natås, Natalie Paluchova, Christina Schickhoff, Anette Gilje Oppistov, Maria Galea, Keith McInturff, Johan Måren and Dan Andersson.
+We are grateful to the farmers and landowners of the study sites for allowing access to their fields and for their time during the phone interviews.
+We also thank Peter Manning for his pertinent insights on the conceptual design, as well as Michael Patten and Richard Telford for their valuable guidance on the data analysis.
 
-<!-- # STATEMENTS AND DECLARATIONS -->
+# STATEMENTS AND DECLARATIONS
 
-<!-- ## FUNDING -->
+## FUNDING
 
-<!-- This study was part of the TradMod project at the University of Bergen, funded by the Research Council of Norway (NFR; project number 280299). -->
+This study was part of the TradMod project at the University of Bergen, funded by the Research Council of Norway (NFR; project number 280299).
 
-<!-- ## AUTHOR CONTRIBUTION -->
+## AUTHOR CONTRIBUTION
 
-<!-- Conceptualization, A.E.E., M.K.; -->
-<!-- Methodology, A.E.E., M.K.; -->
-<!-- Validation, I.E.M, A.E.E., A.K., M.K.; -->
-<!-- Formal analysis, M.K., A.E.E., A.K.; -->
-<!-- Data collection, M.K., A.E.E.; -->
-<!-- Writing - original draft preparation, M.K.; -->
-<!-- Writing - review and editing, I.E.M, A.E.E., A.K.; -->
-<!-- Visualization, M.K.; -->
-<!-- Supervision, I.E.M., A.E.E.; -->
-<!-- Project administration, I.E.M.; -->
-<!-- Funding acquisition, I.E.M. -->
+Conceptualization, A.E.E., M.K.;
+Methodology, A.E.E., M.K.;
+Validation, I.E.M, A.E.E., A.K., M.K.;
+Formal analysis, M.K., A.E.E., A.K.;
+Data collection, M.K., A.E.E.;
+Writing - original draft preparation, M.K.;
+Writing - review and editing, I.E.M, A.E.E., A.K.;
+Visualization, M.K.;
+Supervision, I.E.M., A.E.E.;
+Project administration, I.E.M.;
+Funding acquisition, I.E.M.
 
-<!-- All authors have read and agreed to the final version of the manuscript. -->
+All authors have read and agreed to the final version of the manuscript.
 
-<!-- ## CONSENT TO PUBLISH -->
+## CONSENT TO PUBLISH
 
-<!-- All authors have given consent to publish. -->
+All authors have given consent to publish.
 
-<!-- ## COMPETING INTERESTS -->
+## COMPETING INTERESTS
 
-<!-- The authors declare no competing interests. -->
+The authors declare no competing interests.
 
-<!-- ## DATA AVAILABILITY -->
+## DATA AVAILABILITY
 
-<!-- The dataset used in this manuscript is planned to be submitted to DataverseNO (https://dataverse.no/). -->
+The dataset used in this manuscript is planned to be submitted to DataverseNO (https://dataverse.no/).
 
-<!-- ## CODE AVAILABILITY -->
+## CODE AVAILABILITY
 
-<!-- The codes of the data curation and analyses are available at https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod. -->
+The codes of the data curation and analyses are available at https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
 
 \newpage
 
