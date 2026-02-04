@@ -171,13 +171,17 @@ vege_site <- vege_infield |>
 
 ## Plant community - plot-level summary
 vege_plot <- vege_infield %>% 
-  group_by(PlotID, Species) %>% 
+  group_by(PlotID, SiteID, Species) %>% 
   summarise(PlantSp_cover = mean(Abundance))
 
 ## Beetle community - current at pitfall level -> summary by average
 beetle_infield <- beetle_infield |> 
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = mean(BeetleFam_abundance))
+
+## id string
+
+id <- subset(groundcover_plot, select = c(SiteID, PlotID))
 
 # Selection & transformation plant community data
 
@@ -271,7 +275,8 @@ contin_grass_plot <- decostand(contin_grass_plot, method = "hellinger")
 ## Wide table
 grass_plot <- as.data.frame(contin_grass_plot)
 grass_plot <- grass_plot |>
-  pivot_wider(names_from = Species, values_from = Freq)
+  pivot_wider(names_from = Species, values_from = Freq) %>% 
+  mutate(SiteID = id$SiteID)
 
 ## Suitable variable names
 names(grass_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(grass_plot))
@@ -333,7 +338,8 @@ contin_forb_plot <- decostand(contin_forb_plot, method = "hellinger")
 ## Wide table
 forb_plot <- as.data.frame(contin_forb_plot)
 forb_plot <- forb_plot |>
-  pivot_wider(names_from = Species, values_from = Freq)
+  pivot_wider(names_from = Species, values_from = Freq) %>% 
+  mutate(SiteID = id$SiteID)
 
 ## Suitable variable names
 names(forb_plot) <- gsub("Trifolium repens", "T.repens", names(forb_plot))
@@ -522,6 +528,7 @@ names(fine) <- gsub("Slope_degree", "Slope", names(fine))
 ## Scaling numeric variables
 fine <- subset(fine, select = -c(Litter))
 fine_sc <- fine |> 
+  # mutate_if(is.numeric, scale)
   mutate(across(where(is.numeric), scale))
 
 # Explanatory set fine scale - plot level
@@ -543,9 +550,11 @@ names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
 names(fine_plot) <- gsub("Slope_degree", "Slope", names(fine_plot))
 
 ## Scaling numeric variables
-fine_plot <- subset(fine_plot, select = -c(Litter))
-fineplot_sc <- fine_plot |> 
-  mutate(across(where(is.numeric), scale))
+fineplot_sc <- subset(fine_plot, select = -c(Litter, PlotID))
+fineplot_sc <- fineplot_sc |> 
+  mutate_if(is.numeric, scale) %>% 
+  mutate(PlotID = id$PlotID) %>% 
+  mutate(SiteID = id$SiteID)
 
 # Variable filtering - colinearity
 
@@ -1556,9 +1565,49 @@ ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, widt
 
 # Fine x grass plot-level
 
+fineplot_sc <- fineplot_sc %>% 
+  mutate(SiteID = factor(SiteID))
+
+rda <- rda(select_if(grass_plot, is.numeric) ~ . + Condition(fineplot_sc$SiteID), data = select_if(fineplot_sc, is.numeric), na.action = na.exclude)
+h <- how(blocks = fineplot_sc$SiteID, nperm = 999)
+
+rsq <- as.data.frame(RsquareAdj(rda)) |> 
+  mutate(type = "model", dim = "Model")
+
+## ANOVA permutation test on RDA model
+testrda <- as.data.frame(anova.cca(rda, permutations = h)) 
+testrda <- testrda |> 
+  mutate(dim = rownames(testrda), type = "model") |> 
+  mutate(eigenval = Variance) |> 
+  mutate(Variance = eigenval/summary(rda)$tot.chi)
+
+## ANOVA permutation test on individual axes
+testaxis <- as.data.frame(anova.cca(rda, permutations = h, by = "axis"))
+testaxis <- testaxis |> 
+  mutate(dim = row.names(testaxis), type = "axis") |> 
+  mutate(eigenval = Variance) |> 
+  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+  filter(dim != "Residual")
+
+## ANOVA permutation test on margins (relative importance terms)
+testerm <- as.data.frame(anova.cca(rda, permutations = h, by = "margin")) 
+testerm <- testerm |> 
+  mutate(dim = row.names(testerm), type = "margin") |> 
+  mutate(eigenval = Variance) |> 
+  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+  filter(dim != "Residual")
+
+## Summary statistics
+rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+names(rdatable) <- gsub("\\(", "", names(rdatable))
+names(rdatable) <- gsub("\\)", "", names(rdatable))
+names(rdatable) <- gsub(">", "", names(rdatable))
+
+rdatable
+
 ## RDA model
 rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
-rdafinegrass <- statrda(rda) |>
+rdafinegrassplot <- statrda(rda) |>
   mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
