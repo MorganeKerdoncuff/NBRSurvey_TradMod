@@ -183,7 +183,7 @@ Our mountain sites were dominated by ericaceous shrubs (*Vaccinium* spp) with a 
 Infields were permanent grasslands either dominated by *Agrostis capillaris*-*Poa pratensis* assemblages or by *Festuca rubra* assemblages, with an important layer of creeping species such as *Galium saxatile* and *Potentilla erecta*.
 Infield management was highly variable: the fields were grazed from 3 to 12 months with either rustic or conventional breeds, and 7 out of 11 sites were enriched with either artificial fertiliser, manure and/or shellsand-lime mix.
 
-![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway. Shapes and colours indicate ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; white: outfield) respectively. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background topographic layer (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](illustrations/NBR_SheepMap.png){#fig-sitemap}
+![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway. Shapes and colours indicate ecological zone (circle: coastal; triangle: fjord; square: mountain) and field type (black: infield; white: outfield) respectively. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background topographic layer (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figures/NBR_SheepMap.png){#fig-sitemap}
 
 \newpage
 
@@ -194,7 +194,7 @@ The sampling area was when possible a 20 m x 20 m square, if not a 40 m x 10 m s
 Within this area, we nested three plots of 3 m x 3 m separated by at least 6 m from each other and themselves divided into nine subplots of 1 m^2^.
 Five subplots were dedicated to the non-destructive inventory of plant species and the remaining four subplots were used for biomass and/or soil sampling (@fig-sampling).
 
-![Nested sampling design applied to a representative 400 m^2^ area of each grazing field. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](illustrations/NBR_SheepSamplingDesign.png){#fig-sampling width=100%}
+![Nested sampling design applied to a representative 400 m^2^ area of each grazing field. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figures/NBR_SheepSamplingDesign.png){#fig-sampling width=100%}
 
 In each non-destructive subplot (15 per site), we identified all vascular and cryptogam species (except lichens) using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed them a percent cover by one of the same two observers.
 When necessary, specimens were collected, coded and brought for microscopic or expert identification.
