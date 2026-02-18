@@ -182,6 +182,7 @@ beetle_infield <- beetle_infield |>
 ## id string
 
 id <- subset(groundcover_plot, select = c(SiteID, PlotID))
+idplot <- filter(id, PlotID != "OC2-P1")
 
 # Selection & transformation plant community data
 
@@ -277,6 +278,7 @@ grass_plot <- as.data.frame(contin_grass_plot)
 grass_plot <- grass_plot |>
   pivot_wider(names_from = Species, values_from = Freq) %>% 
   mutate(SiteID = id$SiteID)
+grass_plot <- filter(grass_plot, PlotID != "OC2-P1")
 
 ## Suitable variable names
 names(grass_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(grass_plot))
@@ -504,11 +506,12 @@ field_sc <- field |>
 
 ## Selection variables
 fine <- purrr::reduce(list(groundcover_site, soilbulk_site, soilpene_site, soilchem_site, area20x20_infield), dplyr::left_join)
-fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
+# fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
 
 ## Suitable variable names
-names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
-names(fine) <- gsub("Slope_degree", "Slope", names(fine))
+# names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
+# names(fine) <- gsub("Slope_degree", "Slope", names(fine))
 
 # Variable distribution
 #hist(fine$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
@@ -543,11 +546,12 @@ fine_sc <- fine |>
 
 ## Selection variables
 fine_plot <- purrr::reduce(list(groundcover_plot, soilbulk_plot, soilpene_plot, soilchem_plot, area20x20_infield), dplyr::left_join)
-fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
+# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
 
 ## Suitable variable names
-names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
-names(fine_plot) <- gsub("Slope_degree", "Slope", names(fine_plot))
+# names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
+# names(fine_plot) <- gsub("Slope_degree", "Slope", names(fine_plot))
 
 ## Scaling numeric variables
 fineplot_sc <- subset(fine_plot, select = -c(Litter, PlotID))
@@ -555,6 +559,7 @@ fineplot_sc <- fineplot_sc |>
   mutate_if(is.numeric, scale) %>% 
   mutate(PlotID = id$PlotID) %>% 
   mutate(SiteID = id$SiteID)
+fineplot_sc <- filter(fineplot_sc, PlotID != "OC2-P1") # remove NA row due to Calcium outlier
 
 # Variable filtering - colinearity
 
@@ -595,6 +600,7 @@ pairs(select_if(fine_sc, is.numeric),
 # Removal strongly correlated variables - BD kept as with higher number of replication for each site
 regional_sc <- subset(regional_sc, select = -c(JanTemp))
 fine_sc <- subset(fine_sc, select = -c(GWC, LOI, Humus, Nitrog))
+fineplot_sc <- subset(fineplot_sc, select = -c(GWC, LOI, Humus, Nitrog))
 
 # Contingency tables for correlation analyses
 
@@ -626,7 +632,8 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 # Fine set
 fine_long <- fine_sc |> 
   pivot_longer(
-    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
+    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
+    # cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
     names_to = "Factors",
     values_to = "Values")
 contin_fine <- xtabs(formula = Values ~ SiteID + Factors, data = fine_long)
@@ -1326,8 +1333,8 @@ plotrda_fieldfine <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-  xlim(-2.5, 3.5) +
-  ylim(-2.5, 3.5) +
+  # xlim(-2.5, 3.5) +
+  # ylim(-2.5, 3.5) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
@@ -1356,17 +1363,17 @@ plotrda_fieldfine <- ggplot() +
   theme(
     axis.title = element_text(size = 9),
     axis.text = element_text(size = 8)
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 3.2, image = "illustrations/Icons/icon_field.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  )
+  ) 
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 3, y = 3.2, image = "illustrations/Icons/icon_field.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 3, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
+  #   size = 0.15
+  # )
 plotrda_fieldfine
 ggsave("outputs/singleRDA/plotrda_fieldfine.png", plot = plotrda_fieldfine, width = 6, height = 6, units = "cm", bg = "white")
 
@@ -1565,36 +1572,36 @@ ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, widt
 
 # Fine x grass plot-level
 
-fineplot_sc <- fineplot_sc %>% 
+fineplot_sc <- fineplot_sc %>%
   mutate(SiteID = factor(SiteID))
 
 rda <- rda(select_if(grass_plot, is.numeric) ~ . + Condition(fineplot_sc$SiteID), data = select_if(fineplot_sc, is.numeric), na.action = na.exclude)
 h <- how(blocks = fineplot_sc$SiteID, nperm = 999)
 
-rsq <- as.data.frame(RsquareAdj(rda)) |> 
+rsq <- as.data.frame(RsquareAdj(rda)) |>
   mutate(type = "model", dim = "Model")
 
 ## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda, permutations = h)) 
-testrda <- testrda |> 
-  mutate(dim = rownames(testrda), type = "model") |> 
-  mutate(eigenval = Variance) |> 
+testrda <- as.data.frame(anova.cca(rda, permutations = h))
+testrda <- testrda |>
+  mutate(dim = rownames(testrda), type = "model") |>
+  mutate(eigenval = Variance) |>
   mutate(Variance = eigenval/summary(rda)$tot.chi)
 
 ## ANOVA permutation test on individual axes
 testaxis <- as.data.frame(anova.cca(rda, permutations = h, by = "axis"))
-testaxis <- testaxis |> 
-  mutate(dim = row.names(testaxis), type = "axis") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+testaxis <- testaxis |>
+  mutate(dim = row.names(testaxis), type = "axis") |>
+  mutate(eigenval = Variance) |>
+  mutate(Variance = eigenval/summary(rda)$tot.chi) |>
   filter(dim != "Residual")
 
 ## ANOVA permutation test on margins (relative importance terms)
-testerm <- as.data.frame(anova.cca(rda, permutations = h, by = "margin")) 
-testerm <- testerm |> 
-  mutate(dim = row.names(testerm), type = "margin") |> 
-  mutate(eigenval = Variance) |> 
-  mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+testerm <- as.data.frame(anova.cca(rda, permutations = h, by = "margin"))
+testerm <- testerm |>
+  mutate(dim = row.names(testerm), type = "margin") |>
+  mutate(eigenval = Variance) |>
+  mutate(Variance = eigenval/summary(rda)$tot.chi) |>
   filter(dim != "Residual")
 
 ## Summary statistics
@@ -1603,12 +1610,11 @@ names(rdatable) <- gsub("\\(", "", names(rdatable))
 names(rdatable) <- gsub("\\)", "", names(rdatable))
 names(rdatable) <- gsub(">", "", names(rdatable))
 
-rdatable
-
+ 
 ## RDA model
-rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+# rda <- rda(select_if(grass_plot, is.numeric) ~ . + Condition(fineplot_sc$SiteID), data = select_if(fineplot_sc, is.numeric), na.action = na.omit)
 rdafinegrassplot <- statrda(rda) |>
-  mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
+  mutate(model = "FinexGrassplot", explanatory = "Fine", response = "Grass") |>
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
 ## Plot RDA
@@ -1617,8 +1623,8 @@ plotrda_finegrassplot <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-  xlim(-2.9, 1.6) +
-  ylim(-2.4, 2.1) +
+  # xlim(-2.9, 1.6) +
+  # ylim(-2.4, 2.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
@@ -1649,19 +1655,19 @@ plotrda_finegrassplot <- ggplot() +
   theme(
     axis.title = element_text(size = 9),
     axis.text = element_text(size = 8)
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
-    size = 0.15
   )
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
+  #   size = 0.15
+  # )
 plotrda_finegrassplot
-ggsave("outputs/singleRDA/plotrda_finegrassplot.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
+# ggsave("outputs/singleRDA/plotrda_finegrassplot.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
 
 
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
