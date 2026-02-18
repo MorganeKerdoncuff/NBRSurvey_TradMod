@@ -11,6 +11,7 @@
 library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
+library(BiodiversityR) # community ecology analysis
 library(ggplot2) # Visual representation
 library(ggord) # Ordination plot with ggplot2
 library(ggvegan) # Function autoplot.rda for ordination plot with ggplot2
@@ -1572,17 +1573,24 @@ ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, widt
 
 # Fine x grass plot-level
 
-fineplot_sc <- fineplot_sc %>%
-  mutate(SiteID = factor(SiteID))
+perm <- how(
+  within = Within(type = "free"),
+  plots = Plots("none"),
+  blocks = fineplot_sc$SiteID,
+  nperm = 999
+)
 
-rda <- rda(select_if(grass_plot, is.numeric) ~ . + Condition(fineplot_sc$SiteID), data = select_if(fineplot_sc, is.numeric), na.action = na.exclude)
-h <- how(blocks = fineplot_sc$SiteID, nperm = 999)
+# fineplot_sc <- fineplot_sc %>%
+#   mutate(SiteID = factor(SiteID))
+fineplot_sc <- subset(fineplot_sc, select = -c(PlotID))
+
+rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
 
 rsq <- as.data.frame(RsquareAdj(rda)) |>
   mutate(type = "model", dim = "Model")
 
 ## ANOVA permutation test on RDA model
-testrda <- as.data.frame(anova.cca(rda, permutations = h))
+testrda <- as.data.frame(anova.cca(rda, permutations = perm))
 testrda <- testrda |>
   mutate(dim = rownames(testrda), type = "model") |>
   mutate(eigenval = Variance) |>
