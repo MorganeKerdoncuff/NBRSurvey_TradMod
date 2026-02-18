@@ -1380,13 +1380,12 @@ write_csv(soilbulk_full, "data/cleandata/NBR_FullSoilBulk.csv")
 #str(chem2019) # two missing variables (dry matter and total N) available in the PDF version of the document
 #str(chem2020) # two missing variables (dry matter and total N) respectively available in the complementary dataset and in the PDF version of the document
 #str(chem2020_DM) # dry matter as character
-chem2020_DM$`Tørrstoff/g/100g` <- as.numeric(chem2020_DM$`Tørrstoff/g/100g`)
 
 #
 ## Common ID for merging
 
-names(chem2019) <- gsub("Prøvenummer", "PlotID", names(chem2019)) # common ID
-names(chem2020) <- gsub("Prøvenummer", "PlotID", names(chem2020)) # common ID
+names(chem2019) <- gsub("Provenummer", "PlotID", names(chem2019)) # common ID
+names(chem2020) <- gsub("Provenummer", "PlotID", names(chem2020)) # common ID
 names(chem2020_DM) <- gsub("Merking", "PlotID", names(chem2020_DM)) # common ID
 
 #
@@ -1408,7 +1407,8 @@ extra2020 <- data.frame(
 chem2020 <- full_join(chem2020, extra2020)
 
 # Soil chemistry 2020 - dry matter
-names(chem2020_DM) <- gsub("Tørrstoff/g/100g", "DryMatter_percent", names(chem2020_DM))
+names(chem2020_DM) <- gsub("Torrstoff.g.100g", "DryMatter_percent", names(chem2020_DM))
+chem2020_DM$DryMatter_percent <- as.numeric(chem2020_DM$DryMatter_percent)
 chem2020 <- left_join(chem2020, chem2020_DM)
 
 # Merging 2019 and 2020 tables
@@ -1420,7 +1420,7 @@ soilchem_raw <- full_join(chem2019, chem2020)
 # R friendly variable names
 names(soilchem_raw) <- gsub("Jordart", "SoilType", names(soilchem_raw))
 names(soilchem_raw) <- gsub("Leirklasse", "ClayCategory", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Glødetap", "LOI", names(soilchem_raw))
+names(soilchem_raw) <- gsub("Glodetap", "LOI", names(soilchem_raw))
 names(soilchem_raw) <- gsub("Volumvekt", "SoilDensity_kg.L", names(soilchem_raw))
 names(soilchem_raw) <- gsub("Mold", "Humus_percentDM", names(soilchem_raw))
 names(soilchem_raw) <- gsub("Humus_percentDMklasse", "HumusCategory", names(soilchem_raw))
@@ -1434,7 +1434,7 @@ names(soilchem_raw) <- gsub("Na.Al", "Na.Al_mg.100g", names(soilchem_raw))
 # Removal dummy and/or empty variables from Eurofins protocol
 soilchem_raw <- soilchem_raw |>   
   discard(~all(is.na(.) | . =="")) # remove all empty columns
-soilchem_raw <- subset(soilchem_raw, select = -c(Årstall, Journalnr, Navn, Postnr, Poststed, Registreringsdato, batchCode, contactName, Adresse, samplePartnerCode)) # remove useless columns
+soilchem_raw <- subset(soilchem_raw, select = -c(Arstall, Journalnr, Navn, Postnr, Poststed, Registreringsdato, batchCode, contactName, Adresse, samplePartnerCode)) # remove useless columns
 
 # New ID variables
 soilchem_raw$PlotID <- paste(substr(soilchem_raw$PlotID, 1, 3), substr(soilchem_raw$PlotID, 4, 4), sep= "-P") #Create PlotID same format as other sheets
