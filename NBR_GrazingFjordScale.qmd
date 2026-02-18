@@ -112,28 +112,77 @@ To the knowledge of the farmers, no field had been resown and/or plowed since at
 
 ## Data collection
 
+### Regional environment
+
+``` {r CorrelationTempRangeLongitude}
+#| message: false
+#| warning: false
+
+oceanity <- left_join(climate_infield, siteinfo_full)
+lm_oceanity <- lm(maxtempJuly-mintempJan ~ EPSG.25832_X, data = oceanity)
+summary_oceanity <- summary(lm_oceanity)
+
+```
+
+<!-- On site, we recorded field coordinates (SCR EPSG:25832), elevation, and field slope angle with a compass clinometer.  -->
+<!-- We determined slope aspect degree and distance to the closest fjord from a Digital Elevation Model of 10 m x 10 m cell size retrieved from the GeoNorge online map catalogue of the Norwegian Mapping Authority [@kartverketGeoNorgeKartkatalogen2023].  -->
+Average annual precipitation, maximum and average July temperatures, and minimum and average January temperatures, were obtained from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
+Average annual temperature range, calculated as the difference between maximum July temperature and minimum January temperature, showed a strong linear relationship with longitude (adjusted R^2^ = `r op(summary_oceanity$adj.r.squared, 2)`, F = `r op(summary_oceanity$fstatistic[1], 0)`, p-value = `r op(summary_oceanity$coefficients[2,4], 3)`) and was used as a proxy for oceanity.
+For sites not covered by the daily projections, data were extrapolated from averaging values of neighbouring cells with the R software package *terra* (v. 1.7.29) [@hijmansTerraSpatialData2023; @rcoreteamLanguageEnvironmentStatistical2024].
+
+### Landscape matrix
+
+We calculated land use percent cover in a 1 km radius area around each field from land cover data provided by the Norwegian Institute of Bioeconomy Research (NIBIO) [@norskinstituttforbiookonominibioKildenArealinformasjon2023].
+Land cover was categorised according to the AR5 land cover classification system [@ahlstromAR5Klassifikasjonssystem2019], that we simplified into eight categories:
+forest area, including managed and non-managed; 
+cultivated area, either fully or partially; 
+infield area, i.e. enclosed, productive grazing area (permanent grasslands); 
+outfield area, i.e. unenclosed, low-productivity grazing area (shrublands or heathlands); 
+wetland area; 
+artificial area.
+
+### Field management
+
+We conducted phone interviews with 23 farmers from October 2021 to January 2022 to collect information on field management. 
+For the 3 out of 26 farmers who were unable or unwilling to reply to our survey, we used data from a similar interview series conducted in 2018 [@reiersenBaerekraftVestnorskLandbruk2019]. 
+We asked the farmers for the following elements: 
+the type of livestock which has been grazing the site for the past 5 years; 
+the size of the flock, including adults and young; 
+the grazing period on the visited field; 
+the total surface area of infields grazed by the animals on the farm; 
+the size of the grazing field we selected as a survey site.
+
+Stocking density is usually calculated as follows: 
+
+$$
+\text{Stocking density} = \frac{\text{number animals}\times{\text{standard livestock unit}}}{\text{area}\times{\text{grazing period}}}
+$$ 
+
+However, estimating stocking density for individual fields was challenging, as  most respondents could not give us accurate field occupation periods due to the regular transfers of livestock during the season.
+We thus arranged the formula to calculate instead an average stocking density for the farms' total infield area over a year:
+
+$$
+\text{Average stocking density} = \frac{\text{Nadults}\times{\text{standard  LU}} + \text{Nyoung}\times{\text{young LU}} }{\text{total infield area of the farm}}
+$$ 
+
+We defined the reference livestock unit (LU) for young sheep and goats as half the value of adult (0.05 LU). 
+The total infield area within each farm was retrieved from the map of agricultural properties made by the Norwegian Institute of Bioeconomy Research (https://gardskart.nibio.no/). 
+We included both areas classified as infields (*innmark*) and unclassified areas which were known as grazing fields from the farmer and/or from field observation. 
+For two farms (IG1 and IG2) where livestock was moved to mountain summer farms every year, we calculated average stocking density for the time period when animals were in the lowlands.
+
+### Fine-scale environment
+
+The study design for collecting fine-scale environment and community data is based on @demeauxJustGrazeIt2024.
 We visited each of the 29 sites once, starting in mid-June at the westernmost sites and ending in late July at the easternmost sites to account for the spring bloom time difference [@karlsenVariabilityStartGrowing2007]. 
 On each site, we laid out a nested sampling design within a representative area of 400 m^2^, preferentially 20 m x 20 m but when necessary 40 m x 10 m, avoiding rocks, waterlogged ground, trees and field edges.
 According to the same exclusion rules, we set three plots of 3 m x 3 m in the sampling area, at least 6 m apart from each other (@fig-sampling). 
-Each plot was divided into nine subplots of 1 m^2^, five of them dedicated to non-destructive plant community observations, and the remaining four used for destructive sampling of the dung-associated beetle community and soil.
+Each plot was divided into nine subplots of 1 m^2^, five non-destructive and four destructive respectively.
+<!-- Five of them were dedicated to observations of vegetation structure and the remaining four were used for destructive sampling of soil physicochemical parameters. -->
+In each non-destructive subplot (15 per site), we evaluated the average percent cover of bare ground, rock, litter and bryophytes, and we estimated average vegetation height from three random measurements within the subplot.
 
 ![Schematic representation of the nested sampling design applied in a representative area of each site. Field sampling was carried out on the same day except for beetle trapping. Credits: figure created using Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figure3.png){#fig-sampling width=50%}
 
-### Grass, forb and dung-associated beetle assemblages
-
-In each non-destructive subplot (15 per site), all plant species were identified using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed an average percent cover by one of the same two observers.
-When necessary, specimens were collected, coded and brought for microscopic or expert identification.
-We determined the average percent cover of bare ground, rock and litter, and estimated average vegetation height out of three random measurements within the subplot.
-
-In each destructive subplot (12 per site), we collected dung-associated beetles with dung-baited pitfall traps set for one full week between early July and early August.
-Traps were made of white plastic cups of 1 L (diam. 10.5 cm, height 11.5 cm) filled to 1/4 with salted water, with a drop of neutral detergent to break water surface tension. 
-The cups were covered with a square metal grid of 2 cm x 2 cm mesh size pegged into the ground, on which we put a ball of about fist size of previously-frozen cattle dung.
-The dung ball was placed at the centre of the grid, at least 3 cm from the edge of the cup to provide enough space for beetles to fall in.
-Beetles were stored in 70% ethanol and identified to the family level using the identification key from @duffBeetlesBritainIreland2012a.
-The sampling design resulted in a spatial clumping of pitfall traps, but it was not deemed to cause spatial autocorrelation or affect our abundance data [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
-
-### Soil data
-
+Destructive subplots were dedicated to the determination of soil physicochemical properties.
 We characterised soil structure using three complementary measurements: 
 soil resistance to penetration, induced by root mat density and soil texture; 
 bulk density, as a proxy for soil compaction;
@@ -169,63 +218,17 @@ For chemical analyses, we sampled soil with a stainless steel cylindrical core o
 The soil was stored at 4°C before being sieved and merged at the plot level (3 per site).
 We sent 0.5 L of each pooled sample to a certified analysis laboratory to determine total nitrogen content with modified Kjeldahl method (NS-EN 13654-1:2890) [@bremnerDeterminationNitrogenSoil1960], and available phosphorus concentration with ammonium lactacte extraction method [@brayDeterminationTotalOrganic1945].
 
-### Regional environment data
+### Grass, forb and dung-associated beetle assemblages
 
-``` {r CorrelationTempRangeLongitude}
-#| message: false
-#| warning: false
-
-oceanity <- left_join(climate_infield, siteinfo_full)
-lm_oceanity <- lm(maxtempJuly-mintempJan ~ EPSG.25832_X, data = oceanity)
-summary_oceanity <- summary(lm_oceanity)
-
-```
-
-On site, we recorded field coordinates (SCR EPSG:25832), elevation, and field slope angle with a compass clinometer. 
-We determined slope aspect degree and distance to the closest fjord from a Digital Elevation Model of 10 m x 10 m cell size retrieved from the GeoNorge online map catalogue of the Norwegian Mapping Authority [@kartverketGeoNorgeKartkatalogen2023]. 
-Average annual precipitation, maximum and average July temperatures, and minimum and average January temperatures, were obtained from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
-Average annual temperature range, calculated as the difference between maximum July temperature and minimum January temperature, showed a strong linear relationship with longitude (adjusted R^2^ = `r op(summary_oceanity$adj.r.squared, 2)`, F = `r op(summary_oceanity$fstatistic[1], 0)`, p-value = `r op(summary_oceanity$coefficients[2,4], 3)`) and was used as a proxy for oceanity.
-For sites not covered by the daily projections, data were extrapolated from averaging values of neighbouring cells with the R software package *terra* (v. 1.7.29) [@hijmansTerraSpatialData2023; @rcoreteamLanguageEnvironmentStatistical2024].
-
-### Landscape matrix data
-
-We calculated land use percent cover in a 1 km radius area around each field from land cover data provided by the Norwegian Institute of Bioeconomy Research (NIBIO) [@norskinstituttforbiookonominibioKildenArealinformasjon2023].
-Land cover was categorised according to the AR5 land cover classification system [@ahlstromAR5Klassifikasjonssystem2019], that we simplified into eight categories:
-forest area, including managed and non-managed; 
-cultivated area, either fully or partially; 
-infield area, i.e. enclosed, productive grazing area (permanent grasslands); 
-outfield area, i.e. unenclosed, low-productivity grazing area (shrublands or heathlands); 
-wetland area; 
-artificial area.
-
-### Field management data
-
-We conducted phone interviews with 23 farmers from October 2021 to January 2022 to collect information on field management. 
-For the 3 out of 26 farmers who were unable or unwilling to reply to our survey, we used data from a similar interview series conducted in 2018 [@reiersenBaerekraftVestnorskLandbruk2019]. 
-We asked the farmers for the following elements: 
-the type of livestock which has been grazing the site for the past 5 years; 
-the size of the flock, including adults and young; 
-the grazing period on the visited field; 
-the total surface area of infields grazed by the animals on the farm; 
-the size of the grazing field we selected as a survey site.
-
-Stocking density is usually calculated as follows: 
-
-$$
-\text{Stocking density} = \frac{\text{number animals}\times{\text{standard livestock unit}}}{\text{area}\times{\text{grazing period}}}
-$$ 
-
-However, estimating stocking density for individual fields was challenging, as  most respondents could not give us accurate field occupation periods due to the regular transfers of livestock during the season.
-We thus arranged the formula to calculate instead an average stocking density for the farms' total infield area over a year:
-
-$$
-\text{Average stocking density} = \frac{\text{Nadults}\times{\text{standard  LU}} + \text{Nyoung}\times{\text{young LU}} }{\text{total infield area of the farm}}
-$$ 
-
-We defined the reference livestock unit (LU) for young sheep and goats as half the value of adult (0.05 LU). 
-The total infield area within each farm was retrieved from the map of agricultural properties made by the Norwegian Institute of Bioeconomy Research (https://gardskart.nibio.no/). 
-We included both areas classified as infields (*innmark*) and unclassified areas which were known as grazing fields from the farmer and/or from field observation. 
-For two farms (IG1 and IG2) where livestock was moved to mountain summer farms every year, we calculated average stocking density for the time period when animals were in the lowlands.
+In each non-destructive subplot (15 per site), all plant species were identified using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed an average percent cover by one of the same two observers.
+When necessary, specimens were collected, coded and brought for microscopic or expert identification.
+<!-- We determined the average percent cover of bare ground, rock and litter, and estimated average vegetation height out of three random measurements within the subplot. -->
+In each destructive subplot (12 per site), we collected dung-associated beetles with dung-baited pitfall traps set for one full week between early July and early August.
+Traps were made of white plastic cups of 1 L (diam. 10.5 cm, height 11.5 cm) filled to 1/4 with salted water, with a drop of neutral detergent to break water surface tension. 
+The cups were covered with a square metal grid of 2 cm x 2 cm mesh size pegged into the ground, on which we put a ball of about fist size of previously-frozen cattle dung.
+The dung ball was placed at the centre of the grid, at least 3 cm from the edge of the cup to provide enough space for beetles to fall in.
+Beetles were stored in 70% ethanol and identified to the family level using the identification key from @duffBeetlesBritainIreland2012a.
+The sampling design resulted in a spatial clumping of pitfall traps, but it was not deemed to cause spatial autocorrelation or affect our abundance data [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
 
 ## Data analysis
 
@@ -487,6 +490,11 @@ Ordination plots of RDA models (a) between the fine-scale environment and domina
 \newpage
 
 # DISCUSSION
+
+<!-- - Difference between CANCOR and RDA: cancor shows maximum variance from the data, RDA constrains according to the explanatory variables -->
+<!-- - Interpretations: -->
+<!-- - NS CANCOR vs *RDA: explanatory variables not strong enough when max variance, but significant when variance constrained by them -->
+<!-- - *CANCOR vs NS RDA: could that show an artifact of the CANCOR ? -->
 
 Among the complexity of the cross-scale interactions in the small-scale grazing systems of Western Norway, we were able to identify some links between environmental gradients, land use and dominant plant and dung-associated beetle assemblages of semi-natural grasslands.
 The composition of the landscape matrix of the Nordhordland UNESCO Biosphere Reserve was influenced by the geography of the fjord region, with an increase of more intensively managed areas such as infields and croplands towards the nearest fjord shorelines.
