@@ -11,6 +11,7 @@
 library(tidyverse) # R language
 library(purrr) # Data manipulation: function "reduce" to bind several tables at the same time
 library(vegan) # Community ecology analysis
+library(BiodiversityR) # community ecology analysis
 library(ggplot2) # Visual representation
 library(ggord) # Ordination plot with ggplot2
 library(ggvegan) # Function autoplot.rda for ordination plot with ggplot2
@@ -72,8 +73,8 @@ beetle_infield <- filter(beetle_full, SiteID %in% siteinfo_infield$SiteID)
 ## Field management - validated
 ## Area 20 x 20 - validated
 
-## Ground cover - current at sample level -> summary by average
-groundcover_infield <- groundcover_infield |>  
+## Ground cover - current at sample level -> site-level summary by average
+groundcover_site <- groundcover_infield |>  
   group_by(SiteID) |>  
   summarise(BareGrd = mean(Bare_soil, na.rm=TRUE),
             Rocks = mean(Rocks, na.rm=TRUE),
@@ -87,14 +88,35 @@ groundcover_infield <- groundcover_infield |>
             MaxHeight = mean(VG_max_height_cm, na.rm=TRUE),
             PlantRich = mean(Plant_species_richness, na.rm=TRUE))
 
-## Bulk density - current at sample level -> summary by average
-soilbulk_infield <- soilbulk_infield |> 
+## Ground cover - current at sample level -> plot-level summary by average
+groundcover_plot <- groundcover_infield |>  
+  group_by(PlotID, SiteID) |>  
+  summarise(BareGrd = mean(Bare_soil, na.rm=TRUE),
+            Rocks = mean(Rocks, na.rm=TRUE),
+            Litter = mean(Litter, na.rm=TRUE),
+            DeadWood = mean(Dead_wood, na.rm=TRUE),
+            Bryo = mean(Bryophytes, na.rm=TRUE),
+            Lichen = mean(Lichen, na.rm=TRUE),
+            Vasc = mean(Vascular, na.rm=TRUE),
+            Blossom = mean(Blossom_cover, na.rm=TRUE),
+            MeanHeight = mean(VG_mean_height_cm, na.rm=TRUE),
+            MaxHeight = mean(VG_max_height_cm, na.rm=TRUE),
+            PlantRich = mean(Plant_species_richness, na.rm=TRUE))
+
+## Bulk density - current at sample level -> site-level summary by average
+soilbulk_site <- soilbulk_infield |> 
   group_by(SiteID) |> 
   summarise(BD = mean(BD),
             GWC = mean(GWC_48))
 
-## Soil chemistry - current at plot level -> summary by average
-soilchem_infield <- soilchem_infield |> 
+## Bulk density - current at sample level -> plot-level summary by average
+soilbulk_plot <- soilbulk_infield |> 
+  group_by(PlotID, SiteID) |> 
+  summarise(BD = mean(BD),
+            GWC = mean(GWC_48))
+
+## Soil chemistry - current at plot level -> site-level summary by average
+soilchem_site <- soilchem_infield |> 
   # Post-analysis verification to determine if soil penetration is related to soil texture -> answer is no
   # mutate(SoilType = ifelse(
   #   SoilType == "Medium_sand", 2, ifelse(
@@ -113,14 +135,44 @@ soilchem_infield <- soilchem_infield |>
             Nitrog = mean(TotalN_percentDM),
             Sodium = mean(Na.Al_mg.100g))
 
-## Soil penetration - current at sample level -> summary by average
-soilpene_infield <- soilpene_infield |> 
+## Soil chemistry - current at plot level -> plot-level summary by average
+soilchem_plot <- soilchem_infield |> 
+  # Post-analysis verification to determine if soil penetration is related to soil texture -> answer is no
+  # mutate(SoilType = ifelse(
+  #   SoilType == "Medium_sand", 2, ifelse(
+  #     SoilType == "Fine_sand", 3, ifelse(
+  #       SoilType == "Silty_medium_sand", 5, ifelse(
+  #         SoilType == "Silty_fine_sand", 6, ifelse(
+  #           SoilType == "Mineral_mixed_humus_soil", 13, 14
+  #         )))))) |>
+  group_by(PlotID, SiteID) |> 
+  summarise(LOI = mean(LOI),
+            #SoilType = mean(SoilType),
+            Humus = mean(Humus_percentDM),
+            pH = mean(pH),
+            Phosph = mean(P.Al_mg.100g),
+            Potass = mean(K.Al_mg.100g),
+            Nitrog = mean(TotalN_percentDM),
+            Sodium = mean(Na.Al_mg.100g))
+
+## Soil penetration - current at sample level -> site-level summary by average
+soilpene_site <- soilpene_infield |> 
   group_by(SiteID) |> 
   summarise(SoilPene = mean(AveragePT_cm))
 
+## Soil penetration - current at sample level -> plot-level summary by average
+soilpene_plot <- soilpene_infield |> 
+  group_by(PlotID, SiteID) |> 
+  summarise(SoilPene = mean(AveragePT_cm))
+
 ## Plant community - current at quadrat level -> summary by average
-vege_infield <- vege_infield |> 
+vege_site <- vege_infield |> 
   group_by(SiteID, Species) |> 
+  summarise(PlantSp_cover = mean(Abundance))
+
+## Plant community - plot-level summary
+vege_plot <- vege_infield %>% 
+  group_by(PlotID, SiteID, Species) %>% 
   summarise(PlantSp_cover = mean(Abundance))
 
 ## Beetle community - current at pitfall level -> summary by average
@@ -128,13 +180,18 @@ beetle_infield <- beetle_infield |>
   group_by(SiteID, BeetleFamilies) |> 
   summarise(BeetleFam_abundance = mean(BeetleFam_abundance))
 
+## id string
+
+id <- subset(groundcover_plot, select = c(SiteID, PlotID))
+idplot <- filter(id, PlotID != "OC2-P1")
+
 # Selection & transformation plant community data
 
 ## Data distribution
 #hist(vege_grass$PlantSp_cover) # Poisson, highly skewed
 
 ## Species frequencies across sites
-vege_freq <- filter(vege_infield, PlantSp_cover>0) |>
+vege_freq <- filter(vege_site, PlantSp_cover>0) |>
   group_by(Species) |>
   count() |>
   dplyr::arrange(desc(n)) # filtering by frequency
@@ -146,7 +203,7 @@ filter(vege_freq, n > 9 & n < 20)
 # 10 forb species in at least 10 sites R. acris; P. erecta; G. saxatile; r. repens; A. millefolium; C. majus; H. radicata; C. pratensis; V. palustris; C. rotundifolia
 
 ## Species average percent cover across site
-vege_average <- vege_infield |>
+vege_average <- vege_site |>
   group_by(Species) |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) |> 
@@ -168,10 +225,10 @@ filter(vege_average, PlantSp_cover < 3 & PlantSp_cover > 1)
 # 4 forb species over 1%  P. erecta; R. repens; A. millefolium; R acris
 # filter(vege_freq, Species == "Lolium perenne") only present in 6 sites
 
-# Selection and transformation grass assemblage
+# Selection and transformation grass assemblage site-level
 
 ## Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
-grass <- subset(vege_infield,
+grass <- subset(vege_site,
                 Species == "Agrostis capillaris" |
                 Species == "Festuca rubra" | 
                 Species == "Holcus lanatus" | 
@@ -200,10 +257,45 @@ names(grass) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass))
 names(grass) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass))
 names(grass) <- gsub("Poa trivialis", "P.trivialis", names(grass))
 
-# Selection and transformation forb assemblage
+# Selection and transformation grass assemblage plot-level
+
+## Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
+grass_plot <- subset(vege_plot,
+                Species == "Agrostis capillaris" |
+                  Species == "Festuca rubra" | 
+                  Species == "Holcus lanatus" | 
+                  Species == "Poa pratensis" | 
+                  Species == "Deschampsia cespitosa" | 
+                  Species == "Anthoxantum odoratum" | 
+                  Species == "Deschampsia flexuosa" | 
+                  Species == "Poa trivialis")
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_grass_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = grass_plot)
+contin_grass_plot <- decostand(contin_grass_plot, method = "hellinger")
+
+## Wide table
+grass_plot <- as.data.frame(contin_grass_plot)
+grass_plot <- grass_plot |>
+  pivot_wider(names_from = Species, values_from = Freq) %>% 
+  mutate(SiteID = id$SiteID)
+grass_plot <- filter(grass_plot, PlotID != "OC2-P1")
+
+## Suitable variable names
+names(grass_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(grass_plot))
+names(grass_plot) <- gsub("Festuca rubra", "F.rubra", names(grass_plot))
+names(grass_plot) <- gsub("Holcus lanatus", "H.lanatus", names(grass_plot))
+names(grass_plot) <- gsub("Poa pratensis", "P.pratensis", names(grass_plot))
+names(grass_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass_plot))
+names(grass_plot) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass_plot))
+names(grass_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass_plot))
+names(grass_plot) <- gsub("Poa trivialis", "P.trivialis", names(grass_plot))
+
+
+# Selection and transformation forb assemblage site-level
 
 ## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
-forb <- subset(vege_infield,
+forb <- subset(vege_site,
                 Species == "Trifolium repens" |
                   Species == "Rumex acetosa" |
                   Species == "Galium saxatile" |
@@ -230,7 +322,39 @@ names(forb) <- gsub("Ranunculus acris", "R.acris", names(forb))
 names(forb) <- gsub("Ranunculus repens", "R.repens", names(forb))
 names(forb) <- gsub("Achillea millefolium", "A.millefolium", names(forb))
 
-## Transformation beetle assemblage data
+# Selection and transformation forb assemblage plot-level
+
+## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
+forb_plot <- subset(vege_plot,
+               Species == "Trifolium repens" |
+                 Species == "Rumex acetosa" |
+                 Species == "Galium saxatile" |
+                 Species == "Potentilla erecta" |
+                 Species == "Ranunculus acris" |
+                 Species == "Ranunculus repens" |
+                 Species == "Achillea millefolium")
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_forb_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = forb_plot)
+contin_forb_plot <- decostand(contin_forb_plot, method = "hellinger")
+
+## Wide table
+forb_plot <- as.data.frame(contin_forb_plot)
+forb_plot <- forb_plot |>
+  pivot_wider(names_from = Species, values_from = Freq) %>% 
+  mutate(SiteID = id$SiteID)
+forb_plot <- filter(forb_plot, PlotID != "OC2-P1")
+
+## Suitable variable names
+names(forb_plot) <- gsub("Trifolium repens", "T.repens", names(forb_plot))
+names(forb_plot) <- gsub("Rumex acetosa", "R.acetosa", names(forb_plot))
+names(forb_plot) <- gsub("Galium saxatile", "G.saxatile", names(forb_plot))
+names(forb_plot) <- gsub("Potentilla erecta", "P.erecta", names(forb_plot))
+names(forb_plot) <- gsub("Ranunculus acris", "R.acris", names(forb_plot))
+names(forb_plot) <- gsub("Ranunculus repens", "R.repens", names(forb_plot))
+names(forb_plot) <- gsub("Achillea millefolium", "A.millefolium", names(forb_plot))
+
+# Transformation beetle assemblage data
 
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
@@ -250,7 +374,7 @@ beetle_average <- beetle_infield |>
 filter(beetle_average, BeetleFam_abundance > 3)
 # 5 beetles families with at least 3 individuals on average Staph; Ptili; Hydro; Scara; Carab
 
-## Selection main dung beetle families -> at least present in 10 sites + min 3 individuals on average -> 6 families
+## Selection main dung beetle families site-level -> at least present in 10 sites + min 3 individuals on average -> 6 families
 beetle <- subset(beetle_infield,
                  BeetleFamilies == "Carabidae" |
                    BeetleFamilies == "Staphylinidae" |
@@ -266,6 +390,25 @@ contin_beetle <- decostand(contin_beetle, method = "hellinger")
 beetle <- as.data.frame(contin_beetle)
 beetle <- beetle |>
   pivot_wider(names_from = BeetleFamilies, values_from = Freq)
+
+# ## Selection main dung beetle families plot-level -> at least present in 10 sites + min 3 individuals on average -> 6 families
+# beetle_plot <- subset(beetle_infield,
+#                  BeetleFamilies == "Carabidae" |
+#                    BeetleFamilies == "Staphylinidae" |
+#                    BeetleFamilies == "Hydrophilidae" |
+#                    BeetleFamilies == "Ptiliidae" |
+#                    BeetleFamilies == "Scarabaeidae")
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
+# contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
+# 
+# ## Wide table
+# beetle_plot <- as.data.frame(contin_beetle_plot)
+# beetle_plot <- beetle_plot |>
+#   pivot_wider(names_from = BeetleFamilies, values_from = Freq)
+#   mutate(SiteID = id$SiteID)
+# beetle_plot <- filter(beetle_plot, PlotID != "OC2-P1")
 
 # Explanatory set regional scale
 
@@ -372,7 +515,7 @@ field <- subset(field, select = -c(NbAdults))
 field_sc <- field |> 
   mutate(across(where(is.numeric), scale))
 
-# Explanatory set fine scale
+# Explanatory set fine scale - site level
 
 ## Desired variables
 ### litter and bryophyte percent cover from groundcover
@@ -383,12 +526,13 @@ field_sc <- field |>
 ### aspect & slope from area20x20
 
 ## Selection variables
-fine <- purrr::reduce(list(groundcover_infield, soilbulk_infield, soilpene_infield, soilchem_infield, area20x20_infield), dplyr::left_join)
-fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+fine <- purrr::reduce(list(groundcover_site, soilbulk_site, soilpene_site, soilchem_site, area20x20_infield), dplyr::left_join)
+fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
+# fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
 
 ## Suitable variable names
-names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
-names(fine) <- gsub("Slope_degree", "Slope", names(fine))
+# names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
+# names(fine) <- gsub("Slope_degree", "Slope", names(fine))
 
 # Variable distribution
 #hist(fine$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
@@ -408,7 +552,35 @@ names(fine) <- gsub("Slope_degree", "Slope", names(fine))
 ## Scaling numeric variables
 fine <- subset(fine, select = -c(Litter))
 fine_sc <- fine |> 
+  # mutate_if(is.numeric, scale)
   mutate(across(where(is.numeric), scale))
+
+# Explanatory set fine scale - plot level
+
+## Desired variables
+### litter and bryophyte percent cover from groundcover
+### sward average height from groundcover
+### bulk density and gravimetric water content from soilbulk
+### LOI, nitrogen, phosphorus, pH & humus content from soilchem
+### soil resistance to penetration from soilpene
+### aspect & slope from area20x20
+
+## Selection variables
+fine_plot <- purrr::reduce(list(groundcover_plot, soilbulk_plot, soilpene_plot, soilchem_plot, area20x20_infield), dplyr::left_join)
+fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
+# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+
+## Suitable variable names
+# names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
+# names(fine_plot) <- gsub("Slope_degree", "Slope", names(fine_plot))
+
+## Scaling numeric variables
+fineplot_sc <- subset(fine_plot, select = -c(Litter, PlotID))
+fineplot_sc <- fineplot_sc |> 
+  mutate_if(is.numeric, scale) %>% 
+  mutate(PlotID = id$PlotID) %>% 
+  mutate(SiteID = id$SiteID)
+fineplot_sc <- filter(fineplot_sc, PlotID != "OC2-P1") # remove NA row due to Calcium outlier
 
 # Variable filtering - colinearity
 
@@ -449,6 +621,7 @@ pairs(select_if(fine_sc, is.numeric),
 # Removal strongly correlated variables - BD kept as with higher number of replication for each site
 regional_sc <- subset(regional_sc, select = -c(JanTemp))
 fine_sc <- subset(fine_sc, select = -c(GWC, LOI, Humus, Nitrog))
+fineplot_sc <- subset(fineplot_sc, select = -c(GWC, LOI, Humus, Nitrog))
 
 # Contingency tables for correlation analyses
 
@@ -480,7 +653,8 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 # Fine set
 fine_long <- fine_sc |> 
   pivot_longer(
-    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
+    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
+    # cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
     names_to = "Factors",
     values_to = "Values")
 contin_fine <- xtabs(formula = Values ~ SiteID + Factors, data = fine_long)
@@ -784,6 +958,7 @@ comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
 
 #### RDA stat summary function ####
 
+# Field-level
 statrda <- function(rda) {
   
   ## Adjusted variance explained by the RDA model
@@ -807,6 +982,53 @@ statrda <- function(rda) {
   
   ## ANOVA permutation test on margins (relative importance terms)
   testerm <- as.data.frame(anova.cca(rda, by = "margin")) 
+  testerm <- testerm |> 
+    mutate(dim = row.names(testerm), type = "margin") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## Summary statistics
+  rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+  names(rdatable) <- gsub("\\(", "", names(rdatable))
+  names(rdatable) <- gsub("\\)", "", names(rdatable))
+  names(rdatable) <- gsub(">", "", names(rdatable))
+  
+  rdatable
+}
+
+# Plot-level
+statrdaplot <- function(rda) {
+  
+  ## Permutation design
+  perm <- how(
+    within = Within(type = "none"),
+    plots = Plots(strata = as.factor(fineplot_sc$PlotID), type = "free"),
+    blocks = as.factor(fineplot_sc$SiteID),
+    nperm = 999
+  )
+  
+  ## Adjusted variance explained by the RDA model
+  rsq <- as.data.frame(RsquareAdj(rda)) |> 
+    mutate(type = "model", dim = "Model")
+  
+  ## ANOVA permutation test on RDA model
+  testrda <- as.data.frame(anova.cca(rda), permutations = perm) 
+  testrda <- testrda |> 
+    mutate(dim = rownames(testrda), type = "model") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi)
+  
+  ## ANOVA permutation test on individual axes
+  testaxis <- as.data.frame(anova.cca(rda, by = "axis", permutations = perm))
+  testaxis <- testaxis |> 
+    mutate(dim = row.names(testaxis), type = "axis") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## ANOVA permutation test on margins (relative importance terms)
+  testerm <- as.data.frame(anova.cca(rda, by = "margin", permutations = perm)) 
   testerm <- testerm |> 
     mutate(dim = row.names(testerm), type = "margin") |> 
     mutate(eigenval = Variance) |> 
@@ -1180,8 +1402,8 @@ plotrda_fieldfine <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-  xlim(-2.5, 3.5) +
-  ylim(-2.5, 3.5) +
+  # xlim(-2.5, 3.5) +
+  # ylim(-2.5, 3.5) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
@@ -1210,17 +1432,17 @@ plotrda_fieldfine <- ggplot() +
   theme(
     axis.title = element_text(size = 9),
     axis.text = element_text(size = 8)
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 3.2, image = "illustrations/Icons/icon_field.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  )
+  ) 
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 3, y = 3.2, image = "illustrations/Icons/icon_field.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 3, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
+  #   size = 0.15
+  # )
 plotrda_fieldfine
 ggsave("outputs/singleRDA/plotrda_fieldfine.png", plot = plotrda_fieldfine, width = 6, height = 6, units = "cm", bg = "white")
 
@@ -1357,7 +1579,7 @@ plotrda_fieldgrass <- ggplot() +
 plotrda_fieldgrass
 ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
 
-# Fine x grass
+# Fine x grass site-level
 
 ## RDA model
 rda <- rda(select_if(grass, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
@@ -1416,6 +1638,69 @@ plotrda_finegrass <- ggplot() +
   )
 plotrda_finegrass
 ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
+
+# Fine x grass plot-level
+
+## RDA model
+rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+rdafinegrassplot <- statrdaplot(rda) |>
+  mutate(model = "FinexGrassplot", explanatory = "Fine", response = "Grass") |>
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA model
+
+## Plot RDA
+plotrda_finegrassplot <- ggplot() +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+  # xlim(-2.9, 1.6) +
+  # ylim(-2.4, 2.1) +
+  geom_point(
+    data = filter(fortify(rda), score == "sites"),
+    mapping = aes(x = RDA1, y = RDA2),
+    size = 1
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA1, y = RDA2, label = label),
+    colour = "black",
+    size = 3
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA1*3, y = RDA2*3, label = label),
+    colour = "darkred",
+    size = 3,
+    nudge_x = -0.1,
+    nudge_y = 0.1
+  ) +
+  coord_equal() +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  )
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
+  #   size = 0.15
+  # )
+plotrda_finegrassplot
+ggsave("outputs/singleRDA/plotrda_finegrassplot.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
+
 
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
 
@@ -1550,7 +1835,7 @@ plotrda_fieldforb <- ggplot() +
 plotrda_fieldforb
 ggsave("outputs/singleRDA/plotrda_fieldforb.png", plot = plotrda_fieldforb, width = 6, height = 6, units = "cm", bg = "white")
 
-# Fine x forb
+# Fine x forb - site-level
 
 ## RDA model
 rda <- rda(select_if(forb, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
@@ -1607,6 +1892,64 @@ plotrda_fineforb <- ggplot() +
   )
 plotrda_fineforb
 ggsave("outputs/singleRDA/plotrda_fineforb.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
+
+# Fine x forb - plot-level
+
+## RDA model
+rda <- rda(select_if(forb_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+rdafineforbplot <- statrdaplot(rda) |>
+  mutate(model = "FinexForb", explanatory = "Fine", response = "Forb") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+plotrda_fineforbplot <- ggplot() +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+  # xlim(-2, 2.7) +
+  # ylim(-2, 2.7) +
+  geom_point(
+    data = filter(fortify(rda), score == "sites"),
+    mapping = aes(x = RDA1, y = RDA2),
+    size = 1
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA1, y = RDA2, label = label),
+    colour = "black",
+    size = 3
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA1*3, y = RDA2*3, label = label),
+    colour = "darkred",
+    size = 3
+  ) +
+  coord_equal() +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  ) 
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 2.4, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 2.4, y = 1.96, image = "illustrations/Icons/icon_forb.png"),
+  #   size = 0.15
+  # )
+plotrda_fineforbplot
+ggsave("outputs/singleRDA/plotrda_fineforbplot.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
