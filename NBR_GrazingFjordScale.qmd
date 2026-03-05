@@ -37,7 +37,7 @@ theme_set(theme_bw(base_size = 5))
 
 Pasture-based husbandry has shaped plant and animal communities of high diversity that support multiple ecosystem functions.
 However, the direct impact of grazing management on the composition of these communities is not as straightforward, due to complex interactions between management and underlying environmental gradients.
-Here we present an attempt at disentangling these interactions across multiple spatial scales in an exploratory study of the agroecological system of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
+Here we present an attempt at disentangling these interactions and their influences on grassland plant and animal communities across multiple spatial scales in the agroecological system of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
 We used both canonical correlation analyses and redundancy analyses to investigate
 1) links between the regional environment, the landscape matrix, the field management and the fine-scale environment of 29 grazed fields, and
 2) links between these factors and dominant grass, forb and dung-associated beetle assemblages.
@@ -97,7 +97,7 @@ and dung-associated beetle families, as indirect support of forage production th
 The Nordhordland UNESCO Biosphere Reserve is located in the fjord region of Western Norway, between the Bergen region to the south and the Sognefjord, Europe's deepest and longest fjord, to the north [@kalandNordhordlandBiosphereReserve2018]. 
 The area is characterised by strong elevation and climate gradients from west to east, with average July temperature dropping from 15.9 to 8.3°C and annual precipitation increasing from 1550 to 4800 mm [@ketzlerClimateNorway2021; @meteorologiskinstituttNorskKlimaservicesenter2023]. 
 
-In the summers of 2019 and 2020, we conducted an ecological survey on 29 grazing fields distributed across the southern part of the Nordhordland UNESCO Biosphere Reserve, all located below 250 m above sea level (@fig-sitemap).
+In the summers of 2019 and 2020, we conducted an ecological survey on 29 grazing fields distributed across the southern part of the Nordhordland UNESCO Biosphere Reserve, all located below 250 m above sea level [@fig-sitemap; @demeauxJustGrazeIt2024].
 Our sites were "infields" (*innmarksbeite*), defined by the Norwegian AR5 land cover classification system as "*agricultural land that cannot be harvested mechanically* \[with\] *at least 50% of the area* \[...\] *covered with cultured grass or pasture-tolerant herbs*" [@ahlstromAR5Klassifikasjonssystem2019]. 
 All fields had been grazed uninterruptedly for at least 10 years, and had been grazed by the same livestock type, either sheep, goats or cattle, for at least the last 5 years. 
 According to the farmers, most fields had been continuously grazed for at least 50 years; 
@@ -126,12 +126,15 @@ summary_oceanity <- summary(lm_oceanity)
 
 <!-- On site, we recorded field coordinates (SCR EPSG:25832), elevation, and field slope angle with a compass clinometer.  -->
 <!-- We determined slope aspect degree and distance to the closest fjord from a Digital Elevation Model of 10 m x 10 m cell size retrieved from the GeoNorge online map catalogue of the Norwegian Mapping Authority [@kartverketGeoNorgeKartkatalogen2023].  -->
+
+The regional environment explanatory set encompasses climatic and geographical variables operating at broad spatial scales.
 Average annual precipitation, maximum and average July temperatures, and minimum and average January temperatures, were obtained from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
 Average annual temperature range, calculated as the difference between maximum July temperature and minimum January temperature, showed a strong linear relationship with longitude (adjusted R^2^ = `r op(summary_oceanity$adj.r.squared, 2)`, F = `r op(summary_oceanity$fstatistic[1], 0)`, p-value = `r op(summary_oceanity$coefficients[2,4], 3)`) and was used as a proxy for oceanity.
 For sites not covered by the daily projections, data were extrapolated from averaging values of neighbouring cells with the R software package *terra* (v. 1.7.29) [@hijmansTerraSpatialData2023; @rcoreteamLanguageEnvironmentStatistical2024].
 
 ### Landscape matrix
 
+The landscape explanatory set represents the composition of the landscape matrix around semi-natural grasslands.
 We calculated land use percent cover in a 1 km radius area around each field from land cover data provided by the Norwegian Institute of Bioeconomy Research (NIBIO) [@norskinstituttforbiookonominibioKildenArealinformasjon2023].
 Land cover was categorised according to the AR5 land cover classification system [@ahlstromAR5Klassifikasjonssystem2019], that we simplified into eight categories:
 forest area, including managed and non-managed; 
@@ -143,6 +146,7 @@ artificial area.
 
 ### Field management
 
+The field management explanatory set encompasses factors affecting the grazing pressure on the field.
 We conducted phone interviews with 23 farmers from October 2021 to January 2022 to collect information on field management. 
 For the 3 out of 26 farmers who were unable or unwilling to reply to our survey, we used data from a similar interview series conducted in 2018 [@reiersenBaerekraftVestnorskLandbruk2019]. 
 We asked the farmers for the following elements: 
@@ -172,7 +176,8 @@ For two farms (IG1 and IG2) where livestock was moved to mountain summer farms e
 
 ### Fine-scale environment
 
-The study design for collecting fine-scale environment and community data is based on @demeauxJustGrazeIt2024.
+The fine-scale environment encompasses biological and environmental factors characterising vegetation structure, soil texture and soil nutrient availability.
+The study design is based on @demeauxJustGrazeIt2024.
 We visited each of the 29 sites once, starting in mid-June at the westernmost sites and ending in late July at the easternmost sites to account for the spring bloom time difference [@karlsenVariabilityStartGrowing2007]. 
 On each site, we laid out a nested sampling design within a representative area of 400 m^2^, preferentially 20 m x 20 m but when necessary 40 m x 10 m, avoiding rocks, waterlogged ground, trees and field edges.
 According to the same exclusion rules, we set three plots of 3 m x 3 m in the sampling area, at least 6 m apart from each other (@fig-sampling). 
@@ -218,12 +223,13 @@ For chemical analyses, we sampled soil with a stainless steel cylindrical core o
 The soil was stored at 4°C before being sieved and merged at the plot level (3 per site).
 We sent 0.5 L of each pooled sample to a certified analysis laboratory to determine total nitrogen content with modified Kjeldahl method (NS-EN 13654-1:2890) [@bremnerDeterminationNitrogenSoil1960], and available phosphorus concentration with ammonium lactacte extraction method [@brayDeterminationTotalOrganic1945].
 
-### Grass, forb and dung-associated beetle assemblages
+### Dominant grass, forb and dung-associated beetle assemblages
 
 In each non-destructive subplot (15 per site), all plant species were identified using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed an average percent cover by one of the same two observers.
 When necessary, specimens were collected, coded and brought for microscopic or expert identification.
 <!-- We determined the average percent cover of bare ground, rock and litter, and estimated average vegetation height out of three random measurements within the subplot. -->
 In each destructive subplot (12 per site), we collected dung-associated beetles with dung-baited pitfall traps set for one full week between early July and early August.
+Clumped trapping compensated for the short sampling period and should not lead to spatial autocorrelation of catches [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
 Traps were made of white plastic cups of 1 L (diam. 10.5 cm, height 11.5 cm) filled to 1/4 with salted water, with a drop of neutral detergent to break water surface tension. 
 The cups were covered with a square metal grid of 2 cm x 2 cm mesh size pegged into the ground, on which we put a ball of about fist size of previously-frozen cattle dung.
 The dung ball was placed at the centre of the grid, at least 3 cm from the edge of the cup to provide enough space for beetles to fall in.
@@ -232,28 +238,43 @@ The sampling design resulted in a spatial clumping of pitfall traps, but it was 
 
 ## Data analysis
 
-We first used canonical correlation analysis, which searches for the maximum correlation between linear projections of two datasets [@hotellingRelationsTwoSets1992], to investigate 1) links between sets of explanatory variables characterising the regional environment, the landscape matrix, field management and the fine-scale environment of semi-natural grasslands, and 2) links between these explanatory sets and dominant grass, forb and dung-associated beetle assemblages (following scheme in @fig-fjordconcept).
-We then used redundancy analysis (RDA) [@legendreNumericalEcology2012] to get insight into the effect of individual variables and assess robustness of the results.
+First, we used canonical correlation analysis (CCA) to investigate
+1) links between sets of explanatory variables characterising the regional environment, the landscape matrix, field management and the fine-scale environment of semi-natural grasslands, and
+2) links between these explanatory sets and dominant grass, forb and dung-associated beetle assemblages (following scheme in @fig-fjordconcept).
+Canonical correlation analysis is a multivariate statistical method which allows to summarise relationships from high-dimensional datasets [@hotellingRelationsTwoSets1992].
+Specifically, it searches for linear projections showing the maximum co-variance between two sets of quantitative variables and is thus suitable for exploring relationships between environmental gradients, field management and community assemblages symmetrically.
+Second, we used redundancy analysis (RDA) to investigate the directional processes which underlie relationships between explanatory sets, from the broader to the finer scale, and between explanatory sets and community assemblages.
+Redundancy analysis is a constrained ordination method, which performs multiple linear regression to multivariate data based on Euclidean distance [@legendreNumericalEcology2012].
+Contrary to canonical correlation analysis, which projects total variation among two symmetrical sets, redundancy analysis only explores the variation explains by an explanatory matrix over a response matrix.
+It is therefore suitable for investigating the top-down effects of environmental gradients and field management on community assemblages and to disentangle the influence of individual variables.
 
-Prior to analyses, we averaged all data from the nested sampling design at the site level.
-We standardised all explanatory variables (environmental gradients and grazing management variables) to 0 mean and standard deviation 1.
-We further checked and filtered all variables, removing variables with highly skewed distributions or with obvious outliers, and secondly by testing variable collinearity within each set with the Spearman's rank correlation test. 
-For a correlation coefficient of 0.8 or higher, variables were selected first according to the highest within-site replication, and second according to the most even distribution.
-We found high collinearity between average January temperature and annual temperature range (Spearman's rank correlation coefficient of 0.93), and between bulk density, gravimetric water content, loss of ignition, total nitrogen content and humus content (Spearman's rank correlation coefficients ranging from 0.78 to 1).
-The variables kept for the canonical correlation analysis are shown in @fig-fjordconcept and their statistical summary can be found in @tbl-varsum.
+Our analyses were performed on data averaged at the site-level, because we aim to understand processes which affect representative assemblages of grazing fields rather than within-site variation.
+Site-level averaging may cause a loss of sensitivity regarding interactions between the fine-scale environment and dominant grass and forb assemblages, which operates at finer spatial ranges.
+Therefore, we led supplementary analyses at plot-level in these two cases while controlling for the structure of the nested sampling design.
+This supplementary analysis did not apply for dominant dung-associated beetle assemblages, whose relationship with the fine-scale environment operates at higher spatial range due to their greater mobility.
 
-Assemblage data were percent cover for grass (Poaceae) and forb species, and abundance for beetle families. 
-We filtered taxa according to their frequency and abundance across sites: 
-species or families found in at least one-third of the infields, with a minimum average percent cover of 1% for plants and a minimum average occurrence of 3 for beetles, were selected for the analysis. 
-In total, eight species of grasses, seven species of forbs and five families of beetles were selected (@fig-fjordconcept). 
-Community data were transformed using Hellinger transformation, which lowers the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
+Prior to analyses, explanatory variables (environmental gradients and field management) were filtered to meet the assumptions of the canonical correlation analysis and the redundancy analysis [@tabachnickUsingMultivariateStatistics2014] and scaled to 0 mean and standard deviation 1 to account for unit differences.
+Livestock type, the only qualitative variable of our study, was transformed into two dummy numeric variables, Sheep and Cattle respectively.
+We removed variables with strongly skewed distributions or with obvious outliers and tested variable collinearity within each set with the Spearman's rank correlation test.
+For a correlation coefficient of 0.7 or higher, we selected variables with the closest distribution to normal.
+In the regional environment set, we removed average January temperature which was strongly correlated with annual temperature range (Spearman's rank correlation coefficient of 0.93).
+In the field management set, the number of adult animals grazing on field was removed due to a clear outlier.
+In the fine-scale environment set, we removed litter percent cover, which showed a highly skewed distribution, and we removed gravimetric water content, loss of ignition, total nitrogen content and humus content which were strongly correlated with bulk density (Spearman's rank correlation coefficients ranging from 0.78 to 1).
+See @tbl-varsum for the statistical summary of variables kept for the analyses.
 
-We tested for statistical significance of correlations with asymptotic approximation of Hotelling-Lawley Trace (*p.asym* function in CCP package) [@mullerPracticalMethodsComputing1984], and statistical significance of RDA models, axes and terms by ANOVA-like permutation (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
-For illustrative purpose, we performed RDAs on all combinations of sets and provided them in Supplementary Information.
+Community assemblage data were percent cover for grass (Poaceae) and forb species, and number of catches for beetle families.
+"Dominant" plant species and beetle families were characterised by criteria of frequency, i.e. presence in at least one-third of the sites, and average abundance, i.e. minimum plant species percent cover of 1% and minimum beetle family occurrence of 3.
+In total, eight species of grasses, seven species of forbs and five families of beetles met these two criteria and were selected for the analyses (@fig-fjordconcept).
+We performed Hellinger transformation on community data to lower the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
+
+For the canonical correlation analyses, the statistical significance of canonical correlation coefficients rho was tested with the asymptotic approximation of Hotelling-Lawley Trace [@mullerPracticalMethodsComputing1984].
+For the redundancy analyses, the statistical significance of models, axes and marginal terms was tested with ANOVA-like permutation tests (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
+For the supplementary redundancy analyses between the fine-scale environment and dominant grass and forb assemblages, we restricted permutations at plot-level to prevent pseudo-replication [@andersonPermutationTestsMultifactorial2003].
 
 All statistical analyses were performed in R (v.4.4.1) with R-Studio (v.2024.04.2+764) [@positteamRStudioIntegratedDevelopment2024; @rcoreteamLanguageEnvironmentStatistical2024]. 
 The canonical correlation analyses and the related statistical tests were made with the *CCA* [@gonzalezCCACanonicalCorrelation2023] and *CCP* [@menzelCCPSignificanceTests2022] packages. 
 The redundancy analyses were performed with the *vegan* package [@oksanenVeganCommunityEcology2024] and their visual representations were made with the *ggord* package [@beckGgordOrdinationPlots2022].
+The restricted permutations for the supplementary analyses were performed with the *permute* package [@simpsonPermuteFunctionsGenerating2011].
 
 \scriptsize
 
