@@ -651,7 +651,7 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 # Fine set
 fine_long <- fine_sc |> 
   pivot_longer(
-    cols = c(Bryo, MeanHeight, BD, logPhosph, pH, SoilPene),
+    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
     # cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
     names_to = "Factors",
     values_to = "Values")
@@ -956,7 +956,6 @@ comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
 
 #### RDA stat summary function ####
 
-# Field-level
 statrda <- function(rda) {
   
   ## Adjusted variance explained by the RDA model
@@ -980,53 +979,6 @@ statrda <- function(rda) {
   
   ## ANOVA permutation test on margins (relative importance terms)
   testerm <- as.data.frame(anova.cca(rda, by = "margin", permutations = 999)) 
-  testerm <- testerm |> 
-    mutate(dim = row.names(testerm), type = "margin") |> 
-    mutate(eigenval = Variance) |> 
-    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-    filter(dim != "Residual")
-  
-  ## Summary statistics
-  rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
-  names(rdatable) <- gsub("\\(", "", names(rdatable))
-  names(rdatable) <- gsub("\\)", "", names(rdatable))
-  names(rdatable) <- gsub(">", "", names(rdatable))
-  
-  rdatable
-}
-
-# Plot-level
-statrdaplot <- function(rda) {
-  
-  ## Permutation design
-  perm <- how(
-    within = Within(type = "none"),
-    plots = Plots(strata = as.factor(fineplot_sc$PlotID), type = "free"),
-    blocks = as.factor(fineplot_sc$SiteID),
-    nperm = 999
-  )
-  
-  ## Adjusted variance explained by the RDA model
-  rsq <- as.data.frame(RsquareAdj(rda)) |> 
-    mutate(type = "model", dim = "Model")
-  
-  ## ANOVA permutation test on RDA model
-  testrda <- as.data.frame(anova.cca(rda), permutations = perm) 
-  testrda <- testrda |> 
-    mutate(dim = rownames(testrda), type = "model") |> 
-    mutate(eigenval = Variance) |> 
-    mutate(Variance = eigenval/summary(rda)$tot.chi)
-  
-  ## ANOVA permutation test on individual axes
-  testaxis <- as.data.frame(anova.cca(rda, by = "axis", permutations = perm))
-  testaxis <- testaxis |> 
-    mutate(dim = row.names(testaxis), type = "axis") |> 
-    mutate(eigenval = Variance) |> 
-    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
-    filter(dim != "Residual")
-  
-  ## ANOVA permutation test on margins (relative importance terms)
-  testerm <- as.data.frame(anova.cca(rda, by = "margin", permutations = perm)) 
   testerm <- testerm |> 
     mutate(dim = row.names(testerm), type = "margin") |> 
     mutate(eigenval = Variance) |> 
@@ -1155,15 +1107,9 @@ plotrda_regiolandscape <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 3.2, image = "illustrations/Icons/icon_regional.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 2.5, image = "illustrations/Icons/icon_landscape.png"),
+    aes(x = 3, y = 2.9, image = "illustrations/Icons/icon_regiolandscape.png"),
     size = 0.15
   )
-
 plotrda_regiolandscape
 ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
 
@@ -1331,12 +1277,6 @@ rdafieldfine <- statrda(rda) |>
   mutate(model = "FieldxFine", explanatory = "Field", response = "Fine") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## dbRDA model
-dbrda <- dbrda(select_if(fine_sc, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
-dbrdafieldfine <- statrda(dbrda) |>
-  mutate(model = "FieldxFine", explanatory = "Field", response = "Fine") |> 
-  filter(type == "model" | dim == "dbRDA1" | dim == "dbRDA2" | type == "margin")
-
 ## Plot RDA
 plotrda_fieldfine <- ggrda(rda) +
   xlim(-3, 3) +
@@ -1361,12 +1301,7 @@ plotrda_fieldfine <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 2.5, y = 2.5, image = "illustrations/Icons/icon_field.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 2.5, y = 1.7, image = "illustrations/Icons/icon_fine.png"),
+    aes(x = 2.5, y = 2.3, image = "illustrations/Icons/icon_fieldfine.png"),
     size = 0.15
   )
 plotrda_fieldfine
@@ -1512,12 +1447,6 @@ rdafinegrass <- statrda(rda) |>
   mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## dbRDA model
-# dbrda <- dbrda(select_if(grass, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
-# dbrdafinegrass <- statrda(dbrda) |>
-#   mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |> 
-#   filter(type == "model" | dim == "dbRDA1" | dim == "dbRDA2" | type == "margin")
-
 ## Plot RDA
 plotrda_finegrass <- ggrda(rda) +
   xlim(-2.9, 1.6) +
@@ -1544,93 +1473,14 @@ plotrda_finegrass <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
+    aes(x = 1.2, y = 1.5, image = "illustrations/Icons/icon_finegrass.png"),
     size = 0.15
   )
 plotrda_finegrass
 ggsave("outputs/singleRDA/plotrda_finegrass.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
 
-# Fine x grass plot-level
-
-## RDA model
-rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
-rdafinegrassplot <- statrdaplot(rda) |>
-  mutate(model = "FinexGrassplot", explanatory = "Fine", response = "Grass") |>
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-## RDA model
-
-## Plot RDA
-plotrda_finegrassplot <- ggplot() +
-  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
-  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  # xlim(-2.9, 1.6) +
-  # ylim(-2.4, 2.1) +
-  geom_point(
-    data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2),
-    size = 1
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
-    colour = "black",
-    size = 3
-  ) +
-  geom_segment(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
-    arrow = arrow(length = unit(0.01, "npc")),
-    colour = "darkred"
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*3, y = RDA2*3, label = label),
-    colour = "darkred",
-    size = 3,
-    nudge_x = -0.1,
-    nudge_y = 0.1
-  ) +
-  coord_equal() +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = 9),
-    axis.text = element_text(size = 8)
-  )
-  # geom_image(
-  #   data = tibble(x = 1, y = 1),
-  #   aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
-  #   size = 0.15
-  # ) +
-  # geom_image(
-  #   data = tibble(x = 1, y = 1),
-  #   aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
-  #   size = 0.15
-  # )
-plotrda_finegrassplot
-ggsave("outputs/singleRDA/plotrda_finegrassplot.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
-
-
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
-
-## Stat summary
 rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgrass, rdafinegrass), dplyr::full_join)
-
-## Plot summary
-# rda_grass <- ggarrange(plotrda_regiograss, plotrda_landscapegrass, plotrda_fieldgrass, plotrda_finegrass,
-#                       labels = c("A", "B", "C", "D"),
-#                       ncol = 2,
-#                       nrow = 2)
-# rda_grass
-# ggsave("outputs/RDA_grass.png", plot = rda_grass, width = 15, height = 15, units = "cm", bg = "white")
-
 
 #### RDA forb community data ####
 
@@ -1783,16 +1633,126 @@ plotrda_fineforb <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 2.4, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 2.4, y = 1.96, image = "illustrations/Icons/icon_forb.png"),
+    aes(x = 2.3, y = 2.3, image = "illustrations/Icons/icon_fineforb.png"),
     size = 0.15
   )
 plotrda_fineforb
 ggsave("outputs/singleRDA/plotrda_fineforb.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
+
+# Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
+rdastat_forb <- purrr::reduce(list(rdaregioforb, rdalandscapeforb, rdafieldforb, rdafineforb), dplyr::full_join)
+
+#### Supplementary RDA analysis ####
+
+# Plot-level function
+
+statrdaplot <- function(rda) {
+  
+  ## Permutation design
+  perm <- how(
+    within = Within(type = "none"),
+    plots = Plots(strata = as.factor(fineplot_sc$PlotID), type = "free"),
+    blocks = as.factor(fineplot_sc$SiteID),
+    nperm = 999
+  )
+  
+  ## Adjusted variance explained by the RDA model
+  rsq <- as.data.frame(RsquareAdj(rda)) |> 
+    mutate(type = "model", dim = "Model")
+  
+  ## ANOVA permutation test on RDA model
+  testrda <- as.data.frame(anova.cca(rda), permutations = perm) 
+  testrda <- testrda |> 
+    mutate(dim = rownames(testrda), type = "model") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi)
+  
+  ## ANOVA permutation test on individual axes
+  testaxis <- as.data.frame(anova.cca(rda, by = "axis", permutations = perm))
+  testaxis <- testaxis |> 
+    mutate(dim = row.names(testaxis), type = "axis") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## ANOVA permutation test on margins (relative importance terms)
+  testerm <- as.data.frame(anova.cca(rda, by = "margin", permutations = perm)) 
+  testerm <- testerm |> 
+    mutate(dim = row.names(testerm), type = "margin") |> 
+    mutate(eigenval = Variance) |> 
+    mutate(Variance = eigenval/summary(rda)$tot.chi) |> 
+    filter(dim != "Residual")
+  
+  ## Summary statistics
+  rdatable <- purrr::reduce(list(testrda, rsq, testaxis, testerm), dplyr::full_join)
+  names(rdatable) <- gsub("\\(", "", names(rdatable))
+  names(rdatable) <- gsub("\\)", "", names(rdatable))
+  names(rdatable) <- gsub(">", "", names(rdatable))
+  
+  rdatable
+}
+
+# Fine x grass plot-level
+
+## RDA model
+rda <- rda(select_if(grass_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+rdafinegrassplot <- statrdaplot(rda) |>
+  mutate(model = "FinexGrass", explanatory = "Fine", response = "Grass") |>
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA model
+
+## Plot RDA
+plotrda_finegrassplot <- ggplot() +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+  xlim(-2.9, 1.7) +
+  ylim(-2.7, 1.9) +
+  geom_point(
+    data = filter(fortify(rda), score == "sites"),
+    mapping = aes(x = RDA1, y = RDA2),
+    size = 1
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA1, y = RDA2, label = label),
+    colour = "black",
+    size = 3
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA1*3, y = RDA2*3, label = label),
+    colour = "darkred",
+    size = 3,
+    nudge_x = -0.1,
+    nudge_y = 0.1
+  ) +
+  coord_equal() +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  )
+# geom_image(
+#   data = tibble(x = 1, y = 1),
+#   aes(x = 1.3, y = 1.9, image = "illustrations/Icons/icon_fine.png"),
+#   size = 0.15
+# ) +
+# geom_image(
+#   data = tibble(x = 1, y = 1),
+#   aes(x = 1.3, y = 1.38, image = "illustrations/Icons/icon_grass.png"),
+#   size = 0.15
+# )
+plotrda_finegrassplot
+ggsave("outputs/singleRDA/plotrda_finegrassplot.png", plot = plotrda_finegrass, width = 6, height = 6, units = "cm", bg = "white")
 
 # Fine x forb - plot-level
 
@@ -1808,8 +1768,8 @@ plotrda_fineforbplot <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  # xlim(-2, 2.7) +
-  # ylim(-2, 2.7) +
+  xlim(-2.1, 2.4) +
+  ylim(-1.5, 3) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
@@ -1839,31 +1799,21 @@ plotrda_fineforbplot <- ggplot() +
     axis.title = element_text(size = 9),
     axis.text = element_text(size = 8)
   ) 
-  # geom_image(
-  #   data = tibble(x = 1, y = 1),
-  #   aes(x = 2.4, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
-  #   size = 0.15
-  # ) +
-  # geom_image(
-  #   data = tibble(x = 1, y = 1),
-  #   aes(x = 2.4, y = 1.96, image = "illustrations/Icons/icon_forb.png"),
-  #   size = 0.15
-  # )
+# geom_image(
+#   data = tibble(x = 1, y = 1),
+#   aes(x = 2.4, y = 2.5, image = "illustrations/Icons/icon_fine.png"),
+#   size = 0.15
+# ) +
+# geom_image(
+#   data = tibble(x = 1, y = 1),
+#   aes(x = 2.4, y = 1.96, image = "illustrations/Icons/icon_forb.png"),
+#   size = 0.15
+# )
 plotrda_fineforbplot
 ggsave("outputs/singleRDA/plotrda_fineforbplot.png", plot = plotrda_fineforb, width = 6, height = 6, units = "cm", bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
-
-## Stat summary
-rdastat_forb <- purrr::reduce(list(rdaregioforb, rdalandscapeforb, rdafieldforb, rdafineforb), dplyr::full_join)
-
-## Plot summary
-# rda_forb <- ggarrange(plotrda_regioforb, plotrda_landscapeforb, plotrda_fieldforb, plotrda_fineforb,
-#                        labels = c("A", "B", "C", "D"),
-#                        ncol = 2,
-#                        nrow = 2)
-# rda_forb
-# ggsave("outputs/RDA_forb.png", plot = rda_forb, width = 15, height = 15, units = "cm", bg = "white")
+rdastat_plot <- purrr::reduce(list(rdafinegrassplot, rdafineforbplot), dplyr::full_join)
 
 #### RDA beetle community data ####
 
@@ -2005,7 +1955,8 @@ plotrda_finebeetle <- ggrda(rda) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
-    colour = "black"
+    colour = "black",
+    size = 3
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -2016,16 +1967,12 @@ plotrda_finebeetle <- ggrda(rda) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-    colour = "darkred"
+    colour = "darkred",
+    size = 3
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 1.5, y = 1.8, image = "illustrations/Icons/icon_fine.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.5, y = 1.3, image = "illustrations/Icons/icon_beetle.png"),
+    aes(x = 1.5, y = 1.9, image = "illustrations/Icons/icon_finebeetle.png"),
     size = 0.15
   )
 plotrda_finebeetle
