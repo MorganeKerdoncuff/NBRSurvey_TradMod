@@ -54,6 +54,13 @@ scripts/TrySumVarTable.R
 NBR_SmallScaleFjordFarmingTables.qmd
 oldfiles/
 
+# Sumbission files
+submission/*
+*.spl
+*_CoverLetter.qmd
+*_Highlights.qmd
+*_TitlePage.qmd
+
 # Repo try (will be in new project)
 scripts/TradMod_RepoDataCleaning.R
 /.quarto/
