@@ -1,5 +1,5 @@
 ---
-title: "Grazing the fjord landscape: community interactions with environmental gradients and management across scales"
+title: "Grazing the fjord landscape: interactions between environmental gradients, management and grassland community assemblages"
 date: today
 bibliography: references.bib
 number-sections: true
@@ -9,17 +9,21 @@ format:
   elsevier-pdf:
     keep-tex: true
     fig-dpi: 800
+    # mainfont: "Times New Roman"
+    # sansfont: "Times New Roman"
+    linestretch: 2
     include-in-header:
       text: |
         \usepackage{lscape}
         \newcommand{\blandscape}{\begin{landscape}}
         \newcommand{\elandscape}{\end{landscape}}
+        \usepackage{lineno}
+        \linenumbers
     journal:
       formatting: preprint
       model: 3p
       layout: onecolumn
       cite-style: authoryear
-  docx: default
 author:
   - name: Morgane Kerdoncuff
     orcid: https://orcid.org/0000-0003-2223-1857
@@ -64,10 +68,10 @@ We used both canonical correlation analyses and redundancy analyses to investiga
 The composition of the landscape matrix was influenced by the regional environment, as land use intensity increased with closer proximity to fjords.
 Field management was weakly correlated with opposing gradients of vegetation height and bulk density, suggesting that farmers adapt livestock type, stocking density and the size of grazing area according to grasslands' productivity.
 Only the fine-scale environment explained significant proportions of community assemblage variances, which responded to gradients of vegetation height, soil penetration and bulk density respectively.
-Dominant grass and dung-associated beetle assemblages were also correlated with the regional environment and field management, indicating the existence of more complex interactions which we were only superficially captured in our analyses
-Overall, our results suggest that the effects of current farming practices on grassland community assemblages of the Nordhordland UNESCO Biosphere Reserve may be overridden by stronger environmental gradients at local scale.
+Dominant grass and dung-associated beetle assemblages were also correlated with the regional environment and field management, indicating the existence of more complex interactions which were only superficially captured in our analyses.
+Overall, our results suggest that the effects of diversified grazing management on grassland community assemblages of the Nordhordland UNESCO Biosphere Reserve may be overridden by stronger environmental gradients at local scale.
 
-Keywords: agroecology; livestock; semi-natural grassland; plant community; dung beetle community
+Keywords: agroecology; livestock; plant community; dung-associated beetle community; Nordhordland UNESCO Biosphere Reserve
 
 \setcounter{section}{0}
 
@@ -592,7 +596,7 @@ We found that community assemblages were primarily determined by the fine-scale 
 There was no evidence of an effect of field management on dominant assemblages, even though our findings suggest the existence of an indirect link mediated by field productivity.
 Therefore, our analyses indicate that, in small-scale grazing systems, the effect of diversified grazing management may be overridden by stronger influences of environmental gradients.
 Overall, we highlighted the complexity of interactions between the farmer, the environment and the livestock in small-scale grazing systems.
-We encourage further research to disentangle these relationships through explicitly addressing the spatiotemporal variability of rotational management 
+We encourage further research to disentangle these relationships through explicitly addressing the spatiotemporal variability of rotational management.
 
 # ACKNOWLEDGEMENTS
 
@@ -638,7 +642,9 @@ The dataset used in this manuscript is planned to be submitted to DataverseNO (h
 
 ## CODE AVAILABILITY
 
-The codes of the data curation and analyses are available at https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
+The codes of the data curation and analyses are available at
+
+https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
 
 \newpage
 
