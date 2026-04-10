@@ -1,160 +1,202 @@
-# TradMod WP2 - NBR survey cleaning script
-#Description of the data
-#Year - 2023
-#Who - Morgane Kerdoncuff
-#Project - TradMod
-#Funding - NFR
-#Place - University of Bergen, Norway
+##
+#### DESCRIPTION ####
+##
+## Purpose: Cleaning script for ecological data collected in 2019 and 2020 in the Nordhordland UNESCO Biosphere Reserve
+## Author: Morgane KERDONCUFF
+## ORCID: 0000-0003-2223-1857
+## github
+## Date created: 11/2022
+## Last time modified: 03/2026
+## Project: TradMod
+## Funding: Norges forskningsråd (NFR)
+## Institution: University of Bergen, Norway
+##
+##
 
-#### PACKAGE LOADING ####
+#### PACKAGES ####
 
 library(tidyverse) #R language
+library(janitor) #Data cleaning
 library(readxl) #read xl files
-library(lubridate) #standard date data
-library(terra) # work with raster files
-library(purrr) # merging several files at the same time
+library(lubridate) #standard date
+library(terra) #raster files
+library(purrr) #file merging
 
-#### DATA LOADING ####
+#### RAW DATA ####
 
-siteinfo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo") # Farm information, field location and habitat type
-landuse_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R") # Field management data from farmer interview, at site level
-#farmer_raw <- read_excel(path = "data/rawdata/NBR_RawFarmRepertoire.xlsx") # Farm management data from farmer interview med Margit, at site level
-landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx") #Land cover data around the fields from Geonorge, at site level
-area20x20_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m") # Sampling area description, vegetation cover at the site level
-groundcover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover") # Vegetation cover at the quadrat (subplot) level
-soilpene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration") # Penetration rate in the soil, at subplot level (two collection per subplot)
-soilbulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA") # Soil bulk density, at subplot level (three samples per subplot)
-chem2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";") # 2019 Soil chemistry data from Eurofins, at plot level
-chem2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";") # 2020 soil chemistry data from Eurofins, at plot level
-chem2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls") # 2020 complementary soil chemistry data from Eurofins, at plot level
-poo_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA") # poo data at subplot (quadrat) level
-vege_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichness") # plant community data, at species level
-arthro_main <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA") # arthropod community data, at family level for beetles and order level for other arthropods
-arthro_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA") # complementary arthropod community data, at family level for beetles and order level for other arthropods
-mesobio_raw <- read_excel(path = "data/rawdata/NBR_RawMesobio.xlsx", na="NA")
-soilmeso_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofauna") # Height of mesofauna soil core, at subplot level
-biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
+# Site location & habitat type
+site_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo")
+# Site management, from farmer interviews
+management_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R")
+# 1 km^2^ land cover, from Geonorge (https://kartkatalog.geonorge.no/metadata/fkb-ar5/166382b4-82d6-4ea9-a68e-6fd0c87bf788)
+landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx")
+# 20 m x 20 m sampling area
+sampling_area_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m")
+# 1 m^2^ ground cover in non-destructive subplots (1 per subplot)
+ground_cover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover")
+# Soil penetration tests in destructive subplots (2 per subplot)
+soil_pene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration")
+# Bulk density in destructive subplots (3 per subplot)
+soil_bulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA")
+# Soil chemistry 2019 (3 per plot)
+soil_chem_2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";")
+# Soil chemistry 2020 (3 per plot)
+soil_chem_2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";")
+# Soil chemistry 2020 complementary
+soil_chem_2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls")
+# 1 m^2^ dung collection in non-destructive subplot
+dung_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA")
+# 1 m^2^ plant community, species level
+plant_com_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichness")
+# Arthropod community, family level (beetles) and order level (others)
+arthro_com_raw <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA")
+# Arthropod community complementary
+arthro_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA")
+# Mesofauna community
+meso_com_raw <- read_excel(path = "data/rawdata/NBR_RawMesobio.xlsx", na="NA")
+# Soil core height for mesofauna in destructive subplots (1 per subplot)
+meso_soil_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofauna")
+# Aboveground biomass in destructive subplots
+plant_biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
 
-#### SITE INFO ####
+#### SITE DESCRIPTION ####
 
-## Description
+# Raw datasets
+## site_raw
+## management_raw
 
-## List of variables
+# Desired variables
+## siteID - Field identification code for data collection
+## samplingYear - Year of data collection (values: 2019; 2020)
+## landscapeZone - Landscape zone (values: coastal; fjord; mountain) adapted from Uttakleiv, Lars A., and Trond Simensen. 2011. “Landskapskartlegging i Norge [Landscape Mapping in Norway].” Plan 43 (3-4): 76–83. https://doi.org/10.18261/ISSN1504-3045-2011-03-04-15.
+## municipality - Smaller administrative region
+## latitude25832 - Latitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832)
+## longitude25832 - Longitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832)
+## habitatType - Simplified habitat type according to shrub dominance, geographical location and land use (values: coastal heathland; permanent grassland; transition heathland; subalpine heathland)
+## fieldType - Land use type according to traditional Norwegian farming system (values: infield; outfield)
+## livestockType - Type of livestock grazing on field (values: cattle; goat; sheep)
+## numberAnimalsAdult - Number of adult animals grazing on field during the year of sampling
+## numberAnimalsYoung - Number of young animals grazing on field during the year of sampling (born in the year for sheep & goats, less than 1 year old for cattle)
+## fieldAreaHa - Surface area of the field selected for the survey in hectares
+## farmGrazingAreaHa - Total surface area of grazing fields (innmark) of the farm, collected from https://gardskart.nibio.no/search (only valid for fieldType = infield)
+## 
 
-# [1] Field identification code for data collection
-# [2] Former ecological zonation (adapted from NIBIO) - obsolete, not included in analysis
-# [3] Validated ecological zonation (adapted from NIBIO)
-# [4] Year of sampling
-# [5] Geographical location of the field, hamlet
-# [6] Geographical location of the field, municipality
-# [7] Geolocation of the field, X-coordinate - CRS EPSG 25832
-# [8] Geolocation of the field, y-coordinate - CRS EPSG 25832
-# [9] Current grazing livestock, at least for the last 5 years
-# [10] Size of the livestock flock - column empty, data collected in another file
-# [11] Size of the grazing area - column empty, data collected in another file
-# [12] Y/N if the animal was seen on site during the collection
-# [13] Poo weight collected on 10% of the sampling area (g) - proxy of grazing intensity on site
-# [14] Comments
+# Variable names
 
-#
-## Summary site info - Check table size, list of variables, variable types (num/chr)
+## R-friendly with janitor package
+site_raw <- site_raw %>% 
+  clean_names("lower_camel")
+management_raw <- management_raw %>% 
+  clean_names("lower_camel")
 
-#str(siteinfo_raw) # All good
+## Consistent & FAIR
+names(site_raw) <- gsub("siteId", "siteID", names(site_raw))
+names(site_raw) <- gsub("niBioEcologicalZone", "landscapeZone", names(site_raw))
+names(site_raw) <- gsub("year", "samplingYear", names(site_raw))
+names(site_raw) <- gsub("epsg25832X", "latitude25832", names(site_raw))
+names(site_raw) <- gsub("epsg25832Y", "longitude25832", names(site_raw))
+names(site_raw) <- gsub("habitat", "habitatType", names(site_raw))
+names(management_raw) <- gsub("siteCode", "siteID", names(management_raw))
+names(management_raw) <- gsub("infieldOutfield", "fieldType", names(management_raw))
+names(management_raw) <- gsub("typeOfLivestock1", "livestockType", names(management_raw))
+names(management_raw) <- gsub("numberOfAnimals1Adults", "numberAnimalsAdult", names(management_raw))
+names(management_raw) <- gsub("numberOfAnimals1Young", "numberAnimalsYoung", names(management_raw))
+names(management_raw) <- gsub("surveySiteGrazingSurfaceHa", "fieldAreaHa", names(management_raw))
+names(management_raw) <- gsub("inmarksbeiteGardskart", "farmGrazingAreaHa", names(management_raw))
 
-#
-## Name & character cleaning
+# Dataset
 
-# R friendly variable names
-names(siteinfo_raw) <- gsub("%", "percent", names(siteinfo_raw))
-names(siteinfo_raw) <- gsub(" ", "", names(siteinfo_raw)) 
-names(siteinfo_raw) <-  gsub("\\(", "_", names(siteinfo_raw))
-names(siteinfo_raw) <-  gsub("\\)", "", names(siteinfo_raw))
-names(siteinfo_raw) <- gsub("Comments", "Comments_siteinfo", names(siteinfo_raw))
+## Binding desirable variables
+site_description <- left_join(
+  subset(site_raw, 
+         select = c(siteID, landscapeZone, samplingYear, municipality, latitude25832, longitude25832, habitatType)),
+  subset(management_raw,
+         select = c(siteID, fieldType, livestockType, numberAnimalsAdult, numberAnimalsYoung, fieldAreaHa, farmGrazingAreaHa))
+)
 
-# Removal empty columns
-#siteinfo_raw <- subset(siteinfo_raw, select = -c(Size_livestock, Surface)) # remove empty variables, which will be included in another dataset
+## Variable types (num/chr)
+# str(site_description) #validated
+## Duplicate check for siteID and geolocation
+# get_dupes(site_description, siteID, latitude25832, longitude25832) #validated
 
-#
-## Data cleaning - new R object with removal empty columns or variables redundant with other datasets
+## Character variables - desirable categories, NAs, misprints
 
-siteinfo_full <- subset(siteinfo_raw, select = -c(Size_livestock, Surface, Ecologicalzone_former, Animal_on_site, Location))
+### Consistent lower camel
+site_description <- site_description %>% 
+  filter
+  mutate_if(is.character, tolower)
 
-#
-## Numeric var - Check min/max, distribution and potential outliers
+### Categories & distribution
+# table(site_description$landscapeZone) #validated
+# unique(site_description$municipality) # NA
+site_description[is.na(site_description$municipality),] # NA identified - US2 located in Masfjorden
+site_description <- site_description |> 
+  mutate(municipality = ifelse(siteID == "us2", "masfjorden", municipality))
+# table(site_description$habitatType) # five categories instead of four, bog to be removed
+site_description <- filter(site_description, habitatType != "bog")
+site_description <- site_description |> 
+  mutate(habitatType = dplyr::recode(habitatType, "forest clearing" = "transition heathland"))
+# table(site_description$fieldType) #validated
+# table(site_description$livestockType) # four categories instead of three
+site_description <- site_description %>% 
+  mutate(livestockType = dplyr::recode(livestockType, "villsau" = "sheep")) %>% 
+  mutate(livestockType = dplyr::recode(livestockType, "cow" = "cattle"))
 
-# Check min/max
-test <- siteinfo_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-        ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-      )
-    ) |>  
-  transpose() # All good
+## Numeric variables - min/max, distribution, potential outliers
 
-# Check distribution of quantitative variable
-#hist(siteinfo_full$`Pooestimation_g-10percent`) # Standard distribution of poo data - validated
+### Min/max
+# test <- site_description |>  
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>  
+#   transpose() #validated
 
-#
-## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+### NA check
+# site_description[is.na(site_description$samplingYear),] #validated
+# site_description[is.na(site_description$latitude25832),] #validated
+# site_description[is.na(site_description$longitude25832),] #validated
+# site_description[is.na(site_description$numberAnimalsAdult),] # Missing values from 2020 farmer interviews, replaced by values from 
+site_description <- site_description |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "ic2", 37, numberAnimalsAdult)) |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "us1", 4, numberAnimalsAdult)) |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "us4", 66, numberAnimalsAdult)) |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "is5", 90, numberAnimalsAdult)) |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "os7", 39, numberAnimalsAdult)) |> 
+  mutate(numberAnimalsAdult = ifelse(siteID == "ig3", 109, numberAnimalsAdult)) 
+  # no information for us6
+# site_description[is.na(site_description$numberAnimalsYoung),] # Missing values from 2020 farmer interviews, replaced by values from 
+site_description <- site_description |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "ic2", 17, numberAnimalsYoung)) |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "us1", 10, numberAnimalsYoung)) |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "us4", 63, numberAnimalsYoung)) |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "is5", 181, numberAnimalsYoung)) |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "os7", 14, numberAnimalsYoung)) |> 
+  mutate(numberAnimalsYoung = ifelse(siteID == "ig3", 135, numberAnimalsYoung)) 
+  # no information for US6
+# site_description[is.na(site_description$fieldAreaHa),] #validated - No fenced areas in the mountains
+# site_description[is.na(site_description$farmGrazingAreaHa),] #validated - Applicable for infields only
 
-# Site ID
-#table(siteinfo_full$SiteID) # Unique ID for each site - validated
+### Variable distribution & outliers
+# hist(site_description$numberAnimalsAdult) # Poisson distribution, one outlier over 150 animals
+# site_description[site_description$numberAnimalsAdult>150,] # is4, no observed inconsistency with farm characteristics
+# hist(site_description$numberAnimalsYoung) # Poisson distribution, no outlier
+hist(site_description$fieldAreaHa) # One outlier over 1000 ha crushing the distriution
+site_description[site_description$fieldAreaHa>1000,] # ug2 outfield site in upland area, value non applicable for analysis
+# hist(filter(site_description, siteID != "ug2")$fieldAreaHa) # Poisson distribution
+# hist(site_description$farmGrazingAreaHa) # dominance small farms, no visible outliers
 
-# Ecological zones
-#unique(siteinfo_full$NiBioEcologicalZone) # Three categories for ecological zone - validated
-# Homogeneous character writing - removing capital letters for common nouns
-siteinfo_full <- siteinfo_full |> 
-  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Coastal" = "coastal")) |> 
-  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Fjord" = "fjord")) |> 
-  mutate(NiBioEcologicalZone = dplyr::recode(NiBioEcologicalZone, "Mountain" = "mountain"))
-
-# Municipalities
-#unique(siteinfo_full$Municipality) # missing data + US2 Stordalen -> did you guys went that far ? Yes validated
-#siteinfo_full[is.na(siteinfo_full$Municipality),] # NA identified - US2, Stordalen is located in Masfjorden
-siteinfo_full <- siteinfo_full |> 
-  mutate(Municipality = ifelse(SiteID == "US2", "Masfjorden", Municipality)) # Replace NA by municipality name
-#unique(siteinfo_full$Municipality) # NA in Municipality replaced - validated
-
-# Livestock
-#unique(siteinfo_full$Type_livestock) # Villsau should be within sheep category
-siteinfo_full <- siteinfo_full |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Villsau" = "sheep")) # Only 3 livestock categories - validated
-# Homogeneous character writing - removing capital letters for common nouns
-siteinfo_full <- siteinfo_full |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Sheep" = "sheep")) |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Cows" = "cattle")) |> 
-  mutate(Type_livestock = dplyr::recode(Type_livestock, "Goats" = "goat"))
-#table(siteinfo_full$Type_livestock) # correct number of sites per livestock category - validated
-
-# Habitat type
-#unique(siteinfo_full$Habitat) # 3 categories + one extra (bog) which will not be considered in the analysis
-# Homogeneous character writing - removing capital letters for common nouns
-siteinfo_full <- siteinfo_full |> 
-  mutate(Habitat = dplyr::recode(Habitat, "Coastal heathland" = "coastal heathland")) |> 
-  mutate(Habitat = dplyr::recode(Habitat, "Permanent grassland" = "permanent grassland")) |> 
-  mutate(Habitat = dplyr::recode(Habitat, "Subalpine heathland" = "subalpine heathland"))
-#table(siteinfo_full$Habitat) # habitat repartition - validated
-#unique(siteinfo_full$Animal_on_site)
-
-#
-## Standard variable names
-
-names(siteinfo_full) <- gsub("NiBioEcologicalZone", "EcoZone", names(siteinfo_full))
-names(siteinfo_full) <- gsub("Type_livestock", "Livestock", names(siteinfo_full))
-names(siteinfo_full) <- gsub("Pooestimation_g-10percent", "Poo10per", names(siteinfo_full))
-
-#
-## Export clean data in new excel file
-
-write_csv(siteinfo_full, "data/cleandata/NBR_FullSiteInfo.csv")
+# Dataset export
+write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription.csv")
 
 
 #### FIELD MANAGEMENT ####
