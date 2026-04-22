@@ -15,23 +15,14 @@
 
 #### PACKAGES ####
 
-library(tidyverse) #R language
-library(janitor) #Data cleaning
-library(readxl) #read xl files
-library(lubridate) #standard date
-library(terra) #raster files
-library(purrr) #file merging
+library(tidyverse) # R language
+library(janitor) # Data cleaning
+library(readxl) # Read xl files
+library(lubridate) # Standard date
+library(purrr) # Merge tables
 
 #### RAW DATA ####
 
-# Site location & habitat type
-site_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo")
-# Site management, from farmer interviews
-management_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R")
-# 1 km^2^ land cover, from Geonorge (https://kartkatalog.geonorge.no/metadata/fkb-ar5/166382b4-82d6-4ea9-a68e-6fd0c87bf788)
-landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx")
-# 20 m x 20 m sampling area
-sampling_area_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m")
 # 1 m^2^ ground cover in non-destructive subplots (1 per subplot)
 ground_cover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover")
 # Soil penetration tests in destructive subplots (2 per subplot)
@@ -63,7 +54,9 @@ plant_biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
 
 # Raw datasets
 ## site_raw
+site_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo")
 ## management_raw
+management_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -160,9 +153,7 @@ site_description <- site_description %>%
 #   transpose() #validated
 
 ### NA check
-# site_description[is.na(site_description$samplingYear),] #validated
-# site_description[is.na(site_description$latitude25832),] #validated
-# site_description[is.na(site_description$longitude25832),] #validated
+# colnames(site_description)[apply(site_description, 2, anyNA)] # numberAnimalAdult; numberAnimalYoung; fieldAreaHA; farmGrazingAreaHa
 # site_description[is.na(site_description$numberAnimalsAdult),] # Missing values from 2020 farmer interviews, replaced by values from 
 site_description <- site_description |> 
   mutate(numberAnimalsAdult = ifelse(siteID == "ic2", 37, numberAnimalsAdult)) |> 
@@ -196,54 +187,89 @@ site_description[site_description$fieldAreaHa>1000,] # ug2 outfield site in upla
 # Dataset export
 write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription.csv")
 
-#### LANDSCAPE MATRIX ####
+#### 20x20 SAMPLING AREA ####
 
 # Raw datasets
-## landscape_raw
+## sampling_area_raw
+sampling_area_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m")
 
 # Desired variables
 ## siteID - Field identification code for data collection
-## fullyCultivatedLandHa - Area of cultivated lands within 1 km radius around the site
-## superficiallyCultivatedLandHa - Area of cultivated lands within 1 km radius around the site
-## infieldHa - Area of productive grazing fields within 1 km radius around the site
-## productiveForestHa - Area of forests within 1 km radius around the site
-## nonProductiveForestHa - Area of forests within 1 km radius around the site
-## wetlandHa - Area of wetlands within 1 km radius around the site
-## outfieldHa - Area of unproductive open lands within 1 km radius around the site
-## freshwaterHa - Area of freshwater within 1 km radius around the site
-## infrastructureHa - Area of built land and infrastructures within 1 km radius around the site
-## seaHa - Area of sea bodies within 1 km radius around the site
+## eventDate - Date of data collection
+## numberLivestockPaths - Number of paths created by the livestock in the sampling area
+## lengthLivestockPathM - Total length of livestock path in the sampling area in meters
+## elevationMasl - Elevation at the highest point of the sampling area in meters above sea level
+## slopeAngleDegree - Slope angle from the highest point to the lowest point of the sampling area in degree
+## slopeAspectDegree - Slope aspect from the highest point to the lowest point of the sampling area in degree
+## percentRock - Estimated percentage cover of exposed rock in the sampling area
+## percentMud - Estimated percentage cover of visible mud in the sampling area
+## percentTreeTallShrubs - Estimated percentage cover of trees and shrubs over 1 m in the sampling area
+## percentLowShrubs - Estimated percentage cover of shrubs under 1 m in the sampling area
+## percentForbs - Estimated percentage cover of forbs in the sampling area
+## percentMonocotyledons - Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area
+## percentBryophytes - Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area
+## percentFerns - Estimated percentage cover of ferns in the sampling area
+## percentLichens - Estimated percentage cover of lichens in the sampling area
 
 # Variable names
 
-## Lower camel with janitor package
-landscape_raw <- landscape_raw %>% 
+## R-friendly with janitor package
+sampling_area_raw <- sampling_area_raw %>% 
   clean_names("lower_camel")
 
 ## Consistent & FAIR
-names(landscape_raw) <- gsub("siteId", "siteID", names(landscape_raw))
+names(sampling_area_raw) <- gsub("siteId", "siteID", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("recordingDate", "eventDate", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("numberPaths", "numberLivestockPaths", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("totalLengthPathM", "lengthLivestockPathM", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("elevationMax", "elevationMasl", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("generalSlope", "slopeAngleDegree", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("aspectDegree", "slopeAspectDegree", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("percentHerbs", "percentForbs", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("percentFern", "percentFerns", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("percentLichen", "percentLichens", names(sampling_area_raw))
 
 # Dataset
-landscape <- landscape_raw
+
+## Selection desirable variables
+sampling_area <- subset(
+  sampling_area_raw, select = -c(
+    # anonymous
+    team,
+    # dupe with site_description
+    latitude1,
+    longitude1,
+    latitude2,
+    longitude2,
+    # only one elevation variable necessary
+    elevationMin,
+    # only aspect degree necessary
+    aspect,
+    comments
+  )
+)
 
 ## Variable types (num/chr)
-# str(landscape) #validated
+# str(sampling_area) #validated
+## Standard date according to ISO 8601-1:2019
+sampling_area$eventDate <- as.POSIXct(sampling_area$eventDate, format = "%d.%m.%Y")
 ## Duplicate check
-# get_dupes(landscape) #validated
+# get_dupes(sampling_area) #validated
 
 ## Character variables - desirable categories, NAs, misprints
 
 ### Consistent lower camel
-landscape <- landscape %>% 
+sampling_area <- sampling_area %>% 
   mutate_if(is.character, tolower)
 
 ### Categories & distribution
-# table(landscape$siteID) # Unique ID for each site & only grassland sites
+# table(sampling_area$siteID) #validated - uc1 site (bog) to be removed
+sampling_area <- filter(sampling_area, siteID != "uc1")
 
 ## Numeric variables - min/max, distribution, potential outliers
 
-### Min/max
-# test <- landscape |>
+## Min/max
+# test <- sampling_area |>
 #   summarise(
 #     tibble(
 #       across(
@@ -257,190 +283,47 @@ landscape <- landscape %>%
 #         .names = "max_{.col}")
 #       )
 #     ) |>
-#   transpose() #validated
+#   transpose() #validated - need further check for max herbs 97% & max lichens 20%
 
 ### NA check
-# landscape[is.na(landscape$fullyCultivatedLandHa),] #validated
-# landscape[is.na(landscape$superficiallyCultivatedLandHa),] #validated
-# landscape[is.na(landscape$infieldHa),] #validated
-# landscape[is.na(landscape$productiveForestHa),] #validated
-# landscape[is.na(landscape$nonProductiveForestHa),] #validated
-# landscape[is.na(landscape$wetlandHa),] #validated
-# landscape[is.na(landscape$outfieldHa),] #validated
-# landscape[is.na(landscape$freshwaterHa),] #validated
-# landscape[is.na(landscape$infrastructureHa),] #validated
-# landscape[is.na(landscape$seaHa),] #validated
+# colnames(sampling_area)[apply(sampling_area, 2, anyNA)] # col: numberLivestockPaths, lengthLivestockPaths & all percent cover
+sampling_area[!complete.cases(sampling_area),] # rows: us1, ug1, oc4
 
 ### Variable distribution & outliers
-# hist(landscape$fullyCultivatedLandHa) # Poisson distribution, no outlier
-# hist(landscape$superficiallyCultivatedLandHa) # Poisson distribution, no outlier
-# hist(landscape$infieldHa) # Poisson distribution, no outlier
-# hist(landscape$productiveForestHa) # Poisson distribution (a bit uneven), no outlier
-# hist(landscape$nonProductiveForestHa) # Poisson distribution (skewed), no outlier
-# hist(landscape$wetlandHa) # Poisson distribution (skewed), no outlier
-# hist(landscape$outfieldHa) # Poisson distribution, no outlier
-# hist(landscape$freshwaterHa) # Poisson distribution (skewed), no outlier
-# hist(landscape$infrastructureHa) # Poisson distribution, 2 sites slightly outlying above 60 ha but should not affect analysis
-# filter(landscape, infrastructureHa > 60) # oc4 & og2
-# hist(landscape$seaHa) # Poisson distribution, no outlier
-
-# Dataset export
-write_csv(landscape, "data/cleandata/tradmod_nbr_landscape.csv")
-
-#### 20x20 SAMPLING AREA ####
-
-# Raw datasets
-## site_raw
-## sampling_area_raw
-
-# Desired variables
-## siteID - Field identification code for data collection
-## samplingDate - Date of data collection
-## numberLivestockPath - Number of paths created by the livestock in the sampling area
-## lengthLivestockPathM - Total length of livestock path in the sampling area in meters
-## elevationMasl - Elevation at the highest point of the sampling area in meters above sea level
-## slopeAngleDegree - Slope angle from the highest point to the lowest point of the sampling area in degree
-## slopeAspectDegree - Slope aspect from the highest point to the lowest point of the sampling area in degree
-## percentRock - Estimated percentage cover of exposed rock in the sampling area
-## percentMud - Estimated percentage cover of visible mud in the sampling area
-## percentTreeTallShrub - Estimated percentage cover of trees and shrubs over 1 m in the sampling area
-## percentLowShrub - Estimated percentage cover of shrubs under 1 m in the sampling area
-## percentForb - Estimated percentage cover of forbs in the sampling area
-## percentMonocotyledon - Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area
-## percentBryophyte - Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area
-## percentFern - Estimated percentage cover of ferns in the sampling area
-## percentLichen - Estimated percentage cover of lichens in the sampling area
-
-#
-## Summary sampling area - Check table size, list of variables, variable types (num/chr)
-
-#str(area20x20_raw) # All good, date should be reformatted
-
-#
-## Name & character cleaning sampling area
-
-# R friendly variable names
-names(area20x20_raw) <- gsub("%", "percent", names(area20x20_raw)) # remove percent signs from names
-names(area20x20_raw) <- gsub("&", "_", names(area20x20_raw)) # remove &
-names(area20x20_raw) <- gsub("\\(", "", names(area20x20_raw)) # remove (
-names(area20x20_raw) <- gsub("\\)", "", names(area20x20_raw)) # remove )
-names(area20x20_raw) <- gsub("Recording_date", "RecordingDate", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Number_paths", "NumberAnimalPaths", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Total_length_path_m", "AnimalPathsLength_m", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Elevation_max", "Elevation", names(area20x20_raw))
-names(area20x20_raw) <- gsub("General_slope", "Slope_degree", names(area20x20_raw))
-names(area20x20_raw) <- gsub("AspectDegree", "Aspect_degree", names(area20x20_raw))
-names(area20x20_raw) <- gsub("percent", "Percent", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Trees_Tall", "TreesTall", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Fern", "Ferns", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Lichen", "Lichens", names(area20x20_raw))
-names(area20x20_raw) <- gsub("Comments", "Comments_area20x20", names(area20x20_raw))
-
-#
-## Sampling date standardisation
-
-area20x20_raw$RecordingDate <- as.POSIXct(area20x20_raw$RecordingDate, format = "%d.%m.%Y")
-
-#
-## Data cleaning - New R object
-
-area20x20_full <- subset(area20x20_raw, select = -c(Team, Latitude1, Longitude1, Latitude2, Longitude2, NumberAnimalPaths, AnimalPathsLength_m, Elevation_min, Aspect))
-
-#
-## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
-
-# Site ID
-#table(area20x20_full$SiteID) # Unique ID for each site - validated
-
-#
-## Numeric var sampling area - Check min/max, distribution and potential outliers
-
-# Check min/max
-test <- area20x20_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # potential outliers are max herbs 97% and max lichens 20%
-
-# Distribution elevation max
-#hist(area20x20_full$Elevation) # Sites range from 0 to 900 m elevation, no outlier - validated
-
-# Distribution slope
-#hist(area20x20_full$Slope_degree) # Slopes range from 0 to 35 degrees, no outlier - validated
-
-# Distribution aspect degree
-#hist(area20x20_full$Aspect_degree) # Aspect covers all spectrum (0 to 360), no outliers - validated
-
-# Distribution distance to sea
-#area20x20_full[is.na(area20x20_full$DistanceToSea_m),] # 9 NA, corresponding to upland sites -> validated
-#hist(area20x20_full$DistanceToSea_m) # One outlier, above 10 km distance
-#filter(area20x20_full, DistanceToSea_m>10000) # IG3 in Modalen
-
-# Distribution rock cover
-#hist(area20x20_full$PercentRock) # Some sites over 7%, check their location + 3 NAs
-#area20x20_full[area20x20_full$PercentRock>7,] # 5 sites OV1, UG2, US3, IG3, US5
-# UG2, US3 and US5 in subalpine areas with exposed bedrock - validated
-# OV1 in coastal heathland habitat, with exposed bedrock - validated
-# IG3 in fjord area but at higher elevation, with exposed bedrock - validated
-test <- area20x20_full[is.na(area20x20_full$PercentRock),] # 3 sites US1, UG1 and OC4 missing all soil cover percentages
-
-# Distribution mud cover
-#hist(area20x20_full$PercentMud) # One site over 15%
-#area20x20_full[area20x20_full$PercentMud>10,] # UC1 -> bog site, will not be included into the analysis - validated
-
-# Distribution trees and tall shrubs cover
-#hist(area20x20_full$PercentTreesTallShrubs) # No sites over 10% - validated
-
-# Distribution low shrubs
-#hist(area20x20_full$PercentLowShrubs) # Wide range due to collection in both grassland and heathland habitats. Check that all grassland sites are under 10%
-#area20x20_full[area20x20_full$PercentLowShrubs>10,] # 11 sites over 10%
-# OV1, OV2, OS5, OS7, OS9, IS2 coastal heathlands - validated
-# US2, US3, US4, US5, UG2 subalpine heathlands - validated
-
-# Distribution herbs
-hist(area20x20_full$PercentHerbs) # a few sites over 60%
-area20x20_full[area20x20_full$PercentHerbs>60,] # OS1, OC1, IG1, IS2, IC1 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
+table(sampling_area$numberLivestockPaths) # dominance 0, variable to be taken out
+hist(sampling_area$lengthLivestockPathM) # dominance 0, variable to be taken out
+# hist(sampling_area$elevationMasl) # Poisson distribution, no outlier
+# hist(sampling_area$slopeAngleDegree) # Normal distribution, no outlier
+hist(sampling_area$slopeAspectDegree) # Uneven distribution, no outlier
+# hist(sampling_area$percentRock) # Poisson distribution, further check for sites over 7%
+# sampling_area[sampling_area$percentRock>7,] # subalpine heathlands (ug2, us3, us5), coastal heatland (ov1) & fjord at higher elevation (ig3)
+# hist(sampling_area$percentMud) # very skewed Poisson distribution, no outlier
+# hist(sampling_area$percentTreesTallShrubs) # Skewed Poisson distribution, no outlier
+# hist(sampling_area$percentLowShrubs) # Poisson distribution, further check all grassland sites should be under 10%
+# sampling_area[sampling_area$percentLowShrubs>10,] # 11 heathland sites
+hist(sampling_area$percentForbs) # Poisson distribution, further check for sites >50%
+sampling_area[sampling_area$percentForbs>50,] # os1, oc1, ig1, ig2, is2, iv1, ic1, og2, ic4 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
 # OS1 80% - average 20% & no cover over 55% in quadrats, estimation from pictures 35%-40%
 # OC1 80% - average 25% & no cover over 50% in quadrats, estimation from pictures 10%-15% 
 # IG1 97% - average 20% & no cover over 30% in quadrats, estimation from pictures 15%-20%
 # IS2 80% - average 70% & no cover over 90% in quadrats, estimation from pictures 45%-50%
 # IC1 70% - average 45% & no cover over 70% in quadrats, estimation from pictures 60%-65%
+hist(sampling_area$percentMonocotyledons) # further check for sites with odd forb distribution
+hist(sampling_area$percentBryophytes) # uneven distribution, further check for sites with odd forb distribution
+# hist(sampling_area$percentLichens) # highly skewed Poisson distribution, one site over 10%
+# sampling_area[sampling_area$percentLichens>10,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
 
-# Distribution monocotyledons
-hist(area20x20_full$PercentMonocotyledons) # need to check again sites with weird herb estimations
+# New variables
 
-# Distribution bryophytes
-hist(area20x20_full$PercentBryophytes) # need to check again sites with weird herb estimations
+## Heat Load Index
+# sampling_area <- sampling_area |> 
+#   mutate(heatLoadIndex = cos(slopeAspectDegree-225)*tan(slopeAngleDegree))
+# hist(sampling_area$heatLoadIndex) # 3 outliers: one under 200, two over 100
+# sampling_area[sampling_area$heatLoadIndex>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
+# sampling_area[sampling_area$heatLoadIndex<0,] #OS6 -> 11 degree slope with NE exposition
 
-# Distribution lichens
-#hist(area20x20_full$PercentLichens) # one site over 10%
-#area20x20_full[area20x20_full$PercentLichens>15,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
-
-#
-## Calculation new variables
-
-# Heat Load Index
-area20x20_full <- area20x20_full |> 
-  mutate(HeatLoadIndex = cos(Aspect_degree-225)*tan(Slope_degree))
-#hist(area20x20_full$HLI) # 3 outliers: one under 200, two over 100
-#area20x20_full[area20x20_full$HLI>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
-#area20x20_full[area20x20_full$HLI<0,] #OS6 -> 11 degree slope with NE exposition
-
-
-## Export clean data in new excel file
-
-write_csv(area20x20_full, "data/cleandata/NBR_FullArea20x20.csv")
-
+# Dataset export
+write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea.csv")
 
 #### Ground cover quadrats ####
 
@@ -1755,227 +1638,5 @@ biomass_full <- biomass_full |>
 
 # Export clean data in new excel file
 write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
-
-
-#### Climate data ####
-
-#
-## Description
-
-# Import and transformation of daily temperature and precipitation data from MET into yearly averages
-# Type of data - 1 km x 1km
-# Variables
-## Daily precipitation
-## Daily maximum temperature
-## Daily minimum temperature
-
-#
-## Prepare coordinates
-
-# Subset from site info file + simplification col names
-sitecoord <- subset(siteinfo_full, select = c(SiteID, EPSG.25832_X, EPSG.25832_Y))
-names(sitecoord) <- gsub("EPSG.25832_X", "Xsite", names(sitecoord))
-names(sitecoord) <- gsub("EPSG.25832_Y", "Ysite", names(sitecoord))
-
-# Create column id which will allow binding with raster analysis results
-sitecoord <- sitecoord |> 
-  mutate(ID = 1:n()) #|> 
-  #select(ID, everything())
-
-#
-## Precipitation data
-
-# Make function
-
-# Import tiff files according to year
-preci_list2010 <- list.files(path = "./data/precipitationraster", pattern= '2010.*\\.tif$', all.files=TRUE, full.names=TRUE) # pattern equal to : contains exactly '2010', then 0 or x characters, then exactly '.tif' and nothing after
-preci_list2011 <- list.files(path = "./data/precipitationraster", pattern= '2011.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2012 <- list.files(path = "./data/precipitationraster", pattern= '2012.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2013 <- list.files(path = "./data/precipitationraster", pattern= '2013.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2014 <- list.files(path = "./data/precipitationraster", pattern= '2014.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2015 <- list.files(path = "./data/precipitationraster", pattern= '2015.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2016 <- list.files(path = "./data/precipitationraster", pattern= '2016.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2017 <- list.files(path = "./data/precipitationraster", pattern= '2017.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2018 <- list.files(path = "./data/precipitationraster", pattern= '2018.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2019 <- list.files(path = "./data/precipitationraster", pattern= '2019.*\\.tif$', all.files=TRUE, full.names=TRUE)
-preci_list2020 <- list.files(path = "./data/precipitationraster", pattern= '2020.*\\.tif$', all.files=TRUE, full.names=TRUE)
-
-# Import raster files within one object
-#preci_daily2010 <- stack(preci_list2010) # base raster, slower
-preci_daily2010 <- terra::rast(preci_list2010) #faster, but needs following terra method and not standard raster
-preci_daily2011 <- terra::rast(preci_list2011)
-preci_daily2012 <- terra::rast(preci_list2012)
-preci_daily2013 <- terra::rast(preci_list2013)
-preci_daily2014 <- terra::rast(preci_list2014)
-preci_daily2015 <- terra::rast(preci_list2015)
-preci_daily2016 <- terra::rast(preci_list2016)
-preci_daily2017 <- terra::rast(preci_list2017)
-preci_daily2018 <- terra::rast(preci_list2018)
-preci_daily2019 <- terra::rast(preci_list2019)
-preci_daily2020 <- terra::rast(preci_list2020)
-
-# Calculate yearly value
-preci_yearly2010 <- terra::app(preci_daily2010, sum, NA.RM = TRUE)
-#preci_mean2010 <- calc(preci_daily2010, mean, NA.RM = TRUE)
-#plot(preci_yearly2010)
-preci_yearly2011 <- terra::app(preci_daily2011, sum, NA.RM = TRUE)
-preci_yearly2012 <- terra::app(preci_daily2012, sum, NA.RM = TRUE)
-preci_yearly2013 <- terra::app(preci_daily2013, sum, NA.RM = TRUE)
-preci_yearly2014 <- terra::app(preci_daily2014, sum, NA.RM = TRUE)
-preci_yearly2015 <- terra::app(preci_daily2015, sum, NA.RM = TRUE)
-preci_yearly2016 <- terra::app(preci_daily2016, sum, NA.RM = TRUE)
-preci_yearly2017 <- terra::app(preci_daily2017, sum, NA.RM = TRUE)
-preci_yearly2018 <- terra::app(preci_daily2018, sum, NA.RM = TRUE)
-preci_yearly2019 <- terra::app(preci_daily2019, sum, NA.RM = TRUE)
-preci_yearly2020 <- terra::app(preci_daily2020, sum, NA.RM = TRUE)
-
-# Check if all sites covered
-#precipitation2010 <- as.data.frame(terra::extract(preci_yearly2010, subset(siteinfo_full, select = c(EPSG.25832_X, EPSG.25832_Y))))
-
-# Fill missing cell with average from closest cells
-fullpreci_yearly2010 <- terra::focal(preci_yearly2010, w=7, fun = "mean", na.policy = "only")
-#plot(fullpreci_yearly2010)
-fullpreci_yearly2011 <- terra::focal(preci_yearly2011, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2012 <- terra::focal(preci_yearly2012, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2013 <- terra::focal(preci_yearly2013, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2014 <- terra::focal(preci_yearly2014, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2015 <- terra::focal(preci_yearly2015, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2016 <- terra::focal(preci_yearly2016, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2017 <- terra::focal(preci_yearly2017, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2018 <- terra::focal(preci_yearly2018, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2019 <- terra::focal(preci_yearly2019, w=7, fun = "mean", na.policy = "only")
-fullpreci_yearly2020 <- terra::focal(preci_yearly2020, w=7, fun = "mean", na.policy = "only")
-
-# Average annual precipitation from 2010 to 2020
-list_allpreci_yearly <- terra::as.list(fullpreci_yearly2010, fullpreci_yearly2011, fullpreci_yearly2012, fullpreci_yearly2013, fullpreci_yearly2014, fullpreci_yearly2015, fullpreci_yearly2016, fullpreci_yearly2017, fullpreci_yearly2018, fullpreci_yearly2019, fullpreci_yearly2020)
-allpreci_yearly <- terra::rast(list_allpreci_yearly)
-averagepreci <- terra::app(allpreci_yearly, mean, NA.RM = TRUE)
-
-# Extract yearly values for NBR site coordinates
-precipitation <- as.data.frame(terra::extract(averagepreci, subset(sitecoord, select = c(Xsite, Ysite))))
-names(precipitation) <- gsub("mean", "annualprecipitation", names(precipitation))
-
-#
-## Max temperature data
-
-# Import tiff files according to July month
-maxtemp_listJuly <- list.files(path = "./data/maxtempraster", pattern= '_07_.*\\.tif$', all.files=TRUE, full.names=TRUE)
-
-# Import raster files within one object
-maxtemp_dailyJuly <- terra::rast(maxtemp_listJuly)
-
-# Calculate mean
-maxtemp_meanJuly <- terra::app(maxtemp_dailyJuly, mean, NA.RM = TRUE)
-#plot(maxtemp_meanJuly)
-
-# Fill missing cell with average from closest cells
-fullmaxtemp_meanJuly <- terra::focal(maxtemp_meanJuly, w=7, fun = "mean", na.policy = "only")
-plot(fullmaxtemp_meanJuly)
-
-# Extract mean values for NBR site coordinates
-maxtempjuly <- as.data.frame(terra::extract(fullmaxtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
-names(maxtempjuly) <- gsub("focal_mean", "maxtempJuly", names(maxtempjuly))
-
-#
-## Min temperature data
-
-# Import tiff files according to January month
-mintemp_listJan <- list.files(path = "./data/mintempraster", pattern= '_01_.*\\.tif$', all.files=TRUE, full.names=TRUE)
-
-# Import raster files within one object
-mintemp_dailyJan <- terra::rast(mintemp_listJan)
-
-# Calculate mean
-mintemp_meanJan <- terra::app(mintemp_dailyJan, mean, NA.RM = TRUE)
-#plot(mintemp_meanJan)
-
-# Fill missing cell with average from closest cells
-fullmintemp_meanJan <- terra::focal(mintemp_meanJan, w=7, fun = "mean", na.policy = "only")
-plot(fullmintemp_meanJan)
-
-# Extract mean values for NBR site coordinates
-mintempJan <- as.data.frame(terra::extract(fullmintemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
-names(mintempJan) <- gsub("focal_mean", "mintempJan", names(mintempJan))
-
-#
-## Average July temperature data
-
-# Import tiff files according to July month
-avgtemp_listJuly <- list.files(path = "./data/avgtempraster", pattern= '_07_.*\\.tif$', all.files=TRUE, full.names=TRUE)
-
-# Import raster files within one object
-avgtemp_dailyJuly <- terra::rast(avgtemp_listJuly)
-
-# Calculate mean
-avgtemp_meanJuly <- terra::app(avgtemp_dailyJuly, mean, NA.RM = TRUE)
-#plot(avgtemp_meanJuly)
-
-# Fill missing cell with average from closest cells
-fullavgtemp_meanJuly <- terra::focal(avgtemp_meanJuly, w=7, fun = "mean", na.policy = "only")
-plot(fullavgtemp_meanJuly)
-
-# Extract mean values for NBR site coordinates
-avgtempJuly <- as.data.frame(terra::extract(fullavgtemp_meanJuly, subset(sitecoord, select = c(Xsite, Ysite))))
-names(avgtempJuly) <- gsub("focal_mean", "avgtempJuly", names(avgtempJuly))
-
-#
-## Average Jan temperature data
-
-# Import tiff files according to Jan month
-avgtemp_listJan <- list.files(path = "./data/avgtempraster", pattern= '_01_.*\\.tif$', all.files=TRUE, full.names=TRUE)
-
-# Import raster files within one object
-avgtemp_dailyJan <- terra::rast(avgtemp_listJan)
-
-# Calculate mean
-avgtemp_meanJan <- terra::app(avgtemp_dailyJan, mean, NA.RM = TRUE)
-#plot(avgtemp_meanJan)
-
-# Fill missing cell with average from closest cells
-fullavgtemp_meanJan <- terra::focal(avgtemp_meanJan, w=7, fun = "mean", na.policy = "only")
-plot(fullavgtemp_meanJan)
-
-# Extract mean values for NBR site coordinates
-avgtempJan <- as.data.frame(terra::extract(fullavgtemp_meanJan, subset(sitecoord, select = c(Xsite, Ysite))))
-names(avgtempJan) <- gsub("focal_mean", "avgtempJan", names(avgtempJan))
-
-#
-## Preparation final dataset
-
-# Merging all climate results
-climate_full <- purrr::reduce(list(sitecoord, precipitation, maxtempjuly, mintempJan, avgtempJuly, avgtempJan), dplyr::left_join)
-
-# Rescaling - original data at 0.1 scale - temp conversion to C
-climate_full <- climate_full |> 
-  mutate(annualprecipitation = annualprecipitation/10,
-         maxtempJuly = maxtempJuly/100-273.15,
-         mintempJan = mintempJan/100-273.15,
-         avgtempJuly = avgtempJuly/10-273.15,
-         avgtempJan = avgtempJan/10-273.15)
-
-# Clean data + export in csv
-climate_full <- subset(climate_full, select = -c(ID, Xsite, Ysite))
-write_csv(climate_full, "data/cleandata/NBR_FullClimate.csv")
-
-# Export summary raster files
-writeRaster(averagepreci, "outputs/NBR_maps/NBR_AnnualPreci.tiff", overwrite = TRUE)
-writeRaster(fullmaxtemp_meanJuly, "outputs/NBR_maps/NBR_MaxJulyTemp.tiff", overwrite = TRUE)
-writeRaster(fullmintemp_meanJan, "outputs/NBR_maps/NBR_MinJanTemp.tiff", overwrite = TRUE)
-writeRaster(fullavgtemp_meanJuly, "outputs/NBR_maps/NBR_AvgJulyTemp.tiff", overwrite = TRUE)
-writeRaster(fullavgtemp_meanJan, "outputs/NBR_maps/NBR_AvgJanTemp.tiff", overwrite = TRUE)
-
-
-#### SUMMARY FOR REPOSITORY ####
-
-#
-## Site-level data
-# Merging of site info full, area 20x20, land use -> NBR_sitescale
-
-# Select variables for repository
-repo_site <- purrr::reduce(list(
-  subset(siteinfo_full, select = c(SiteID, EcoZone, Year, Habitat)), 
-  subset(landuse_full, select = c(SiteID, FieldType, Livestock1, FlockSize1_adults, FlockSize1_young, SelectedFieldArea_ha, FarmInfieldArea_ha, LSU_adult, LSU_young, AvgStockDensity_perha)), 
-  subset(area20x20_full, select = -c(HeatLoadIndex, Comments_area20x20))
-  ), dplyr::full_join)
 
 
