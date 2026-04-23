@@ -1,12 +1,12 @@
 ##
 #### DESCRIPTION ####
 ##
-## Purpose: Cleaning script for ecological data collected in 2019 and 2020 in the Nordhordland UNESCO Biosphere Reserve
+## Purpose: Cleaning script for data paper "Grazing-dependent communities in the fjord region - data from an observational study in the Nordhordland UNESCO Biosphere Reserve"
 ## Author: Morgane KERDONCUFF
 ## ORCID: 0000-0003-2223-1857
 ## github
 ## Date created: 11/2022
-## Last time modified: 03/2026
+## Last time modified: 04/2026
 ## Project: TradMod
 ## Funding: Norges forskningsråd (NFR)
 ## Institution: University of Bergen, Norway
@@ -23,8 +23,6 @@ library(purrr) # Merge tables
 
 #### RAW DATA ####
 
-# Soil penetration tests in destructive subplots (2 per subplot)
-soil_pene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration")
 # Bulk density in destructive subplots (3 per subplot)
 soil_bulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA")
 # Soil chemistry 2019 (3 per plot)
@@ -326,7 +324,7 @@ sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthL
 # Dataset export
 write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea.csv")
 
-#### Ground cover quadrats ####
+#### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
 
 # Raw datasets
 ## 1 m^2^ ground cover in non-destructive subplots (15 per site)
@@ -459,115 +457,106 @@ ground_cover <- ground_cover |>
 # Dataset export
 write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover.csv")
 
+#### DESTRUCTIVE SUBPLOTS - SOIL PENETRATION TESTS ####
 
-#### Soil penetration quadrat ####
+# Raw datasets
+## Soil penetration tests in destructive subplots (2 per subplot, 24 per site)
+soil_pene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration")
 
-## Description
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## recordID - Identification code for penetration test
+## soilPenetrationDepthCm - Soil penetration depth of a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) dropped from 1 m above ground in cm
+## bedrockHit - If the penetration stick hit the bedrock during the test (yes/no)
 
-## List of variables
+# Variable names & structure
 
-# [1] Field identification code for data collection
-# [2] Date of data collection
-# [3] Sample identification code
-# [4] Stick height remaining above the ground on the left side of the quadrat (cm)
-# [5] Stick height which penetrated the ground on the left side of the quadrat (cm) -> calculated in Excel
-# [6] If the stick hit a rock on the left side of the quadrat Y/N
-# [7] Stick height remaining above the ground on the right side of the quadrat (cm)
-# [8] Stick height which penetrated the ground on the right side of the quadrat (cm) -> calculated in Excel
-# [9] If the stick hit a rock on the left side of the quadrat Y/N
-# [10] Average soil penetration for quadrat (mean left and right)
-# [11] Stick total length (cm) - the stick would wear out along with repetitive use, so its length would decrease over time
-# [12] Comments
+## R-friendly with janitor package
+soil_pene_raw <- soil_pene_raw %>% 
+  clean_names("lower_camel")
 
-#
-## Summary - Check table size, list of variables, variable types (num/chr)
+## Consistent & FAIR
+names(soil_pene_raw) <- gsub("site", "siteID", names(soil_pene_raw))
+names(soil_pene_raw) <- gsub("plotId", "subplotID", names(soil_pene_raw))
 
-#str(soilpene_raw) # Date should be reformatted, plotID renamed as sampleID and plotID created
+## New plot & record ID variables
+soil_pene_raw <- soil_pene_raw %>%
+  mutate(plotID = substr(subplotID, 1, 6)) %>% 
+  mutate(recordID = ifelse(
+    leftRight == "left",
+    paste(subplotID, "r1", sep = "-"),
+    paste(subplotID, "r2", sep = "-")
+  ))
 
-#
-## Name & character cleaning
+# Dataset
 
-# R friendly variable names
-names(soilpene_raw) <- gsub("Site", "SiteID", names(soilpene_raw)) # rename in SiteID so it matches with other files
-names(soilpene_raw) <- gsub("PlotID", "SampleID", names(soilpene_raw)) # Rename plotID as sampleID
-names(soilpene_raw) <- gsub("Date", "Recording_date", names(soilpene_raw)) # Rename so it matches with other files
-names(soilpene_raw) <- gsub("\\(", "", names(soilpene_raw)) # remove (
-names(soilpene_raw) <- gsub("\\)", "", names(soilpene_raw)) # remove )
-names(soilpene_raw) <- gsub("Comments", "Comments_soilpene", names(soilpene_raw))
-soilpene_raw$PlotID <- substr(soilpene_raw$SampleID, 1,6) #create PlotID column
+## Removal redundant or unnecessary variables
+soil_pene <- subset(
+  soil_pene_raw, select = -c(
+    # redundant with sampling_area
+    date,
+    # replaced by recordID
+    leftRight,
+    comments
+  )
+)
 
-#
-## Sampling date standardisation
+## Variable types (num/chr)
+# str(soil_pene) #validated
+## Duplicate check
+# get_dupes(soil_pene) #validated
 
-soilpene_raw$Recording_date <- as.POSIXct(soilpene_raw$Recording_date, format = "%d.%m.%Y")
+## Character variables - desirable categories, NAs, misprints
 
-#
-## Data cleaning - New R object
+### Consistent lower typo
+soil_pene <- soil_pene %>%
+  mutate_if(is.character, tolower)
 
-soilpene_full <- soilpene_raw
+### Categories & distribution
+# table(soil_pene$siteID) #validated - uc1 site (bog) to be removed
+soil_pene <- filter(soil_pene, siteID != "uc1")
+# table(soil_pene$plotID) #validated
+# table(soil_pene$bedrockHit) # 39 failed tests over 1017 due to bedrock hit
+table(filter(soil_pene, bedrockHit == "y")$siteID) # 8 sites with up to 12 failures
 
-#
-## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+## Numeric variables - min/max, distribution, potential outliers
 
-# Site ID
-#table(soilpene_full$SiteID) # 12 samples per site - validated
+## Min/max
+# test <- soil_pene |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() #validated - no visible height above maximum stick length
 
-# Plot ID
-#table(soilpene_full$PlotID) # 4 samples per plot - validated
+### NA check
+# colnames(soil_pene)[apply(soil_pene, 2, anyNA)] #validated
 
-# Sample ID
-#soilpene_full[duplicated(soilpene_full$SampleID),] # Unique ID for sample - validated
+### Variable distribution & outliers
+# hist(soil_pene$visibleHeightCm) # Normal distribution, no outliers
 
-# If rock hit on the left or right
-#unique(soilpene_full$Left_rock_hit) # only Y & N -> validated
-#unique(soilpene_full$Right_rock_hit) # only Y & N -> validated
+# Add/remove variables
 
-#
-## Numeric var - Check min/max, distribution and potential outliers
+## New variable soilPenetrationDepth
+soil_pene <- soil_pene %>% 
+  mutate(soilPeneDepthCm = stickHeight - visibleHeightCm)
 
-# Check min/max
-test <- soilpene_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # no visible outlier, no penetration or standing part above stick full length
+## Removal stickHeight and visibleHeightCm
+soil_pene <- subset(soil_pene, select = -c(stickHeight, visibleHeightCm))
 
-# Left standing height
-#soilpene_full[is.na(soilpene_full$Left_standing_part_cm),] # No NA
-#hist(soilpene_full$Left_standing_part_cm) # Heights range from 28 to 42 cm in a normal distribution -> validated
-
-# Left penetration height
-#soilpene_full[is.na(soilpene_full$Left_PT_cm),] # No NA
-#hist(soilpene_full$Left_PT_cm) # Heights range from 0 to 14 cm in a normal distribution -> validated
-
-# Right standing height
-#soilpene_full[is.na(soilpene_full$Right_standing_part_cm),] # No NA
-#hist(soilpene_full$Right_standing_part_cm) # Heights range from 25 to 45 cm in a normal distribution -> validated
-
-# Right penetration height
-#soilpene_full[is.na(soilpene_full$Right_PT_cm),] # No NA
-#hist(soilpene_full$Right_PT_cm) # Heights range from 0 to 16 cm in a normal distribution -> validated
-
-# Total stick length
-#soilpene_full[is.na(soilpene_full$Stick_height),] # No NA
-#hist(soilpene_full$Stick_height) # Heights range from 42.7 to 43.4 cm -> validated
-
-
-## Export clean data in new excel file
-
-write_csv(soilpene_full, "data/cleandata/NBR_FullSoilPene.csv")
-
-
+# Dataset export
+write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene.csv")
 
 #### Soil bulk density - quadrats ####
 
