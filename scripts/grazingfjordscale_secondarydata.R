@@ -31,6 +31,13 @@ landscape_raw <- read_excel(path = "data/rawdata/NBR_RawLandscapeMatrix.xlsx")
 
 #### REGIONAL SCALE ####
 
+
+# Distribution distance to sea
+#area20x20_full[is.na(area20x20_full$DistanceToSea_m),] # 9 NA, corresponding to upland sites -> validated
+#hist(area20x20_full$DistanceToSea_m) # One outlier, above 10 km distance
+#filter(area20x20_full, DistanceToSea_m>10000) # IG3 in Modalen
+
+
 #### Climate data ####
 
 #
