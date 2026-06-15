@@ -23,14 +23,6 @@ library(purrr) # Merge tables
 
 #### RAW DATA ####
 
-# Bulk density in destructive subplots (3 per subplot)
-soil_bulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA")
-# Soil chemistry 2019 (3 per plot)
-soil_chem_2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";")
-# Soil chemistry 2020 (3 per plot)
-soil_chem_2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";")
-# Soil chemistry 2020 complementary
-soil_chem_2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls")
 # 1 m^2^ dung collection in non-destructive subplot
 dung_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA")
 # 1 m^2^ plant community, species level
@@ -467,7 +459,7 @@ soil_pene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPe
 ## siteID - Field identification code for data collection
 ## plotID - Plot identification code for data collection
 ## subplotID - Subplot identification code for data collection
-## recordID - Identification code for penetration test
+## recordID - Identification code for individual penetration tests
 ## soilPenetrationDepthCm - Soil penetration depth of a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) dropped from 1 m above ground in cm
 ## bedrockHit - If the penetration stick hit the bedrock during the test (yes/no)
 
@@ -483,7 +475,8 @@ names(soil_pene_raw) <- gsub("plotId", "subplotID", names(soil_pene_raw))
 
 ## New plot & record ID variables
 soil_pene_raw <- soil_pene_raw %>%
-  mutate(plotID = substr(subplotID, 1, 6)) %>% 
+  mutate(plotID = substr(subplotID, 1, 6)) %>%
+  # replace left/right test by a record ID
   mutate(recordID = ifelse(
     leftRight == "left",
     paste(subplotID, "r1", sep = "-"),
@@ -523,7 +516,7 @@ table(filter(soil_pene, bedrockHit == "y")$siteID) # 8 sites with up to 12 failu
 
 ## Numeric variables - min/max, distribution, potential outliers
 
-## Min/max
+### Min/max
 # test <- soil_pene |>
 #   summarise(
 #     tibble(
@@ -558,100 +551,128 @@ soil_pene <- subset(soil_pene, select = -c(stickHeight, visibleHeightCm))
 # Dataset export
 write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene.csv")
 
-#### Soil bulk density - quadrats ####
+#### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
-## Description
+# Raw datasets
+# Bulk density in destructive subplots (3 per subplot, 36 per site)
+soil_bulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA")
 
-## List of variables
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## recordID - Identification code for individual bulk density cores
+## coreVolCm3 - Core volume corrected for gaps in cm3
+## weight0hG - Initial core weight after collection in g
+## weightSatG - Water saturated weight of soil cores in g
+## weight24hG - Core weight after 24h air drying in g
+## weight48hG - Core weight after 48h air drying in g
+## weightDryG - Core weight after 48h oven drying at 105C in g
 
-# [1] Sample identification code
-# [2] Field identification code for data collection
-# [3] Plot identification code
-# [4] Height of the core fully completed with soil (cm)
-# [5] Volume of the soil core before correction for holes or slopes (cm3) -> not to be used in the analysis
-# [6] Volume of the soil core manually corrected for holes and slopes if applicable (cm3) -> not to be used in the analysis
-# [7] Best estimation of the volume of the soil core, with correction for holes or slopes if needed (cm3)
-# [8] Core weight (including soil + PVC core + cheesecloth) on fresh soil, before water saturation (g)
-# [9] Core weight (including soil + PVC core + cheesecloth) after water saturation (g)
-# [10] Core weight (including soil + PVC core + cheesecloth) after 24h of drying (g)
-# [11] Core weight (including soil + PVC core + cheesecloth) after 48h of drying (g)
-# [12] Core weight (including soil + PVC core + cheesecloth) after drying at 105C in oven (g)
-# [13] Weight of the cheesecloth (g)
-# [14] Weight of the PVC core with the cheesecloth (g)
-# [15] Percentage of water loss over 24h -> calculated from W0 and W24
-# [16] Percentage of water loss over 48h -> calculated from W0 and W48
-# [17] Bulk density calculated from the best volume estimation [7]
-# [18] Weight of percentage of soil moisture (g)
-# [19] Volume of percentage of soil moisture (cm3) -> calculated from the BD
-# [20] Percentage of soil porosity -> calculated from the BD
-# [21] Percentage of WFPS
-# [22] Comments during the lab processing of the soil
-# [23] Other comments
-# [24] If the samples are concerned by scale calibration issue
-# [25] Who performed the task
+# Variable names & structure
 
-#
-## Summary - Check table size, list of variables, variable types (num/chr)
+## R-friendly with janitor package
+soil_bulk_raw <- soil_bulk_raw %>% 
+  clean_names("lower_camel")
 
-#str(soilbulk_raw) # missing sample ID, plotID to be reformated
+## Consistent & FAIR
+names(soil_bulk_raw) <- gsub("site", "siteID", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("plotId", "plotID", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("bdCoreId", "recordID", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("coreVol", "coreVolCm3", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("w0", "weight0h", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("wsat", "weightSatG", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("w24H", "weight24hG", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("w48H", "weight48hG", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("wdry", "weightDryG", names(soil_bulk_raw))
 
-#
-## Name & character cleaning
+## Consistent plot, subplot & record ID variables
+soil_bulk_raw <- soil_bulk_raw %>%
+  mutate(plotID = substr(recordID, 1, 6)) %>% 
+  mutate(subplotID = substr(recordID, 1, 9)) %>% 
+  group_by(subplotID) %>% 
+  mutate(recordID = paste(subplotID, row_number(), sep = "-r")) %>% 
+  ungroup()
 
-# R friendly variable names
-names(soilbulk_raw) <- gsub("\\(", "", names(soilbulk_raw)) # remove (
-names(soilbulk_raw) <- gsub("\\)", "", names(soilbulk_raw)) # remove )
-names(soilbulk_raw) <- gsub(" ", "", names(soilbulk_raw)) # remove spaces
-names(soilbulk_raw) <- gsub("Site", "SiteID", names(soilbulk_raw)) # rename in SiteID so it matches with other files
-names(soilbulk_raw) <- gsub("cm", "_cm", names(soilbulk_raw))
-names(soilbulk_raw) <- gsub("%", "percent_", names(soilbulk_raw))
-names(soilbulk_raw) <- gsub("Comments_processing", "CommentsProcessing_soilbulk", names(soilbulk_raw))
-names(soilbulk_raw) <- gsub("Other_comments", "OtherComments_soilbulk", names(soilbulk_raw))
+# Dataset
 
-# New ID variables
-soilbulk_raw$PlotID <- substr(soilbulk_raw$BDcoreID, 1,6) # recreate PlotID column
-soilbulk_raw$SampleID <- substr(soilbulk_raw$BDcoreID, 1,9) # recreate SampleID column
+## Removal redundant or unnecessary variables
+soil_bulk <- subset(
+  soil_bulk_raw, select = c(
+    siteID,
+    plotID,
+    subplotID,
+    recordID,
+    # corrected volume of soil cores in cm3
+    coreVolCm3,
+    # soil core weight measurements
+    weight0hG,
+    weightSatG,
+    weight24hG,
+    weight48hG,
+    weightDryG
+  )
+)
 
-#
-## Data cleaning - New R object
+## Variable types (num/chr)
+# str(soil_bulk) #validated
+## Duplicate check
+# get_dupes(soil_bulk) #validated
 
-soilbulk_full <- soilbulk_raw
+## Character variables - desirable categories, NAs, misprints
 
-#
-## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
+### Consistent lower typo
+soil_bulk <- soil_bulk %>%
+  mutate_if(is.character, tolower)
 
-# Site ID
-#table(soilbulk_full$SiteID) # 36 samples per site - validated
+### Categories & distribution
+# table(soil_bulk$siteID) #validated - uc1 site (bog) to be removed
+soil_bulk <- filter(soil_bulk, siteID != "uc1")
+# table(soil_bulk$plotID) #validated
 
-# Plot ID
-#table(soilbulk_full$PlotID) # 12 samples per plot - validated
+## Numeric variables - min/max, distribution, potential outliers
 
-# Bulk density core ID
-#soilbulk_full[duplicated(soilbulk_full$BDcoreID),] # Unique ID for core - validated
+# Min/max
+# test <- soil_bulk |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() #quality check needed - min core volume low
 
-#
-## Numeric var - Check min/max, distribution and potential outliers
+ # min core volume quite low, negative values for water loss 24h and 48h, negative BD
 
-# Check min/max
-test <- soilbulk_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # min core volume quite low, negative values for water loss 24h and 48h, negative BD
+### NA check
+# colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
+# soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1-p3-d2-r1) -> discarded due to lab incident
+soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-d2-r1")
 
-# Best estimation soil core volume
-#soilbulk_full[is.na(soilbulk_full$CoreVol),] # two NA in IS1 & OG1 + 24 NAs in IC3 -> check datasheet -> lab incident, the 2 cores were discarded - Samples missing for IC3, never found
-#hist(soilbulk_full$CoreVol) # Volumes range from 15 to 60 cm3, most above 45-50 cm3 -> low volume = bad estimation of BD, too low volumes should be discarded
+### Quality check
+
+#### Soil core volume - low core volume affect weight measurements
+# hist(soil_bulk$coreVolCm3) # Visible threshold around 50 cm3
+# filter(soil_bulk, coreVolCm3<40) # 37 or 2% samples unfit
+# filter(soil_bulk, coreVolCm3<45) # 105 or 7% samples unfit
+# filter(soil_bulk, coreVolCm3<50) # 330 or 21% samples unfit -> cores should be minimum vol of 50 cm3
+soil_bulk <- filter(soil_bulk, coreVolCm3 >= 50)
+
+### Soil core weight - weight loss should be consistent with drying processes
+qualitycheck <- filter(soil_bulk,
+                        weightSatG - weight0hG < 0 |
+                        weight24hG - weightSatG > 0 |
+                        weight48hG - weight24hG > 0 |
+                        weightDryG - weight0hG > 0)
+
+### Variable distribution & outliers
 
 # W0 - Weight of fresh soil before saturation
 #soilbulk_full[is.na(soilbulk_full$W0g),] # same NAs -> validated
@@ -782,239 +803,237 @@ write_csv(soilbulk_full, "data/cleandata/NBR_FullSoilBulk.csv")
 
 
 
-#### Soil chemistry ####
+#### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
 
-## Description
-# 3 datasets: one from 2019, one from 2020, and one complementary for a missing variable in 2020
+# Raw datasets
+# Soil chemistry 2019 (3 per plot)
+soil_chem_2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";")
+# Soil chemistry 2020 (3 per plot)
+soil_chem_2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";")
+# Soil chemistry 2020 complementary dry matter content
+soil_chem_2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls")
 
-## List of variables
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## soilType - Soil type according to sand, clay & humus content
+## clayContentClass - Content of clay in soil in percent classes
+## lossOnIgnitionPercentDM - Labile carbon content in soil in percent dry matter content
+## soilDensityKgL - Soil density in kg per liter
+## dryMatterPercent - Dry matter content in the soil in percent weight
+## humusPercentDM - Content of humus in soil in percent dry matter content
+## humusContentClass - Content of humus in soil in classes
+## pH - Soil pH
+## availablePMg100g - Concentration of phosphorus in mg in 100 g of soil
+## availableKMg100g - Concentration of potassium in mg in 100 g of soil
+## availableMgMg100g - Concentration of magnesium in mg in 100 g of soil
+## availableCaMg100g - Concentration of calcium in mg in 100 g of soil
+## availableNaMg100g - Concentration of sodium in mg in 100 g of soil
+## totalNPercentDM - Nitrogen content in percent dry matter content
 
-# [1] Eurofins protocole -> not to be used in the analysis
-# [2] Eurofins protocole -> not to be used in the analysis
-# [3] Eurofins protocole -> not to be used in the analysis
-# [4] Eurofins protocole -> not to be used in the analysis
-# [5] Eurofins protocole -> not to be used in the analysis
-# [6] Eurofins protocole -> not to be used in the analysis
-# [7] Eurofins protocole -> not to be used in the analysis
-# [8] Eurofins protocole -> not to be used in the analysis
-# [9] Eurofins protocole -> not to be used in the analysis
-# [10] Eurofins protocole -> not to be used in the analysis
-# [11] Eurofins protocole -> not to be used in the analysis
-# [12] Eurofins protocole -> not to be used in the analysis
-# [13] Plot identification code
-# [14] Eurofins protocole -> not to be used in the analysis
-# [15] Eurofins protocole -> not to be used in the analysis
-# [16] Soil type code (e.g. clay, sand, humus)
-# [17] Clay class code
-# [18] Loss of Ignition (LOI)
-# [19] Soil density (kg/L)
-# [20] Humus quantity in percent dry matter
-# [21] Humus class code
-# [22] pH
-# [23] Rate of phosphorus (mg/100g)
-# [24] Rate of potassium (mg/100g)
-# [25] Rate of magnesium (mg/100g)
-# [26] Rate of calcium (mg/100g)
-# [27] Rate of potassium nitrate (mg/100g)
-# [28] Rate of copper (mg/100g)
-# [29] Rate of boron (mg/100g)
-# [30] Rate of sodium (mg/100g)
-# [31] Rate of sulfur (mg/100g)
-# [32] Rate of iron (mg/100g)
-# [33] Rate of manganese (mg/100g)
-# [34] Rate of zinc (mg/100g)
-# [35] Rate of molybdenum (mg/100g)
-# [36] Rate of selenium (mg/100g)
+# Variable names & structure
 
-#
-## Summary - Check table size, list of variables, variable types (num/chr)
+## R-friendly with janitor package
+soil_chem_2019 <- soil_chem_2019 %>% 
+  clean_names("lower_camel")
+soil_chem_2020 <- soil_chem_2020 %>% 
+  clean_names("lower_camel")
+soil_chem_2020_DM <- soil_chem_2020_DM %>% 
+  clean_names("lower_camel")
 
-#str(chem2019) # two missing variables (dry matter and total N) available in the PDF version of the document
-#str(chem2020) # two missing variables (dry matter and total N) respectively available in the complementary dataset and in the PDF version of the document
-#str(chem2020_DM) # dry matter as character
+## Consistent plotID
+names(soil_chem_2019) <- gsub("provenummer", "plotID", names(soil_chem_2019))
+names(soil_chem_2020) <- gsub("provenummer", "plotID", names(soil_chem_2020))
+names(soil_chem_2020_DM) <- gsub("merking", "plotID", names(soil_chem_2020_DM))
 
-#
-## Common ID for merging
+# Dataset
 
-names(chem2019) <- gsub("Provenummer", "PlotID", names(chem2019)) # common ID
-names(chem2020) <- gsub("Provenummer", "PlotID", names(chem2020)) # common ID
-names(chem2020_DM) <- gsub("Merking", "PlotID", names(chem2020_DM)) # common ID
+## Variable list & types
+# str(soil_chem_2019) # dryMatterPercent & totalNPercentDM missing -> in the PDF version of the document
+# str(soil_chem_2020) # dryMatterPercent & totalNPercentDM missing -> dryMatterPercent in soil_chem_2020_DM & totalNPercentDM in the PDF version of the document
+# str(soil_chem_2020_DM) # dryMatterPercent as character
 
-#
-## Filling missing variables
+## Missing variables
 
-# Soil chemistry 2019 - dry matter and total N
-extra2019 <- data.frame(
-  PlotID = c("OC11", "OC12", "OC13", "OS11", "OS12", "OS13", "OG11", "OG12", "OG13", "OS21", "OS22", "OS23", "OV21", "OV22", "OV23", "IC11", "IC12", "IC13", "IG11", "IG12", "IG13", "IG21", "IG22", "IG23", "IS11", "IS12", "IS13", "IS21", "IS22", "IS23", "IC21", "IC22", "IC23", "IV11", "IV12", "IV13", "UG11", "UG12", "UG13", "UG21", "UG22", "UG23", "US11", "US12", "US13", "US21", "US22", "US23", "US31", "US32", "US33", "US41", "US42", "US43"),
-  DryMatter_percent = c(68.9, 66.7, 70.8, 96.8, 97.4, 97, 94.2, 94.9, 95.7, 95.6, 95.6, 95.5, 88.7, 93, 93.5, 96.2, 95.4, 95.8, 94.8, 95.4, 95.1, 93.6, 92.9, 94.4, 94.8, 94.4, 94.9, 94.7, 93.5, 93.7, 95.1, 95, 93.3, 96.7, 96.4, 97.1, 83.8, 89.1, 90.6, 94.8, 94.3, 90.6, 95.2, 94.5, 89, 94.6, 90.7, 94.3, 86.7, 93.5, 91.3, 92.9, 94.4, 93),
-  TotalN_percentDM = c(1.98, 2.08, 1.46, 0.28, 0.29, 0.34, 0.88, 0.65, 0.59, 0.54, 0.63, 0.62, 1.14, 0.61, 0.72, 0.5, 0.62, 0.5, 0.4, 0.45, 0.51, 0.76, 0.83, 0.74, 0.64, 0.62, 0.67, 0.59, 0.64, 0.92, 0.64, 0.7, 0.92, 0.52, 0.55, 0.71, 1.78, 1.53, 1.41, 0.71, 0.78, 1.26, 0.66, 0.63, 1.57, 0.72, 1.2, 0.94, 1.6, 0.62, 0.86, 1.08, 0.84, 0.67)
+### Soil chemistry 2019 complement from PDF document
+complement_2019 <- data.frame(
+  plotID = c("OC11", "OC12", "OC13", "OS11", "OS12", "OS13", "OG11", "OG12", "OG13", "OS21", "OS22", "OS23", "OV21", "OV22", "OV23", "IC11", "IC12", "IC13", "IG11", "IG12", "IG13", "IG21", "IG22", "IG23", "IS11", "IS12", "IS13", "IS21", "IS22", "IS23", "IC21", "IC22", "IC23", "IV11", "IV12", "IV13", "UG11", "UG12", "UG13", "UG21", "UG22", "UG23", "US11", "US12", "US13", "US21", "US22", "US23", "US31", "US32", "US33", "US41", "US42", "US43"),
+  dryMatterPercent = c(68.9, 66.7, 70.8, 96.8, 97.4, 97, 94.2, 94.9, 95.7, 95.6, 95.6, 95.5, 88.7, 93, 93.5, 96.2, 95.4, 95.8, 94.8, 95.4, 95.1, 93.6, 92.9, 94.4, 94.8, 94.4, 94.9, 94.7, 93.5, 93.7, 95.1, 95, 93.3, 96.7, 96.4, 97.1, 83.8, 89.1, 90.6, 94.8, 94.3, 90.6, 95.2, 94.5, 89, 94.6, 90.7, 94.3, 86.7, 93.5, 91.3, 92.9, 94.4, 93),
+  totalNPercentDM = c(1.98, 2.08, 1.46, 0.28, 0.29, 0.34, 0.88, 0.65, 0.59, 0.54, 0.63, 0.62, 1.14, 0.61, 0.72, 0.5, 0.62, 0.5, 0.4, 0.45, 0.51, 0.76, 0.83, 0.74, 0.64, 0.62, 0.67, 0.59, 0.64, 0.92, 0.64, 0.7, 0.92, 0.52, 0.55, 0.71, 1.78, 1.53, 1.41, 0.71, 0.78, 1.26, 0.66, 0.63, 1.57, 0.72, 1.2, 0.94, 1.6, 0.62, 0.86, 1.08, 0.84, 0.67)
 )
-chem2019 <- full_join(chem2019, extra2019)
+soil_chem_2019 <- full_join(soil_chem_2019, complement_2019)
 
-# Soil chemistry 2020 - total N
-extra2020 <- data.frame(
-  PlotID = c("OC21", "OC22", "OC23", "OC31", "OC32", "OC33", "OC41", "OC42", "OC43", "OC51", "OC52", "OC53", "OG21", "OG22", "OG23", "OG31", "OG32", "OG33", "OG51", "OG52", "OG53", "OG61", "OG62", "OG63", "IG31", "IG32", "IG33", "IS31", "IS32", "IS33", "IS41", "IS42", "IS43", "IS51", "IS52", "IS53", "OS31", "OS32", "OS33", "OS41", "OS42", "OS43", "OS51", "OS52", "OS53", "OS61", "OS62", "OS63", "OS71", "OS72", "OS73", "OS81", "OS82", "OS83", "OS91", "OS92", "OS93", "IC31", "IC32", "IC33", "IC41", "IC42", "IC43", "IC51", "IC52", "IC53", "OG41", "OG42", "OG43", "US51", "US52", "US53", "US61", "US62", "US63"),
-  TotalN_percentDM = c(0.25, 0.32, 0.33, 0.88, 1.13, 0.84, 0.54, 0.63, 0.63, 0.63, 0.76, 1.26, 0.69, 0.34, 0.47, 1.97, 1.4, 2.04, 1.57, 0.87, 0.42, 0.53, 0.5, 0.4, 0.27, 0.73, 0.5, 0.68, 0.95, 0.69, 0.41, 0.93, 0.42, 1.04, 1.21, 1.66, 0.69, 0.53, 0.5, 0.42, 0.3, 0.35, 0.61, 0.48, 0.42, 0.39, 0.4, 0.41, 1.21, 1.5, 1.82, 1.77, 1.96, 1.51, 0.76, 0.84, 0.63, 0.61, 0.77, 0.68, 0.31, 0.45, 0.39, 0.55, 1.33, 1.27, 0.56, 0.45, 0.27, 0.79, 0.85, 0.97, 0.65, 0.56, 1.22)
+### Soil chemistry 2020 complement from PDF document & soil_chem_2020_DM
+#### totalNPercentDM
+complement_2020 <- data.frame(
+  plotID = c("OC21", "OC22", "OC23", "OC31", "OC32", "OC33", "OC41", "OC42", "OC43", "OC51", "OC52", "OC53", "OG21", "OG22", "OG23", "OG31", "OG32", "OG33", "OG51", "OG52", "OG53", "OG61", "OG62", "OG63", "IG31", "IG32", "IG33", "IS31", "IS32", "IS33", "IS41", "IS42", "IS43", "IS51", "IS52", "IS53", "OS31", "OS32", "OS33", "OS41", "OS42", "OS43", "OS51", "OS52", "OS53", "OS61", "OS62", "OS63", "OS71", "OS72", "OS73", "OS81", "OS82", "OS83", "OS91", "OS92", "OS93", "IC31", "IC32", "IC33", "IC41", "IC42", "IC43", "IC51", "IC52", "IC53", "OG41", "OG42", "OG43", "US51", "US52", "US53", "US61", "US62", "US63"),
+  totalNPercentDM = c(0.25, 0.32, 0.33, 0.88, 1.13, 0.84, 0.54, 0.63, 0.63, 0.63, 0.76, 1.26, 0.69, 0.34, 0.47, 1.97, 1.4, 2.04, 1.57, 0.87, 0.42, 0.53, 0.5, 0.4, 0.27, 0.73, 0.5, 0.68, 0.95, 0.69, 0.41, 0.93, 0.42, 1.04, 1.21, 1.66, 0.69, 0.53, 0.5, 0.42, 0.3, 0.35, 0.61, 0.48, 0.42, 0.39, 0.4, 0.41, 1.21, 1.5, 1.82, 1.77, 1.96, 1.51, 0.76, 0.84, 0.63, 0.61, 0.77, 0.68, 0.31, 0.45, 0.39, 0.55, 1.33, 1.27, 0.56, 0.45, 0.27, 0.79, 0.85, 0.97, 0.65, 0.56, 1.22)
 )
-chem2020 <- full_join(chem2020, extra2020)
+soil_chem_2020 <- full_join(soil_chem_2020, complement_2020)
+#### dryMatterPercent
+names(soil_chem_2020_DM) <- gsub("torrstoffG100G", "dryMatterPercent", names(soil_chem_2020_DM)) # Consistent variable name
+soil_chem_2020_DM$dryMatterPercent <- as.numeric(soil_chem_2020_DM$dryMatterPercent) # Make variable as numeric
+soil_chem_2020 <- left_join(soil_chem_2020, subset(soil_chem_2020_DM, select = c(plotID, dryMatterPercent)))
 
-# Soil chemistry 2020 - dry matter
-names(chem2020_DM) <- gsub("Torrstoff.g.100g", "DryMatter_percent", names(chem2020_DM))
-chem2020_DM$DryMatter_percent <- as.numeric(chem2020_DM$DryMatter_percent)
-chem2020 <- left_join(chem2020, chem2020_DM)
+## Binding 2019 and 2020 datasets
+soil_chem <- full_join(soil_chem_2019, soil_chem_2020)
 
-# Merging 2019 and 2020 tables
-soilchem_raw <- full_join(chem2019, chem2020)
+## Remove empty columns
+soil_chem <- soil_chem %>% 
+  remove_empty()
 
-#
-## Name & character cleaning
+## Consistent ID variables
+soil_chem$plotID <- paste(substr(soil_chem$plotID, 1, 3), substr(soil_chem$plotID, 4, 4), sep= "-p")
+soil_chem$siteID <- substr(soil_chem$plotID, 1, 3)
 
-# R friendly variable names
-names(soilchem_raw) <- gsub("Jordart", "SoilType", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Leirklasse", "ClayCategory", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Glodetap", "LOI", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Volumvekt", "SoilDensity_kg.L", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Mold", "Humus_percentDM", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Humus_percentDMklasse", "HumusCategory", names(soilchem_raw))
-names(soilchem_raw) <- gsub("P.Al", "P.Al_mg.100g", names(soilchem_raw))
-names(soilchem_raw) <- gsub("K.Al", "K.Al_mg.100g", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Mg.Al", "Mg.Al_mg.100g", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Ca.Al", "Ca.Al_mg.100g", names(soilchem_raw))
-names(soilchem_raw) <- gsub("KHNO3", "KHNO3_mg.100g", names(soilchem_raw))
-names(soilchem_raw) <- gsub("Na.Al", "Na.Al_mg.100g", names(soilchem_raw))
+## Consistent & FAIR variable names
+names(soil_chem) <- gsub("jordart", "soilType", names(soil_chem))
+names(soil_chem) <- gsub("leirklasse", "clayContentClass", names(soil_chem))
+names(soil_chem) <- gsub("glodetap", "lossOnIgnitionPercentDM", names(soil_chem))
+names(soil_chem) <- gsub("volumvekt", "soilDensityKgL", names(soil_chem))
+names(soil_chem) <- gsub("mold", "humusPercentDM", names(soil_chem))
+names(soil_chem) <- gsub("humusPercentDMklasse", "humusContentClass", names(soil_chem))
+names(soil_chem) <- gsub("pAl", "availablePMg100g", names(soil_chem))
+names(soil_chem) <- gsub("kAl", "availableKMg100g", names(soil_chem))
+names(soil_chem) <- gsub("mgAl", "availableMgMg100g", names(soil_chem))
+names(soil_chem) <- gsub("caAl", "availableCaMg100g", names(soil_chem))
+names(soil_chem) <- gsub("naAl", "availableNaMg100g", names(soil_chem))
 
-# Removal dummy and/or empty variables from Eurofins protocol
-soilchem_raw <- soilchem_raw |>   
-  discard(~all(is.na(.) | . =="")) # remove all empty columns
-soilchem_raw <- subset(soilchem_raw, select = -c(Arstall, Journalnr, Navn, Postnr, Poststed, Registreringsdato, batchCode, contactName, Adresse, samplePartnerCode)) # remove useless columns
+## Selection desirable variables
+soil_chem <- subset(
+  soil_chem, select = -c(
+    arstall,
+    # anonymous
+    journalnr,
+    navn,
+    adresse,
+    postnr,
+    poststed,
+    registreringsdato
+  )
+)
 
-# New ID variables
-soilchem_raw$PlotID <- paste(substr(soilchem_raw$PlotID, 1, 3), substr(soilchem_raw$PlotID, 4, 4), sep= "-P") #Create PlotID same format as other sheets
-soilchem_raw$SiteID <- substr(soilchem_raw$PlotID, 1, 3) #Create SiteID
+## Duplicate check
+# get_dupes(soil_chem) #validated
 
-#
-## Data cleaning - New R object
+## Site distribution check
+# table(soil_chem$siteID) # ov1 missing - in another PDF document
 
-soilchem_full <- soilchem_raw
-
-#
-## Char var - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
-
-# Site ID
-#table(soilchem_full$SiteID) # 3 samples per site - validated - but missing OV1 site
-
-# Adding OV1-P1 replicate
-soilchem_full <- soilchem_full |> 
-  add_row(PlotID = 'OV1-P1',
-          SoilType = 13,
-          ClayCategory = 1,
-          LOI = 25.8,
-          SoilDensity_kg.L = 0.59,
-          Humus_percentDM = 25.8,
-          HumusCategory = 5,
+### Adding ov1 plots from PDF document
+soil_chem <- soil_chem |> 
+  add_row(plotID = "ov1-p1",
+          soilType = 13,
+          clayContentClass = 1,
+          lossOnIgnitionPercentDM = 25.8,
+          soilDensityKgL = 0.59,
+          humusPercentDM = 25.8,
+          humusContentClass = 5,
           pH = 5.4,
-          P.Al_mg.100g = 3,
-          K.Al_mg.100g = 14,
-          Mg.Al_mg.100g = 20,
-          Ca.Al_mg.100g = 31,
-          Na.Al_mg.100g = 6,
-          DryMatter_percent = 0.5,
-          TotalN_percentDM = 0.44,
-          SiteID = 'OV1'
-          )
-
-# Adding OV1-P2 replicate
-soilchem_full <- soilchem_full |> 
-  add_row(PlotID = 'OV1-P2',
-          SoilType = 13,
-          ClayCategory = 1,
-          LOI = 26.0,
-          SoilDensity_kg.L = 0.74,
-          Humus_percentDM = 26.0,
-          HumusCategory = 5,
+          availablePMg100g = 3,
+          availableKMg100g = 14,
+          availableMgMg100g = 20,
+          availableCaMg100g = 31,
+          availableNaMg100g = 6,
+          dryMatterPercent = 0.5,
+          totalNPercentDM = 0.44,
+          siteID = "ov1"
+  ) %>% 
+  add_row(plotID = "ov1-p2",
+          soilType = 13,
+          clayContentClass = 1,
+          lossOnIgnitionPercentDM = 26.0,
+          soilDensityKgL = 0.74,
+          humusPercentDM = 26.0,
+          humusContentClass = 5,
           pH = 4.9,
-          P.Al_mg.100g = 3,
-          K.Al_mg.100g = 13,
-          Mg.Al_mg.100g = 15,
-          Ca.Al_mg.100g = 21,
-          Na.Al_mg.100g = 5,
-          DryMatter_percent = 91.4,
-          TotalN_percentDM = 0.51,
-          SiteID = 'OV1'
-  )
-
-# Adding OV1-P3 replicate
-soilchem_full <- soilchem_full |> 
-  add_row(PlotID = 'OV1-P3',
-          SoilType = 14,
-          ClayCategory = 1,
-          LOI = 43.2,
-          SoilDensity_kg.L = 0.38,
-          Humus_percentDM = 43.2,
-          HumusCategory = 6,
+          availablePMg100g = 3,
+          availableKMg100g = 13,
+          availableMgMg100g = 15,
+          availableCaMg100g = 21,
+          availableNaMg100g = 5,
+          dryMatterPercent = 91.4,
+          totalNPercentDM = 0.51,
+          siteID = "ov1"
+  ) %>% 
+  add_row(plotID = "ov1-p3",
+          soilType = 14,
+          clayContentClass = 1,
+          lossOnIgnitionPercentDM = 43.2,
+          soilDensityKgL = 0.38,
+          humusPercentDM = 43.2,
+          humusContentClass = 6,
           pH = 5.0,
-          P.Al_mg.100g = 3,
-          K.Al_mg.100g = 12,
-          Mg.Al_mg.100g = 14,
-          Ca.Al_mg.100g = 16,
-          Na.Al_mg.100g = 5,
-          DryMatter_percent = 85.4,
-          TotalN_percentDM = 0.72,
-          SiteID = 'OV1'
+          availablePMg100g = 3,
+          availableKMg100g = 12,
+          availableMgMg100g = 14,
+          availableCaMg100g = 16,
+          availableNaMg100g = 5,
+          dryMatterPercent = 85.4,
+          totalNPercentDM = 0.72,
+          siteID = "ov1"
+  )
+  
+## Character variables - desirable categories, NAs, misprints
+
+### Consistent lower camel
+soil_chem <- soil_chem %>% 
+  mutate_if(is.character, tolower)
+
+### Explicit category names for class variables from Eurofins classification
+soil_chem <- soil_chem %>% 
+  mutate(
+    soilType = ifelse(
+      soilType == 2, "medium-sand", ifelse(
+        soilType == 3, "fine-sand", ifelse(
+          soilType == 5, "silty-medium-sand", ifelse(
+            soilType == 6, "silty-fine-sand", ifelse(
+              soilType == 13, "mineral-mixed-humus-soil", "organic-soil"
+            )
+          )
+        )
+      )
+    )
+  ) %>% 
+  mutate(
+    clayContentClass = ifelse(clayContentClass == 1, "0-5%", "5-10%")
+  ) %>% 
+  mutate(
+    humusContentClass = ifelse(
+      humusContentClass == 5, "mineral-mixed-humus", ifelse(
+        humusContentClass == 6, "organic-soil", "moderately-humus-rich"
+      )
+    )
   )
 
-# Plot ID
-#soilchem_full[duplicated(soilchem_full$PlotID),] # Unique plot ID - validated
+### Categories & distribution
+# table(soil_chem$soilType) #validated
+# table(soil_chem$clayContentClass) #validated
+# table(soil_chem$humusContentClass) #validated
 
-# Soil type - make categories explicit
-#unique(soilchem_full$SoilType) # 6 categories
-soilchem_full <- soilchem_full |>  
-  mutate(SoilType = ifelse(
-    SoilType == 2, "Medium_sand", ifelse(
-      SoilType == 3, "Fine_sand", ifelse(
-        SoilType == 5, "Silty_medium_sand", ifelse(
-          SoilType == 6, "Silty_fine_sand", ifelse(
-            SoilType == 13, "Mineral_mixed_humus_soil", "Organic_soil"
-            ))))))
+## Numeric variables - min/max, distribution, potential outliers
 
-# Clay category - make categories explicit
-#unique(soilchem_full$ClayCategory) # 2 categories
-soilchem_full <- soilchem_full |>  
-  mutate(ClayCategory = ifelse(
-    ClayCategory == 1, "0-5%", "5-10%"
-  ))
+### Min/max
+# test <- soil_chem |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() # Check max Ca over 1000 mg/100g
 
-# Humus category - make categories explicit
-#unique(soilchem_full$HumusCategory) # 4 categories
-soilchem_full <- soilchem_full %>% 
-  mutate(HumusCategory = ifelse(
-    HumusCategory == 5, "Mineral_mixed_humus", ifelse(
-      HumusCategory == 6, "Organic_soil", "Moderately_humus-rich"
-    )))
+### NA check
+# colnames(soil_chem)[apply(soil_chem, 2, anyNA)] #validated
 
-#
-## Numeric var - Check min/max, distribution and potential outliers
-
-# Check min/max
-test <- soilchem_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # max calcium over 1000 mg/100g ?
-
-# LOI
-#soilchem_full[is.na(soilchem_full$LOI),] # no NA
-#hist(soilchem_full$LOI) # range from 0 to 90 -> very wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
+### Variable distribution & outliers
+hist(soil_chem$lossOnIgnitionPercentDM) # 
 
 # Soil density
 #soilchem_full[is.na(soilchem_full$SoilDensity_kg.L),] # no NA
