@@ -249,6 +249,8 @@ sampling_area <- subset(
   )
 )
 
+# Variable format
+
 ## Variable types (num/chr)
 # str(sampling_area) #validated
 ## Standard date according to ISO 8601-1:2019
@@ -287,7 +289,7 @@ sampling_area <- filter(sampling_area, siteID != "uc1")
 
 ### NA check
 # colnames(sampling_area)[apply(sampling_area, 2, anyNA)] # col: numberLivestockPaths, lengthLivestockPaths & all percent cover
-sampling_area[!complete.cases(sampling_area),] # rows: us1, ug1, oc4
+sampling_area[!complete.cases(sampling_area),] # missing data for three sites (us1, ug1, oc4)
 
 ### Variable distribution & outliers
 table(sampling_area$numberLivestockPaths) # dominance 0, variable to be taken out
@@ -315,8 +317,8 @@ hist(sampling_area$percentBryophytes) # uneven distribution, further check for s
 
 # Add/remove variables
 
-## Removal numberLivestockPaths and lengthLivestockPathM
-sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthLivestockPathM))
+## Removal numberLivestockPaths and lengthLivestockPathM due to 
+# sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthLivestockPathM))
 
 ## Heat Load Index
 # sampling_area <- sampling_area |> 
@@ -327,12 +329,13 @@ sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthL
 
 # Dataset export
 write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea.csv")
 
 #### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
 
 # Raw datasets
 ## 1 m^2^ ground cover in non-destructive subplots (15 per site)
-ground_cover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilCover")
+ground_cover_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawgroundcover.xlsx")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -351,7 +354,7 @@ ground_cover_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Soi
 ## avgVegetationHeightCm - Average vegetation height in the subplot in cm
 ## maxVegetationHeightCm - Maximum vegetation height in the subplot in cm
 
-# Variable names
+# Variable names & structure
 
 ## R-friendly with janitor package
 ground_cover_raw <- ground_cover_raw %>% 
@@ -378,16 +381,18 @@ ground_cover_raw <- ground_cover_raw %>%
 
 # Dataset
 
-## Selection desirable variables
+## Variable selection to avoid redundancy
 ground_cover <- subset(
   ground_cover_raw, select = -c(
     # redundant with sampling_area
     date,
-    # species richness to be calculated from community data
+    # redundant with plant community data
     plantSpeciesRichness,
     comment
   )
 )
+
+# Variable format
 
 ## Variable types (num/chr)
 # str(ground_cover) #validated
@@ -460,12 +465,13 @@ ground_cover <- ground_cover |>
 
 # Dataset export
 write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL PENETRATION TESTS ####
 
 # Raw datasets
 ## Soil penetration tests in destructive subplots (2 per subplot, 24 per site)
-soil_pene_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SoilPenetration")
+soil_pene_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsoilpenetration.xlsx")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -484,11 +490,12 @@ soil_pene_raw <- soil_pene_raw %>%
 ## Consistent & FAIR
 names(soil_pene_raw) <- gsub("site", "siteID", names(soil_pene_raw))
 names(soil_pene_raw) <- gsub("plotId", "subplotID", names(soil_pene_raw))
+names(soil_pene_raw) <- gsub("stickHeight", "stickLengthCm", names(soil_pene_raw))
 
 ## New plot & record ID variables
 soil_pene_raw <- soil_pene_raw %>%
   mutate(plotID = substr(subplotID, 1, 6)) %>%
-  # replace left/right test by a record ID
+  # create recordID to identify left/right tests within subplots
   mutate(recordID = ifelse(
     leftRight == "left",
     paste(subplotID, "r1", sep = "-"),
@@ -497,16 +504,18 @@ soil_pene_raw <- soil_pene_raw %>%
 
 # Dataset
 
-## Removal redundant or unnecessary variables
+## Variable selection to avoid redundancy
 soil_pene <- subset(
   soil_pene_raw, select = -c(
     # redundant with sampling_area
     date,
-    # replaced by recordID
+    # redundant with recordID
     leftRight,
     comments
   )
 )
+
+# Variable format
 
 ## Variable types (num/chr)
 # str(soil_pene) #validated
@@ -552,22 +561,21 @@ table(filter(soil_pene, bedrockHit == "y")$siteID) # 8 sites with up to 12 failu
 # hist(soil_pene$visibleHeightCm) # Normal distribution, no outliers
 
 # Add/remove variables
-
 ## New variable soilPenetrationDepth
-soil_pene <- soil_pene %>% 
-  mutate(soilPeneDepthCm = stickHeight - visibleHeightCm)
-
-## Removal stickHeight and visibleHeightCm
-soil_pene <- subset(soil_pene, select = -c(stickHeight, visibleHeightCm))
+# soil_pene <- soil_pene %>% 
+#   mutate(soilPeneDepthCm = stickLengthCm - visibleHeightCm)
+## Removal stickLengthCm and visibleHeightCm
+# soil_pene <- subset(soil_pene, select = -c(stickLengthCm, visibleHeightCm))
 
 # Dataset export
 write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene.csv")
 
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
 # Raw datasets
 # Bulk density in destructive subplots (3 per subplot, 36 per site)
-soil_bulk_raw <- read_excel(path = "data/rawdata/NBR_RawBD.xlsx", na="NA")
+soil_bulk_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawbulkdensity.xlsx", na="NA")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -597,6 +605,7 @@ names(soil_bulk_raw) <- gsub("wsat", "weightSatG", names(soil_bulk_raw))
 names(soil_bulk_raw) <- gsub("w24H", "weight24hG", names(soil_bulk_raw))
 names(soil_bulk_raw) <- gsub("w48H", "weight48hG", names(soil_bulk_raw))
 names(soil_bulk_raw) <- gsub("wdry", "weightDryG", names(soil_bulk_raw))
+names(soil_bulk_raw) <- gsub("cheesecloth", "weightCheeseclothG", names(soil_bulk_raw))
 
 ## Consistent plot, subplot & record ID variables
 soil_bulk_raw <- soil_bulk_raw %>%
@@ -606,9 +615,19 @@ soil_bulk_raw <- soil_bulk_raw %>%
   mutate(recordID = paste(subplotID, row_number(), sep = "-r")) %>% 
   ungroup()
 
+## Correction for weight variables
+soil_bulk <- soil_bulk %>% 
+  # correction weight core (constant) + cheesecloth (variable) for weight0hG, weightSatG, weight24hG and weight48hG
+  mutate(weight0hG = weight0hG - (weightCheeseclothG + 22.7)) %>% 
+  mutate(weightSatG = weightSatG - (weightCheeseclothG + 22.7)) %>% 
+  mutate(weight24hG = weight24hG - (weightCheeseclothG + 22.7)) %>% 
+  mutate(weight48hG = weight48hG - (weightCheeseclothG + 22.7)) %>% 
+  # correction weight core only for weightDryG
+  mutate(weightDryG = weightDryG - 22.7)
+
 # Dataset
 
-## Removal redundant or unnecessary variables
+## Variable selection to avoid redundancy and treatment
 soil_bulk <- subset(
   soil_bulk_raw, select = c(
     siteID,
@@ -617,14 +636,17 @@ soil_bulk <- subset(
     recordID,
     # corrected volume of soil cores in cm3
     coreVolCm3,
-    # soil core weight measurements
+    # corrected soil core weight measurements
     weight0hG,
     weightSatG,
     weight24hG,
     weight48hG,
-    weightDryG
+    weightDryG,
+    weightCheeseclothG
   )
 )
+
+# Variable format
 
 ## Variable types (num/chr)
 # str(soil_bulk) #validated
@@ -666,7 +688,7 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 ### NA check
 # colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
 # soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1-p3-d2-r1) -> discarded due to lab incident
-soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-d2-r1")
+# soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-d2-r1")
 
 ### Quality check
 
@@ -675,14 +697,14 @@ soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-
 # filter(soil_bulk, coreVolCm3<40) # 37 or 2% samples unfit
 # filter(soil_bulk, coreVolCm3<45) # 105 or 7% samples unfit
 # filter(soil_bulk, coreVolCm3<50) # 330 or 21% samples unfit -> cores should be minimum vol of 50 cm3
-soil_bulk <- filter(soil_bulk, coreVolCm3 >= 50)
+# soil_bulk <- filter(soil_bulk, coreVolCm3 >= 50)
 
 ### Soil core weight - weight loss should be consistent with drying processes
-qualitycheck <- filter(soil_bulk,
-                        weightSatG - weight0hG < 0 |
-                        weight24hG - weightSatG > 0 |
-                        weight48hG - weight24hG > 0 |
-                        weightDryG - weight0hG > 0)
+# qualitycheck <- filter(soil_bulk,
+#                         weightSatG - weight0hG < 0 |
+#                         weight24hG - weightSatG > 0 |
+#                         weight48hG - weight24hG > 0 |
+#                         weightDryG - weight0hG > 0)
 
 ### Variable distribution & outliers
 
@@ -738,13 +760,13 @@ qualitycheck <- filter(soil_bulk,
 ## New variables - gravimetric & volumetric water content from standardised W+48h dried soil
 
 # New variables
-soilbulk_full <- soilbulk_full |> 
-  mutate(GWC_48 = (W48H - WDRY)/W48H*100) |> 
-  mutate(VWC_48 = GWC_48*BD)
+# soilbulk_full <- soilbulk_full |> 
+#   mutate(GWC_48 = (W48H - WDRY)/W48H*100) |> 
+#   mutate(VWC_48 = GWC_48*BD)
 
 # Distribution
-hist(soilbulk_full$GWC_48) # Normal distribution, from 20% to 80% -> some very high values
-hist(soilbulk_full$VWC_48) # Normal distribution, from 5% to 60%
+# hist(soilbulk_full$GWC_48) # Normal distribution, from 20% to 80% -> some very high values
+# hist(soilbulk_full$VWC_48) # Normal distribution, from 5% to 60%
 
 #
 ## Data filtering
@@ -759,9 +781,9 @@ hist(soilbulk_full$VWC_48) # Normal distribution, from 5% to 60%
 #filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #82 samples with water loss 48h negative
 
 # Selection data with min 50 cm3 soil volume and positive water loss
-soilbulk_full <- subset(soilbulk_full, CoreVol>50)
-soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
-soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
+# soilbulk_full <- subset(soilbulk_full, CoreVol>50)
+# soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
+# soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
 
 # Check new variable distribution - water loss 24h
 #hist(soilbulk_full$percent_Waterloss24h) # still some extreme values over 20%
@@ -770,14 +792,14 @@ soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
 # 1 cores from OC3, concerned with scale issue (lots of negative values which are already removed). Water loss between 0-24 and 24-48 not coherent -> should be removed
 # 2 cores from OC2, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same plot (W48h>W24h for P1-D1_2) -> should be removed
 # 1 cores from OC5, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same site -> should be removed
-soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20)
+# soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20)
 
 # Check new variable distribution - water loss 48h
 #hist(soilbulk_full$percent_Waterloss48h) # still some extreme values over 25%
 #filter(soilbulk_full, percent_Waterloss48h>25) # 2 cores with more than 25% over 48h
 # OG6-P1-D3_1, not concerned by the scale issue and with values from other cores coherent -> to be kept
 # OC2-P2-D1_3, concerned with scale issue - value not coherent with water loss 24h and with other cores -> to be removed
-soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D1_3")
+# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D1_3")
 
 # Check new variable distribution - bulk density
 #hist(soilbulk_full$BD) # no negative values anymore, quite nice normal distribution -> validated
@@ -787,10 +809,10 @@ soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D1_3")
 #filter(soilbulk_full, Weightpercent_Soilmoisture<20) # 5 cores with less than 20% soil moisture
 # 3 cores from OC2, concerned with scale issue. OC2-P2-D2_2 negative value, OC2-P1-D1_3 very low not coherent with other samples from the plot -> to be removed - OC2-P3-D3_3 just under 20, not extreme compared with the other samples -> to be kept
 # OG4-P3-D3_1, concerned with scale issue -> values are coherent within the plot and relatively close to what is find in other plots (10%-30%) -> to be kept
-soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D2_2")
-soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P1-D1_3")
+# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D2_2")
+# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P1-D1_3")
 #filter(soilbulk_full, Weightpercent_Soilmoisture>90) # IS3-P3-D4_1, with P3 concerned with scale issue. Incoherent with other samples from same plot -> to be removed
-soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90)
+# soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90)
 
 # Check new variable distribution - soil moisture in percent volume
 #hist(soilbulk_full$Volpercent_Soilmoisture) # no extreme. nice normal distribution
@@ -811,19 +833,18 @@ soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90)
 
 ## Export clean data in new excel file
 
-write_csv(soilbulk_full, "data/cleandata/NBR_FullSoilBulk.csv")
-
-
+write_csv(soil_bulk, "data/cleandata/tradmod_nbr_soilbulk.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
 
 # Raw datasets
 # Soil chemistry 2019 (3 per plot)
-soil_chem_2019 <- read.csv("data/rawdata/NBR_RawSoilChemistry2019.txt", sep=";")
+soil_chem_2019 <- read.csv("data/rawdata/tradmod_nbr_rawsoilchemistry2019.txt", sep=";")
 # Soil chemistry 2020 (3 per plot)
-soil_chem_2020 <- read.csv("data/rawdata/NBR_RawSoilChemistry2020.txt", sep=";")
+soil_chem_2020 <- read.csv("data/rawdata/tradmod_nbr_rawsoilchemistry2020.txt", sep=";")
 # Soil chemistry 2020 complementary dry matter content
-soil_chem_2020_DM <- read_excel(path = "data/rawdata/NBR_RawSoilChemistry2020bis.xls")
+soil_chem_2020_DM <- read_excel(path = "data/rawdata/tradmod_nbr_rawsoilchemistry2020sup.xls")
 
 # Desired variables
 ## siteID - Field identification code for data collection
