@@ -15,6 +15,7 @@
 
 #### PACKAGES ####
 
+library(osfr) # Retrieve raw data from OSF
 library(tidyverse) # R language
 library(janitor) # Data cleaning
 library(readxl) # Read xl files
@@ -38,13 +39,21 @@ meso_soil_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofa
 # Aboveground biomass in destructive subplots
 plant_biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
 
+#### CLEAN DATA OSF UPLOAD ####
+
+## Access to OSF project
+nbr_project <- osf_retrieve_node("https://osf.io/5gh3c")
+nbr_project
+## Define target directory for uploading clean data
+target_dir <- osf_ls_files(nbr_project, path = "tradmod_nbr_data", pattern = "cleandata")
+
 #### SITE DESCRIPTION ####
 
 # Raw datasets
 ## General information about grazing fields selected as study sites
-site_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="SiteInfo")
+site_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsitedescription.xlsx")
 ## Management data on each study site collected during farmer interviews
-management_raw <- read_excel(path = "data/rawdata/NBR_RawFarmerSurvey.xlsx", sheet="Farms Information_R")
+management_raw <- read_excel(path = "data/rawdata/CONFIDENTIAL_tradmod_nbr_rawmanagement.xlsx", sheet="Farms Information_R")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -93,6 +102,8 @@ site_description <- left_join(
   subset(management_raw,
          select = c(siteID, fieldType, livestockType, numberAnimalsAdult, numberAnimalsYoung, fieldAreaHa, farmGrazingAreaHa))
 )
+
+# Variable format
 
 ## Variable types (num/chr)
 # str(site_description) #validated
@@ -174,12 +185,13 @@ site_description[site_description$fieldAreaHa>1000,] # ug2 outfield site in upla
 
 # Dataset export
 write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription.csv")
 
 #### 20x20 SAMPLING AREA ####
 
 # Raw datasets
 ## Description of the representative 20 m x 20 m sampling areas
-sampling_area_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="20mX20m")
+sampling_area_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsamplingarea.xlsx")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -219,19 +231,19 @@ names(sampling_area_raw) <- gsub("percentLichen", "percentLichens", names(sampli
 
 # Dataset
 
-## Selection desirable variables
+## Variable selection to avoid redundancy and preserve anonymity
 sampling_area <- subset(
   sampling_area_raw, select = -c(
-    # anonymous
+    # preserve anonymity
     team,
     # redundant with site_description
     latitude1,
     longitude1,
     latitude2,
     longitude2,
-    # only one elevation variable necessary
+    # redundant with elevationMax
     elevationMin,
-    # only aspect degree necessary
+    # redundant with slopeAspectDegree
     aspect,
     comments
   )
