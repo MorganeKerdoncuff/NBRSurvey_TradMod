@@ -1,6 +1,7 @@
 # Defaut
 .Ruserdata
 .DS_Store
+.Renviron
 
 # History files
 .Rhistory
