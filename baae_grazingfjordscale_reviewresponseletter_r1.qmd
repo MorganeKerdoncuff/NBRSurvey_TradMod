@@ -1,5 +1,462 @@
 ---
-format: pdf
+format:
+  pdf: 
+    mainfont: "Times New Roman"
+    sansfont: "Times New Roman"
+  docx:
+    mainfont: "Times New Roman"
+    sansfont: "Times New Roman"
 ---
 
 ## Ref: Ms. No. BAAE-D-26-00112
+
+Dear Bea Maas,
+
+Thank you very much for your time and positive response in assessing our manuscript "*Grazing the fjord landscape: interactions between environmental gradients, management and grassland community assemblages*". 
+We are grateful for the constructive comments the editorial committee and the reviewers provided, which undoubtedly improved the quality of our manuscript.
+
+Please find below our point-by-point reply to the editors' and reviewers' comments. Responses are in plain text and includes line numbers of the modified section when applicable.
+
+We hope this improved version of the manuscript is acceptable for publication in Basic and Applied Ecology.
+
+Morgane Kerdoncuff, on behalf of the authors.
+
+
+### Response to the Managing Editor
+
+<!-- \begin{itshape} -->
+
+Dear Ms Kerdoncuff,
+
+Thank you for submitting your manuscript to Basic and Applied Ecology.  I have completed the review of your manuscript and a summary is appended below. Based on the available reviews, our subject editor recommends reconsideration of your paper following major revision. I invite you to resubmit your manuscript after addressing all reviewer comments.
+
+In addition to addressing the reviewer comments, please ensure that your manuscript clearly aligns with the aims and scope of Basic and Applied Ecology.
+In particular, we encourage you to emphasize the broader ecological implications of your findings and how they contribute to both fundamental and applied ecological understanding. 
+Your discussion should integrate the relevance of your research within a wider ecological framework, extending beyond the specific study system. 
+Where possible, practical applications or insights that inform ecological management, conservation strategies, or policy decisions should be highlighted, drawing from your own findings or relevant literature. 
+Additionally, we recommend that key contributions be clearly articulated in the abstract and discussion to enhance accessibility for a broad ecological readership.
+
+<!-- \end{itshape} -->
+
+Dear Bea Maas,
+
+You rightfully highlighted that the Discussion of our paper lacks broader perspectives with regards to the journal scope.
+
+- fundamental ecology: add-on in each section
+- new section: implications for management
+
+### Response to the Subject Editor
+
+<!-- \begin{itshape} -->
+
+Dear Morgane Kerdoncuff!
+
+I received two reviews, both being positive in principle, but suggesting more major changes in your paper. Thus, I invite you to consider their comments in a major revision. in addition, I ask to regard for the following points of concern:
+
+<!-- \end{itshape} -->
+
+Dear Karl,
+
+Thank you very much for complementing the reviewers' work with pertinent feedback on our manuscript.
+Please find below our response to your comments and the revision details when applicable.
+
+<!-- \begin{itshape} -->
+
+Fig.2: There is no blue line. More general: I doubt that this figure provides much helpful information. Having the coordinates in an Appendix might make more sense.
+
+<!-- \end{itshape} -->
+
+- **REVISION**: ~~Line color modified in the caption~~
+- We still think it is best to keep the map for visualisation
+- **REVISION**: Following your suggestion, we still included a summary table of the visited sites with geographical locations in the Supplementary Material
+
+<!-- \begin{itshape} -->
+
+Your sites were restricted to so called “infield” grasslands, meaning that your findings may not apply to low-productivity grasslands . This should be emphasized more explicitly to be clear to the reader.
+
+<!-- \end{itshape} -->
+
+- In the context of Western Norway, infields refer to grasslands *per se* in contrast to outfields which refer to shrublands and heathlands.
+- Norwegian grasslands are characterised by low carrying capacity due to constraining climate and environmental conditions [@piipponenGlobalTrendsGrassland2022]
+- Assemblages were dominated by *Agrostis capillaris* & *Festuca rubra*, which are rather typical of low-productivity grasslands
+- **REVISION**: We clarified the meaning of infield and its implication for grassland productivity in the study area section
+
+<!-- \begin{itshape} -->
+
+“Site” and “Field” (in the sense of Fig. 1) seem to be synonyms -> unify.
+
+<!-- \end{itshape} -->
+
+- **REVISION**: 
+  - ~~in the general farming context (e.g. Introduction, Discussion): "grazing fields"~~
+  - ~~when related to our survey: "grazed sites" or "study sites", field only used in relation to the explanatory variables (field management)~~
+- l.196
+- Amy: "grazed site" or "grazing site" ?
+
+<!-- \begin{itshape} -->
+
+I am not convinced that our parameters actually represent 4 spatial scales, because your data was averaged at the site-level (line 226). 
+This implies for me, that the spatial scale of the field (=site) level and the “Fine” level. [*missing part*]
+Accordingly, they should be merged for the ordination analyses, etc. - or the differences should be clearly described.
+
+<!-- \end{itshape} -->
+
+- "fine-scale" relates to factors which operate within the immediate range of organisms (e.g. nutrient availability for plants, vegetation structure for beetles)
+- in contrast, field-scale variables are controlled at the scale of the entire grazing field
+- supplementary analyses at plot-level to capture the variation driven by the fine-scale environment we might have missed with the site-level analysis
+- **REVISION**: any relevant modification to make it more explicit in the paper ?
+
+<!-- \begin{itshape} -->
+
+The details on ordination analyses (as shown in Figure 4) must already be described in the method section.
+
+<!-- \end{itshape} -->
+
+- ????
+- figure 4 is the canonical correlations, is he talking about fig 5 (the RDAs) ?
+- what does he mean by "the details of the ordination analyses" ?
+
+<!-- \begin{itshape} -->
+
+Additionally, I consider the first comment of reviewer 1 (on the presentation of results) as particularly valuable.
+
+<!-- \end{itshape} -->
+
+- ref reviewer
+
+### Response to Reviewer 1
+
+<!-- \begin{itshape} -->
+
+While reading the first part of the manuscript, I liked the ambitiously planned study involving four scales and many well-selected variables to study interactions between variables of certain scales and biotic assemblages (plants and dung-associated beetles) in a landscape with grazing lands. 
+However, unfortunately, the Results and Discussion parts did not meet my expectations. 
+Somehow, I remained stucked in the highly complex system of relationships between variables, variables and some members of the biotic assemblage, with very few consistent patterns and straightforward explanations. 
+In its present state, the results of the manuscript are hard to unravel. I suggest a sharp simplification of the design and/or a complete reworking of data analyses referring to the relationship between variables and biotic assemblages.
+
+Sampling was carefully designed, soil analyses were especially multifaceted and detailed. Figures are of high-level with useful additional illustrations, which help the reader understand the study design and results. In some parts, data processing and data analyses are not convincing enough, or decisions are not properly argued and supported.
+
+<!-- \end{itshape} -->
+
+- Thank you very much for very thorough review of our manuscript, which greatly helped us to improve the quality of our manuscript.
+- Following your recommendation, we led a major revision of our analytical design regarding the plant community etc
+- Please find below our response to your comments and the revision details when applicable.
+
+<!-- \begin{itshape} -->
+
+Introduction
+~~Line 90-91 „We selected grass three indicator communities in relation to their key contributions to forage provision in semi-natural grasslands" You should delete the word grass.~~
+Lines 91-92: „grass and forb species, as direct determinant of forage availability and nutritional quality;" 
+Information about forage value and nutritional quality of plant species or plant communities on plot or site scale are completely missing from the study. 
+I suggest deleting these terms from the aims, since the study does not offer any results referring to this aspect.
+m
+Line 92: Authors should more precisely argue why were beetles selected as an indicator group? 
+Nutrient cycling in grasslands is supported by a various decomposer community with bacteria, archaea, fungi and soil macrofauna, to mention just some of these groups. 
+Why the authors think that dung-associated beetles may indicate the well-functioning (or quality?) of decomposition and nutrient cycling in the study system?
+
+<!-- \end{itshape} -->
+
+- the big question we came across several times already: shall we refer to ecosystem services in this paper or simply stick to communities ?
+- He made a fair point: we did not make an explicit, demonstrated link between the chosen species/families and contributions to ecosystem service delivery
+- I personally felt it was needed to justify somehow that we picked grasses, forbs and dung-associated beetles - especially I wanted to integrate some sort of farmers' perspectives (benefits) to step outside of the purely ecological interpretation.
+- However I agree is is wobbly as it is. 
+- If we discard the whole ecosystem service framework, then we just do not justify at all why we picked these species ? Is it enough to just say we wanted to explore community response at both plant and beetle level because we need multitaxa studies (or something like that) ?
+- See also suggestions at point 
+
+<!-- \begin{itshape} -->
+
+Figure 1: arrows between field scale and fine scale may be bidirectional, since fine scale factors may also influence field scale patterns.
+
+<!-- \end{itshape} -->
+
+- the study design is based on a top-down conceptual framework, and bottom-up processes are not investigated in our analyses (RDAs only rely on broader scales as explanatory factors to the finer scales)
+- this choice can be debated and our results shows that it can limit our interpretations - it is true we interpreted a potential bottom-up from the fine-scale to the field-scale without actually questioning our study design
+- **REVISION**: include a few sentences about the limitation of the top-down analytical design in the Discussion subsection 4.2
+
+<!-- \begin{itshape} -->
+
+Material and methods
+2.2.1. Regional environment
+Elevation is not mentioned as a regional variable. It appears only in the Data analyses section.
+
+<!-- \end{itshape} -->
+
+- **REVISION**: ~~add elevation in section 2.2.1~~
+
+<!-- \begin{itshape} -->
+
+Authors should give a more detailed description about „infields". 
+I wonder this is a grazing land type, which occurs only in Norway or does it occur in other European countries as well. 
+Can the authors bring this land management type closer to readers from other European countries to increase the general validity of their results?
+
+What does it mean that it is „covered with cultured grass or pasture-tolerant herbs"? 
+Are these grasses (and herbs) sown? 
+If they are, their occurrence is not governed only by natural factors (most of the explanatory variables from this study) but by historical (?) decisions made by farmers. 
+Authors should elucidate this aspect.
+
+<!-- \end{itshape} -->
+
+- **REVISION**: more explicit description of grazing fields, including habitat type and how it relates to grassland classification in Europe (refers to Editor's comment) -> **cf descriptions from thesis**
+- About sowing: the definition of "infields" does include pastures with and without sowing. However, in our study, there has been no sowing since the 1970s (l.111) so the influence of sowing is expected to be minimal - **check in farmer interviews: does that mean no sowing at all but their knowledge is limited to the 1970s, or it was sown in the 1970s and never after**
+
+<!-- \begin{itshape} -->
+
+Lines 105-107: „All fields had been grazed uninterruptedly for at least 10 years, and had been grazed by the same livestock type, either sheep, goats or cattle, for at least the last 5 years."
+My opinion (and my experience) is that the species assemblage of a grazing land cannot react in such a short period (5 years) to a potential change in grazing animal or stocking rate. 
+It may happen that some of the study sites had been grazed by other animals or they had a different stocking rate before, thus the land is bearing the signs (e.g. species assemblage, soil parameters) of the former management type. 
+Thus, one needs a longer-term unchanged grazing regime of a certain type in order to clearly detect differences in plant assemblages and other fine scale variables between management types. 
+I understand the practical difficulties of finding proper study sites, which meet these expectations, but authors should disclose this problem in the Methods and Discussion.
+
+<!-- \end{itshape} -->
+
+- You are right, grazing history is an important - sometimes more important - factor affecting the composition of the field, and we were indeed limited in our choice of study sites
+- **cf thesis for detailed description of management history**
+- **REVISION**: add sentences in the study area section (2.1) & Discussion subsection (4.3)
+
+<!-- \begin{itshape} -->
+
+Was livestock unit the same for sheep, goat and cattle?
+
+<!-- \end{itshape} -->
+
+- LSU milking cow 1, beef cattle 0.8, sheep & goat 0.1
+- **REVISION**: ~~information missing in the paper, update section 2.2.3~~
+
+<!-- \begin{itshape} -->
+
+2.2.4. Fine-scale environment
+Line 194: „2.2.5. Dominant grass, forb and dung-associated beetle assemblages" 
+One will find out about what „dominant" means only in the Data analyses section. 
+You should add a definition here as well. 
+But see my comments about the term „dominant" below and about species selection for the analyses.
+
+<!-- \end{itshape} -->
+
+- We addressed the whole matter of "dominant" in response to your comment below
+
+<!-- \begin{itshape} -->
+
+Lines 230-232: „This supplementary analysis did not apply for dominant dung-associated beetle assemblages, whose relationship with the fine-scale environment operates at higher spatial range due to their greater mobility." 
+This statement needs support by 1-2 references.
+
+<!-- \end{itshape} -->
+
+- ref
+
+<!-- \begin{itshape} -->
+
+Lines 235-237: „Livestock type, the only qualitative variable of our study, was transformed into two dummy numeric variables, Sheep and Cattle respectively." 
+What about goats? 
+Authors stated before that they had goat grazing among the study sites.
+
+<!-- \end{itshape} -->
+
+- Dummy numeric: all three livestock types are considered with two variables: cattle (cattle 1; sheep 0), sheep (cattle 0; sheep 1) and goats (cattle 0; sheep 0), as goat is implicitly considered as the absence of both cattle and sheep.
+- Adding a goat variable would be redundant - **a better, specific term Adam ?**
+- **REVISION**: 1 sentence about how goat is implicitly considered in the livestock type variable
+
+<!-- \begin{itshape} -->
+
+Lines 241-42: „In the field management set, the number of adult animals grazing on field was removed due to a clear outlier."
+Why not removed the outlier itself, while keeping the variable in the analyses? 
+I suggest to do so.
+
+<!-- \end{itshape} -->
+
+- So we remove one more site from the entire analysis ? The number of adult animals is still included in the calculation of the stocking density, so I think removing the variable is a lesser issue than removing a site.
+
+<!-- \begin{itshape} -->
+
+Line 244: Loss of ignition and humus content was not mentioned before in the soil analyses. 
+pH appears only in Table 1., and it is not mentioned in the soil analyses part.
+
+Table 1. Infrastructure area: the term is not consistently used throughout the text. In the text of the Methods section (2.2.2. Landscape matrix) and Fig. 1. „artificial area" is used instead. Are these two the same?
+
+<!-- \end{itshape} -->
+
+- **REVISION**: 
+  - ~~update soil chemistry analyses~~
+  - update figure to replace artificial by infrastructures
+
+<!-- \begin{itshape} -->
+
+Why didn't you involve total vegetation cover in your analyses? 
+Besides vegetation height, total cover is a very important variable accounting for the competitive environment and vegetation structure. 
+In addition, it could have been used as a proxy for productivity, which showed up in the Discussion.
+
+<!-- \end{itshape} -->
+
+- Can be done I guess, but wasn't an issue of circular argument we mentioned at the very start of selecting our explanatory variables Amy ?
+
+<!-- \begin{itshape} -->
+
+Line 247: Grasses were only species of the Poaceae? What about Cyperaceae and Juncaceae? Were there any in the plant communities?
+
+<!-- \end{itshape} -->
+
+- Yes only Poaceae, Cyperaceae and Juncaceae were only minor in the community
+- **REVISIONS**: mention the weight of other monocotyledons in the community
+
+<!-- \begin{itshape} -->
+
+I found using the term „dominant" for those plant species and beetle families, which were characterised by criteria of frequency, i.e. presence in at least one-third of the sites, and average abundance, i.e. minimum plant species percent cover of 1% and minimum beetle family occurrence of 3 (lines 248-250) misleading. 
+Dominant is a term used in case of abundance superiority (relative abundance), and dominance should represent a stronger superiority than a minimum cover of 1%. 
+Thus, I ask for finding another term in this case. 
+Maybe „most important plant species" or something like that. 
+Looking at the average cover values of „dominant" species, I found very small numbers: majority below 6%. 
+Thus, these species you ground your analyses on, are frequent but not abundant species.
+I have serious doubts that they can be considered representative for what is happening with the whole community and for what the effect of several nicely defined explanatory variables have on the species composition and ultimately on the productivity (?) of the plant community.
+
+Why did you set such a high frequency limitation („presence in at least one-third of the sites" meaning 34%?) in the case of plant species and beetle families you worked with in your analyses? 
+My opinion is that it strongly decreases the variation range in species assemblages, and by this means it decreases the possibility of finding clear relationships between plant assemblages and explanatory variables. 
+Thus, I do not agree with this approach. 
+How you came up with such a high frequency threshold? 
+What are the reasons? 
+And what are the consequences? 
+You should present a clear argumentation here.
+
+How many plant species and beetle families you had in total? 
+The reader should know how much of the total species (or family) pool was represented in the analyses already in the Methods section. 
+How many species (beetle families) were omitted from the analyses?
+
+Figure 4: I found strange that separate ordinations were done for the three species groups: grasses, forbs and beetles. 
+Why not putting all the species and beetle families within a single ordination? 
+Especially plants cannot be separated in such an artificial way, since grasses and forbs occure together within a plot, influencing each other's abundance and occurrence by means of e.g. competitive relations.
+With other words, the two plant species groups are not independent from each other. 
+I suggest merging at least all members of the plant community within the same ordination.
+
+<!-- \end{itshape} -->
+
+- Ok there is the big deal.
+- I agree with him on first point (dominant is not the most suited term) and the last point (grass/forb separation, especially if we acknowledge that contributions to ES are not properly exploited in the manuscript)
+- However I do not really think that presence in at least 1/3 of the sites is limiting for our analysis ?
+- The reason for this selection was the canonical correlation analysis: you cannot have too many variables (columns) in the matrices compared with the numbers of replicates/sites (rows)
+- **REVISIONS**: how about we do the reasoning at the family-level for plants too ? It will make it much more consistent with the beetles (I was personally bothered by the fact that plants were species and beetles were families) and the distribution of families can also be interpreted in terms of ecology and management
+- With this solution, we address most of what is pointed out in this paragraph + what was mentioned above about ES
+
+<!-- \begin{itshape} -->
+
+Results
+Lines 268-274: Besides average values, you should give the minimum and maximum cover values of each one of the plant species in the plots. I am curious whether these species included in the analyses really attained high abundances at least in some of the plots.
+I find the results referring to the relation between explanatory variables and plant species rather questionable (see my comments above). In addition, one cannot speak about the dominance by a certain plant species while having in fact low abundance values.
+
+<!-- \end{itshape} -->
+
+- **REVISIONS**: maybe a table similar to what we have for explanatory variables ? Could be put in Supplementary material if too much in the text
+
+<!-- \begin{itshape} -->
+
+Discussion
+4.1. Very interesting!
+4.2. I found interpreting the results referring to the relationship between field management and the fine-scale environment by means of „biomass regeneration capacity" and productivity, while having no data about these factors in the study system, highly speculative (lines 368-372). I suggest deleting this part.
+
+<!-- \end{itshape} -->
+
+- This part is all about how to interpret the trends of bulk density & vegetation height in relation to farm management (cf fig. 5b), which for me have been a challenge from the start.
+- I agree that using productivity is a bit of a stretch as we have not really defined it or directly investigated it in this manuscript.
+- **REVISIONS**: 
+
+<!-- \begin{itshape} -->
+
+4.3. I found this part very hard to follow. 
+There are so many relationships between studied variables on different scales, the management type and biological assemblages, that I couldn't perceive the essence. 
+There are very few consistent patterns and straightforward explanations. 
+The study is complex in its approach, but the authors couldn't treat this complexity in a way to be receptible. 
+I miss some prominent relationships, main messages to consider and implement in future studies or in nature conservation planning in grazing lands.
+
+<!-- \end{itshape} -->
+
+- Yes this section is too much, I agree. 
+- If I follow-up from the plant family scenario, then first of all it will be split into the plants section and the beetles section
+- and yes, a proper section on the implication for management/research is missing (see also Editor's comment)
+- Then the challenge will be to keep the manuscript under reasonable length
+
+### Response to Reviewer 2
+
+<!-- \begin{itshape} -->
+
+In general terms, it is an interesting manuscript, and the message is important. It is well-written, and the figures and tables are valuable. However, the authors could correct and refine certain aspects to enhance the manuscript's quality and facilitate its acceptance.
+
+<!-- \end{itshape} -->
+
+- Dear Reviewer,
+- Thank you very much for your pertinent feedback on our manuscript
+- Please find below our responses to your comments
+
+<!-- \begin{itshape} -->
+
+Minor:
+L11, 12, 16, 18, 28, 56, 194: add a comma before the and
+L30, 31, 57, 58, 383, 388, 391, 394, 409: change to "e.g.," always in italics
+L32, 54: add Noriega et al. (2023) Nature Communications
+L40, 55: add Milotić et al. (2018) Journal of Biogeography
+L96-97: add the geographic coordinates
+L98: add the altitude range
+L130, 131, 249, 334: change to "i.e.," always in italics
+Table 1: Move the position of Table 1 so that it does not cut off the text.
+L276-279: remove the term "family" it is redundant
+
+<!-- \end{itshape} -->
+
+- simple enough except for the table, we'll see how Latex behave 
+
+<!-- \begin{itshape} -->
+
+Major:
+The title is extremely general and broad, failing to provide a clear understanding of the work's geographical scope. 
+This confuses the reader and hinders a quick grasp of its implications. 
+It gives the impression of being a global study, which it certainly is not; it is a regional study. 
+A specific geographical location needs to be added. The work was conducted in a single country: Norway. 
+Add "Norway" to the title.
+
+<!-- \end{itshape} -->
+
+- Makes sense. Apart from the geographical location, this title is still lacking - even though it was the best option we came up with.
+- **REVISION**: keep on dropping titles that would fit better our manuscript
+
+<!-- \begin{itshape} -->
+
+Throughout the text, terms like "community" and "assemblage" are used, but they do not have the same meaning and cannot be used interchangeably, as they signify very different things. 
+The term "community assemblages" is particularly inappropriate. See Fauth et al. (1996). 
+In the case of dung beetles, they are usually defined as an assemblage. 
+Review this throughout the text and change it according to the most appropriate criterion.
+
+<!-- \end{itshape} -->
+
+- Agree that I never settled on a definite term - did not know that "community assemblage" was deprecated though
+- **REVISION**: should it be "plant community" and "beetle assemblage" then ? Or if we decide on the plant analysis at family level then we can stick to "plant & beetle families"
+
+<!-- \begin{itshape} -->
+
+The research question is not explicitly stated in the text, which needs to be reviewed. Include the question in the last paragraph of the introduction.
+
+<!-- \end{itshape} -->
+
+- we have a research objective: improve our understanding of the environmental and management processes affecting plant and beetle communities in semi-natural grasslands of the NBR - not explicitly stated in the text, I agree 
+- it could be transformed into a research question, though I would not be fond of it. In my understanding research questions are precise and associated with a specific test (e.g. does livestock type affect the distribution of beetle families with GLM) - which is not our case because we run an exploratory study, in which we do not go into each interaction in details.
+- What are your thoughts ?
+
+<!-- \begin{itshape} -->
+
+L195-208: The distance between traps is a critical variable in the study and sampling of dung beetles and is not specified. 
+This data should be included and discussed if it is less than 50-100 m, which is the minimum distance specified for ecological studies.
+
+<!-- \end{itshape} -->
+
+- yes, clumped sampling design, but no, it is not an issue (l.200)
+- **REVISION**: add distance in section 2.2.5, and maybe few lines in Discussion (Methodological approach section ? would be relevant as it could include the paragraph on rotational grazing assessment challenge)
+
+<!-- \begin{itshape} -->
+
+Results: The first time a species is named, the author and year of the original description of the species must be included.
+
+<!-- \end{itshape} -->
+
+- Agree, but not necessary if we switch to plant families
+
+<!-- \begin{itshape} -->
+
+The conclusions are a bit short and lack a full paragraph of recommendations for future studies.
+
+<!-- \end{itshape} -->
+
+- Consensus between reviewers and editors: a research/management implications section is necessary
