@@ -185,42 +185,112 @@ beetle_infield <- beetle_infield |>
 id <- subset(groundcover_plot, select = c(SiteID, PlotID))
 idplot <- filter(id, PlotID != "OC2-P1")
 
-# Selection & transformation plant community data
+# Selection & transformation plant community data site-level
 
 ## Data distribution
 #hist(vege_grass$PlantSp_cover) # Poisson, highly skewed
 
+## Dominant plant species
+dominantplant <- vege_site |> 
+  group_by(Species, SiteID) |> 
+  summarise_if(is.numeric, mean, na.rm = TRUE) |> 
+  # filter species with at least 20% cover in at least one site
+  filter(PlantSp_cover > 20) |> 
+  ungroup() |> 
+  group_by(Species) |> 
+  summarise() |> 
+  # removal bryophytes
+  filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
+
+## Plant data table
+plant <- vege_site |> 
+  filter(Species %in% dominantplant$Species)
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_plant <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = plant)
+contin_plant <- decostand(contin_plant, method = "hellinger")
+
+## Wide table
+plant <- as.data.frame(contin_plant)
+plant <- plant |>
+  pivot_wider(names_from = Species, values_from = Freq)
+
+## Suitable variable names
+names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
+names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
+names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
+names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
+names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
+names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
+names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
+names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
+names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
+names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
+names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
+names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
+
+# Selection & transformation plant community data plot-level
+
+## Plant data table
+plant_plot <- vege_plot |> 
+  filter(Species %in% dominantplant$Species)
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_plant_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = plant_plot)
+contin_plant_plot <- decostand(contin_plant_plot, method = "hellinger")
+
+## Wide table
+plant_plot <- as.data.frame(contin_plant_plot)
+plant_plot <- plant_plot |>
+  pivot_wider(names_from = Species, values_from = Freq) |> 
+  mutate(SiteID = id$SiteID) |> 
+  filter(PlotID != "OC2-P1")
+
+## Suitable variable names
+names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
+names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
+names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
+names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
+names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
+names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
+names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
+names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
+names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
+names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
+names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
+names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
+
 ## Species frequencies across sites
-vege_freq <- filter(vege_site, PlantSp_cover>0) |>
-  group_by(Species) |>
-  count() |>
-  dplyr::arrange(desc(n)) # filtering by frequency
-filter(vege_freq, n > 19)
-# 6 grass species in at least 20 sites A. capillaris; F. rubra; H. lanatus; P. pratensis; A. odoratum; D. cespitosa
-# 4 forb species in at least 20 sites T. repens; C. fontanum; C. palustre; R. acetosa
-filter(vege_freq, n > 9 & n < 20)
-# 2 grass species in at least 10 sites D. flexuosa; P. trivialis
-# 10 forb species in at least 10 sites R. acris; P. erecta; G. saxatile; r. repens; A. millefolium; C. majus; H. radicata; C. pratensis; V. palustris; C. rotundifolia
-
-## Species average percent cover across site
-vege_average <- vege_site |>
-  group_by(Species) |>
-  summarise_if(is.numeric, mean, na.rm = TRUE) |>
-  dplyr::arrange(desc(PlantSp_cover)) |> 
-  # filtering by average value across sites
-  mutate(FunctionalGroup = case_when(
-    grepl("Achillea|Alchemilla|Anagalis|Anemone|Angelica|Anthriscus|Armeria|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Euphrasia|Fraxinus|Galeopsis|Galium|Geranium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Myosotis|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Prunella|Ranunculus|Rumex|Sagina|Sedum|Senecio|Silene|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Urtica|Valeriana|Veronica|Vicia|Viola", Species) ~ "forbs",
-    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Bromopsis|Calamagrostis|Dactylis|Danthonia|Deschampsia|Festuca|Holcus|Lolium|Molinia|Nardus|Phleum|Poa", Species) ~ "grasses",
-    grepl("Carex|Eriophorum|Juncus|Luzula|Trichophorum", Species) ~ "monocotyledons",
-    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "woody",
-    grepl("Athyrium|Blechnum|Dryopteris|Gymnocarpium|Phegopteris|Polypodium|Pteridium", Species) ~ "ferns",
-    .default = "cryptogams"
-  ))
-
-filter(vege_average, PlantSp_cover >= 3)
-# 7 grass species over 3 % A. capillaris; F. rubra; H. lanatus; P. pratensis; D. cespitosa; A. odoratum; L. perenne
-# 3 forb species over 3 % T. repens; R. acetosa; G. saxatile
-filter(vege_average, PlantSp_cover < 3 & PlantSp_cover > 1)
+# vege_freq <- filter(vege_site, PlantSp_cover>0) |>
+#   group_by(Species) |>
+#   count() |>
+#   dplyr::arrange(desc(n)) # filtering by frequency
+# filter(vege_freq, n > 19)
+# # 6 grass species in at least 20 sites A. capillaris; F. rubra; H. lanatus; P. pratensis; A. odoratum; D. cespitosa
+# # 4 forb species in at least 20 sites T. repens; C. fontanum; C. palustre; R. acetosa
+# filter(vege_freq, n > 9 & n < 20)
+# # 2 grass species in at least 10 sites D. flexuosa; P. trivialis
+# # 10 forb species in at least 10 sites R. acris; P. erecta; G. saxatile; r. repens; A. millefolium; C. majus; H. radicata; C. pratensis; V. palustris; C. rotundifolia
+# 
+# ## Species average percent cover across site
+# vege_average <- vege_site |>
+#   group_by(Species) |>
+#   summarise_if(is.numeric, mean, na.rm = TRUE) |>
+#   dplyr::arrange(desc(PlantSp_cover)) |> 
+#   # filtering by average value across sites
+#   mutate(FunctionalGroup = case_when(
+#     grepl("Achillea|Alchemilla|Anagalis|Anemone|Angelica|Anthriscus|Armeria|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Euphrasia|Fraxinus|Galeopsis|Galium|Geranium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Myosotis|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Prunella|Ranunculus|Rumex|Sagina|Sedum|Senecio|Silene|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Urtica|Valeriana|Veronica|Vicia|Viola", Species) ~ "forbs",
+#     grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Bromopsis|Calamagrostis|Dactylis|Danthonia|Deschampsia|Festuca|Holcus|Lolium|Molinia|Nardus|Phleum|Poa", Species) ~ "grasses",
+#     grepl("Carex|Eriophorum|Juncus|Luzula|Trichophorum", Species) ~ "monocotyledons",
+#     grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "woody",
+#     grepl("Athyrium|Blechnum|Dryopteris|Gymnocarpium|Phegopteris|Polypodium|Pteridium", Species) ~ "ferns",
+#     .default = "cryptogams"
+#   ))
+# 
+# filter(vege_average, PlantSp_cover >= 3)
+# # 7 grass species over 3 % A. capillaris; F. rubra; H. lanatus; P. pratensis; D. cespitosa; A. odoratum; L. perenne
+# # 3 forb species over 3 % T. repens; R. acetosa; G. saxatile
+# filter(vege_average, PlantSp_cover < 3 & PlantSp_cover > 1)
 # 2 grass species between 1 & 3% D. flexuosa; P. trivialis
 # 4 forb species over 1%  P. erecta; R. repens; A. millefolium; R acris
 # filter(vege_freq, Species == "Lolium perenne") only present in 6 sites
@@ -358,6 +428,10 @@ names(forb_plot) <- gsub("Achillea millefolium", "A.millefolium", names(forb_plo
 
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
+dominantbeetle <- beetle_infield |> 
+  group_by(BeetleFamilies, SiteID) |> 
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+
 ## Family frequencies across sites
 beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
   group_by(BeetleFamilies) |>
@@ -366,7 +440,7 @@ beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
 filter(beetle_freq, n > 10)
 # 8 beetle families in at least 10 sites Carab; Hydro; Scara; Staph; Ptili; Curcu; Elat; Silph
 
-## Species average percent cover across site
+## Species average abundancer across site
 beetle_average <- beetle_infield |>
   group_by(BeetleFamilies) |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
@@ -1114,160 +1188,32 @@ plotrda_regiolandscape
 ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
 
 # Regional x field
-
 ## RDA model
 rda <- rda(select_if(field_sc, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
 rdaregiofield <- statrda(rda) |>
   mutate(model = "RegionalxField", explanatory = "Regional", response = "Field") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## RDA plot
-# plotrda_regiofield <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "cyan4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "cyan4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_regiofield
-# ggsave("outputs/singleRDA/plotrda_regiofield.png", plot = plotrda_regiofield, width = 6, height = 6, units = "cm", bg = "white")
-# 
 # Regional x fine
-
 ## RDA model
 rda <- rda(select_if(fine_sc, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
 rdaregiofine <- statrda(rda) |>
   mutate(model = "RegionalxFine", explanatory = "Regional", response = "Fine") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## RDA plot
-# plotrda_regiofine <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "darkred"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "cyan4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "cyan4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_regiofine
-# ggsave("outputs/singleRDA/plotrda_regiofine.png", plot = plotrda_regiofine, width = 6, height = 6, units = "cm", bg = "white")
-
 # Landscape x field
-
 ## RDA model
 rda <- rda(select_if(field_sc, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
 rdalandscapefield <- statrda(rda) |>
   mutate(model = "LandscapexField", explanatory = "Landscape", response = "Field") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## RDA plot
-# plotrda_landscapefield <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "chartreuse4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "chartreuse4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_landscapefield
-# ggsave("outputs/singleRDA/plotrda_landscapefield.png", plot = plotrda_landscapefield, width = 6, height = 6, units = "cm", bg = "white")
-
 # Landscape x fine
-
 ## RDA model
 rda <- rda(select_if(fine_sc, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
 rdalandscapefine <- statrda(rda) |>
   mutate(model = "LandscapexFine", explanatory = "Landscape", response = "Fine") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-## RDA plot
-# plotrda_landscapefine <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "darkred"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "chartreuse4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "chartreuse4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_landscapefine
-# ggsave("outputs/singleRDA/plotrda_landscapefine.png", plot = plotrda_landscapefine, width = 6, height = 6, units = "cm", bg = "white")
 
 # Field x fine
 
@@ -1319,6 +1265,166 @@ rdastat_envi <- purrr::reduce(list(rdaregiolandscape, rdaregiofield, rdaregiofin
 #                    nrow = 3)
 # rda_envi
 # ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 15, height = 22, units = "cm", bg = "white")
+
+#### RDA plant community data ####
+
+# Regional x plant
+
+## RDA model
+rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregioplant <- statrda(rda) |>
+  mutate(model = "RegionalxPlant", explanatory = "Regional", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+# plotrda_regiograss <- ggplot() +
+#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
+#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
+#   geom_point(
+#     data = filter(fortify(rda), score == "sites"),
+#     mapping = aes(x = RDA1, y = RDA2)
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "species"),
+#     mapping = aes(x = RDA1, y = RDA2, label = label),
+#     colour = "black"
+#   ) +
+#   geom_segment(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
+#     arrow = arrow(length = unit(0.01, "npc")),
+#     colour = "cyan4"
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
+#     colour = "cyan4"
+#   ) +
+#   coord_equal() +
+#   theme_bw()
+# plotrda_regiograss
+# ggsave("outputs/singleRDA/plotrda_regiograss.png", plot = plotrda_regiograss, width = 6, height = 6, units = "cm", bg = "white")
+
+# Landscape x plant
+
+## RDA model
+rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapeplant <- statrda(rda) |>
+  mutate(model = "LandscapexPlant", explanatory = "Landscape", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+# plotrda_landscapegrass <- ggplot() +
+#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
+#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
+#   geom_point(
+#     data = filter(fortify(rda), score == "sites"),
+#     mapping = aes(x = RDA1, y = RDA2)
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "species"),
+#     mapping = aes(x = RDA1, y = RDA2, label = label),
+#     colour = "black"
+#   ) +
+#   geom_segment(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
+#     arrow = arrow(length = unit(0.01, "npc")),
+#     colour = "chartreuse4"
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
+#     colour = "chartreuse4"
+#   ) +
+#   coord_equal() +
+#   theme_bw()
+# plotrda_landscapegrass
+# ggsave("outputs/singleRDA/plotrda_landscapegrass.png", plot = plotrda_landscapegrass, width = 6, height = 6, units = "cm", bg = "white")
+
+# Field x plant
+
+## RDA model
+rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldplant <- statrda(rda) |>
+  mutate(model = "FieldxPlant", explanatory = "Field", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+# plotrda_fieldgrass <- ggplot() +
+#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
+#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
+#   geom_point(
+#     data = filter(fortify(rda), score == "sites"),
+#     mapping = aes(x = RDA1, y = RDA2)
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "species"),
+#     mapping = aes(x = RDA1, y = RDA2, label = label),
+#     colour = "black"
+#   ) +
+#   geom_segment(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
+#     arrow = arrow(length = unit(0.01, "npc")),
+#     colour = "darkgoldenrod3"
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
+#     colour = "darkgoldenrod3"
+#   ) +
+#   coord_equal() +
+#   theme_bw()
+# plotrda_fieldgrass
+# ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
+
+# Fine x plant site-level
+
+## RDA model
+rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafineplant <- statrda(rda) |>
+  mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## Plot RDA
+plotrda_fineplant <- ggrda(rda) +
+  xlim(-1.1, 0.9) +
+  ylim(-1.2, 0.8) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA1, y = RDA2, label = label),
+    colour = "black",
+    size = 3
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    colour = "darkred",
+    size = 3
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finegrass.png"),
+    size = 0.15
+  )
+plotrda_fineplant
+ggsave("outputs/singleRDA/plotrda_fineplant.png", plot = plotrda_fineplant, width = 6, height = 6, units = "cm", bg = "white")
+
+# Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
+rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgrass, rdafinegrass), dplyr::full_join)
 
 #### RDA grass community data ####
 
@@ -1691,6 +1797,57 @@ statrdaplot <- function(rda) {
   
   rdatable
 }
+
+# Fine x plant plot-level
+
+## RDA model
+rda <- rda(select_if(plant_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+rdafineplantplot <- statrdaplot(rda) |>
+  mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |>
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA model
+
+## Plot RDA
+plotrda_fineplantplot <- ggplot() +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+  xlim(-1, 0.8) +
+  ylim(-0.8, 1) +
+  geom_point(
+    data = filter(fortify(rda), score == "sites"),
+    mapping = aes(x = RDA1, y = RDA2),
+    size = 1
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA1, y = RDA2, label = label),
+    colour = "black",
+    size = 3
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    colour = "darkred",
+    size = 3
+  ) +
+  coord_equal() +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  )
+plotrda_fineplantplot
+ggsave("outputs/singleRDA/plotrda_fineplantplot.png", plot = plotrda_fineplantplot, width = 6, height = 6, units = "cm", bg = "white")
+
 
 # Fine x grass plot-level
 
