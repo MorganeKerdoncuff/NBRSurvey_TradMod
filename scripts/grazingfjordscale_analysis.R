@@ -175,10 +175,10 @@ vege_plot <- vege_infield %>%
   group_by(PlotID, SiteID, Species) %>% 
   summarise(PlantSp_cover = mean(Abundance))
 
-## Beetle community - current at pitfall level -> summary by average
+## Beetle community - current at pitfall level -> summary by sum
 beetle_infield <- beetle_infield |> 
   group_by(SiteID, BeetleFamilies) |> 
-  summarise(BeetleFam_abundance = mean(BeetleFam_abundance))
+  summarise(BeetleFam_abundance = sum(BeetleFam_abundance))
 
 ## id string
 
@@ -188,12 +188,14 @@ idplot <- filter(id, PlotID != "OC2-P1")
 # Selection & transformation plant community data site-level
 
 ## Data distribution
-#hist(vege_grass$PlantSp_cover) # Poisson, highly skewed
+hist(sort(log10(vege_site$PlantSp_cover))) # Poisson, highly skewed
+barplot(sort(dominantplant$PlantSp_cover))
 
 ## Dominant plant species
 dominantplant <- vege_site |> 
   group_by(Species, SiteID) |> 
-  summarise_if(is.numeric, mean, na.rm = TRUE) |> 
+  summarise_if(is.numeric, mean, na.rm = TRUE) |>
+  dplyr::arrange(desc(PlantSp_cover)) |> 
   # filter species with at least 20% cover in at least one site
   filter(PlantSp_cover > 20) |> 
   ungroup() |> 
@@ -429,8 +431,15 @@ names(forb_plot) <- gsub("Achillea millefolium", "A.millefolium", names(forb_plo
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
 dominantbeetle <- beetle_infield |> 
-  group_by(BeetleFamilies, SiteID) |> 
-  summarise_if(is.numeric, mean, na.rm = TRUE)
+  group_by(BeetleFamilies) |> 
+  summarise_if(is.numeric, sum, na.rm = TRUE) |> 
+  dplyr::arrange(desc(BeetleFam_abundance)) 
+  # filter(BeetleFam_abundance > 100)
+barplot(sort(dominantbeetle$BeetleFam_abundance))
+
+freqbeetle <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle)
+percentbeetle <- prop.table(xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle))
+head(percentbeetle)
 
 ## Family frequencies across sites
 beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
@@ -579,7 +588,7 @@ names(field) <- gsub("SelectedFieldArea_ha", "FieldArea", names(field))
 names(field) <- gsub("AvgStockDensity_perha", "StockDens", names(field))
 
 ## Variable distribution
-#hist(field$NbAdults) # one outlier above 150 -> rejected
+# hist(field$NbAdults) # one outlier above 150 -> rejected
 #hist(field$FieldArea) # Poisson distribution, with few gaps -> validated
 #hist(field$FarmInfield) # Poisson-like distribution, a bit unbalanced but no outlier
 #hist(field$StockDens) # Poisson distribution -> validated
@@ -1391,12 +1400,12 @@ rdafieldplant <- statrda(rda) |>
 rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
 rdafineplant <- statrda(rda) |>
   mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
 
 ## Plot RDA
 plotrda_fineplant <- ggrda(rda) +
-  xlim(-1.1, 0.9) +
-  ylim(-1.2, 0.8) +
+  # xlim(-1.1, 0.9) +
+  # ylim(-1.2, 0.8) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
@@ -1424,7 +1433,7 @@ plotrda_fineplant
 ggsave("outputs/singleRDA/plotrda_fineplant.png", plot = plotrda_fineplant, width = 6, height = 6, units = "cm", bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
-rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgrass, rdafinegrass), dplyr::full_join)
+# rdastat_grass <- purrr::reduce(list(rdaregiograss, rdalandscapegrass, rdafieldgrass, rdafinegrass), dplyr::full_join)
 
 #### RDA grass community data ####
 
