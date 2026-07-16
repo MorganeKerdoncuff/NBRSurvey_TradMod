@@ -180,7 +180,7 @@ cultivated area, either fully or partially;
 infield area, i.e. enclosed, productive grazing area (permanent grasslands); 
 outfield area, i.e. unenclosed, low-productivity grazing area (shrublands or heathlands); 
 wetland area; 
-artificial area.
+infrastructure area.
 
 ### Field management
 
@@ -307,11 +307,52 @@ In the fine-scale environment set, we removed litter percent cover, which showed
 See @tbl-varsum for the statistical summary of variables kept for the analyses.
 <!-- New table for community data in supplementary. -->
 
+```{r communitysummary}
+
+# Plant species & percent cover
+nbplantspecies <- vege_site |> 
+  group_by(Species) |> 
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+
+# Beetle families & occurrences
+nbbeetlefamilies <- beetle_infield |> 
+  group_by(BeetleFamilies) |> 
+  summarise_if(is.numeric, sum, na.rm = TRUE) |> 
+  # removal non-ID
+  filter(BeetleFamilies != "Other") |> 
+  mutate(freq = BeetleFam_abundance/sum(BeetleFam_abundance)*100)
+
+```
+
 <!-- Revision dominance -->
-Plant community data were percent cover of plant species in 1 m^2^ and dung-associated beetle assemblage data were occurrences of beetle families.
-"Dominant" plant species and beetle families were characterised by criteria of frequency, i.e. presence in at least one-third of the sites, and average abundance, i.e. minimum plant species percent cover of 1% and minimum beetle family occurrence of 3.
-In total, eight species of grasses, seven species of forbs and five families of beetles met these two criteria and were selected for the analyses (@fig-fjordconcept).
-We performed Hellinger transformation on community data to lower the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
+Plant community data were percent cover of plant species in 1 m^2^ subplots, averaged at the site-level.
+Using a rank-abundance curve, we determined dominant plant species by a minimum average percent cover of 20% in at least one site.
+<!-- Include rank-abundance curve in SI -->
+Twelve out of the `r op(nrow(nbplantspecies), 0)` recorded species fit this criteria:
+*Agrostis capillaris* (`r op(filter(nbplantspecies, Species == "Agrostis capillaris")$PlantSp_cover)`% of average cover across site),
+*Festuca rubra* (`r op(filter(nbplantspecies, Species == "Festuca rubra")$PlantSp_cover)`%),
+*Holcus lanatus* (`r op(filter(nbplantspecies, Species == "Holcus lanatus")$PlantSp_cover)`%),
+*Poa pratensis* (`r op(filter(nbplantspecies, Species == "Poa pratensis")$PlantSp_cover)`%),
+*Deschampsia cespitosa* (`r op(filter(nbplantspecies, Species == "Deschampsia cespitosa")$PlantSp_cover)`%),
+*Anthoxanthum odoratum* (`r op(filter(nbplantspecies, Species == "Anthoxanthum odoratum")$PlantSp_cover)`%),
+*Trifolium repens* (`r op(filter(vege_average, Species == "Trifolium repens")$PlantSp_cover)`%),
+*Rumex acetosa* (`r op(filter(vege_average, Species == "Rumex acetosa")$PlantSp_cover)`%),
+*Lolium perenne* (`r op(filter(nbplantspecies, Species == "Lolium perenne")$PlantSp_cover)`%),
+*Galium saxatile* (`r op(filter(vege_average, Species == "Galium saxatile")$PlantSp_cover)`%), 
+*Deschampsia flexuosa* (`r op(filter(nbplantspecies, Species == "Deschampsia flexuosa")$PlantSp_cover)`%) and
+*Potentilla erecta* (`r op(filter(vege_average, Species == "Potentilla erecta")$PlantSp_cover)`%).
+Dung-associated beetle assemblage data were pitfall trap occurrences of beetle families, summed at the site-level.
+Using a rank-abundance curve, we determined dominant beetle families by a minimum total occurrences of 50 individuals in at least one site.
+Six out of the `r op(nrow(dominantbeetle), 0)` recorded families fit this criteria:
+Staphylinidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$BeetleFam_abundance)` out of `r op(sum(nbbeetlefamilies$BeetleFam_abundance), 0)` identified individuals across sites, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$freq)`% of the catches),
+Ptiliidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$BeetleFam_abundance)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$freq)`% of the catches), 
+Hydrophilidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Hydrophilidae")$BeetleFam_abundance)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Hydrophilidae")$freq)`% of the catches),
+Scarabaeidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Scarabaeidae")$BeetleFam_abundance)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Scarabaeidae")$freq)`% of the catches), 
+Carabidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Carabidae")$BeetleFam_abundance)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Carabidae")$freq)`% of the catches) and
+Silphidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Silphidae")$BeetleFam_abundance)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Silphidae")$freq)`% of the catches).
+<!-- "Dominant" plant species and beetle families were characterised by criteria of frequency, i.e. presence in at least one-third of the sites, and average abundance, i.e. minimum plant species percent cover of 1% and minimum beetle family occurrence of 3. -->
+<!-- In total, eight species of grasses, seven species of forbs and five families of beetles met these two criteria and were selected for the analyses (@fig-fjordconcept). -->
+We performed Hellinger transformation on plant community and dung-associated assemblage data to lower the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
 
 For the canonical correlation analyses, the statistical significance of the canonical correlation coefficient rho was tested with the asymptotic approximation of Hotelling-Lawley Trace [@mullerPracticalMethodsComputing1984].
 For the redundancy analyses, the statistical significance of models, axes and marginal terms was tested with ANOVA-like permutation tests (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
@@ -430,23 +471,6 @@ varsum |>
 
 # RESULTS
 
-We recorded `r op(nrow(filter(vege_average, FunctionalGroup == "grasses")), 0)` grass species, among which eight were present in at least 10 sites and with a minimum average cover of 1% per subplot: 
-*Agrostis capillaris* (`r op(filter(vege_average, Species == "Agrostis capillaris")$PlantSp_cover)`% of average quadrat cover), 
-*Festuca rubra* (`r op(filter(vege_average, Species == "Festuca rubra")$PlantSp_cover)`%), 
-*Holcus lanatus* (`r op(filter(vege_average, Species == "Holcus lanatus")$PlantSp_cover)`%), 
-*Poa pratensis* (`r op(filter(vege_average, Species == "Poa pratensis")$PlantSp_cover)`%), 
-*Deschampsia cespitosa* (`r op(filter(vege_average, Species == "Deschampsia cespitosa")$PlantSp_cover)`%), 
-*Anthoxanthum odoratum* (`r op(filter(vege_average, Species == "Anthoxanthum odoratum")$PlantSp_cover)`%), 
-*Lolium perenne* (`r op(filter(vege_average, Species == "Lolium perenne")$PlantSp_cover)`%) and 
-*Deschampsia flexuosa* (`r op(filter(vege_average, Species == "Deschampsia flexuosa")$PlantSp_cover)`%). 
-We recorded `r op(nrow(filter(vege_average, FunctionalGroup == "forbs")), 0)` forb species, among which seven species were present in at least 10 sites and with a minimum average cover of 1% per subplot: 
-*Trifolium repens* (`r op(filter(vege_average, Species == "Trifolium repens")$PlantSp_cover)`%), 
-*Rumex acetosa* (`r op(filter(vege_average, Species == "Rumex acetosa")$PlantSp_cover)`%), 
-*Galium saxatile* (`r op(filter(vege_average, Species == "Galium saxatile")$PlantSp_cover)`%), 
-*Potentilla erecta* (`r op(filter(vege_average, Species == "Potentilla erecta")$PlantSp_cover)`%), 
-*Ranunculus repens* (`r op(filter(vege_average, Species == "Ranunculus repens")$PlantSp_cover)`%), 
-*Achillea millefolium* (`r op(filter(vege_average, Species == "Achillea millefolium")$PlantSp_cover)`%) and 
-*Ranunculus acris* (`r op(filter(vege_average, Species == "Ranunculus acris")$PlantSp_cover)`%). 
 Finally, we collected a total of 45 685 beetles belonging to 14 families, among which five were found in at least 10 sites and with a minimum of 3 catches on average per pitfall trap: 
 the Staphylinidae family (25 161 individuals, `r op(filter(beetle_average, BeetleFamilies == "Staphylinidae")$BeetleFam_abundance)`% of the catches), 
 the Ptiliidae family (11 336 individuals, `r op(filter(beetle_average, BeetleFamilies == "Ptiliidae")$BeetleFam_abundance)`% of the catches), 
