@@ -188,8 +188,8 @@ idplot <- filter(id, PlotID != "OC2-P1")
 # Selection & transformation plant community data site-level
 
 ## Data distribution
-hist(sort(log10(vege_site$PlantSp_cover))) # Poisson, highly skewed
-barplot(sort(dominantplant$PlantSp_cover))
+# hist(sort(log10(vege_site$PlantSp_cover))) # Poisson, highly skewed
+# barplot(sort(dominantplant$PlantSp_cover))
 
 ## Dominant plant species
 dominantplant <- vege_site |> 
@@ -300,170 +300,179 @@ names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
 # Selection and transformation grass assemblage site-level
 
 ## Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
-grass <- subset(vege_site,
-                Species == "Agrostis capillaris" |
-                Species == "Festuca rubra" | 
-                Species == "Holcus lanatus" | 
-                Species == "Poa pratensis" | 
-                Species == "Deschampsia cespitosa" | 
-                Species == "Anthoxantum odoratum" | 
-                Species == "Deschampsia flexuosa" | 
-                Species == "Poa trivialis")
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_grass <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = grass)
-contin_grass <- decostand(contin_grass, method = "hellinger")
-
-## Wide table
-grass <- as.data.frame(contin_grass)
-grass <- grass |>
-  pivot_wider(names_from = Species, values_from = Freq)
-
-## Suitable variable names
-names(grass) <- gsub("Agrostis capillaris", "A.capillaris", names(grass))
-names(grass) <- gsub("Festuca rubra", "F.rubra", names(grass))
-names(grass) <- gsub("Holcus lanatus", "H.lanatus", names(grass))
-names(grass) <- gsub("Poa pratensis", "P.pratensis", names(grass))
-names(grass) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass))
-names(grass) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass))
-names(grass) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass))
-names(grass) <- gsub("Poa trivialis", "P.trivialis", names(grass))
-
-# Selection and transformation grass assemblage plot-level
-
-## Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
-grass_plot <- subset(vege_plot,
-                Species == "Agrostis capillaris" |
-                  Species == "Festuca rubra" | 
-                  Species == "Holcus lanatus" | 
-                  Species == "Poa pratensis" | 
-                  Species == "Deschampsia cespitosa" | 
-                  Species == "Anthoxantum odoratum" | 
-                  Species == "Deschampsia flexuosa" | 
-                  Species == "Poa trivialis")
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_grass_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = grass_plot)
-contin_grass_plot <- decostand(contin_grass_plot, method = "hellinger")
-
-## Wide table
-grass_plot <- as.data.frame(contin_grass_plot)
-grass_plot <- grass_plot |>
-  pivot_wider(names_from = Species, values_from = Freq) %>% 
-  mutate(SiteID = id$SiteID)
-grass_plot <- filter(grass_plot, PlotID != "OC2-P1")
-
-## Suitable variable names
-names(grass_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(grass_plot))
-names(grass_plot) <- gsub("Festuca rubra", "F.rubra", names(grass_plot))
-names(grass_plot) <- gsub("Holcus lanatus", "H.lanatus", names(grass_plot))
-names(grass_plot) <- gsub("Poa pratensis", "P.pratensis", names(grass_plot))
-names(grass_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass_plot))
-names(grass_plot) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass_plot))
-names(grass_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass_plot))
-names(grass_plot) <- gsub("Poa trivialis", "P.trivialis", names(grass_plot))
-
-
-# Selection and transformation forb assemblage site-level
-
-## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
-forb <- subset(vege_site,
-                Species == "Trifolium repens" |
-                  Species == "Rumex acetosa" |
-                  Species == "Galium saxatile" |
-                  Species == "Potentilla erecta" |
-                  Species == "Ranunculus acris" |
-                  Species == "Ranunculus repens" |
-                  Species == "Achillea millefolium")
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_forb <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = forb)
-contin_forb <- decostand(contin_forb, method = "hellinger")
-
-## Wide table
-forb <- as.data.frame(contin_forb)
-forb <- forb |>
-  pivot_wider(names_from = Species, values_from = Freq)
-
-## Suitable variable names
-names(forb) <- gsub("Trifolium repens", "T.repens", names(forb))
-names(forb) <- gsub("Rumex acetosa", "R.acetosa", names(forb))
-names(forb) <- gsub("Galium saxatile", "G.saxatile", names(forb))
-names(forb) <- gsub("Potentilla erecta", "P.erecta", names(forb))
-names(forb) <- gsub("Ranunculus acris", "R.acris", names(forb))
-names(forb) <- gsub("Ranunculus repens", "R.repens", names(forb))
-names(forb) <- gsub("Achillea millefolium", "A.millefolium", names(forb))
-
-# Selection and transformation forb assemblage plot-level
-
-## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
-forb_plot <- subset(vege_plot,
-               Species == "Trifolium repens" |
-                 Species == "Rumex acetosa" |
-                 Species == "Galium saxatile" |
-                 Species == "Potentilla erecta" |
-                 Species == "Ranunculus acris" |
-                 Species == "Ranunculus repens" |
-                 Species == "Achillea millefolium")
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_forb_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = forb_plot)
-contin_forb_plot <- decostand(contin_forb_plot, method = "hellinger")
-
-## Wide table
-forb_plot <- as.data.frame(contin_forb_plot)
-forb_plot <- forb_plot |>
-  pivot_wider(names_from = Species, values_from = Freq) %>% 
-  mutate(SiteID = id$SiteID)
-forb_plot <- filter(forb_plot, PlotID != "OC2-P1")
-
-## Suitable variable names
-names(forb_plot) <- gsub("Trifolium repens", "T.repens", names(forb_plot))
-names(forb_plot) <- gsub("Rumex acetosa", "R.acetosa", names(forb_plot))
-names(forb_plot) <- gsub("Galium saxatile", "G.saxatile", names(forb_plot))
-names(forb_plot) <- gsub("Potentilla erecta", "P.erecta", names(forb_plot))
-names(forb_plot) <- gsub("Ranunculus acris", "R.acris", names(forb_plot))
-names(forb_plot) <- gsub("Ranunculus repens", "R.repens", names(forb_plot))
-names(forb_plot) <- gsub("Achillea millefolium", "A.millefolium", names(forb_plot))
+# grass <- subset(vege_site,
+#                 Species == "Agrostis capillaris" |
+#                 Species == "Festuca rubra" | 
+#                 Species == "Holcus lanatus" | 
+#                 Species == "Poa pratensis" | 
+#                 Species == "Deschampsia cespitosa" | 
+#                 Species == "Anthoxantum odoratum" | 
+#                 Species == "Deschampsia flexuosa" | 
+#                 Species == "Poa trivialis")
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_grass <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = grass)
+# contin_grass <- decostand(contin_grass, method = "hellinger")
+# 
+# ## Wide table
+# grass <- as.data.frame(contin_grass)
+# grass <- grass |>
+#   pivot_wider(names_from = Species, values_from = Freq)
+# 
+# ## Suitable variable names
+# names(grass) <- gsub("Agrostis capillaris", "A.capillaris", names(grass))
+# names(grass) <- gsub("Festuca rubra", "F.rubra", names(grass))
+# names(grass) <- gsub("Holcus lanatus", "H.lanatus", names(grass))
+# names(grass) <- gsub("Poa pratensis", "P.pratensis", names(grass))
+# names(grass) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass))
+# names(grass) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass))
+# names(grass) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass))
+# names(grass) <- gsub("Poa trivialis", "P.trivialis", names(grass))
+# 
+# # Selection and transformation grass assemblage plot-level
+# 
+# ## Selection main grass species - at least present in 10 sites AND min average cover 1% -> 8 species
+# grass_plot <- subset(vege_plot,
+#                 Species == "Agrostis capillaris" |
+#                   Species == "Festuca rubra" | 
+#                   Species == "Holcus lanatus" | 
+#                   Species == "Poa pratensis" | 
+#                   Species == "Deschampsia cespitosa" | 
+#                   Species == "Anthoxantum odoratum" | 
+#                   Species == "Deschampsia flexuosa" | 
+#                   Species == "Poa trivialis")
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_grass_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = grass_plot)
+# contin_grass_plot <- decostand(contin_grass_plot, method = "hellinger")
+# 
+# ## Wide table
+# grass_plot <- as.data.frame(contin_grass_plot)
+# grass_plot <- grass_plot |>
+#   pivot_wider(names_from = Species, values_from = Freq) %>% 
+#   mutate(SiteID = id$SiteID)
+# grass_plot <- filter(grass_plot, PlotID != "OC2-P1")
+# 
+# ## Suitable variable names
+# names(grass_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(grass_plot))
+# names(grass_plot) <- gsub("Festuca rubra", "F.rubra", names(grass_plot))
+# names(grass_plot) <- gsub("Holcus lanatus", "H.lanatus", names(grass_plot))
+# names(grass_plot) <- gsub("Poa pratensis", "P.pratensis", names(grass_plot))
+# names(grass_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(grass_plot))
+# names(grass_plot) <- gsub("Anthoxantum odoratum", "A.odoratum", names(grass_plot))
+# names(grass_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(grass_plot))
+# names(grass_plot) <- gsub("Poa trivialis", "P.trivialis", names(grass_plot))
+# 
+# 
+# # Selection and transformation forb assemblage site-level
+# 
+# ## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
+# forb <- subset(vege_site,
+#                 Species == "Trifolium repens" |
+#                   Species == "Rumex acetosa" |
+#                   Species == "Galium saxatile" |
+#                   Species == "Potentilla erecta" |
+#                   Species == "Ranunculus acris" |
+#                   Species == "Ranunculus repens" |
+#                   Species == "Achillea millefolium")
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_forb <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = forb)
+# contin_forb <- decostand(contin_forb, method = "hellinger")
+# 
+# ## Wide table
+# forb <- as.data.frame(contin_forb)
+# forb <- forb |>
+#   pivot_wider(names_from = Species, values_from = Freq)
+# 
+# ## Suitable variable names
+# names(forb) <- gsub("Trifolium repens", "T.repens", names(forb))
+# names(forb) <- gsub("Rumex acetosa", "R.acetosa", names(forb))
+# names(forb) <- gsub("Galium saxatile", "G.saxatile", names(forb))
+# names(forb) <- gsub("Potentilla erecta", "P.erecta", names(forb))
+# names(forb) <- gsub("Ranunculus acris", "R.acris", names(forb))
+# names(forb) <- gsub("Ranunculus repens", "R.repens", names(forb))
+# names(forb) <- gsub("Achillea millefolium", "A.millefolium", names(forb))
+# 
+# # Selection and transformation forb assemblage plot-level
+# 
+# ## Selection main forb species - at least present in 10 sites AND min average cover 1% -> 7 species
+# forb_plot <- subset(vege_plot,
+#                Species == "Trifolium repens" |
+#                  Species == "Rumex acetosa" |
+#                  Species == "Galium saxatile" |
+#                  Species == "Potentilla erecta" |
+#                  Species == "Ranunculus acris" |
+#                  Species == "Ranunculus repens" |
+#                  Species == "Achillea millefolium")
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_forb_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = forb_plot)
+# contin_forb_plot <- decostand(contin_forb_plot, method = "hellinger")
+# 
+# ## Wide table
+# forb_plot <- as.data.frame(contin_forb_plot)
+# forb_plot <- forb_plot |>
+#   pivot_wider(names_from = Species, values_from = Freq) %>% 
+#   mutate(SiteID = id$SiteID)
+# forb_plot <- filter(forb_plot, PlotID != "OC2-P1")
+# 
+# ## Suitable variable names
+# names(forb_plot) <- gsub("Trifolium repens", "T.repens", names(forb_plot))
+# names(forb_plot) <- gsub("Rumex acetosa", "R.acetosa", names(forb_plot))
+# names(forb_plot) <- gsub("Galium saxatile", "G.saxatile", names(forb_plot))
+# names(forb_plot) <- gsub("Potentilla erecta", "P.erecta", names(forb_plot))
+# names(forb_plot) <- gsub("Ranunculus acris", "R.acris", names(forb_plot))
+# names(forb_plot) <- gsub("Ranunculus repens", "R.repens", names(forb_plot))
+# names(forb_plot) <- gsub("Achillea millefolium", "A.millefolium", names(forb_plot))
 
 # Transformation beetle assemblage data
 
 #hist(arthro_grass$BeetleFam_abundance) # Poisson, highly skewed
 
 dominantbeetle <- beetle_infield |> 
-  group_by(BeetleFamilies) |> 
+  group_by(BeetleFamilies, SiteID) |> 
   summarise_if(is.numeric, sum, na.rm = TRUE) |> 
-  dplyr::arrange(desc(BeetleFam_abundance)) 
-  # filter(BeetleFam_abundance > 100)
-barplot(sort(dominantbeetle$BeetleFam_abundance))
+  dplyr::arrange(desc(BeetleFam_abundance)) |> 
+  filter(BeetleFam_abundance > 50) |> 
+  ungroup() |> 
+  group_by(BeetleFamilies) |> 
+  summarise() |> 
+  # removal non ID
+  filter(BeetleFamilies != "Other")
+# barplot(sort(dominantbeetle$BeetleFam_abundance))
 
-freqbeetle <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle)
-percentbeetle <- prop.table(xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle))
-head(percentbeetle)
+## Plant data table
+beetle <- beetle_infield |> 
+  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
 
-## Family frequencies across sites
-beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
-  group_by(BeetleFamilies) |>
-  count() |>
-  dplyr::arrange(desc(n)) # filtering by frequency
-filter(beetle_freq, n > 10)
-# 8 beetle families in at least 10 sites Carab; Hydro; Scara; Staph; Ptili; Curcu; Elat; Silph
-
-## Species average abundancer across site
-beetle_average <- beetle_infield |>
-  group_by(BeetleFamilies) |>
-  summarise_if(is.numeric, mean, na.rm = TRUE) |>
-  dplyr::arrange(desc(BeetleFam_abundance)) # filtering by average value across sites
-filter(beetle_average, BeetleFam_abundance > 3)
-# 5 beetles families with at least 3 individuals on average Staph; Ptili; Hydro; Scara; Carab
-
-## Selection main dung beetle families site-level -> at least present in 10 sites + min 3 individuals on average -> 6 families
-beetle <- subset(beetle_infield,
-                 BeetleFamilies == "Carabidae" |
-                   BeetleFamilies == "Staphylinidae" |
-                   BeetleFamilies == "Hydrophilidae" |
-                   BeetleFamilies == "Ptiliidae" |
-                   BeetleFamilies == "Scarabaeidae")
+# freqbeetle <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle)
+# percentbeetle <- prop.table(xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = dominantbeetle))
+# head(percentbeetle)
+# 
+# ## Family frequencies across sites
+# beetle_freq <- filter(beetle_infield, BeetleFam_abundance>0) |>
+#   group_by(BeetleFamilies) |>
+#   count() |>
+#   dplyr::arrange(desc(n)) # filtering by frequency
+# filter(beetle_freq, n > 10)
+# # 8 beetle families in at least 10 sites Carab; Hydro; Scara; Staph; Ptili; Curcu; Elat; Silph
+# 
+# ## Species average abundancer across site
+# beetle_average <- beetle_infield |>
+#   group_by(BeetleFamilies) |>
+#   summarise_if(is.numeric, mean, na.rm = TRUE) |>
+#   dplyr::arrange(desc(BeetleFam_abundance)) # filtering by average value across sites
+# filter(beetle_average, BeetleFam_abundance > 3)
+# # 5 beetles families with at least 3 individuals on average Staph; Ptili; Hydro; Scara; Carab
+# 
+# ## Selection main dung beetle families site-level -> at least present in 10 sites + min 3 individuals on average -> 6 families
+# beetle <- subset(beetle_infield,
+#                  BeetleFamilies == "Carabidae" |
+#                    BeetleFamilies == "Staphylinidae" |
+#                    BeetleFamilies == "Hydrophilidae" |
+#                    BeetleFamilies == "Ptiliidae" |
+#                    BeetleFamilies == "Scarabaeidae")
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_beetle <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = beetle)
@@ -831,195 +840,195 @@ envar <- envar_SI |>
 #### Canonical correlation analyses between explanatory sets and dominant grass assemblage ####
 
 ## Number of observations (same for all sets)
-nobs <- dim(contin_regional)[1]
-
-## Number of variables in each set
-nvar_regional <- length(select_if(regional_sc, is.numeric))
-nvar_landscape <- length(select_if(landscape_sc, is.numeric))
-nvar_field <- length(select_if(field_sc, is.numeric))
-nvar_fine <- length(select_if(fine_sc, is.numeric))
-nvar_grass <- length(select_if(grass, is.numeric))
-
-## Regional x grass
-cancor <- cc(contin_regional, contin_grass)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_regional, nvar_grass, tstat = "Hotelling") 
-ccaregiograss <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Regional", response = "Grass", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccaregiograss
-
-## Landscape x grass
-cancor <- cc(contin_landscape, contin_grass)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grass, tstat = "Hotelling") 
-ccalandscapegrass <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Landscape", response = "Grass", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccalandscapegrass
-
-## Field x grass
-cancor <- cc(contin_field, contin_grass)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_field, nvar_grass, tstat = "Hotelling") 
-ccafieldgrass <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Field", response = "Grass", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafieldgrass
-
-## Fine x grass
-cancor <- cc(contin_fine, contin_grass)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_fine, nvar_grass, tstat = "Hotelling")
-ccafinegrass <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Fine", response = "Grass", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafinegrass
-
-# Summary statistics
-
-## All dimensions included
-grassvar_SI <- purrr::reduce(list(ccaregiograss, ccalandscapegrass, ccafieldgrass, ccafinegrass), dplyr::full_join)
-
-## First dimension + other dimensions if marginally significant only
-grassvar <- grassvar_SI |> 
-  filter(dim == "dim1" | p.value < 0.1)
-
-
-#### Canonical correlation analyses between explanatory sets and dominant forb assemblage ####
-
-# Number of observations (same for all sets)
-nobs <- dim(contin_regional)[1]
-
-# Number of variables in each set
-nvar_regional <- length(select_if(regional_sc, is.numeric))
-nvar_landscape <- length(select_if(landscape_sc, is.numeric))
-nvar_field <- length(select_if(field_sc, is.numeric))
-nvar_fine <- length(select_if(fine_sc, is.numeric))
-nvar_forb <- length(select_if(forb, is.numeric))
-
-## Regional x forb
-cancor <- cc(contin_regional, contin_forb)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_regional, nvar_forb, tstat = "Hotelling") 
-ccaregioforb <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Regional", response = "Forb", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccaregioforb
-
-## Landscape x forb
-cancor <- cc(contin_landscape, contin_forb)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_forb, tstat = "Hotelling") 
-ccalandscapeforb <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Landscape", response = "Forb", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccalandscapeforb
-
-## Field x forb
-cancor <- cc(contin_field, contin_forb)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_field, nvar_forb, tstat = "Hotelling") 
-ccafieldforb <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Field", response = "Forb", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafieldforb
-
-## Fine x forb
-cancor <- cc(contin_fine, contin_forb)
-rhocancor <- cancor$cor
-rhocancor 
-test <- p.asym(rhocancor, nobs, nvar_fine, nvar_forb, tstat = "Hotelling") 
-ccafineforb <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Fine", response = "Forb", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafineforb
-
-# Summary statistics
-
-## All dimensions included
-forbvar_SI <- purrr::reduce(list(ccaregioforb, ccalandscapeforb, ccafieldforb, ccafineforb), dplyr::full_join)
-
-## First dimension + other dimensions if marginally significant only
-forbvar <- forbvar_SI |> 
-  filter(dim == "dim1" | p.value < 0.1)
-
-
-#### Canonical correlation analyses between explanatory sets and dominant beetle assemblage ####
-
-# Number of observations (same for all sets)
-nobs <- dim(contin_regional)[1]
-
-# Number of variables in each set
-nvar_regional <- length(select_if(regional_sc, is.numeric))
-nvar_landscape <- length(select_if(landscape_sc, is.numeric))
-nvar_field <- length(select_if(field_sc, is.numeric))
-nvar_fine <- length(select_if(fine_sc, is.numeric))
-nvar_beetle <- length(select_if(beetle, is.numeric))
-
-# Regional x beetle
-
-## Canonical correlation analysis
-cancor <- cc(contin_regional, contin_beetle)
-## Extraction canonical correlation coefficient
-rhocancor <- cancor$cor
-rhocancor
-## Asymptotic approximation of Hotelling-Lawley
-test <- p.asym(rhocancor, nobs, nvar_regional, nvar_beetle, tstat = "Hotelling")
-## Extraction statistics
-ccaregiobeetle <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Regional", response = "Beetle", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccaregiobeetle
-
-## Landscape x beetle
-cancor <- cc(contin_landscape, contin_beetle)
-rhocancor <- cancor$cor
-rhocancor
-test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
-ccalandscapebeetle <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Landscape", response = "Beetle", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccalandscapebeetle
-
-## Field x beetle
-cancor <- cc(contin_field, contin_beetle)
-rhocancor <- cancor$cor
-rhocancor
-test <- p.asym(rhocancor, nobs, nvar_field, nvar_beetle, tstat = "Hotelling")
-ccafieldbeetle <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Field", response = "Beetle", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafieldbeetle
-
-## Fine x beetle
-cancor <- cc(contin_fine, contin_beetle)
-rhocancor <- cancor$cor
-rhocancor
-test <- p.asym(rhocancor, nobs, nvar_fine, nvar_beetle, tstat = "Hotelling")
-ccafinebeetle <- as.data.frame(test) |> 
-  mutate(rho = rhocancor, explanatory = "Fine", response = "Beetle", dim = "dim") |>  
-  mutate(dim = paste(dim, row_number(), sep = ""))
-ccafinebeetle
-
-# Summary statistics
-
-## All dimensions included
-beetlevar_SI <- purrr::reduce(list(ccaregiobeetle, ccalandscapebeetle, ccafieldbeetle, ccafinebeetle), dplyr::full_join)
-
-## First dimension + other dimensions if marginally significant only
-beetlevar <- beetlevar_SI |> 
-  filter(dim == "dim1" | p.value < 0.1)
-
-## All significant community outputs
-comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
+# nobs <- dim(contin_regional)[1]
+# 
+# ## Number of variables in each set
+# nvar_regional <- length(select_if(regional_sc, is.numeric))
+# nvar_landscape <- length(select_if(landscape_sc, is.numeric))
+# nvar_field <- length(select_if(field_sc, is.numeric))
+# nvar_fine <- length(select_if(fine_sc, is.numeric))
+# nvar_grass <- length(select_if(grass, is.numeric))
+# 
+# ## Regional x grass
+# cancor <- cc(contin_regional, contin_grass)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_regional, nvar_grass, tstat = "Hotelling") 
+# ccaregiograss <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Regional", response = "Grass", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccaregiograss
+# 
+# ## Landscape x grass
+# cancor <- cc(contin_landscape, contin_grass)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_grass, tstat = "Hotelling") 
+# ccalandscapegrass <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Landscape", response = "Grass", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccalandscapegrass
+# 
+# ## Field x grass
+# cancor <- cc(contin_field, contin_grass)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_field, nvar_grass, tstat = "Hotelling") 
+# ccafieldgrass <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Field", response = "Grass", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafieldgrass
+# 
+# ## Fine x grass
+# cancor <- cc(contin_fine, contin_grass)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_fine, nvar_grass, tstat = "Hotelling")
+# ccafinegrass <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Fine", response = "Grass", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafinegrass
+# 
+# # Summary statistics
+# 
+# ## All dimensions included
+# grassvar_SI <- purrr::reduce(list(ccaregiograss, ccalandscapegrass, ccafieldgrass, ccafinegrass), dplyr::full_join)
+# 
+# ## First dimension + other dimensions if marginally significant only
+# grassvar <- grassvar_SI |> 
+#   filter(dim == "dim1" | p.value < 0.1)
+# 
+# 
+# #### Canonical correlation analyses between explanatory sets and dominant forb assemblage ####
+# 
+# # Number of observations (same for all sets)
+# nobs <- dim(contin_regional)[1]
+# 
+# # Number of variables in each set
+# nvar_regional <- length(select_if(regional_sc, is.numeric))
+# nvar_landscape <- length(select_if(landscape_sc, is.numeric))
+# nvar_field <- length(select_if(field_sc, is.numeric))
+# nvar_fine <- length(select_if(fine_sc, is.numeric))
+# nvar_forb <- length(select_if(forb, is.numeric))
+# 
+# ## Regional x forb
+# cancor <- cc(contin_regional, contin_forb)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_regional, nvar_forb, tstat = "Hotelling") 
+# ccaregioforb <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Regional", response = "Forb", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccaregioforb
+# 
+# ## Landscape x forb
+# cancor <- cc(contin_landscape, contin_forb)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_forb, tstat = "Hotelling") 
+# ccalandscapeforb <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Landscape", response = "Forb", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccalandscapeforb
+# 
+# ## Field x forb
+# cancor <- cc(contin_field, contin_forb)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_field, nvar_forb, tstat = "Hotelling") 
+# ccafieldforb <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Field", response = "Forb", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafieldforb
+# 
+# ## Fine x forb
+# cancor <- cc(contin_fine, contin_forb)
+# rhocancor <- cancor$cor
+# rhocancor 
+# test <- p.asym(rhocancor, nobs, nvar_fine, nvar_forb, tstat = "Hotelling") 
+# ccafineforb <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Fine", response = "Forb", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafineforb
+# 
+# # Summary statistics
+# 
+# ## All dimensions included
+# forbvar_SI <- purrr::reduce(list(ccaregioforb, ccalandscapeforb, ccafieldforb, ccafineforb), dplyr::full_join)
+# 
+# ## First dimension + other dimensions if marginally significant only
+# forbvar <- forbvar_SI |> 
+#   filter(dim == "dim1" | p.value < 0.1)
+# 
+# 
+# #### Canonical correlation analyses between explanatory sets and dominant beetle assemblage ####
+# 
+# # Number of observations (same for all sets)
+# nobs <- dim(contin_regional)[1]
+# 
+# # Number of variables in each set
+# nvar_regional <- length(select_if(regional_sc, is.numeric))
+# nvar_landscape <- length(select_if(landscape_sc, is.numeric))
+# nvar_field <- length(select_if(field_sc, is.numeric))
+# nvar_fine <- length(select_if(fine_sc, is.numeric))
+# nvar_beetle <- length(select_if(beetle, is.numeric))
+# 
+# # Regional x beetle
+# 
+# ## Canonical correlation analysis
+# cancor <- cc(contin_regional, contin_beetle)
+# ## Extraction canonical correlation coefficient
+# rhocancor <- cancor$cor
+# rhocancor
+# ## Asymptotic approximation of Hotelling-Lawley
+# test <- p.asym(rhocancor, nobs, nvar_regional, nvar_beetle, tstat = "Hotelling")
+# ## Extraction statistics
+# ccaregiobeetle <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Regional", response = "Beetle", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccaregiobeetle
+# 
+# ## Landscape x beetle
+# cancor <- cc(contin_landscape, contin_beetle)
+# rhocancor <- cancor$cor
+# rhocancor
+# test <- p.asym(rhocancor, nobs, nvar_landscape, nvar_beetle, tstat = "Hotelling")
+# ccalandscapebeetle <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Landscape", response = "Beetle", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccalandscapebeetle
+# 
+# ## Field x beetle
+# cancor <- cc(contin_field, contin_beetle)
+# rhocancor <- cancor$cor
+# rhocancor
+# test <- p.asym(rhocancor, nobs, nvar_field, nvar_beetle, tstat = "Hotelling")
+# ccafieldbeetle <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Field", response = "Beetle", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafieldbeetle
+# 
+# ## Fine x beetle
+# cancor <- cc(contin_fine, contin_beetle)
+# rhocancor <- cancor$cor
+# rhocancor
+# test <- p.asym(rhocancor, nobs, nvar_fine, nvar_beetle, tstat = "Hotelling")
+# ccafinebeetle <- as.data.frame(test) |> 
+#   mutate(rho = rhocancor, explanatory = "Fine", response = "Beetle", dim = "dim") |>  
+#   mutate(dim = paste(dim, row_number(), sep = ""))
+# ccafinebeetle
+# 
+# # Summary statistics
+# 
+# ## All dimensions included
+# beetlevar_SI <- purrr::reduce(list(ccaregiobeetle, ccalandscapebeetle, ccafieldbeetle, ccafinebeetle), dplyr::full_join)
+# 
+# ## First dimension + other dimensions if marginally significant only
+# beetlevar <- beetlevar_SI |> 
+#   filter(dim == "dim1" | p.value < 0.1)
+# 
+# ## All significant community outputs
+# comvar <- purrr::reduce(list(grassvar, forbvar, beetlevar), dplyr::full_join)
 
 # 
 # # Modification ggord function so that axes show non-cumulated explained variance proportion
@@ -2032,8 +2041,8 @@ rdalandscapebeetle <- statrda(rda) |>
 
 ## RDA plot
 plotrda_landscapebeetle <- ggrda(rda) +
-  xlim(-2.2, 2.2) +
-  ylim(-2.2, 2.2) +
+  # xlim(-2.2, 2.2) +
+  # ylim(-2.2, 2.2) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
@@ -2042,26 +2051,26 @@ plotrda_landscapebeetle <- ggrda(rda) +
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
+    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "chartreuse4"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*3, y = RDA2*3, label = label),
+    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "chartreuse4",
     size = 3
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.9, y = 2, image = "illustrations/Icons/icon_landscape.png"),
-    size = 0.15
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 1.9, y = 1.48, image = "illustrations/Icons/icon_beetle.png"),
-    size = 0.15
-  )
+  ) #+
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.9, y = 2, image = "illustrations/Icons/icon_landscape.png"),
+  #   size = 0.15
+  # ) +
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 1.9, y = 1.48, image = "illustrations/Icons/icon_beetle.png"),
+  #   size = 0.15
+  # )
 plotrda_landscapebeetle
 ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, width = 6, height = 6, units = "cm", bg = "white")
 
@@ -2116,8 +2125,8 @@ rdafinebeetle <- statrda(rda) |>
 
 ## RDA plot
 plotrda_finebeetle <- ggrda(rda) +
-  xlim(-2, 1.8) +
-  ylim(-1.5, 2.3) +
+  # xlim(-2, 1.8) +
+  # ylim(-1.5, 2.3) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
@@ -2126,13 +2135,13 @@ plotrda_finebeetle <- ggrda(rda) +
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
+    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
+    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "darkred",
     size = 3
   ) +
