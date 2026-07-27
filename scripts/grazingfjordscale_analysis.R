@@ -1199,7 +1199,7 @@ plotrda_fineplant12 <- ggrda(rda) +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
     colour = "black",
-    size = 3
+    size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -1211,7 +1211,7 @@ plotrda_fineplant12 <- ggrda(rda) +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "darkred",
-    size = 3
+    size = 2.5
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
@@ -1229,7 +1229,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA2, y = RDA3, label = label),
     colour = "black",
-    size = 3
+    size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -1241,7 +1241,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA2*1.2, y = RDA3*1.2, label = label),
     colour = "darkred",
-    size = 3
+    size = 2.5
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
@@ -1632,12 +1632,10 @@ statrdaplot <- function(rda) {
 rda <- rda(select_if(plant_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
 rdafineplantplot <- statrdaplot(rda) |>
   mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |>
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
 
-## RDA model
-
-## Plot RDA
-plotrda_fineplantplot <- ggplot() +
+## Plot RDA dim 1 & 2
+plotrda_fineplantplot12 <- ggplot() +
   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
@@ -1653,7 +1651,7 @@ plotrda_fineplantplot <- ggplot() +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
     colour = "black",
-    size = 3
+    size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -1665,7 +1663,7 @@ plotrda_fineplantplot <- ggplot() +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "darkred",
-    size = 3
+    size = 2.5
   ) +
   coord_equal() +
   theme_bw() +
@@ -1673,8 +1671,48 @@ plotrda_fineplantplot <- ggplot() +
     axis.title = element_text(size = 9),
     axis.text = element_text(size = 8)
   )
-plotrda_fineplantplot
-ggsave("outputs/singleRDA/plotrda_fineplantplot.png", plot = plotrda_fineplantplot, width = 6, height = 6, units = "cm", bg = "white")
+plotrda_fineplantplot12
+ggsave("outputs/singleRDA/plotrda_fineplantplot12.png", plot = plotrda_fineplantplot12, width = 6, height = 6, units = "cm", bg = "white")
+
+## Plot RDA dim 2 & 3
+plotrda_fineplantplot23 <- ggplot() +
+  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+  xlab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+  ylab(paste0("RDA3", " (", round(100 * statrdaplot(rda)[5, "Variance"], 2), "%)")) +
+  # xlim(-1, 0.8) +
+  # ylim(-0.8, 1) +
+  geom_point(
+    data = filter(fortify(rda), score == "sites"),
+    mapping = aes(x = RDA2, y = RDA3),
+    size = 1
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = RDA2, y = RDA3, label = label),
+    colour = "black",
+    size = 2.5
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = RDA2, yend = RDA3),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = RDA2*1.2, y = RDA3*1.2, label = label),
+    colour = "darkred",
+    size = 2.5
+  ) +
+  coord_equal() +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  )
+plotrda_fineplantplot23
+ggsave("outputs/singleRDA/plotrda_fineplantplot23.png", plot = plotrda_fineplantplot23, width = 6, height = 6, units = "cm", bg = "white")
 
 # Fine x grass plot-level
 
@@ -1856,7 +1894,7 @@ plotrda_landscapebeetle <- ggrda(rda) +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
     colour = "black",
-    size = 3
+    size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -1868,7 +1906,7 @@ plotrda_landscapebeetle <- ggrda(rda) +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "chartreuse4",
-    size = 3
+    size = 2.5
   ) #+
   # geom_image(
   #   data = tibble(x = 1, y = 1),
@@ -1940,7 +1978,7 @@ plotrda_finebeetle <- ggrda(rda) +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
     colour = "black",
-    size = 3
+    size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -1952,7 +1990,7 @@ plotrda_finebeetle <- ggrda(rda) +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
     colour = "darkred",
-    size = 3
+    size = 2.5
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
