@@ -1219,7 +1219,7 @@ plotrda_fineplant12 <- ggrda(rda) +
     size = 0.15
   )
 plotrda_fineplant12
-ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, bg = "white")
 
 ## Plot RDA 2nd & 3rd dim
 plotrda_fineplant23 <- ggrda23(rda) +
@@ -1249,7 +1249,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
     size = 0.15
   )
 plotrda_fineplant23
-ggsave("outputs/singleRDA/plotrda_fineplant23.png", plot = plotrda_fineplant23, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_fineplant23.png", plot = plotrda_fineplant23, bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant grass assemblage
 rdastat_plant <- purrr::reduce(list(rdaregioplant, rdalandscapeplant, rdafieldplant, rdafineplant), dplyr::full_join)
@@ -1850,8 +1850,8 @@ rdalandscapebeetle <- statrda(rda) |>
 
 ## RDA plot
 plotrda_landscapebeetle <- ggrda(rda) +
-  # xlim(-2.2, 2.2) +
-  # ylim(-2.2, 2.2) +
+  # xlim(-1, 1) +
+  # ylim(-1, 1.8) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
