@@ -472,34 +472,34 @@ varsum |>
 Only the regional environment and the landscape matrix were significantly correlated, with a canonical correlation coefficient *rho* of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@tbl-cancorenv).
 The regional environment explained a significant proportion of the landscape matrix variance (adjusted R^2^ = `r op(rdastat_envi$adj.r.squared[1], 2)`, F~5~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)` (@tbl-rdaregio).
 The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[3], 2)`, p-value = `r op(rdastat_envi$PrF[3], 3)`) and mainly driven by the distance to the closest fjord (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`).
-Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated and infield areas (@fig-figure5a).
+Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated and infield areas (**SI?**).
 
 <!-- The canonical correlation coefficient between field management and the fine-scale environment was not significant (F~24,70~ = `r op(envar$approx[6], 2)`, p-value = `r op(envar$p.value[6], 3)`) (@fig-cancor[A]; @tbl-cancorenv), but field management still explained a marginal proportion of the fine-scale environment variance (R~adj~^2^ = `r op(rdastat_envi$adj.r.squared[48], 2)`, F~4~ = `r op(rdastat_envi$F[48], 2)`, p-value = `r op(rdastat_envi$PrF[48], 3)`) (@tbl-rdafield). -->
 <!-- The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[50], 2)`, p-value = `r op(rdastat_envi$PrF[50], 3)`) and was driven by livestock type (F = `r op(rdastat_envi$F[52], 2)`, p-value = `r op(rdastat_envi$PrF[52], 3)`), site area (F = `r op(rdastat_envi$F[54], 2)`, p-value = `r op(rdastat_envi$PrF[54], 3)`) and stocking density (F = `r op(rdastat_envi$F[55], 2)`, p-value = `r op(rdastat_envi$PrF[55], 3)`). -->
 <!-- Sheep grazing, bigger grazing area and lower stocking density were associated with greater soil compaction and shorter vegetation (@fig-figure5b). -->
 
+## Influence of environmental gradients and field management on dominant plant communities
+
+Only the fine-scale environment explained a significant proportion of dominant plant communities variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
+All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_grass$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_grass$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_grass$PrF[32], 3)`).
+Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure5a).
+Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure5b).
+Two groups of plant species remained relatively consistent across dimensions.
+The first group, including *Deschampsia flexuosa*, *Festuca rubra*, *Poa pratensis*and *Trifolium repens*, is rather associated with shorter vegetation (@fig-figure5a) and greater bulk density (@fig-figure5b).
+On the other hand, the second group, which includes *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, is rather associated with lower bulk density and greater soil penetration (@fig-figure5b).
+We also observed single species closely associated with one variable, as the relative covers of *Deschampsia cespitosa* and *Lolium perenne* increased with average vegetation height and bulk density respectively (@fig-figure5a and @fig-figure5b).
+
+## Influence of environmental gradients and field management on dung-associated beetle assemblages
+
+A marginally significant proportion of dominant dung-associated beetle assemblages variance was explained by the fine-scale environment (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`), and to a lesser extent by the landscape matrix (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
+The first axis of the RDA model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure5c).
+Specifically, sites with more compact soils were associated with a lower relative abundance Ptiliidae.
+Regarding the RDA model between the landscape matrix and dung-associated beetle assemblages, the first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`) (@fig-figure5d).
+The relative abundance of Carabidae on site increased with the cover of forest area in the landscape, while the relative abundance of Staphylinidae was negatively affected.
+
 :::{#fig-rda layout-ncol=2}
-```{r fig-figure5a}
-#| fig-height: 3.5
-#| fig-width: 3.5
-#| message: false
-#| warning: false
-#| echo: false
 
-plotrda_regiolandscape
-```
-
-``` {r fig-figure5b}
-#| fig-height: 3.5
-#| fig-width: 3.5
-#| message: false
-#| warning: false
-#| echo: false
-
-plotrda_finebeetle
-```
-
-``` {r fig-figure5c}
+``` {r fig-figure5a}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -509,7 +509,7 @@ plotrda_finebeetle
 plotrda_fineplant12
 ```
 
-``` {r fig-figure5d}
+``` {r fig-figure5b}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -519,49 +519,17 @@ plotrda_fineplant12
 plotrda_fineplant23
 ```
 
-Ordination plots of RDA models (a) between the regional environment and the landscape matrix; (b) between the fine-scale environment and dominant dung-associated beetle assemblages; and (c) and (d) between the fine-scale environment and dominant plant communities, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Abbreviations: AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
-:::
-
-## Influence of environmental gradients and field management on dominant plant communities
-
-Only the fine-scale environment explained a significant proportion of dominant plant communities variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
-All three first axes were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_grass$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_grass$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_grass$PrF[32], 3)`).
-Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure5c).
-Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure5d).
-Two groups of plant species remained relatively consistent across dimensions.
-The first group, including *Deschampsia flexuosa*, *Festuca rubra*, *Poa pratensis*and *Trifolium repens*, is rather associated with shorter vegetation (@fig-figure5c) and greater bulk density (@fig-figure5d).
-On the other hand, the second group, which includes *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, is rather associated with lower bulk density and greater soil penetration (@fig-figure5d).
-We also observed single species closely associated with one variable, as the relative covers of *Deschampsia cespitosa* and *Lolium perenne* increased with average vegetation height and bulk density respectively (@fig-figure5c and @fig-figure5d).
-
-## Influence of environmental gradients and field management on dung-associated beetle assemblages
-
-Dominant beetle assemblages were correlated with the regional environment (rho = `r op(comvar$rho[11], 2)`, F~25,87~ = `r op(comvar$approx[11], 2)`, p-value = `r op(comvar$p.value[11], 3)`), the landscape matrix (rho = `r op(comvar$rho[12], 2)`, F~30,82~ = `r op(comvar$approx[12], 2)`, p-value = `r op(comvar$p.value[12], 3)`) and the field management (rho = `r op(comvar$rho[13], 2)`, F~20,74~ = `r op(comvar$approx[13], 2)`, p-value = `r op(comvar$p.value[13], 3)`) (@fig-cancorbeetle; @tbl-cancorcom).
-However, only the fine-scale environment explained a significant proportion of beetle assemblage variance (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`) (@tbl-rdabeetle).
-The first axis was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and was essentially driven by a gradient of bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure6c).
-Sites with more compact soils were characterised by a higher relative abundance of Carabidae and a lower relative abundance of Ptiliidae.
-
-:::{#fig-rdacom layout-ncol=2}
-``` {r fig-figure6a}
+```{r fig-figure5c}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
 #| warning: false
 #| echo: false
 
-plotrda_finegrass
+plotrda_landscapebeetle
 ```
 
-``` {r fig-figure6b}
-#| fig-height: 3.5
-#| fig-width: 3.5
-#| message: false
-#| warning: false
-#| echo: false
-
-plotrda_fineforb
-```
-
-``` {r fig-figure6c}
+``` {r fig-figure5d}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -571,10 +539,10 @@ plotrda_fineforb
 plotrda_finebeetle
 ```
 
-Ordination plots of RDA models (a) between the fine-scale environment and dominant grass assemblages; (b) between the fine-scale environment and dominant forb assemblages; and (c) between the landscape matrix and dominant dung-associated beetle assemblages. Abbreviations: Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
+Ordination plots of RDA models (a) and (b) between the fine-scale environment and dominant plant communities, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively; (c) between the landscape matrix and dominant dung-associated beetle assemblages; and (d) between the fine-scale environment and dominant dung-associated beetle assemblages. Abbreviations: Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
 :::
 
-\newpage
+<!-- AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density;  -->
 
 # DISCUSSION
 
