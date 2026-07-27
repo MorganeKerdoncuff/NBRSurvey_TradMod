@@ -334,12 +334,12 @@ Twelve out of the `r op(nrow(nbplantspecies), 0)` recorded species fit this crit
 *Poa pratensis* (`r op(filter(nbplantspecies, Species == "Poa pratensis")$PlantSp_cover)`%),
 *Deschampsia cespitosa* (`r op(filter(nbplantspecies, Species == "Deschampsia cespitosa")$PlantSp_cover)`%),
 *Anthoxanthum odoratum* (`r op(filter(nbplantspecies, Species == "Anthoxanthum odoratum")$PlantSp_cover)`%),
-*Trifolium repens* (`r op(filter(vege_average, Species == "Trifolium repens")$PlantSp_cover)`%),
-*Rumex acetosa* (`r op(filter(vege_average, Species == "Rumex acetosa")$PlantSp_cover)`%),
+*Trifolium repens* (`r op(filter(nbplantspecies, Species == "Trifolium repens")$PlantSp_cover)`%),
+*Rumex acetosa* (`r op(filter(nbplantspecies, Species == "Rumex acetosa")$PlantSp_cover)`%),
 *Lolium perenne* (`r op(filter(nbplantspecies, Species == "Lolium perenne")$PlantSp_cover)`%),
-*Galium saxatile* (`r op(filter(vege_average, Species == "Galium saxatile")$PlantSp_cover)`%), 
+*Galium saxatile* (`r op(filter(nbplantspecies, Species == "Galium saxatile")$PlantSp_cover)`%), 
 *Deschampsia flexuosa* (`r op(filter(nbplantspecies, Species == "Deschampsia flexuosa")$PlantSp_cover)`%) and
-*Potentilla erecta* (`r op(filter(vege_average, Species == "Potentilla erecta")$PlantSp_cover)`%).
+*Potentilla erecta* (`r op(filter(nbplantspecies, Species == "Potentilla erecta")$PlantSp_cover)`%).
 
 Dung-associated beetle assemblage data were pitfall trap occurrences of beetle families, summed at the site-level.
 Using a rank-abundance curve, we determined dominant beetle families by a minimum total occurrences of 50 individuals in at least one site.
@@ -481,21 +481,14 @@ Fjord proximity was associated with a decrease of forest and outfield areas and 
 ## Influence of environmental gradients and field management on dominant plant communities
 
 Only the fine-scale environment explained a significant proportion of dominant plant communities variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
-All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_grass$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_grass$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_grass$PrF[32], 3)`).
+All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_plant$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_plant$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_plant$PrF[32], 3)`).
 Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure5a).
 Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure5b).
 Two groups of plant species remained relatively consistent across dimensions.
-The first group, including *Deschampsia flexuosa*, *Festuca rubra*, *Poa pratensis*and *Trifolium repens*, is rather associated with shorter vegetation (@fig-figure5a) and greater bulk density (@fig-figure5b).
-On the other hand, the second group, which includes *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, is rather associated with lower bulk density and greater soil penetration (@fig-figure5b).
+The first group, including *Deschampsia flexuosa*, *Festuca rubra*, *Poa pratensis* and *Trifolium repens*, is rather associated with shorter vegetation (@fig-figure5a) and greater bulk density (@fig-figure5b).
+On the other hand, the second group, which includes *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, is rather associated with lower bulk density and higher soil penetration (@fig-figure5b).
 We also observed single species closely associated with one variable, as the relative covers of *Deschampsia cespitosa* and *Lolium perenne* increased with average vegetation height and bulk density respectively (@fig-figure5a and @fig-figure5b).
-
-## Influence of environmental gradients and field management on dung-associated beetle assemblages
-
-A marginally significant proportion of dominant dung-associated beetle assemblages variance was explained by the fine-scale environment (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`), and to a lesser extent by the landscape matrix (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
-The first axis of the RDA model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure5c).
-Specifically, sites with more compact soils were associated with a lower relative abundance Ptiliidae.
-Regarding the RDA model between the landscape matrix and dung-associated beetle assemblages, the first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`) (@fig-figure5d).
-The relative abundance of Carabidae on site increased with the cover of forest area in the landscape, while the relative abundance of Staphylinidae was negatively affected.
+The supplementary RDA analysis at plot-level showed similar patterns (R~adj~^2^ = `r op(rdafineplantplot$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantplot$F[1], 2)`, p-value = `r op(rdafineplantplot$PrF[1], 3)`) (@tbl-rdaplot), except that only bulk density (F = `r op(rdafineplantplot$F[8], 2)`, p-value = `r op(rdafineplantplot$PrF[8], 3)`) and soil penetration (F = `r op(rdafineplantplot$F[11], 2)`, p-value = `r op(rdafineplantplot$PrF[11], 3)`) were significant terms.
 
 :::{#fig-rda layout-ncol=2}
 
@@ -544,17 +537,27 @@ Ordination plots of RDA models (a) and (b) between the fine-scale environment an
 
 <!-- AnnPreci: annual precipitation; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; StockDens: average stocking density;  -->
 
+## Influence of environmental gradients and field management on dung-associated beetle assemblages
+
+A marginally significant proportion of dominant dung-associated beetle assemblages variance was explained by the fine-scale environment (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`), and to a lesser extent by the landscape matrix (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
+The first axis of the RDA model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure5c).
+Specifically, sites with more compact soils were associated with a lower relative abundance Ptiliidae.
+Regarding the RDA model between the landscape matrix and dung-associated beetle assemblages, the first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`) (@fig-figure5d).
+The relative abundance of Carabidae on site increased with the cover of forest area in the landscape, while the relative abundance of Staphylinidae was negatively affected.
+
 # DISCUSSION
 
-We were able to identify both symmetric and directional links between environmental gradients, field management and dominant grass, forb and dung-associated beetle assemblages of semi-natural grasslands in Western Norway.
+We were able to identify only one significant link between environmental gradients operating at different spatial scales in the fjord landscape of Western Norway.
 The composition of the landscape matrix was affected by the geography of the fjord region, with an increase of more intensively managed areas, i.e. infields and croplands, towards the nearest fjord shorelines.
-Field management had a marginal influence on the fine-scale environment of semi-natural grasslands, as greater soil compaction and lower vegetation height were weakly associated with sheep grazing and bigger grazing areas.
-Dominant grass and beetle assemblages were correlated with the regional environment and field management, but only the fine-scale environment explained significant proportion of community assemblage variance.
-Grass and forb assemblages responded to similar gradients of soil penetration and of vegetation structure, while beetle assemblages were rather affected by bulk density.
+<!-- Field management had a marginal influence on the fine-scale environment of semi-natural grasslands, as greater soil compaction and lower vegetation height were weakly associated with sheep grazing and bigger grazing areas. -->
+Dominant plant communities were influenced by the fine-scale environment of semi-natural grasslands at both site- and plot-levels, and essentially responded to two gradients of vegetation structure and soil texture.
+
+Dominant beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix.
+
 
 ## Fjord geography influences land use at landscape scale
 
-We expected the regional environment of the fjord region to affect land use due to strong oceanity and elevation gradients affecting plant phenology and soil fertility [@karlsenVariabilityStartGrowing2007; @uttakleivLandskapskartleggingNorgeLandscape2011].
+We expected the regional environment of the fjord region to influence land use due to strong oceanity and elevation gradients affecting plant phenology and soil fertility [@karlsenVariabilityStartGrowing2007; @uttakleivLandskapskartleggingNorgeLandscape2011].
 However, we observed that, within the investigated range, the environmental context at the individual fjord level had a stronger influence on landscape composition than broader west-east patterns.
 Our findings may reflect how land use history and the evolution of the socioeconomic context have durably imprinted the landscape of the fjord region [@beleHeritageBoundariesNatureculture2024].
 Traditional farmer-fisher communities used to rely on both land and water resources to ensure their livelihood, using the fjords not only for fishing but also for the transport of livestock and people [@brekkeKulturhistoriskVegbokHordaland1993; @hetlandPluriactivityStrategyEmployment1986].
@@ -684,11 +687,13 @@ https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
 ![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (light green line), Western Norway. Colour indicates the type of livestock on the grazing sites: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figure2.png){#fig-sitemap width=50%}
 
 ```{r tbl-sitelocation}
-#| tbl-cap: "Geolocation of the study sites. 2 digits to preserve the anonymacy of farmers. ESPG:25832"
+#| tbl-cap: "Geolocation of the study sites in the Nordhordland UNESCO Biosphere Reserve converted to EPSG:4326 (WGS84). Longitude and latitude were rounded to two digits to preserve the privacy of the farmers involved in the study."
 #| message: false
 #| warning: false
 
+# Packages
 library(spatialrisk)
+library(gt)
 
 sitelocation <- subset(siteinfo_full, select = c(SiteID, EPSG.25832_X, EPSG.25832_Y))
 sitelocation <- sitelocation |> 
@@ -699,9 +704,18 @@ sitelocation <- convert_crs_df(
   crs_to = 4326,
   lon_from = "EPSG.25832_X",
   lat_from = "EPSG.25832_Y",
-  lon_to = "lon",
-  lat_to = "lat"
-)
+  lon_to = "longitude",
+  lat_to = "latitude"
+) |> 
+  dplyr::arrange(SiteID)
+
+sitelocation |> 
+  gt() |> 
+  fmt_number(
+    columns = c("longitude", "latitude"),
+    decimals = 2
+  )
+  
 ```
 
 \newpage
@@ -1140,7 +1154,7 @@ rdabeetle |>
 library(gt)
 library(tidyverse)
 
-rdagrass <- subset(rdafineplantplot_plot, select = -c(r.squared, type, eigenval, explanatory, response))
+rdagrass <- subset(rdafineplantplot, select = -c(r.squared, type, eigenval, explanatory, response))
 rdagrass |>
   gt(groupname_col = "model", rowname_col = "dim") |>
   cols_move_to_start(
@@ -1172,16 +1186,27 @@ rdagrass |>
 
 ```
 
-\newpage
-
+:::{#fig-sup layout-ncol=2}
 
 ``` {r fig-sup1a}
 #| fig-height: 3.5
 #| fig-width: 3.5
-#| fig-cap: "Ordination plot of the supplementary RDA model between the fine-scale environment and dominant plant communities at plot level. Abbreviations: Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration."
 #| message: false
 #| warning: false
 #| echo: false
 
-plotrda_fineplantplot
+plotrda_fineplantplot12
 ```
+
+``` {r fig-sup1b}
+#| fig-height: 3.5
+#| fig-width: 3.5
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_fineplantplot23
+```
+
+Ordination plots of supplementary RDA models (a) and (b) between the fine-scale environment and dominant plant communities, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Abbreviations: Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
+:::
