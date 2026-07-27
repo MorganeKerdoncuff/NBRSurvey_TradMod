@@ -70,3 +70,5 @@ scripts/TradMod_RepoDataCleaning.R
 _extensions/*
 elsarticle.cls
 elsarticle-harv.bst
+
+**/*.quarto_ipynb
