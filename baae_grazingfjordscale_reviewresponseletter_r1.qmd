@@ -66,9 +66,9 @@ Fig.2: There is no blue line. More general: I doubt that this figure provides mu
 
 <!-- \end{itshape} -->
 
-- **REVISION**: ~~Line color modified in the caption~~
-- We still think it is best to keep the map for visualisation
-- **REVISION**: Following your suggestion, we still included a summary table of the visited sites with geographical locations in the Supplementary Material
+Thank you for noticing this formatting issue.
+We modified the line color in the caption and moved the figure to the Supplementary Information (figure S1).
+Following your suggestion, we included the coordinates of the study sites in a table in Supplementary Information (table S1).
 
 <!-- \begin{itshape} -->
 
@@ -154,6 +154,8 @@ Nutrient cycling in grasslands is supported by a various decomposer community wi
 Why the authors think that dung-associated beetles may indicate the well-functioning (or quality?) of decomposition and nutrient cycling in the study system?
 
 <!-- \end{itshape} -->
+
+- Thank you for highlighting the lack of consistency between the 
 
 - the big question we came across several times already: shall we refer to ecosystem services in this paper or simply stick to communities ?
 - He made a fair point: we did not make an explicit, demonstrated link between the chosen species/families and contributions to ecosystem service delivery
