@@ -329,6 +329,7 @@ As site-level averaging may cause a loss of sensitivity regarding relationships 
 We controlled for the structure of the nested sampling design by restricting permutations at plot-level to prevent pseudo-replication [@andersonPermutationTestsMultifactorial2003].
 <!-- Need justification for following sentence -->
 This supplementary analysis did not apply for dominant dung-associated beetle assemblages, whose relationship with the fine-scale environment operates at higher spatial range due to their greater mobility.
+<!-- - as within the spatial range of our sampling area (less than 10 meters distance between pitfall traps), catches between pitfall traps of a same sampling area will not be independent from each other due to greater mobility of beetles. -->
 
 Plant community data were percent cover of vascular plant species in 1 m^2^ subplots, averaged at the site-level.
 Using a rank-abundance curve, we determined dominant plant species by a minimum average percent cover of 20% in at least one site.
@@ -491,9 +492,9 @@ All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_
 Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure5a).
 Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure5b).
 Two groups of plant species remained relatively consistent across dimensions.
-The first group, including *Deschampsia flexuosa*, *Festuca rubra*, *Poa pratensis* and *Trifolium repens*, is rather associated with shorter vegetation (@fig-figure5a) and greater bulk density (@fig-figure5b).
-On the other hand, the second group, which includes *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, is rather associated with lower bulk density and higher soil penetration (@fig-figure5b).
-We also observed single species closely associated with one variable, as the relative covers of *Deschampsia cespitosa* and *Lolium perenne* increased with average vegetation height and bulk density respectively (@fig-figure5a and @fig-figure5b).
+The first group, including *Festuca rubra*, *Poa pratensis* and *Trifolium repens*, was rather associated with shorter vegetation, greater bulk density and stronger resistance to soil penetration.
+The second group, which included *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, was rather associated with taller vegetation, lower bulk density and higher soil penetration.
+We also observed single species closely associated with one variable, as the relative covers of *Deschampsia cespitosa* and *Lolium perenne* increased with average vegetation height and bulk density respectively.
 The supplementary RDA analysis at plot-level showed similar patterns (R~adj~^2^ = `r op(rdafineplantplot$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantplot$F[1], 2)`, p-value = `r op(rdafineplantplot$PrF[1], 3)`) (@tbl-rdaplot), except that only bulk density (F = `r op(rdafineplantplot$F[8], 2)`, p-value = `r op(rdafineplantplot$PrF[8], 3)`) and soil penetration (F = `r op(rdafineplantplot$F[11], 2)`, p-value = `r op(rdafineplantplot$PrF[11], 3)`) were significant terms.
 
 :::{#fig-rda layout-ncol=2}
@@ -558,7 +559,7 @@ The composition of the landscape matrix was affected by the geography of the fjo
 <!-- Field management had a marginal influence on the fine-scale environment of semi-natural grasslands, as greater soil compaction and lower vegetation height were weakly associated with sheep grazing and bigger grazing areas. -->
 Dominant vascular plant communities of semi-natural grasslands were influenced by the fine-scale environment at both site- and plot-levels, and essentially responded to two gradients of vegetation structure and soil physicochemical parameters.
 Dominant dung-associated beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix.
-Ptiliidae were more sensitive to variations in soil structure, while Carabidae, Hydrophilidae and Staphylinidae rather responded to the percent cover of forest area in the landscape.
+Ptiliidae were more sensitive to soil variables, while Carabidae, Hydrophilidae and Staphylinidae rather responded to the percent cover of forest area in the landscape.
 However, we found no effect of field management on dominant vascular plant communities nor dung-associated beetle assemblages.
 
 ## Fjord geography influences land use at landscape scale
@@ -571,25 +572,18 @@ Therefore, crops and hay-meadows were mostly cultivated and managed along the fj
 During the post-WW2 agricultural transition, outermost areas were abandoned or converted for the development of the forestry industry, while livestock was moved to more fertile areas [@fjellstadPatternsChangeTwo1999].
 Steady land use intensification during the past decades has probably contributed to deepen the changes in the landscape between fjord shorelines and inland areas [@hamreLandcoverStructuralChanges2007].
 
-<!-- ## Weak relationship between field management and the fine-scale environment -->
-
-<!-- We expected vegetation structure and soil physicochemical parameters to show consistent patterns according to the intensity of the grazing disturbance. -->
-<!-- For instance, factors like stocking density or cattle grazing were shown to decrease vegetation height [@lyonsImpactsContrastingConservation2017; @pakemanLongTermImpacts2019] and increase soil compaction [@mayelHowDoesGrassland2021; @zhangSoilPhysicalChemical2019]. -->
-<!-- However, we observed opposite trends, as greater bulk density and lower vegetation height were instead associated with lower stocking density and sheep grazing. -->
-<!-- Shorter vegetation could be associated with a more homogeneous foraging behaviour of sheep, which are more efficient in reaching palatable biomass than cattle [@mohammedGrazingBehaviorDietary2020; @rookMatchingTypeLivestock2004]. -->
-<!-- Even so, this interpretation could only be verified with an explicit measurement of vegetation heterogeneity neither does it consider other patterns of environmental variables. -->
-<!-- Opposite patterns of vegetation height and bulk density could also indicate an underlying gradient of grassland productivity [@orwinLinkagesPlantTraits2010]. -->
-<!-- Considering that bulk density was negatively correlated with soil carbon and nitrogen contents, more fertile soils would be associated with taller standing vegetation. -->
-<!-- Rather than a direct impact of management, our findings may thus reflect how farming models are adapted to the inherent productivity of our sites [@demeauxJustGrazeIt2024]. -->
-<!-- Semi-natural grasslands with slower biomass regeneration capacity tend to be used for extensive grazing of smaller livestock, while more productive sites are mostly selected for more intensive mixed dairy-beef production [@asheimPolicyMeasuresPreserve2020; @potthoffNorwegianLowintensityOvine2023]. -->
-<!-- However, our analysis showed this relationship to be negligible when maximum variance was considered, indicating the existence of more complex interactions between the local environment, the farmer and the livestock. -->
-
 ## Drivers of dominant plant communities variance
 
 The stronger influence of environmental factors operating at fine scale on plant communities is consistent with previous findings [e.g. @klimekPlantSpeciesRichness2007; @siefertScaleDependenceVegetationenvironment2012], even though our models showed large proportions of unexplained variance [see also @merunkovaEnvironmentalControlSpecies2012 and @raatikainenImpactsLocalRegional2007].
+We observed that species dominance was affected by average vegetation height, soil penetration and soil bulk density, the latest being inversely correlated with gravimetric water content and nitrogen content.
+In his phytosociological study of hay-meadows in Western Norway, @losvikHayMeadowCommunities1993 highlighted clear community divergences between drier sites on well-drained slopes and moist sites on flat areas.
 
-- soil moisture & fertilisation important drivers of plant communities in grasslands [@merunkovaEnvironmentalControlSpecies2012], and particularly in Western Norway [@losvikHayMeadowCommunities1993]
-- in our study, gravimetric water content and nitrogen content were negatively correlated with bulk density, gradient of soil texture was coupled with gradients of soil moisture and nutrient content.
+- Indicator species not dominant
+- Despite our coarser analysis, our results are mostly consistent with @losvikHayMeadowCommunities1993's findings as we distinguished 
+- Our findings are mostly consistent with such gradients, as we could distinguish groups of plant species associated with softer and moister soil
+
+- Interestingly, some sites with higher percent cover of *Deschampsia flexuosa* showed lower resistance to soil penetration despite greater bulk density.
+
 
 - *Festuca rubra* phosphorus > control [@ceulemansPhosphorusResourcePartitioning2017]
 - *Poa pratensis* dominant N+PK; *Festuca rubra*, *Trifolium repens* dominant PK; *Potentilla erecta* dominant N+ [@zarzyckiSchemeNutrientAddition2020]
@@ -610,21 +604,29 @@ The stronger influence of environmental factors operating at fine scale on plant
 - *Lolium perenne* associated with intensive grazing [@kruessContrastingResponsesPlant2002; @pakemanConsistencyPlantSpecies2004]
 - *Lolium perenne* weaker to light competition [@pakemanConsistencyPlantSpecies2004]
 
-Interestingly, soil penetration was the only significant predictor of dominant grass and forb community variance across both site- and plot-level, while factors such as available phosphorus only showed negligible contributions [contrary to e.g. @myklestadSoilSiteManagement2004; @kleinebeckerEffectsGrazingSeasonal2011].
-Soil penetration was systematically negatively related to a pH gradient while its relationship with bulk density was not consistent across models, suggesting a greater contribution of biological factors (e.g. plant roots) compared with soil physical properties [@forsterRootTraitsCrop2022; @kumiQuantifyingRootinducedSoil2023].
-Lower resistance on more acidic soils could be explained by the increased concentration of ammonium and ionic aluminium which inhibit plant root growth [@forsterRootTraitsCrop2022; @kleijnSearchKeyBiogeochemical2008].
-However, experimental acidification in grasslands showed instead an increase of root density following a community shift from forbs to perennial grasses [@chenBioticCommunityShifts2015].
-We cannot extrapolate further on this soil acidity-resistance relationship without direct assessment of root length/density and standardised measurement of soil resistance to penetration [@sojkaSituStrengthBulk2001], but this interaction would be worth investigating further.
-
 ## Drivers of dominant dung-associated beetle assemblages variance
 
-- Gravimetric water content negatively correlated with bulk density
+Ptiliidae were more abundant in sites with softer and moister soils.
+Soil moisture was shown to be an important factor driving beetle assemblage composition in semi-natural habitats [@broseBottomupControlCarabid2003; @irmlerEffectEnvironmentalConditions2018; @kerdoncuffTraditionalPrescribedBurning2023].
+Specifically, saprophagous Ptiliidae are favoured by the growth of fungi in moist environments with high content of organic matter [@rebeschiniEdaphicBeetleColeoptera2021].
+However, contrary to previous findings [e.g. @harveyEffectsChangesPlant2008; @woodcockEffectsVegetationStructure2010], we observed no significant effect of average plant height.
+
+Arthropod responses to vegetation structure being also closely linked to their diets and trophic levels [@woodcockEffectsVegetationStructure2010], which cannot be precisely interpreted in our study due the coarse
+
+A finer analysis could also better address how the landscape matrix affect dung-associated beetle assemblages, i.e. whether surrounding forest patches could be a source of woodland specialists from the Carabidae and Hydrophilidae families [@avironCarabidAssemblagesAgricultural2005; @vanbergenEffectLanduseHeterogeneity2005].
+
+- This hypothesis should however be verified with a more thorough investigation of the dung-associated beetle community which, interestingly, was strongly dominated by Staphylinidae [see also @daoudiCompositionPhenologyBeetle2022].
+
+- The weak contribution of Scarabaeidae (only 2.5% of our total catches) shows how limited assessments solely based on typical "dung beetle" taxa (i.e. Scarabaeinae, Aphodiinae, Scarabaeidae or Geotrupidae) are, particularly in the Nordic region where Scarabaeinae and Aphodiinae are poorly represented [@artsdatabankenArtsdatabankenKunnskapsbankNaturmangfold2023].
+- Comprehensive investigations of the coprophilous community are challenging to accomplish in short-term studies, but can be facilitated by trait-based approaches [e.g. @tonelliEffectsProgressiveAbandonment2018], as well as DNA-based methods [e.g. @sigsgaardEnvironmentalDNAMetabarcoding2021] which are becoming increasingly accessible and reliable.
 
 ## Implications for management and further research
 
 Against expectations [e.g. @mayelHowDoesGrassland2021; @pakemanLongTermImpacts2019], we identified no interactions between field management and the fine-scale environment which could suggest variations in soil compaction and vegetation height under different livestock types or levels of grazing intensity.
 Neither did we observed any significant influence of livestock type, stocking density or field area on dominant vascular plant communities nor dung-associated beetle assemblages.
 
+- Challenging to detect changes in plant community or beetle assemblage under different management types in low-intensity grazing systems [@dumontEffectsLivestockBreed2007; @pozsgaiGrazingImpactsGround2022]
+- Our study shows that, at the level of dominant plant species and beetle families, the effect of field management is overridden by the variation driven by environmental gradients, especially at fine scale.
 
 Overall, our study is quite representative of how challenging ecological assessments of small-scale grazing systems are in observational studies, particularly when rotational management is involved.
 While in theory a *certain number of animals* is allocated on a *certain area of land* for a *certain period of time*, farmers continuously adapt their management to unforeseeable circumstances, such as for instance the livestock birth rate/survival or the timing of spring bloom [@nuthallIntuitiveWorldFarmers2012].
@@ -641,8 +643,6 @@ Scaling up the study design to the whole farm matrix and developing novel indica
 <!-- Grass and beetle assemblages responded to average vegetation height and bulk density respectively, suggesting that both communities were influenced by similar productivity gradients to the one identified hereinabove [@olffEffectsHerbivoresGrassland1998; @orwinLinkagesPlantTraits2010], and subsequently indirectly linked to field management. -->
 <!-- Considering the large proportion of unexplained variance in the beetle model though, a finer community analysis at species-level may be necessary to understand the underlying processes operating at fine scale [e.g. @sigsgaardEnvironmentalDNAMetabarcoding2021]. -->
 <!-- Regardless, these results support that current farming practices in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve do not override the inherent variation in community assemblages driven by the fine-scale environment. -->
-
-
 
 # CONCLUSION
 
