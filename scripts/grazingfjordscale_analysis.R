@@ -1193,8 +1193,8 @@ rdafineplant <- statrda(rda) |>
 
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
-  xlim(-1.1, 0.9) +
-  ylim(-1.2, 0.8) +
+  # xlim(-1.1, 0.9) +
+  # ylim(-1.2, 0.8) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA1, y = RDA2, label = label),
@@ -1223,8 +1223,8 @@ ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, 
 
 ## Plot RDA 2nd & 3rd dim
 plotrda_fineplant23 <- ggrda23(rda) +
-  xlim(-1.1, 1) +
-  ylim(-1.2, 1.1) +
+  # xlim(-1.1, 1) +
+  # ylim(-1.2, 1.1) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = RDA2, y = RDA3, label = label),
@@ -1640,8 +1640,8 @@ plotrda_fineplantplot12 <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  xlim(-1, 0.8) +
-  ylim(-0.8, 1) +
+  # xlim(-1, 0.8) +
+  # ylim(-0.8, 1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
