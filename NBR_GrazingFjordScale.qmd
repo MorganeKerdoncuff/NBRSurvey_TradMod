@@ -156,6 +156,12 @@ Grazing intensity was low, with a maximum stocking rate of 0.6 yearly unit per h
 Twenty-one sites were enriched at least occasionally with individual or simultaneous use of artificial fertiliser, manure or shellsand-lime mix. 
 To the knowledge of the farmers, no site had been resown and/or plowed since at least the 1970s, and only four out of the 29 sites received upgraded drainage between 1990 and 2010.
 
+<!-- management history -->
+All fields had been grazed uninterruptedly by cattle since at least 2011, and as far back as the 1920s for the oldest record, except one which had a 2-year interruption between 2016 and 2018.
+All sites had been grazed uninterruptedly since at least 2004, and as far back as the 1950s for the oldest record, except two sites which had a 3-years and a 5-years interruptions between 2012 and 2015 and between 2006 and 2011 respectively.
+All sites had been grazed uninterruptedly by goats since at least 2015, and as far back as 2000 for the oldest record, and five of them were previously grazed by sheep for various periods between 1969 and 2014.
+
+
 ## Data collection
 
 ### Regional environment
@@ -170,7 +176,6 @@ summary_oceanity <- summary(lm_oceanity)
 
 ```
 
-<!-- The regional environment explanatory set encompasses climatic and geographical variables operating at broad spatial scales. -->
 Elevation above sea level was collected on site with a GPS.
 Average annual precipitation, maximum and average July temperatures, and minimum and average January temperatures, were obtained from 1 km^2^ daily projections provided by the Norwegian Centre for Climate Services over the period 2010-2020 [@wongGridded112016]. 
 Average annual temperature range, calculated as the difference between maximum July temperature and minimum January temperature, showed a strong linear relationship with longitude (adjusted R^2^ = `r op(summary_oceanity$adj.r.squared, 2)`, F = `r op(summary_oceanity$fstatistic[1], 0)`, p-value = `r op(summary_oceanity$coefficients[2,4], 3)`) and was used as a proxy for oceanity.
@@ -178,7 +183,6 @@ For sites not covered by the daily projections, data were extrapolated from aver
 
 ### Landscape matrix
 
-<!-- The landscape explanatory set represents the composition of the landscape matrix around semi-natural grasslands. -->
 We calculated land use percent cover in a 1 km radius area around each site from land cover data provided by the Norwegian Institute of Bioeconomy Research (NIBIO) [@norskinstituttforbiookonominibioKildenArealinformasjon2023].
 Land cover was categorised according to the AR5 land cover classification system [@ahlstromAR5Klassifikasjonssystem2019], that we simplified into eight categories:
 forest area, including managed and non-managed; 
@@ -190,7 +194,6 @@ infrastructure area.
 
 ### Field management
 
-<!-- The field management explanatory set encompasses factors affecting the grazing pressure on the site. -->
 We conducted phone interviews with 23 farmers from October 2021 to January 2022 to collect information on field management. 
 For the 3 out of 26 farmers who were unable or unwilling to reply to our survey, we used data from a similar interview series conducted in 2018 [@reiersenBaerekraftVestnorskLandbruk2019]. 
 We asked the farmers for the following elements: 
@@ -222,7 +225,6 @@ For two farms (IG1 and IG2) where livestock was moved to mountain summer farms e
 
 ### Fine-scale environment
 
-<!-- The fine-scale environment encompasses biological and environmental factors characterising vegetation structure, soil texture and soil nutrient availability. -->
 The study design for collecting data related to the fine-scale environment was based on @demeauxJustGrazeIt2024.
 We visited each of the 29 sites once, starting in mid-June at the westernmost sites and ending in late July at the easternmost sites to account for the spring bloom time difference [@karlsenVariabilityStartGrowing2007]. 
 On each site, we laid out a nested sampling design within a representative area of 400 m^2^, preferentially 20 m x 20 m but when necessary 40 m x 10 m, avoiding rocks, waterlogged ground, trees and site edges.
@@ -273,12 +275,13 @@ We sent 0.5 L of each pooled sample to a certified analysis laboratory to determ
 In each non-destructive subplot (15 per site), all plant species were identified using the Nordic flora [@mossbergGyldendalsStoreNordiske2018] and attributed an average percent cover by one of the same two observers.
 When necessary, specimens were collected, coded and brought for microscopic or expert identification.
 In each destructive subplot (12 per site), we collected dung-associated beetles with dung-baited pitfall traps set for one full week between early July and early August.
-Clumped trapping compensated for the short sampling period and should not lead to spatial autocorrelation of catches [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
+Pitfall traps were separated by 1 m from each other in the same plot, and by at least 7 m from other plots.
+The trapping design was clumped to account for the short sampling period and the high variation of site area [@tbl-varsum].
+Clumped trapping design can lead to the underestimation of rare species, but should not be affected by spatial autocorrelation [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
 Traps were made of white plastic cups of 1 L (diam. 10.5 cm, height 11.5 cm) filled to 1/4 with salted water, with a drop of neutral detergent to break water surface tension. 
 The cups were covered with a square metal grid of 2 cm x 2 cm mesh size pegged into the ground, on which we put a ball of about fist size of previously-frozen cattle dung.
 The dung ball was placed at the centre of the grid, at least 3 cm from the edge of the cup to provide enough space for beetles to fall in.
 Beetles were stored in 70% ethanol and identified to the family level using the identification key from @duffBeetlesBritainIreland2012a.
-The sampling design resulted in a spatial clumping of pitfall traps, but it was not deemed to cause spatial autocorrelation or affect our abundance data [@bakerEvaluatingSpatialAutocorrelation2006; @wardEffectsPitfallTrap2001].
 
 ## Data analysis
 
@@ -291,7 +294,6 @@ In case of significant canonical correlation coefficient, we used redundancy ana
 Redundancy analysis is a constrained ordination method, based on Euclidean distance, which explores the variation explained by an explanatory matrix over a response matrix through multiple linear regression [@legendreNumericalEcology2012].
 It is therefore suitable for assessing the explanatory power of the environmental gradients and field management over their respective variance and for disentangling the influence of individual variables.
 The statistical significance of models, axes and marginal terms was tested with ANOVA-like permutation tests (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
-<!-- For illustrative purpose we also performed RDA for all combinations - what to do with field x fine ? -->
 
 Our analyses were performed on data averaged at the site-level because we aimed to understand how environmental gradients and field management interacted across sites rather than explain within-site variation.
 <!-- Reviewer comment on fine-scale -->
@@ -327,9 +329,7 @@ The statistical significance of models, axes and marginal terms was tested with 
 These analyses were also performed on data averaged at the site-level, because we aim to understand processes affecting representative plant communities and dung-associated beetle assemblages across sites rather than within-site variation.
 As site-level averaging may cause a loss of sensitivity regarding relationships between the fine-scale environment and dominant plant communities, we led a supplementary redundancy analysis at plot-level.
 We controlled for the structure of the nested sampling design by restricting permutations at plot-level to prevent pseudo-replication [@andersonPermutationTestsMultifactorial2003].
-<!-- Need justification for following sentence -->
-This supplementary analysis did not apply for dominant dung-associated beetle assemblages, whose relationship with the fine-scale environment operates at higher spatial range due to their greater mobility.
-<!-- - as within the spatial range of our sampling area (less than 10 meters distance between pitfall traps), catches between pitfall traps of a same sampling area will not be independent from each other due to greater mobility of beetles. -->
+This supplementary analysis did not apply for dominant dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
 
 Plant community data were percent cover of vascular plant species in 1 m^2^ subplots, averaged at the site-level.
 Using a rank-abundance curve, we determined dominant plant species by a minimum average percent cover of 20% in at least one site.
@@ -575,12 +575,24 @@ Steady land use intensification during the past decades has probably contributed
 ## Drivers of dominant plant communities variance
 
 The stronger influence of environmental factors operating at fine scale on plant communities is consistent with previous findings [e.g. @klimekPlantSpeciesRichness2007; @siefertScaleDependenceVegetationenvironment2012], even though our models showed large proportions of unexplained variance [see also @merunkovaEnvironmentalControlSpecies2012 and @raatikainenImpactsLocalRegional2007].
-We observed that species dominance was affected by average vegetation height, soil penetration and soil bulk density, the latest being inversely correlated with gravimetric water content and nitrogen content.
+We observed that species percent cover was affected by average vegetation height, soil penetration and soil bulk density, the latest being inversely correlated with gravimetric water content and total nitrogen content.
+Specifically, there were subtle variations in community dominance between sites with shorter vegetation and drier, more sandy soils, and sites with taller vegetation and moister, more organic soils.
 In his phytosociological study of hay-meadows in Western Norway, @losvikHayMeadowCommunities1993 highlighted clear community divergences between drier sites on well-drained slopes and moist sites on flat areas.
+Even though our study' scope is more limited than @losvikHayMeadowCommunities1993's, who investigated total plant communities, our findings would be consistent with the existence of a gradient of topography-driven soil moisture driving plant community variance.
 
-- Indicator species not dominant
-- Despite our coarser analysis, our results are mostly consistent with @losvikHayMeadowCommunities1993's findings as we distinguished 
-- Our findings are mostly consistent with such gradients, as we could distinguish groups of plant species associated with softer and moister soil
+Contrary to expectations [e.g. @hejcmanRengenGrasslandExperiment2010; @raatikainenImpactsLocalRegional2007], we found no significant effect of available phosphorus on dominant plant communities.
+
+- *Lolium perenne*, which was an indicator of heavily fertilised meadows in @losvikHayMeadowCommunities1993, 
+
+- *Lolium perenne* indicator of heavily fertilised meadows [@losvikHayMeadowCommunities1993]
+- in our case, closely associated with greater bulk density, which means lower nitrogen content and unrelated to phosphorus content.
+- could suggest higher compaction associated with more intensive grazing, but no demonstrated link between field management and the fine-scale environment
+- *Lolium perenne* associated with intensive grazing [@kruessContrastingResponsesPlant2002; @pakemanConsistencyPlantSpecies2004]
+- *Lolium perenne* weaker to light competition [@pakemanConsistencyPlantSpecies2004]
+
+We observed that average vegetation height was unrelated to available phosphorus, suggesting that other factors than nutrient availability would control aboveground biomass.
+
+- Vegetation height associated with *Deschampsia cespitosa* may be biased due to the low palatability of the species: where dominant, the tall *Deschampsia cespitosa* probably contributed to increase average vegetation height.
 
 - Interestingly, some sites with higher percent cover of *Deschampsia flexuosa* showed lower resistance to soil penetration despite greater bulk density.
 
@@ -594,31 +606,20 @@ In his phytosociological study of hay-meadows in Western Norway, @losvikHayMeado
 - *Agrostis capillaris*-*Rumex acetosa* meadow
   - including *Galium saxatile*, *Deschampsia flexuosa*, *Holcus lanatus*, associated with oceanic, semi-traditional management, up to medium fertilised. independent soil moisture
   - including *Deschampsia flexuosa*, *Galium saxatile*, *Potentilla erecta*, associated with dry, oceanic, low fertilisation
-
-- Mean height unrelated to phosphorus content, suggesting that other factors than nutrient content (e.g. grazing) would control aboveground biomass. 
-- Vegetation height associated with *Deschampsia cespitosa* may be biased due to the low palatability of the species: where dominant, the tall *Deschampsia cespitosa* probably contributed to increase average vegetation height.
-
-- *Lolium perenne* indicator of heavily fertilised meadows [@losvikHayMeadowCommunities1993]
-- in our case, closely associated with greater bulk density, which means lower nitrogen content and unrelated to phosphorus content.
-- could suggest higher compaction associated with more intensive grazing, but no demonstrated link between field management and the fine-scale environment
-- *Lolium perenne* associated with intensive grazing [@kruessContrastingResponsesPlant2002; @pakemanConsistencyPlantSpecies2004]
-- *Lolium perenne* weaker to light competition [@pakemanConsistencyPlantSpecies2004]
-
+  
 ## Drivers of dominant dung-associated beetle assemblages variance
 
 Ptiliidae were more abundant in sites with softer and moister soils.
 Soil moisture was shown to be an important factor driving beetle assemblage composition in semi-natural habitats [@broseBottomupControlCarabid2003; @irmlerEffectEnvironmentalConditions2018; @kerdoncuffTraditionalPrescribedBurning2023].
 Specifically, saprophagous Ptiliidae are favoured by the growth of fungi in moist environments with high content of organic matter [@rebeschiniEdaphicBeetleColeoptera2021].
 However, contrary to previous findings [e.g. @harveyEffectsChangesPlant2008; @woodcockEffectsVegetationStructure2010], we observed no significant effect of average plant height.
+Arthropod responses to vegetation structure being also closely linked to their diets and trophic groups [@woodcockEffectsVegetationStructure2010], our analysis may conceal finer patterns that species-level or trait-based approaches could uncover [e.g. @tonelliEffectsProgressiveAbandonment2018].
+Such methods could also better address how the landscape matrix affect dung-associated beetle assemblages, i.e. whether surrounding forest patches could be a source of woodland specialists from the Carabidae and Hydrophilidae families [@avironCarabidAssemblagesAgricultural2005; @vanbergenEffectLanduseHeterogeneity2005].
 
-Arthropod responses to vegetation structure being also closely linked to their diets and trophic levels [@woodcockEffectsVegetationStructure2010], which cannot be precisely interpreted in our study due the coarse
-
-A finer analysis could also better address how the landscape matrix affect dung-associated beetle assemblages, i.e. whether surrounding forest patches could be a source of woodland specialists from the Carabidae and Hydrophilidae families [@avironCarabidAssemblagesAgricultural2005; @vanbergenEffectLanduseHeterogeneity2005].
-
-- This hypothesis should however be verified with a more thorough investigation of the dung-associated beetle community which, interestingly, was strongly dominated by Staphylinidae [see also @daoudiCompositionPhenologyBeetle2022].
-
-- The weak contribution of Scarabaeidae (only 2.5% of our total catches) shows how limited assessments solely based on typical "dung beetle" taxa (i.e. Scarabaeinae, Aphodiinae, Scarabaeidae or Geotrupidae) are, particularly in the Nordic region where Scarabaeinae and Aphodiinae are poorly represented [@artsdatabankenArtsdatabankenKunnskapsbankNaturmangfold2023].
-- Comprehensive investigations of the coprophilous community are challenging to accomplish in short-term studies, but can be facilitated by trait-based approaches [e.g. @tonelliEffectsProgressiveAbandonment2018], as well as DNA-based methods [e.g. @sigsgaardEnvironmentalDNAMetabarcoding2021] which are becoming increasingly accessible and reliable.
+Our trapping design did not fulfill the conditions for accurate density measures of dung-associated beetle assemblages [@brownReviewExtensiveVariation2016; @zhaoSolvingPitfallsPitfall2013].
+We therefore advise to express caution when interpreting beetle families' responses to environmental gradients shown in our analysis [@larsenTrapSpacingTransect2005].
+Nevertheless, our study highlights a weak contribution of Scarabaeidae (only 2.5% of total catches) to dung-associated beetle assemblages, especially in the Nordic region where Scarabaeinae and Aphodiinae are poorly represented [@artsdatabankenArtsdatabankenKunnskapsbankNaturmangfold2023].
+Further research should prioritise comprehensive assessments of the coprophilous community, beyond the typical "dung beetle" taxa (i.e. Scarabaeinae, Aphodiinae, Scarabaeidae or Geotrupidae), to test the influences of environmental gradients and management [e.g. @daoudiCompositionPhenologyBeetle2022; @sigsgaardEnvironmentalDNAMetabarcoding2021].
 
 ## Implications for management and further research
 
@@ -639,9 +640,6 @@ Scaling up the study design to the whole farm matrix and developing novel indica
 <!-- In an extensive study on meadow communities in Western Norway, @losvikHayMeadowCommunities1993 observed a divergence between coastal and boreal meadows linked to a fertilisation gradient, suggesting that grasslands further inland were, at the time, more productive and more intensively managed. -->
 <!-- We did not include fertilisation (e.g. type, amount) in our analyses due to inconsistent information from the farmers, which could have contributed to explain community variance [@myklestadSoilSiteManagement2004]. -->
 <!-- While both the regional environment and field management were correlated with dominant grass and dung-associated beetle assemblages, none of them directly explained significant proportions of variance. -->
-<!-- On the other hand, all community assemblages were influenced by the fine-scale environment. -->
-<!-- Grass and beetle assemblages responded to average vegetation height and bulk density respectively, suggesting that both communities were influenced by similar productivity gradients to the one identified hereinabove [@olffEffectsHerbivoresGrassland1998; @orwinLinkagesPlantTraits2010], and subsequently indirectly linked to field management. -->
-<!-- Considering the large proportion of unexplained variance in the beetle model though, a finer community analysis at species-level may be necessary to understand the underlying processes operating at fine scale [e.g. @sigsgaardEnvironmentalDNAMetabarcoding2021]. -->
 <!-- Regardless, these results support that current farming practices in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve do not override the inherent variation in community assemblages driven by the fine-scale environment. -->
 
 # CONCLUSION
