@@ -947,7 +947,6 @@ ggrda23 <- function(rda) {
   
 }
 
-
 #### Redundancy analyses between explanatory sets ####
 
 # Region x landscape
@@ -1059,14 +1058,6 @@ ggsave("outputs/singleRDA/plotrda_fieldfine.png", plot = plotrda_fieldfine, widt
 ## Stat summary
 rdastat_envi <- purrr::reduce(list(rdaregiolandscape, rdaregiofield, rdaregiofine, rdalandscapefield, rdalandscapefine, rdafieldfine), dplyr::full_join)
 
-## Plot summary
-# rda_envi <- ggarrange(plotrda_regiolandscape, plotrda_regiofield, plotrda_regiofine, plotrda_landscapefield, plotrda_landscapefine, plotrda_fieldfine,
-#                    labels = c("A", "B", "C", "D", "E", "F"),
-#                    ncol = 2,
-#                    nrow = 3)
-# rda_envi
-# ggsave("outputs/RDA_envi.png", plot = rda_envi, width = 15, height = 22, units = "cm", bg = "white")
-
 #### RDA plant community data ####
 
 # Regional x plant
@@ -1077,37 +1068,6 @@ rdaregioplant <- statrda(rda) |>
   mutate(model = "RegionalxPlant", explanatory = "Regional", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## RDA plot
-# plotrda_regiograss <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "black"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "cyan4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "cyan4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_regiograss
-# ggsave("outputs/singleRDA/plotrda_regiograss.png", plot = plotrda_regiograss, width = 6, height = 6, units = "cm", bg = "white")
-
 # Landscape x plant
 
 ## RDA model
@@ -1116,37 +1076,6 @@ rdalandscapeplant <- statrda(rda) |>
   mutate(model = "LandscapexPlant", explanatory = "Landscape", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
 
-## RDA plot
-# plotrda_landscapegrass <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "black"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "chartreuse4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "chartreuse4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_landscapegrass
-# ggsave("outputs/singleRDA/plotrda_landscapegrass.png", plot = plotrda_landscapegrass, width = 6, height = 6, units = "cm", bg = "white")
-
 # Field x plant
 
 ## RDA model
@@ -1154,37 +1083,6 @@ rda <- rda(select_if(plant, is.numeric) ~ ., data = select_if(field_sc, is.numer
 rdafieldplant <- statrda(rda) |>
   mutate(model = "FieldxPlant", explanatory = "Field", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-## RDA plot
-# plotrda_fieldgrass <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "black"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_fieldgrass
-# ggsave("outputs/singleRDA/plotrda_fieldgrass.png", plot = plotrda_fieldgrass, width = 6, height = 6, units = "cm", bg = "white")
 
 # Fine x plant site-level
 
@@ -1218,7 +1116,7 @@ plotrda_fineplant12 <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finegrass.png"),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
     size = 0.15
   )
 plotrda_fineplant12
@@ -1248,7 +1146,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finegrass.png"),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
     size = 0.15
   )
 plotrda_fineplant23
@@ -1266,37 +1164,6 @@ rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(regional_sc, is.n
 rdaregiobeetle <- statrda(rda) |>
   mutate(model = "RegionalxBeetle", explanatory = "Regional", response = "Beetle") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-## RDA plot
-# plotrda_regiobeetle <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "black"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "cyan4"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "cyan4"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_regiobeetle
-# ggsave("outputs/singleRDA/plotrda_regiobeetle.png", plot = plotrda_regiobeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 # Landscape x beetle
 
@@ -1343,39 +1210,6 @@ rda <- rda(select_if(beetle, is.numeric) ~ ., data = select_if(field_sc, is.nume
 rdafieldbeetle <- statrda(rda) |>
   mutate(model = "FieldxBeetle", explanatory = "Field", response = "Beetle") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
-
-## RDA plot
-# plotrda_fieldbeetle <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrda(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
-#   # xlim(-2.5, 4.5) +
-#   # ylim(-4.5, 2.5) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = RDA1, y = RDA2)
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = RDA1, y = RDA2, label = label),
-#     colour = "black"
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
-#     colour = "darkgoldenrod3"
-#   ) +
-#   coord_equal() +
-#   theme_bw()
-# plotrda_fieldbeetle
-# ggsave("outputs/singleRDA/plotrda_fieldbeetle.png", plot = plotrda_fieldbeetle, width = 6, height = 6, units = "cm", bg = "white")
 
 # Fine x beetle
 
