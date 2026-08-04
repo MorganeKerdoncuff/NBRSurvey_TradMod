@@ -384,81 +384,73 @@ In general terms, it is an interesting manuscript, and the message is important.
 - Thank you very much for your pertinent feedback on our manuscript
 - Please find below our responses to your comments
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Minor:
-L11, 12, 16, 18, 28, 56, 194: add a comma before the and
-L30, 31, 57, 58, 383, 388, 391, 394, 409: change to "e.g.," always in italics
-L32, 54: add Noriega et al. (2023) Nature Communications
-L40, 55: add Milotić et al. (2018) Journal of Biogeography
+<!-- L11, 12, 16, 18, 28, 56, 194: add a comma before the and -->
+<!-- L30, 31, 57, 58, 383, 388, 391, 394, 409: change to "e.g.," always in italics -->
+<!-- L32, 54: add Noriega et al. (2023) Nature Communications -->
+<!-- L40, 55: add Milotić et al. (2018) Journal of Biogeography -->
 L96-97: add the geographic coordinates
-L98: add the altitude range
-L130, 131, 249, 334: change to "i.e.," always in italics
+<!-- L98: add the altitude range -->
+<!-- L130, 131, 249, 334: change to "i.e.," always in italics -->
 Table 1: Move the position of Table 1 so that it does not cut off the text.
-L276-279: remove the term "family" it is redundant
+<!-- L276-279: remove the term "family" it is redundant -->
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for noticing these minor issues, we addressed them accordingly.
+We particularly appreciated the suggestion of relevant literature on dung beetle associated processes (dung removal, seed dispersion).
 
-- simple enough except for the table, we'll see how Latex behave 
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Major:
 The title is extremely general and broad, failing to provide a clear understanding of the work's geographical scope. 
 This confuses the reader and hinders a quick grasp of its implications. 
 It gives the impression of being a global study, which it certainly is not; it is a regional study. 
 A specific geographical location needs to be added. The work was conducted in a single country: Norway. 
 Add "Norway" to the title.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for relevant comment.
+We modified the title of our manuscript accordingly and included the mention of "Western Norway" to prevent expectations of a national-scale study.
 
-- Makes sense. Apart from the geographical location, this title is still lacking - even though it was the best option we came up with.
-- **REVISION**: keep on dropping titles that would fit better our manuscript
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Throughout the text, terms like "community" and "assemblage" are used, but they do not have the same meaning and cannot be used interchangeably, as they signify very different things. 
 The term "community assemblages" is particularly inappropriate. See Fauth et al. (1996). 
 In the case of dung beetles, they are usually defined as an assemblage. 
 Review this throughout the text and change it according to the most appropriate criterion.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for raising this inconsistency.
+The use of "community" would be deprecated in our study as we only investigated the main species of grassland plant communities.
+Therefore, we now use "assemblage" for both plants and beetles throughout our manuscript, except when referring to the phytosociological study of Losvik (1993) (l. 349) and to the coprophilous community as a whole (l. 386).
 
-- Agree that I never settled on a definite term - did not know that "community assemblage" was deprecated though
-- **REVISION**: should it be "plant community" and "beetle assemblage" then ? Or if we decide on the plant analysis at family level then we can stick to "plant & beetle families"
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 The research question is not explicitly stated in the text, which needs to be reviewed. Include the question in the last paragraph of the introduction.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for noticing this gap in our Introduction.
+We revised it accordingly and included three main research questions at then end of the section (l. 87-92).
 
-- we have a research objective: improve our understanding of the environmental and management processes affecting plant and beetle communities in semi-natural grasslands of the NBR - not explicitly stated in the text, I agree 
-- it could be transformed into a research question, though I would not be fond of it. In my understanding research questions are precise and associated with a specific test (e.g. does livestock type affect the distribution of beetle families with GLM) - which is not our case because we run an exploratory study, in which we do not go into each interaction in details.
-- What are your thoughts ?
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 L195-208: The distance between traps is a critical variable in the study and sampling of dung beetles and is not specified. 
 This data should be included and discussed if it is less than 50-100 m, which is the minimum distance specified for ecological studies.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for your pertinent remark.
+We added the distance between the traps (l. 199-200) and discussed the limitation of our sampling design in section 3.4 (l. 381-384).
 
 - yes, clumped sampling design, but no, it is not an issue (l.200)
 - **REVISION**: add distance in section 2.2.5, and maybe few lines in Discussion (Methodological approach section ? would be relevant as it could include the paragraph on rotational grazing assessment challenge)
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Results: The first time a species is named, the author and year of the original description of the species must be included.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for noticing this omission. 
+We added the author and year of the original description of the plant species the first time they are mentioned (l. 255-262).
 
-- Agree, but not necessary if we switch to plant families
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 The conclusions are a bit short and lack a full paragraph of recommendations for future studies.
+\end{itshape}
 
-<!-- \end{itshape} -->
-
-- Consensus between reviewers and editors: a research/management implications section is necessary
+Thank you for highlighting this gap in our Discussion, which was also mentioned by the editors and the other reviewer.
+We revised the manuscript accordingly, adding a new section 4.4 addressing management and research perspectives at the end of the Discussion (l. 390-413).
