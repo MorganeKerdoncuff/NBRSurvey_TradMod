@@ -368,10 +368,10 @@ landscape_infield <- landscape_infield |>
   mutate(Infield = Infield_ha/TotLand_ha*100) |> 
   mutate(Outfield = Outfield_ha/TotLand_ha*100) |> 
   mutate(Wetland = Wetland_ha/TotLand_ha*100) |> 
-  mutate(Artificial = Infrastructure_ha/TotLand_ha*100)
+  mutate(Infrastructure = Infrastructure_ha/TotLand_ha*100)
 
 ## Selection variables
-landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, Infield, Outfield, Wetland, Artificial))
+landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, Infield, Outfield, Wetland, Infrastructure))
 
 ## Variable distribution
 # hist(landscape$Cultivated) # Normal-like distribution, one gap in the middle -> validated
@@ -379,7 +379,7 @@ landscape <- subset(landscape_infield, select = c(SiteID, Cultivated, Forest, In
 # hist(landscape$Infield) # unbalanced normal-like, but no outlier -> validated
 # hist(landscape$Outfield) # Poisson, not skewed -> validated
 # hist(landscape$Wetland) # Poisson, not skewed -> validated
-# hist(landscape$Artificial) # Poisson, no zero -> valiated
+# hist(landscape$Infrastructure) # Poisson, no zero -> valiated
 
 ## Scaling numerical variables
 landscape_sc <- landscape |> 
@@ -537,7 +537,7 @@ contin_regional <- xtabs(formula = Values ~ SiteID + Factors, data = regional_lo
 # Landscape set
 landscape_long <- landscape_sc |> 
   pivot_longer(
-    cols = c(Cultivated, Forest, Infield, Outfield, Wetland, Artificial),
+    cols = c(Cultivated, Forest, Infield, Outfield, Wetland, Infrastructure),
     names_to = "Factors",
     values_to = "Values"
   )
