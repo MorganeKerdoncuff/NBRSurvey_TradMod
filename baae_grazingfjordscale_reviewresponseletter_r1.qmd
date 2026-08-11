@@ -138,12 +138,11 @@ Sampling was carefully designed, soil analyses were especially multifaceted and 
 Dear reviewer,
 
 Thank you very much for your very thorough review, which greatly helped us to improve the quality of our manuscript.
-Following your recommendations, we led major revisions of our analytical design, including:
-(a) a clarification between
-(1) canonical correlation analyses exploring linkages between environmental gradients and field management and
-(2) redundancy analyses assessing the influences of environmental and management factors on plant and dung-associated beetle assemblages;
-(b) a common plant analysis, instead of two separate grass and forb analyses;
-(c) a more consistent definition of dominance in plant and beetle assemblages.
+Following your recommendations, we adjusted the analytical approach, the description of the analyses, and the inclusion of different analyses in the results.
+Specifically, the manuscript now includes
+(1) simplified analyses for exploring linkages between environmental gradients and field management and their influences on dominant plant and beetle assemblages;
+(2) a common plant analysis, instead of two separate grass and forb analyses;
+(3) a more consistent definition of dominance in plant and beetle assemblages.
 
 Following these changes, we revised our Results section to emphasize the main trends at the assemblage-level rather than focusing on associations between single species and variables.
 Most of the Discussion was also re-written to follow a more straightforward structure and to base our interpretation on comparable local studies when possible (e.g. section 4.2).
@@ -162,9 +161,9 @@ Nutrient cycling in grasslands is supported by a various decomposer community wi
 Why the authors think that dung-associated beetles may indicate the well-functioning (or quality?) of decomposition and nutrient cycling in the study system?
 \end{itshape}
 
-Thank you for very much for highlighting the inconsistencies regarding how we justify our choices of indicator groups, which is not further exploited in the manuscript.
-Following your suggestion, we removed references to ecosystem service contribution and instead explained how our indicator groups are associated to livestock-driven processes (l. 79-82).
-We hope these changes improves the clarity and coherence of our manuscript.
+Thank you for very much for highlighting the inconsistencies regarding how we justify our choices of indicator groups, which is not further expanded upon in the manuscript.
+Following your suggestion, we removed references to ecosystem service contribution and instead explained how our indicator groups are associated with livestock-driven processes (l. 79-82).
+<!-- We hope these changes improve the clarity and coherence of our manuscript. -->
 
 \begin{itshape}
 Figure 1: arrows between field scale and fine scale may be bidirectional, since fine scale factors may also influence field scale patterns.
@@ -353,7 +352,7 @@ Following the revision of the analytical design for exploring linkages between e
 With this change, we aim to focus on relationships which showed the most robust interactions.
 As a result, the relationship between field management and the fine-scale environment is no longer considered.
 Nevertheless, we support your point that the use of "productivity" and "biomass regeneration capacity" in the interpretation of our results was unjustified considering our available data.
-We hope these revision simplify the analytical design and improve the understanding of our findings.
+We hope these revisions simplify the analytical design and improve the understanding of our findings.
 
 \begin{itshape}
 4.3. I found this part very hard to follow.
@@ -376,12 +375,11 @@ In general terms, it is an interesting manuscript, and the message is important.
 Dear Reviewer,
 
 Thank you very much for your valuable feedback on our manuscript, which undoubtedly helped us to improve the quality of our manuscript.
-For your information, we led major revisions of our analytical design, including:
-(a) a clarification between
-(1) canonical correlation analyses exploring linkages between environmental gradients and field management and
-(2) redundancy analyses assessing the influences of environmental and management factors on plant and dung-associated beetle assemblages;
-(b) a common plant analysis, instead of two separate grass and forb analyses;
-(c) a more consistent definition of dominance in plant and beetle assemblages.
+For your information, we adjusted the analytical approach, the description of the analyses, and the inclusion of different analyses in the results.
+Specifically, the manuscript now includes
+(1) simplified analyses for exploring linkages between environmental gradients and field management and their influences on dominant plant and beetle assemblages;
+(2) a common plant analysis, instead of two separate grass and forb analyses;
+(3) a more consistent definition of dominance in plant and beetle assemblages.
 
 Following these changes, we revised our Results section to emphasize the main trends at the assemblage-level rather than focusing on associations between single species and variables.
 Most of the Discussion was also re-written to follow a more straightforward structure and to base our interpretation on comparable local studies when possible (e.g. section 4.2).
@@ -441,9 +439,6 @@ This data should be included and discussed if it is less than 50-100 m, which is
 
 Thank you for your pertinent remark.
 We added the distance between the traps (l. 199-200) and discussed the limitation of our sampling design in section 3.4 (l. 381-384).
-
-- yes, clumped sampling design, but no, it is not an issue (l.200)
-- **REVISION**: add distance in section 2.2.5, and maybe few lines in Discussion (Methodological approach section ? would be relevant as it could include the paragraph on rotational grazing assessment challenge)
 
 \begin{itshape}
 Results: The first time a species is named, the author and year of the original description of the species must be included.
