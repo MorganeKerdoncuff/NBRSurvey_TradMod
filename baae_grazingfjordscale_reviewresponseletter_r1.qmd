@@ -10,119 +10,107 @@ format:
 
 ## Ref: Ms. No. BAAE-D-26-00112
 
+## Response letter to the reviews
+
+\begin{itshape}
+Dear Ms Kerdoncuff,
+
+Thank you for submitting your manuscript to Basic and Applied Ecology. I have completed the review of your manuscript and a summary is appended below. Based on the available reviews, our subject editor recommends reconsideration of your paper following major revision. I invite you to resubmit your manuscript after addressing all reviewer comments.
+\end{itshape}
+
 Dear Bea Maas,
 
 Thank you very much for your time and positive response in assessing our manuscript "*Grazing the fjord landscape: interactions between environmental gradients, management and grassland community assemblages*". 
-We are grateful for the constructive comments the editorial committee and the reviewers provided, which undoubtedly improved the quality of our manuscript.
+We are grateful for the constructive comments the editorial committee and the reviewers provided, based on which we improved the quality of our manuscript.
 
-Please find below our point-by-point reply to the editors' and reviewers' comments. Responses are in plain text and includes line numbers of the modified section when applicable.
+Please find below our point-by-point reply to the editors' and reviewers' comments. Responses are in plain text and include line numbers of the modified sections when applicable.
 
-We hope this improved version of the manuscript is acceptable for publication in Basic and Applied Ecology.
+We hope this improved version of the manuscript meets the expectations of the editorial board and the reviewers, and that it is acceptable for moving forward with the reviewing process.
 
 Morgane Kerdoncuff, on behalf of the authors.
 
 
 ### Response to the Managing Editor
 
-<!-- \begin{itshape} -->
-
-Dear Ms Kerdoncuff,
-
-Thank you for submitting your manuscript to Basic and Applied Ecology.  I have completed the review of your manuscript and a summary is appended below. Based on the available reviews, our subject editor recommends reconsideration of your paper following major revision. I invite you to resubmit your manuscript after addressing all reviewer comments.
-
+\begin{itshape}
 In addition to addressing the reviewer comments, please ensure that your manuscript clearly aligns with the aims and scope of Basic and Applied Ecology.
 In particular, we encourage you to emphasize the broader ecological implications of your findings and how they contribute to both fundamental and applied ecological understanding. 
 Your discussion should integrate the relevance of your research within a wider ecological framework, extending beyond the specific study system. 
 Where possible, practical applications or insights that inform ecological management, conservation strategies, or policy decisions should be highlighted, drawing from your own findings or relevant literature. 
 Additionally, we recommend that key contributions be clearly articulated in the abstract and discussion to enhance accessibility for a broad ecological readership.
+\end{itshape}
 
-<!-- \end{itshape} -->
-
-Dear Bea Maas,
-
-You rightfully highlighted that the Discussion of our paper lacks broader perspectives with regards to the journal scope.
-
-- fundamental ecology: add-on in each section
-- new section: implications for management
+Thank you very much for highlighting that the Discussion of our paper lacks broader perspectives with regards to the journal scope.
+We clarified and expanded the implications of our findings in a new section 4.4 titled "Implications for management and future research" (l. 388-416) and in the Abstract.
+We hope this revised manuscript now better align with the aim and scope of *Basic and Applied Ecology*.
 
 ### Response to the Subject Editor
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Dear Morgane Kerdoncuff!
 
 I received two reviews, both being positive in principle, but suggesting more major changes in your paper. Thus, I invite you to consider their comments in a major revision. in addition, I ask to regard for the following points of concern:
-
-<!-- \end{itshape} -->
+\end{itshape}
 
 Dear Karl,
 
 Thank you very much for complementing the reviewers' work with pertinent feedback on our manuscript.
 Please find below our response to your comments and the revision details when applicable.
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Fig.2: There is no blue line. More general: I doubt that this figure provides much helpful information. Having the coordinates in an Appendix might make more sense.
-
-<!-- \end{itshape} -->
+\end{itshape}
 
 Thank you for noticing this formatting issue.
 We modified the line color in the caption and moved the figure to the Supplementary Information (figure S1).
 Following your suggestion, we included the coordinates of the study sites in a table in Supplementary Information (table S1).
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Your sites were restricted to so called “infield” grasslands, meaning that your findings may not apply to low-productivity grasslands . This should be emphasized more explicitly to be clear to the reader.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for highlighting this lack of clarity regarding the definition of our study sites.
+"Infields" refer to enclosed, productive grazing areas (definition added l. 132), in opposition to unenclosed grazing areas (outfields), such as coastal or subalpine heathlands.
+By European standards though, Norwegian semi-natural grasslands are characterised by low carrying capacity due to constraining climate and environmental conditions.
+Therefore, our findings precisely apply to low-productivity grasslands.
+We clarified the description of our study sites in terms of community composition and productivity (l. 103-110) and removed the term "infield" from section 2.1 to avoid confusion for the reader.
 
-- In the context of Western Norway, infields refer to grasslands *per se* in contrast to outfields which refer to shrublands and heathlands.
-- Norwegian grasslands are characterised by low carrying capacity due to constraining climate and environmental conditions [@piipponenGlobalTrendsGrassland2022]
-- Assemblages were dominated by *Agrostis capillaris* & *Festuca rubra*, which are rather typical of low-productivity grasslands
-- **REVISION**: We clarified the meaning of infield and its implication for grassland productivity in the study area section
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 “Site” and “Field” (in the sense of Fig. 1) seem to be synonyms -> unify.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you very much for pointing out this inconsistency.
+We revised our manuscript accordingly, using "grazing fields" only when mentioning the general farming context in the Introduction and the Discussion, and "study sites" when referring to our survey.
 
-- **REVISION**: 
-  - in the general farming context (e.g. Introduction, Discussion): "grazing fields"
-  - when related to our survey: "grazed sites" or "study sites", field only used in relation to the explanatory variables (field management)
-- l.196
-- Amy: "grazed site" or "grazing site" ?
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 I am not convinced that our parameters actually represent 4 spatial scales, because your data was averaged at the site-level (line 226). 
-This implies for me, that the spatial scale of the field (=site) level and the “Fine” level. [*missing part*]
+This implies for me, that the spatial scale of the field (=site) level and the “Fine” level.
 Accordingly, they should be merged for the ordination analyses, etc. - or the differences should be clearly described.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for your pertinent remark.
+Fine-scale variables refer to factors operating within the immediate range of plant and beetle organisms (e.g. nutrient availability, vegetation cover).
+Even though we averaged our data at the site-level, these variables were sampled and replicated within a limited range of the sampling area.
+On the other hand, field management variables are controlled at the field level by the farmer and apply to the whole grassland area within the field enclosure.
+Therefore, these variables do not capture finer variations of the livestock effect within the grazing field.
 
-- "fine-scale" relates to factors which operate within the immediate range of organisms (e.g. nutrient availability for plants, vegetation structure for beetles)
-- in contrast, field-scale variables are controlled at the scale of the entire grazing field
-- supplementary analyses at plot-level to capture the variation driven by the fine-scale environment we might have missed with the site-level analysis
-- **REVISION**: any relevant modification to make it more explicit in the paper ?
+We acknowledged that data averaging could cause a loss of sensitivity for assessing the influence of the fine-scale environment on dominant plant assemblages, and performed supplementary analyses at the plot-level to address this concern.
+Considering the similarity between site-level and plot-level RDA outputs, we think our approach does capture environmental and management variation at four spatial scales.
+To avoid confusion for the reader, we clarified the description of the different scales of study in the Introduction (l. 81-87).
 
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 The details on ordination analyses (as shown in Figure 4) must already be described in the method section.
+\end{itshape}
 
-<!-- \end{itshape} -->
+Thank you for your recommendation.
+We described more explicitly the explanatory and response variables of the redundancy analyses in section 2.3 (l. 235-238; l. 249-252; l.257-275)
 
-- ????
-- figure 4 is the canonical correlations, is he talking about fig 5 (the RDAs) ?
-- what does he mean by "the details of the ordination analyses" ?
-
-<!-- \begin{itshape} -->
-
+\begin{itshape}
 Additionally, I consider the first comment of reviewer 1 (on the presentation of results) as particularly valuable.
+\end{itshape}
 
-<!-- \end{itshape} -->
-
-- ref reviewer
+Thank you for emphasizing the valuable remarks of Reviewer 1 on the lack of clarity of our findings.
+Please refer to our response to his comment below.
 
 ### Response to Reviewer 1
 
@@ -388,18 +376,23 @@ Please find our detailed response to your comments below.
 
 \begin{itshape}
 Minor:
-<!-- L11, 12, 16, 18, 28, 56, 194: add a comma before the and -->
-<!-- L30, 31, 57, 58, 383, 388, 391, 394, 409: change to "e.g.," always in italics -->
-<!-- L32, 54: add Noriega et al. (2023) Nature Communications -->
-<!-- L40, 55: add Milotić et al. (2018) Journal of Biogeography -->
-L96-97: add the geographic coordinates
-<!-- L98: add the altitude range -->
-<!-- L130, 131, 249, 334: change to "i.e.," always in italics -->
-Table 1: Move the position of Table 1 so that it does not cut off the text.
-<!-- L276-279: remove the term "family" it is redundant -->
+L11, 12, 16, 18, 28, 56, 194: add a comma before the and;
+L30, 31, 57, 58, 383, 388, 391, 394, 409: change to "e.g.," always in italics;
+L32, 54: add Noriega et al. (2023) Nature Communications;
+L40, 55: add Milotić et al. (2018) Journal of Biogeography;
+L96-97: add the geographic coordinates;
+L98: add the altitude range;
+L130, 131, 249, 334: change to "i.e.," always in italics;
+Table 1: Move the position of Table 1 so that it does not cut off the text;
+L276-279: remove the term "family" it is redundant.
 \end{itshape}
 
 Thank you for noticing these minor issues, we addressed them accordingly.
+Commas in 3-expressions listing were added throughout the text, and *e.g.* and *i.e.* were consistently italicized.
+References to Noriega *et al.* (2023) and Milotić *et al.* (2018) were added l. 50 and l. 36, 52 respectively.
+Coordinates of the study area were added l. 96, elevation range was added l. 98.
+For Table 1, we are unfortunately limited by the behaviour of LaTex.
+This formatting issue should be solved during the later steps of the editing process. 
 We particularly appreciated the suggestion of relevant literature on dung beetle associated processes (dung removal, seed dispersion).
 
 \begin{itshape}
@@ -411,8 +404,7 @@ A specific geographical location needs to be added. The work was conducted in a 
 Add "Norway" to the title.
 \end{itshape}
 
-Thank you for relevant comment.
-We modified the title of our manuscript accordingly and included the mention of "Western Norway" to prevent expectations of a national-scale study.
+Thank you for relevant comment, we modified the title of our manuscript accordingly.
 
 \begin{itshape}
 Throughout the text, terms like "community" and "assemblage" are used, but they do not have the same meaning and cannot be used interchangeably, as they signify very different things.
