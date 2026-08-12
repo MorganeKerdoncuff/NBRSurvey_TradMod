@@ -965,8 +965,8 @@ plotrda_regiolandscape <- ggrda(rda) +
     colour = "chartreuse4",
     size = 3
   ) +
-  xlim(-2, 3.5) +
-  ylim(-2, 3.5) +
+  xlim(-2.2, 3) +
+  ylim(-1.7, 3.5) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
@@ -977,13 +977,13 @@ plotrda_regiolandscape <- ggrda(rda) +
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = RDA1*3.5, y = RDA2*3.5, label = label),
     colour = "cyan4",
-    size = 3
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 3, y = 2.9, image = "illustrations/Icons/icon_regiolandscape.png"),
-    size = 0.15
-  )
+    size = 2.5
+  ) #+
+  # geom_image(
+  #   data = tibble(x = 1, y = 1),
+  #   aes(x = 3, y = 2.9, image = "illustrations/Icons/icon_regiolandscape.png"),
+  #   size = 0.15
+  # )
 plotrda_regiolandscape
 ggsave("outputs/singleRDA/plotrda_regiolandscape.png", plot = plotrda_regiolandscape, width = 6, height = 6, units = "cm", bg = "white")
 
@@ -1318,8 +1318,8 @@ plotrda_fineplantplot12 <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  # xlim(-1, 0.8) +
-  # ylim(-0.8, 1) +
+  xlim(-1.1, 1) +
+  ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA1, y = RDA2),
@@ -1358,8 +1358,8 @@ plotrda_fineplantplot23 <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
   ylab(paste0("RDA3", " (", round(100 * statrdaplot(rda)[5, "Variance"], 2), "%)")) +
-  # xlim(-1, 0.8) +
-  # ylim(-0.8, 1) +
+  xlim(-1.1, 1) +
+  ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = RDA2, y = RDA3),
@@ -1440,14 +1440,3 @@ plotrda_finebeetleplot <- ggplot() +
 plotrda_finebeetleplot
 ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
 
-#### Posthoc ####
-
-# Verification correlation BD & GWC with slope angle
-
-soilslope <- dplyr::left_join(
-  subset(area20x20_infield, select = c(SiteID, Slope_degree)),
-  soilbulk_site
-)
-pairs(select_if(soilslope, is.numeric),
-      upper.panel = panel.cor,
-      lower.panel = panel.smooth) # high colinearity between Jan temp and temp range
