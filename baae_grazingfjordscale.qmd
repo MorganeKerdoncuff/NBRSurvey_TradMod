@@ -29,9 +29,7 @@ author:
   - name: Morgane Kerdoncuff
     orcid: https://orcid.org/0000-0003-2223-1857
     email: morgane.kerdoncuff@pm.me
-    affiliations:
-      - Department of Biological Sciences, University of Bergen, Norway
-      - Center for Sustainable Area Management (CeSAM), University of Bergen, Norway
+    affiliations: Department of Ecology, Swedish University of Agricultural Sciences, Sweden
   - name: Amy Elizabeth Eycott
     orcid: https://orcid.org/0000-0002-8609-1091
     affiliations: 
@@ -213,7 +211,7 @@ According to the same exclusion rules, we set three plots of 3 m x 3 m in the sa
 Each plot was divided into nine subplots of 1 m^2^, five non-destructive and four destructive respectively.
 In each non-destructive subplot (15 per site), we evaluated the average percent cover of bare ground, rock, litter and bryophytes, and we estimated average vegetation height from three random measurements within the subplot.
 
-![Schematic representation of the nested sampling design applied in a representative area of each site. Sampling was carried out on the same day except for beetle trapping. Credits: figure created using Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figure3.png){#fig-sampling width=50%}
+![Schematic representation of the nested sampling design applied in a representative area of each site. Sampling was carried out on the same day except for beetle trapping. Credits: figure created using Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figure2.png){#fig-sampling width=50%}
 
 Destructive subplots were dedicated to the determination of soil physicochemical properties.
 We characterised soil structure using three complementary measurements: 
@@ -277,7 +275,6 @@ It is therefore suitable for assessing the explanatory power of the environmenta
 The statistical significance of models, axes, and marginal terms was tested with ANOVA-like permutation tests (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
 
 Our analyses were performed on data averaged at the site-level because we aimed to understand how environmental gradients and field management interacted across sites rather than explain within-site variation.
-<!-- Reviewer comment on fine-scale -->
 Environmental and management variables showing strongly skewed distributions or obvious outliers were removed to meet the assumptions of the canonical correlation analysis and the redundancy analysis [@tabachnickUsingMultivariateStatistics2014].
 Considering the limited replication rate of our study compared with the number of variables included, we removed variables rather than sites from further analyses.
 Livestock type was transformed into a dummy numeric variable explicitly representing sheep grazing (Sheep: 1; Cattle: 0) and cattle grazing (Sheep: 0; Cattle: 1), and implicitly representing goat grazing (Sheep: 0; Cattle: 0).
@@ -316,8 +313,7 @@ We controlled for the structure of the nested sampling design by restricting per
 This supplementary analysis did not apply for dominant dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent from each others due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
 
 Plant assemblage data were percent cover of vascular plant species in 1 m^2^ subplots, averaged at the site-level.
-Aided by a rank-abundance curve, we defined dominant plant species as having a minimum average percent cover of 20% in at least one site (@fig-rankabundanceplant).
-<!-- Optimise rank curves in SI -->
+Aided by a rank-abundance curve, we defined dominant plant species as having a minimum average percent cover of 20% in at least one site (@fig-figureS2).
 Twelve out of the `r op(nrow(nbplantspecies), 0)` recorded species fit this criteria:
 *Agrostis capillaris* L., 1753 (`r op(filter(nbplantspecies, Species == "Agrostis capillaris")$PlantSp_cover)`% of average cover across site),
 *Festuca rubra* L., 1753 (`r op(filter(nbplantspecies, Species == "Festuca rubra")$PlantSp_cover)`%),
@@ -333,7 +329,7 @@ Twelve out of the `r op(nrow(nbplantspecies), 0)` recorded species fit this crit
 *Potentilla erecta* (L.) Raeusch., 1797 (`r op(filter(nbplantspecies, Species == "Potentilla erecta")$PlantSp_cover)`%).
 
 Dung-associated beetle assemblage data were pitfall trap occurrences of beetle families, summed at the site-level.
-Aided by a rank-abundance curve, we defined dominant beetle families as having a minimum of 50 occurrences in at least one site (@fig-rankabundancebeetle).
+Aided by a rank-abundance curve, we defined dominant beetle families as having a minimum of 50 occurrences in at least one site (@fig-figureS3).
 Six out of the `r op(nrow(nbbeetlefamilies), 0)` recorded families fit this criteria, the remaining families accounting for `r op(sum(beetleremains$freq), 2)`% of the catches:
 Staphylinidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$BeetleFam_abundance, 0)` out of `r op(sum(nbbeetlefamilies$BeetleFam_abundance), 0)` identified individuals across sites, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$freq)`% of the catches),
 Ptiliidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$freq)`% of the catches), 
@@ -463,14 +459,14 @@ We did not find any significant relationships between environmental gradients an
 Among environmental gradients, only the regional environment and the landscape matrix were significantly correlated, with a canonical correlation coefficient *rho* of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@tbl-cancorenv).
 The regional environment explained a significant proportion of the landscape matrix variance (adjusted R^2^ = `r op(rdastat_envi$adj.r.squared[1], 2)`, F~5~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)` (@tbl-rdaregio).
 The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[3], 2)`, p-value = `r op(rdastat_envi$PrF[3], 3)`) and mainly driven by the distance to the closest fjord (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`).
-Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated lands and enclosed grazing areas (@fig-sup1a).
+Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated lands and enclosed grazing areas (@fig-figureS4a).
 
 ## Influence of environmental gradients and field management on dominant plant assemblages
 
 Only the fine-scale environment explained a significant proportion of dominant plant assemblages variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
 All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_plant$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_plant$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_plant$PrF[32], 3)`).
-Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure5a).
-Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure5b).
+Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure3a).
+Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure3b).
 Two groups of plant species remained relatively consistent across dimensions.
 The first group, including *Festuca rubra*, *Poa pratensis* and *Trifolium repens*, was associated with shorter vegetation, greater bulk density, and stronger resistance to soil penetration.
 The second group, which included *Agrostis capillaris*, *Anthoxanthum odoratum*, *Galium saxatile* and *Potentilla erecta*, was associated with taller vegetation, lower bulk density, and higher soil penetration.
@@ -479,7 +475,7 @@ The supplementary RDA analysis at plot-level showed similar patterns (R~adj~^2^ 
 
 :::{#fig-rda layout-ncol=2}
 
-``` {r fig-figure5a}
+``` {r fig-figure3a}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -489,7 +485,7 @@ The supplementary RDA analysis at plot-level showed similar patterns (R~adj~^2^ 
 plotrda_fineplant12
 ```
 
-``` {r fig-figure5b}
+``` {r fig-figure3b}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -499,7 +495,7 @@ plotrda_fineplant12
 plotrda_fineplant23
 ```
 
-```{r fig-figure5c}
+```{r fig-figure3c}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -509,7 +505,7 @@ plotrda_fineplant23
 plotrda_landscapebeetle
 ```
 
-``` {r fig-figure5d}
+``` {r fig-figure3d}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -525,9 +521,9 @@ Ordination plots of RDA models (a, b) between the fine-scale environment and dom
 ## Influence of environmental gradients and field management on dung-associated beetle assemblages
 
 Dominant dung-associated beetle assemblages variance was explained by the fine-scale environment (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`), and to a lesser extent by the landscape matrix (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
-The first axis of the RDA model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure5c).
+The first axis of the RDA model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure3c).
 Specifically, sites with more compact soils were associated with a lower abundance of Ptiliidae.
-Regarding the RDA model between the landscape matrix and dung-associated beetle assemblages, the first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`) (@fig-figure5d).
+Regarding the RDA model between the landscape matrix and dung-associated beetle assemblages, the first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`) (@fig-figure3d).
 Carabidae and Hydrophilidae abundances increased with the cover of forest area in the landscape, while Staphylinidae abundance was negatively affected.
 
 # DISCUSSION
@@ -535,7 +531,7 @@ Carabidae and Hydrophilidae abundances increased with the cover of forest area i
 We were able to identify only one significant linkage between environmental gradients operating at different spatial scales in the fjord landscape of Western Norway.
 The composition of the landscape matrix was impacted by the geography of the fjord region, with an increase of more intensively managed areas, *i.e.*, enclosed grazing areas and croplands, towards the nearest fjord shorelines.
 Dominant vascular plant assemblages of semi-natural grasslands were affected by the fine-scale environment at both site- and plot-levels, and essentially responded to two gradients of vegetation structure and soil physicochemical parameters.
-Dominant dung-associated beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix.
+Dominant dung-associated beetle assemblages were influenced by the fine-scale environment, and to a lesser extent by the landscape matrix.
 Ptiliidae were more sensitive to soil variables, while Carabidae, Hydrophilidae and Staphylinidae rather responded to the percent cover of forest area in the landscape.
 However, we found no effect of field management on dominant vascular plant species nor on dung-associated beetle families.
 
@@ -601,7 +597,7 @@ We found that both plant species and beetle families were primarily determined b
 However, we observed no significant effect of field management on either dominant plant or dung-associated beetle assemblages.
 Our analyses thus suggest that, in low-intensity grazing systems, the effects of diversified grazing management may be overridden by sa stronger influence of environmental gradients.
 Overall, we highlighted the complexity of interactions between the environment and grazing management in agroecological landscapes.
-We recommend to further investigate these relationships and disentangle their respective influences on plant and animal assemblages in different local contexts in order to assess the efficiency of diversified management practices.
+We recommend to further investigate these relationships and disentangle their respective influences on plant and animal assemblages in different local contexts to assess the ecological implications of diversified management practices.
 
 # ACKNOWLEDGEMENTS
 
@@ -676,7 +672,7 @@ https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
 \newpage
 \scriptsize
 
-![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (light green line), Western Norway. Colour indicates the type of livestock at each study site: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figure2.png){#fig-sitemap width=50%}
+![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (light green line), Western Norway. Colour indicates the type of livestock at each study site: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figureS1.png){#fig-sitemap width=50%}
 
 ```{r tbl-sitelocation}
 #| tbl-cap: "Geolocation of the study sites in the Nordhordland UNESCO Biosphere Reserve converted to EPSG:4326 (WGS84). Longitude and latitude were rounded to two digits to preserve the privacy of the farmers involved in the study."
@@ -717,7 +713,7 @@ sitelocation |>
 \normalsize
 \newpage
 
-```{r fig-rankabundanceplant}
+```{r fig-figureS2}
 #| message: false
 #| warning: false
 #| fig-cap: "Rank-abundance curve of plant species percent cover in each study site for determining dominant plant species in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve. Species below 1% cover are not shown for better clarity."
@@ -733,7 +729,7 @@ barplot(sort(raplant$PlantSp_cover))
 
 ```
 
-```{r fig-rankabundancebeetle}
+```{r fig-figureS3}
 #| message: false
 #| warning: false
 #| fig-cap: "Rank-abundance curve of dung-associated beetle families number of catches in each study site for determining dominant plant species in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve."
@@ -1012,9 +1008,9 @@ rdagrass |>
 
 \newpage
 
-:::{#fig-sup1 layout-ncol=2}
+:::{#fig-figureS4 layout-ncol=2}
 
-``` {r fig-sup1a}
+``` {r fig-figureS4a}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -1024,7 +1020,7 @@ rdagrass |>
 plotrda_regiolandscape
 ```
 
-``` {r fig-sup1b}
+``` {r fig-figureS4b}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -1034,7 +1030,7 @@ plotrda_regiolandscape
 plotrda_fineplantplot12
 ```
 
-``` {r fig-sup1c}
+``` {r fig-figureS4c}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
