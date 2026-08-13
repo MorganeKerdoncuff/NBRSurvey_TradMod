@@ -22,6 +22,11 @@ Dear Bea Maas,
 
 Thank you very much for your time and positive response in assessing our manuscript "*Grazing the fjord landscape: interactions between environmental gradients, management and grassland community assemblages*". 
 We are grateful for the constructive comments the editorial committee and the reviewers provided, based on which we improved the quality of our manuscript.
+To address the main issues highlighted by the different reviews, we made major revisions of the Method, the Results and the Discussion, including:
+more consistent and clear definition of key terms;
+simplified analytical design;
+more assemblage-focused interpretation of the results;
+more straightforward discussion and a new section on ecological relevance and application.
 
 Please find below our point-by-point reply to the editors' and reviewers' comments. Responses are in plain text and include line numbers of the modified sections when applicable.
 
@@ -90,11 +95,13 @@ Accordingly, they should be merged for the ordination analyses, etc. - or the di
 
 Thank you for your pertinent remark.
 Fine-scale variables refer to factors operating within the immediate range of plant and beetle organisms (e.g. nutrient availability, vegetation cover).
-Even though we averaged our data at the site-level, these variables were sampled and replicated within a limited range of the sampling area.
+Even though we averaged our data at the site-level, these variables were sampled and replicated within a limited range of the sampling area of 20 m x 20 m.
 On the other hand, field management variables are controlled at the field level by the farmer and apply to the whole grassland area within the field enclosure.
 Therefore, these variables do not capture finer variations of the livestock effect within the grazing field.
+While variables across all scales are referring to the field (e.g., elevation is elevation on the field and available phosphorus is available phosphorus in representative samples from the field), they are shaped by processes which have a very different spatial scale.
 
-We acknowledged that data averaging could cause a loss of sensitivity for assessing the influence of the fine-scale environment on dominant plant assemblages, and performed supplementary analyses at the plot-level to address this concern.
+An additional analysis of the influence of the fine-scale environment on dominant plant assemblages was performed at the plot-level, to specifically address the loss of sensitivity created by data averaging (l. 255-259).
+We deemed this supplementary analysis would not apply for beetles as the pitfall traps between plots could not be considered independent from each others (l. 259-261).
 Considering the similarity between site-level and plot-level RDA outputs, we think our approach does capture environmental and management variation at four spatial scales.
 To avoid confusion for the reader, we clarified the description of the different scales of study in the Introduction (l. 81-87).
 
