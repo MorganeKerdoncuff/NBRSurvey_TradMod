@@ -313,7 +313,7 @@ beetleremains <- filter(nbbeetlefamilies, BeetleFamilies != "Carabidae" & Beetle
 Second, we used redundancy analysis to investigate how field management and the environmental gradients affect dominant plant and dung-associated beetle assemblages.
 However, as site-level averaging may cause a loss of sensitivity regarding relationships between the fine-scale environment and dominant plant assemblages, we performed a supplementary redundancy analysis at plot-level.
 We controlled for the structure of the nested sampling design by restricting permutations at plot-level to prevent pseudo-replication [@andersonPermutationTestsMultifactorial2003].
-This supplementary analysis did not apply for dominant dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
+This supplementary analysis did not apply for dominant dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent from each others due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
 
 Plant assemblage data were percent cover of vascular plant species in 1 m^2^ subplots, averaged at the site-level.
 Aided by a rank-abundance curve, we defined dominant plant species as having a minimum average percent cover of 20% in at least one site (@fig-rankabundanceplant).
