@@ -206,7 +206,11 @@ For two farms (IG1 and IG2) where livestock was moved to mountain summer farms e
 
 The study design for collecting data related to the fine-scale environment was the same as used by @demeauxJustGrazeIt2024.
 We visited each of the 29 sites once, starting in mid-June at the westernmost sites and ending in late July at the easternmost sites to account for the spring bloom time difference [@karlsenVariabilityStartGrowing2007]. 
+<<<<<<< HEAD
 In each site, we laid out a nested sampling design within a representative area of 400 m^2^, preferentially 20 m x 20 m but when necessary 40 m x 10 m, avoiding rocks, waterlogged ground, trees and site edges.
+=======
+On each site, we laid out a nested sampling design within a representative area of 400 m^2^, preferentially 20 m x 20 m but when necessary 40 m x 10 m, avoiding rocks, waterlogged ground, trees and site edges.
+>>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
 According to the same exclusion rules, we set three plots of 3 m x 3 m in the sampling area, at least 6 m apart from each other (@fig-sampling). 
 Each plot was divided into nine subplots of 1 m^2^, five non-destructive and four destructive respectively.
 In each non-destructive subplot (15 per site), we evaluated the average percent cover of bare ground, rock, litter and bryophytes, and we estimated average vegetation height from three random measurements within the subplot.
