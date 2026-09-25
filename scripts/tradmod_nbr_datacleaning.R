@@ -587,11 +587,7 @@ soil_bulk_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawbulkdensity.xlsx
 ## weightSatG - Water saturated weight of soil cores in g
 ## weight24hG - Core weight after 24h air drying in g
 ## weight48hG - Core weight after 48h air drying in g
-<<<<<<< HEAD
 ## weightDryG - Core weight after 48h oven drying at 105°C in g
-=======
-## weightDryG - Core weight after 48h oven drying at 105C in g
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
 
 # Variable names & structure
 
@@ -620,11 +616,7 @@ soil_bulk_raw <- soil_bulk_raw %>%
   ungroup()
 
 ## Correction for weight variables
-<<<<<<< HEAD
 soil_bulk <- soil_bulk_raw %>% 
-=======
-soil_bulk <- soil_bulk %>% 
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
   # correction weight core (constant) + cheesecloth (variable) for weight0hG, weightSatG, weight24hG and weight48hG
   mutate(weight0hG = weight0hG - (weightCheeseclothG + 22.7)) %>% 
   mutate(weightSatG = weightSatG - (weightCheeseclothG + 22.7)) %>% 
@@ -637,11 +629,7 @@ soil_bulk <- soil_bulk %>%
 
 ## Variable selection to avoid redundancy and treatment
 soil_bulk <- subset(
-<<<<<<< HEAD
   soil_bulk, select = c(
-=======
-  soil_bulk_raw, select = c(
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
     siteID,
     plotID,
     subplotID,
@@ -653,12 +641,7 @@ soil_bulk <- subset(
     weightSatG,
     weight24hG,
     weight48hG,
-<<<<<<< HEAD
     weightDryG
-=======
-    weightDryG,
-    weightCheeseclothG
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
   )
 )
 
@@ -682,11 +665,7 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 
 ## Numeric variables - min/max, distribution, potential outliers
 
-<<<<<<< HEAD
 ### Min/max
-=======
-# Min/max
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
 # test <- soil_bulk |>
 #   summarise(
 #     tibble(
@@ -701,14 +680,9 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 #         .names = "max_{.col}")
 #       )
 #     ) |>
-<<<<<<< HEAD
 #   transpose() #one negative wSatG value
 # filter(soil_bulk, weightSatG < 0) #ic3-p1-d3 - value before correction: 10.35 g -> wrong data entry, should be discarded
 soil_bulk <- filter(soil_bulk, weightSatG > 0)
-=======
-#   transpose() #quality check needed - min core volume low
-
- # min core volume quite low, negative values for water loss 24h and 48h, negative BD
 
 ### NA check
 # colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
@@ -854,7 +828,6 @@ soil_bulk <- filter(soil_bulk, weightSatG > 0)
 # Check new number of replicates per site
 #sort(table(soilbulk_full$SiteID)) 
 # 9 sites with less than 20 replicates and lowest IC3 with 9 replicates (due to missing values) -> validated
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
 
 ### NA check
 # colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
