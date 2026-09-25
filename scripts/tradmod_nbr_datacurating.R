@@ -18,7 +18,6 @@
 
 library(tidyverse) # R language
 library(purrr) # Merge tables
-<<<<<<< HEAD
 
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
@@ -185,5 +184,3 @@ soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1
 # Check new number of replicates per site
 #sort(table(soilbulk_full$SiteID)) 
 # 9 sites with less than 20 replicates and lowest IC3 with 9 replicates (due to missing values) -> validated
-=======
->>>>>>> 27b00ff7d27bee20850ab2836503dea5cb750635
