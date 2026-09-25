@@ -21,7 +21,6 @@ _quarto.yml
 #data (excludes all data files)
 data/*
 *.csv
-*.txt
 
 #figures & output (excludes all figure files)
 outputs/*
