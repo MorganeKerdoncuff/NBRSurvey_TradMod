@@ -1,6 +1,7 @@
 # Defaut
 .Ruserdata
 .DS_Store
+.Renviron
 
 # History files
 .Rhistory
@@ -69,3 +70,5 @@ scripts/TradMod_RepoDataCleaning.R
 _extensions/*
 elsarticle.cls
 elsarticle-harv.bst
+
+**/*.quarto_ipynb
