@@ -699,7 +699,7 @@ rdaplot <- ggplot() +
   ylab(paste0("RDA2", " (", round(100 * statrda(rda)[4, "Variance"], 2), "%)")) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2)
+    mapping = aes(x = rda1, y = rda2)
   ) +
   theme_bw(
     base_size = 7
@@ -723,7 +723,7 @@ ggrda23 <- function(rda) {
     ylab(paste0("RDA3", " (", round(100 * statrda(rda)[5, "Variance"], 2), "%)")) +
     geom_point(
       data = filter(fortify(rda), score == "sites"),
-      mapping = aes(x = RDA1, y = RDA2)
+      mapping = aes(x = rda1, y = rda2)
     ) +
     theme_bw(
       base_size = 7
@@ -751,7 +751,7 @@ rdaregiolandscape <- statrda(rda) |>
 plotrda_regiolandscape <- ggrda(rda) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "chartreuse4",
     size = 3
   ) +
@@ -759,13 +759,13 @@ plotrda_regiolandscape <- ggrda(rda) +
   ylim(-1.7, 3.5) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1*2.5, yend = RDA2*2.5),
+    mapping = aes(x = 0, y = 0, xend = rda1*2.5, yend = rda2*2.5),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "cyan4"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*3.5, y = RDA2*3.5, label = label),
+    mapping = aes(x = rda1*3.5, y = rda2*3.5, label = label),
     colour = "cyan4",
     size = 2.5
   ) #+
