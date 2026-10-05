@@ -19,6 +19,183 @@
 library(tidyverse) # R language
 library(purrr) # Merge tables
 
+#### SITE DESCRIPTION ####
+
+## Numeric variables - min/max, distribution, potential outliers
+
+### Min/max
+# test <- site_description |>  
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>  
+#   transpose() #validated
+
+### Variable distribution & outliers
+# hist(site_description$numberAnimalsAdult) # Poisson distribution, one outlier over 150 animals
+# site_description[site_description$numberAnimalsAdult>150,] # is4, no observed inconsistency with farm characteristics
+# hist(site_description$numberAnimalsYoung) # Poisson distribution, no outlier
+hist(site_description$fieldAreaHa) # One outlier over 1000 ha crushing the distribution
+site_description[site_description$fieldAreaHa>1000,] # ug2 outfield site in upland area, value non applicable for analysis
+# hist(filter(site_description, siteID != "ug2")$fieldAreaHa) # Poisson distribution
+# hist(site_description$farmGrazingAreaHa) # dominance small farms, no visible outliers
+
+#### 20x20 SAMPLING AREA ####
+
+## Numeric variables - min/max, distribution, potential outliers
+
+## Min/max
+# test <- sampling_area |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() #validated - need further check for max herbs 97% & max lichens 20%
+
+### NA check
+# colnames(sampling_area)[apply(sampling_area, 2, anyNA)] # col: numberLivestockPaths, lengthLivestockPaths & all percent cover
+sampling_area[!complete.cases(sampling_area),] # missing data for three sites (us1, ug1, oc4)
+
+### Variable distribution & outliers
+table(sampling_area$numberLivestockPaths) # dominance 0, variable to be taken out
+hist(sampling_area$lengthLivestockPathM) # dominance 0, variable to be taken out
+# hist(sampling_area$elevationMasl) # Poisson distribution, no outlier
+# hist(sampling_area$slopeAngleDegree) # Normal distribution, no outlier
+hist(sampling_area$slopeAspectDegree) # Uneven distribution, no outlier
+# hist(sampling_area$percentRock) # Poisson distribution, further check for sites over 7%
+# sampling_area[sampling_area$percentRock>7,] # subalpine heathlands (ug2, us3, us5), coastal heatland (ov1) & fjord at higher elevation (ig3)
+# hist(sampling_area$percentMud) # very skewed Poisson distribution, no outlier
+# hist(sampling_area$percentTreesTallShrubs) # Skewed Poisson distribution, no outlier
+# hist(sampling_area$percentLowShrubs) # Poisson distribution, further check all grassland sites should be under 10%
+# sampling_area[sampling_area$percentLowShrubs>10,] # 11 heathland sites
+hist(sampling_area$percentForbs) # Poisson distribution, further check for sites >50%
+sampling_area[sampling_area$percentForbs>50,] # os1, oc1, ig1, ig2, is2, iv1, ic1, og2, ic4 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
+# OS1 80% - average 20% & no cover over 55% in quadrats, estimation from pictures 35%-40%
+# OC1 80% - average 25% & no cover over 50% in quadrats, estimation from pictures 10%-15% 
+# IG1 97% - average 20% & no cover over 30% in quadrats, estimation from pictures 15%-20%
+# IS2 80% - average 70% & no cover over 90% in quadrats, estimation from pictures 45%-50%
+# IC1 70% - average 45% & no cover over 70% in quadrats, estimation from pictures 60%-65%
+hist(sampling_area$percentMonocotyledons) # further check for sites with odd forb distribution
+hist(sampling_area$percentBryophytes) # uneven distribution, further check for sites with odd forb distribution
+# hist(sampling_area$percentLichens) # highly skewed Poisson distribution, one site over 10%
+# sampling_area[sampling_area$percentLichens>10,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
+
+# Add/remove variables
+
+## Removal numberLivestockPaths and lengthLivestockPathM due to 
+# sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthLivestockPathM))
+
+## Heat Load Index
+# sampling_area <- sampling_area |> 
+#   mutate(heatLoadIndex = cos(slopeAspectDegree-225)*tan(slopeAngleDegree))
+# hist(sampling_area$heatLoadIndex) # 3 outliers: one under 200, two over 100
+# sampling_area[sampling_area$heatLoadIndex>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
+# sampling_area[sampling_area$heatLoadIndex<0,] #OS6 -> 11 degree slope with NE exposition
+
+
+#### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
+
+## Numeric variables - min/max, distribution, potential outliers
+
+## Min/max
+# test <- ground_cover |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() #validated - need further check for max lichens 80%
+
+### NA check
+# colnames(ground_cover)[apply(ground_cover, 2, anyNA)] #validated - only blossom species ID
+
+### Variable distribution & outliers
+# hist(ground_cover$percentBareGround) # skewed Poisson distribution, check subplots > 20%
+# filter(ground_cover, percentBareGround>20) #validated - subplots from recently burnt heathland ov1
+# hist(ground_cover$percentRock) # skewed Poisson distribution
+# hist(ground_cover$percentLitter) # skewed Poisson distribution, check subplots > 30%
+# filter(ground_cover, percentLitter>30) #validated - subplots from burnt (ov1) & mountain heathlands (us2, ug1)
+# hist(ground_cover$percentDeadWood) # skewed Poisson distribution, check subplots > 2%
+# filter(ground_cover, percentDeadWood>2) #validated - subplots from is5, in the middle of a wood clearing
+# hist(ground_cover$percentBryophytes) # Poisson distribution, no outliers
+# hist(ground_cover$percentLichens) # Poisson distribution, one outlier above 40%
+# filter(ground_cover, percentLichens>40) #validated - mountain site (us1-p1-n5) with high lichen cover
+# hist(ground_cover$percentVascular) # Exponential distribution, no outlier
+# hist(ground_cover$percentBlossom) # Skewed Poisson distribution, no outlier
+# hist(ground_cover$percentDung) # Skewed Poisson distribution, check subplots > 10%
+# filter(ground_cover, percentDung>10) #validated - cattle site (ic1)
+# hist(ground_cover$avgVegetationHeightCm) # Poisson distribution, no outliers
+# hist(ground_cover$maxVegetationHeightCm) # Normal distribution, no outliers
+
+
+#### DESTRUCTIVE SUBPLOTS - SOIL PENETRATION TESTS ####
+
+### Categories & distribution
+# table(soil_pene$siteID) #validated - uc1 site (bog) to be removed
+soil_pene <- filter(soil_pene, siteID != "uc1")
+# table(soil_pene$plotID) #validated
+# table(soil_pene$bedrockHit) # 39 failed tests over 1017 due to bedrock hit
+table(filter(soil_pene, bedrockHit == "y")$siteID) # 8 sites with up to 12 failures
+
+## Numeric variables - min/max, distribution, potential outliers
+
+### Min/max
+# test <- soil_pene |>
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#         ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#       )
+#     ) |>
+#   transpose() #validated - no visible height above maximum stick length
+
+### NA check
+# colnames(soil_pene)[apply(soil_pene, 2, anyNA)] #validated
+
+### Variable distribution & outliers
+# hist(soil_pene$visibleHeightCm) # Normal distribution, no outliers
+
+# Add/remove variables
+## New variable soilPenetrationDepth
+# soil_pene <- soil_pene %>% 
+#   mutate(soilPeneDepthCm = stickLengthCm - visibleHeightCm)
+## Removal stickLengthCm and visibleHeightCm
+# soil_pene <- subset(soil_pene, select = -c(stickLengthCm, visibleHeightCm))
+
+
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
 ## Numeric variables - min/max, distribution, potential outliers
@@ -184,3 +361,107 @@ soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1
 # Check new number of replicates per site
 #sort(table(soilbulk_full$SiteID)) 
 # 9 sites with less than 20 replicates and lowest IC3 with 9 replicates (due to missing values) -> validated
+
+#### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
+
+### NA check
+# colnames(soil_chem)[apply(soil_chem, 2, anyNA)] #validated
+
+### Variable distribution & outliers
+# hist(soil_chem$lossOnIgnitionPercentDM) # 
+
+# Soil density
+#soilchem_full[is.na(soilchem_full$SoilDensity_kg.L),] # no NA
+#hist(soilchem_full$SoilDensity_kg.L) # range from 0 to 1.4 -> quite wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
+
+# Percent of humus in dry matter
+#soilchem_full[is.na(soilchem_full$Humus_percentDM),] # no NA
+#hist(soilchem_full$Humus_percentDM) # range from 0 to 90 -> matching with LOI
+
+# pH
+#soilchem_full[is.na(soilchem_full$pH),] # no NA
+#hist(soilchem_full$pH) # range from 4 to 7, Normal distribution -> one outlier over 6.5
+#filter(soilchem_full, pH>6.5) # OC2-P1 with the calcium outlier -> should be removed
+
+# Phosphorus
+#soilchem_full[is.na(soilchem_full$P.Al_mg.100g),] # no NA
+#hist(soilchem_full$P.Al_mg.100g) # range from 0 to 40, Poisson distribution -> check high values
+#filter(soilchem_full, P.Al_mg.100g>20) # 10 plots among 5 sites over 20 mg/100g
+# 2 sites with all values over 20 (IS4, OC2)
+# other sites (IC2, OC5, OG4), values not to far from other plots
+
+# Potassium
+#soilchem_full[is.na(soilchem_full$K.Al_mg.100g),] # no NA
+#hist(soilchem_full$K.Al_mg.100g) # range from 0 to 30, Normal distribution -> check high values
+#filter(soilchem_full, K.Al_mg.100g>20) # 4 plots among 2 sites (IC2, OC1) over 20 mg/100g -> coherent with other values
+
+# Magnesium
+#soilchem_full[is.na(soilchem_full$Mg.Al_mg.100g),] # no NA
+#hist(soilchem_full$Mg.Al_mg.100g) # range from 0 to 35, Normal distribution -> check high values
+#filter(soilchem_full, Mg.Al_mg.100g>20) # 4 plots among 2 sites (IC2, OC1) over 20 mg/100g, same as for Potassium
+
+# Calcium
+#soilchem_full[is.na(soilchem_full$Ca.Al_mg.100g),] # no NA
+#hist(soilchem_full$Ca.Al_mg.100g) # range from 0 to 1000, one clear outlier
+#filter(soilchem_full, Ca.Al_mg.100g>1000) # OC2-P1, not coherent with other samples -> to be removed
+#filter(soilchem_full, Ca.Al_mg.100g>200) # 2 plots from same site (IC5) over 200 mg/100g
+
+# Sodium
+#soilchem_full[is.na(soilchem_full$Na.Al_mg.100g),] # no NA
+#hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 20
+#filter(soilchem_full, Na.Al_mg.100g>20) # OC2-P1, same as Calcium -> to be removed
+#filter(soilchem_full, Na.Al_mg.100g>12) # IS4-P3 & IS5-P2 -> coherent with rest of the samples
+
+# Percent Dry Matter
+#soilchem_full[is.na(soilchem_full$DryMatter_percent),] # no NA
+#hist(soilchem_full$DryMatter_percent) # range from 10 to 100, distribution a bit hectic
+
+# Total N in percent dry matter
+#soilchem_full[is.na(soilchem_full$TotalN_percentDM),] # no NA
+#hist(soilchem_full$TotalN_percentDM) # range from 0.2 to 2.2, distribution a bit hectic
+
+#
+## Data filtering/removal
+
+# OC2-P1 outlier in several parameter -> farmer fertilizes in spring and summmer, maybe samples taken on a chunk
+# soilchem_full <- subset(soilchem_full, !PlotID == "OC2-P1")
+
+#### DESTRUCTIVE SUBPLOTS - SOIL MESOFAUNA ####
+
+# test <- soil_meso |>  
+#   summarise(
+#     tibble(
+#       across(
+#         where(is.numeric),
+#         ~min(.x, na.rm = TRUE),
+#         .names = "min_{.col}"
+#       ),
+#       across(
+#         where(is.numeric),
+#         ~max(.x, na.rm = TRUE),
+#         .names = "max_{.col}")
+#     )
+#   ) |>  
+#   transpose() # All good
+
+# Check distribution of quantitative variable
+#hist(mesobio_raw$Acari) # Poisson distribution
+#hist(mesobio_raw$Collembola) # Poisson distribution
+#hist(soilmeso_raw$CoreDepth_cm) # Most around 14 cm -> validated
+
+#
+## New variable - abundance per soil area with correction soil volume
+
+# Extraction survey data only
+mesobio_full <- mesobio_raw |> 
+  filter(SiteID != "ØY-")
+
+# Merging datasets according to sorted fauna
+mesobio_full <- left_join(mesobio_full, soilmeso_raw)
+mesobio_full <- subset(mesobio_full, select = c(SampleID, Acari, Collembola, PlotID, SiteID, CoreDepth_cm))
+
+# New variable with correction for soil volume
+mesobio_full <- mesobio_full |> 
+  # corrected abundance = (measured_abundance*standard_coreheight)/measured_coreheight
+  mutate(Acari.m2 = ((Acari*14)/CoreDepth_cm)/(3.14*(0.105/2)^2)) |> 
+  mutate(Collembola.m2 = ((Collembola*14)/CoreDepth_cm)/(3.14*(0.105/2)^2))

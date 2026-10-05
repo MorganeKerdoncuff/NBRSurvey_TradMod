@@ -32,12 +32,6 @@ plant_com_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantR
 arthro_com_raw <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA")
 # Arthropod community complementary
 arthro_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA")
-# Mesofauna community
-meso_com_raw <- read_excel(path = "data/rawdata/NBR_RawMesobio.xlsx", na="NA")
-# Soil core height for mesofauna in destructive subplots (1 per subplot)
-meso_soil_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Mesofauna")
-# Aboveground biomass in destructive subplots
-plant_biomass_raw <- read_excel(path = "data/rawdata/NBR_RawAGB.xlsx", na="NA")
 
 #### CLEAN DATA OSF UPLOAD ####
 
@@ -132,25 +126,6 @@ site_description <- site_description %>%
   mutate(livestockType = dplyr::recode(livestockType, "villsau" = "sheep")) %>% 
   mutate(livestockType = dplyr::recode(livestockType, "cow" = "cattle"))
 
-## Numeric variables - min/max, distribution, potential outliers
-
-### Min/max
-# test <- site_description |>  
-#   summarise(
-#     tibble(
-#       across(
-#         where(is.numeric),
-#         ~min(.x, na.rm = TRUE),
-#         .names = "min_{.col}"
-#         ),
-#       across(
-#         where(is.numeric),
-#         ~max(.x, na.rm = TRUE),
-#         .names = "max_{.col}")
-#       )
-#     ) |>  
-#   transpose() #validated
-
 ### NA check
 # colnames(site_description)[apply(site_description, 2, anyNA)] # numberAnimalAdult; numberAnimalYoung; fieldAreaHA; farmGrazingAreaHa
 # site_description[is.na(site_description$numberAnimalsAdult),] # Missing values from 2020 farmer interviews, replaced by values from Margit Reiersen (2019). Bærekraft i Vestnorsk Landbruk - En deskriptiv studie av landbruket i Nordhordland Biosfæreområdet og bøndenes syn på bærekraft i landbruket. https://hdl.handle.net/1956/20820
@@ -174,18 +149,9 @@ site_description <- site_description |>
 # site_description[is.na(site_description$fieldAreaHa),] #validated - No fenced areas in the mountains
 # site_description[is.na(site_description$farmGrazingAreaHa),] #validated - Applicable for infields only
 
-### Variable distribution & outliers
-# hist(site_description$numberAnimalsAdult) # Poisson distribution, one outlier over 150 animals
-# site_description[site_description$numberAnimalsAdult>150,] # is4, no observed inconsistency with farm characteristics
-# hist(site_description$numberAnimalsYoung) # Poisson distribution, no outlier
-hist(site_description$fieldAreaHa) # One outlier over 1000 ha crushing the distribution
-site_description[site_description$fieldAreaHa>1000,] # ug2 outfield site in upland area, value non applicable for analysis
-# hist(filter(site_description, siteID != "ug2")$fieldAreaHa) # Poisson distribution
-# hist(site_description$farmGrazingAreaHa) # dominance small farms, no visible outliers
-
-# Dataset export
-write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription.csv")
+# Clean data export
+write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
 
 #### 20x20 SAMPLING AREA ####
 
@@ -268,68 +234,9 @@ sampling_area <- sampling_area %>%
 # table(sampling_area$siteID) #validated - uc1 site (bog) to be removed
 sampling_area <- filter(sampling_area, siteID != "uc1")
 
-## Numeric variables - min/max, distribution, potential outliers
-
-## Min/max
-# test <- sampling_area |>
-#   summarise(
-#     tibble(
-#       across(
-#         where(is.numeric),
-#         ~min(.x, na.rm = TRUE),
-#         .names = "min_{.col}"
-#         ),
-#       across(
-#         where(is.numeric),
-#         ~max(.x, na.rm = TRUE),
-#         .names = "max_{.col}")
-#       )
-#     ) |>
-#   transpose() #validated - need further check for max herbs 97% & max lichens 20%
-
-### NA check
-# colnames(sampling_area)[apply(sampling_area, 2, anyNA)] # col: numberLivestockPaths, lengthLivestockPaths & all percent cover
-sampling_area[!complete.cases(sampling_area),] # missing data for three sites (us1, ug1, oc4)
-
-### Variable distribution & outliers
-table(sampling_area$numberLivestockPaths) # dominance 0, variable to be taken out
-hist(sampling_area$lengthLivestockPathM) # dominance 0, variable to be taken out
-# hist(sampling_area$elevationMasl) # Poisson distribution, no outlier
-# hist(sampling_area$slopeAngleDegree) # Normal distribution, no outlier
-hist(sampling_area$slopeAspectDegree) # Uneven distribution, no outlier
-# hist(sampling_area$percentRock) # Poisson distribution, further check for sites over 7%
-# sampling_area[sampling_area$percentRock>7,] # subalpine heathlands (ug2, us3, us5), coastal heatland (ov1) & fjord at higher elevation (ig3)
-# hist(sampling_area$percentMud) # very skewed Poisson distribution, no outlier
-# hist(sampling_area$percentTreesTallShrubs) # Skewed Poisson distribution, no outlier
-# hist(sampling_area$percentLowShrubs) # Poisson distribution, further check all grassland sites should be under 10%
-# sampling_area[sampling_area$percentLowShrubs>10,] # 11 heathland sites
-hist(sampling_area$percentForbs) # Poisson distribution, further check for sites >50%
-sampling_area[sampling_area$percentForbs>50,] # os1, oc1, ig1, ig2, is2, iv1, ic1, og2, ic4 -> all first year/starting sites, check on vegetation quadrats + site & plot pictures
-# OS1 80% - average 20% & no cover over 55% in quadrats, estimation from pictures 35%-40%
-# OC1 80% - average 25% & no cover over 50% in quadrats, estimation from pictures 10%-15% 
-# IG1 97% - average 20% & no cover over 30% in quadrats, estimation from pictures 15%-20%
-# IS2 80% - average 70% & no cover over 90% in quadrats, estimation from pictures 45%-50%
-# IC1 70% - average 45% & no cover over 70% in quadrats, estimation from pictures 60%-65%
-hist(sampling_area$percentMonocotyledons) # further check for sites with odd forb distribution
-hist(sampling_area$percentBryophytes) # uneven distribution, further check for sites with odd forb distribution
-# hist(sampling_area$percentLichens) # highly skewed Poisson distribution, one site over 10%
-# sampling_area[sampling_area$percentLichens>10,] # US4 in subalpine area, average of 12% & max 24% in quadrats - validated
-
-# Add/remove variables
-
-## Removal numberLivestockPaths and lengthLivestockPathM due to 
-# sampling_area <- subset(sampling_area, select = -c(numberLivestockPaths, lengthLivestockPathM))
-
-## Heat Load Index
-# sampling_area <- sampling_area |> 
-#   mutate(heatLoadIndex = cos(slopeAspectDegree-225)*tan(slopeAngleDegree))
-# hist(sampling_area$heatLoadIndex) # 3 outliers: one under 200, two over 100
-# sampling_area[sampling_area$heatLoadIndex>100,] #OG4 & IS3 -> both 11 degree slope with SW & SE exposition
-# sampling_area[sampling_area$heatLoadIndex<0,] #OS6 -> 11 degree slope with NE exposition
-
-# Dataset export
-write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea.csv")
+# Clean data export
+write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
 
 #### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
 
@@ -423,49 +330,13 @@ ground_cover <- ground_cover |>
 # table(ground_cover$blossomSp4) #validated
 # table(ground_cover$blossomSp5) #validated
 
-## Numeric variables - min/max, distribution, potential outliers
-
-## Min/max
-# test <- ground_cover |>
-#   summarise(
-#     tibble(
-#       across(
-#         where(is.numeric),
-#         ~min(.x, na.rm = TRUE),
-#         .names = "min_{.col}"
-#         ),
-#       across(
-#         where(is.numeric),
-#         ~max(.x, na.rm = TRUE),
-#         .names = "max_{.col}")
-#       )
-#     ) |>
-#   transpose() #validated - need further check for max lichens 80%
-
 ### NA check
 # colnames(ground_cover)[apply(ground_cover, 2, anyNA)] #validated - only blossom species ID
 
-### Variable distribution & outliers
-# hist(ground_cover$percentBareGround) # skewed Poisson distribution, check subplots > 20%
-# filter(ground_cover, percentBareGround>20) #validated - subplots from recently burnt heathland ov1
-# hist(ground_cover$percentRock) # skewed Poisson distribution
-# hist(ground_cover$percentLitter) # skewed Poisson distribution, check subplots > 30%
-# filter(ground_cover, percentLitter>30) #validated - subplots from burnt (ov1) & mountain heathlands (us2, ug1)
-# hist(ground_cover$percentDeadWood) # skewed Poisson distribution, check subplots > 2%
-# filter(ground_cover, percentDeadWood>2) #validated - subplots from is5, in the middle of a wood clearing
-# hist(ground_cover$percentBryophytes) # Poisson distribution, no outliers
-# hist(ground_cover$percentLichens) # Poisson distribution, one outlier above 40%
-# filter(ground_cover, percentLichens>40) #validated - mountain site (us1-p1-n5) with high lichen cover
-# hist(ground_cover$percentVascular) # Exponential distribution, no outlier
-# hist(ground_cover$percentBlossom) # Skewed Poisson distribution, no outlier
-# hist(ground_cover$percentDung) # Skewed Poisson distribution, check subplots > 10%
-# filter(ground_cover, percentDung>10) #validated - cattle site (ic1)
-# hist(ground_cover$avgVegetationHeightCm) # Poisson distribution, no outliers
-# hist(ground_cover$maxVegetationHeightCm) # Normal distribution, no outliers
+# Clean data export
+write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover_clean.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover_clean.csv")
 
-# Dataset export
-write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL PENETRATION TESTS ####
 
@@ -522,54 +393,13 @@ soil_pene <- subset(
 ## Duplicate check
 # get_dupes(soil_pene) #validated
 
-## Character variables - desirable categories, NAs, misprints
-
-### Consistent lower typo
+## Lower case character variables
 soil_pene <- soil_pene %>%
   mutate_if(is.character, tolower)
 
-### Categories & distribution
-# table(soil_pene$siteID) #validated - uc1 site (bog) to be removed
-soil_pene <- filter(soil_pene, siteID != "uc1")
-# table(soil_pene$plotID) #validated
-# table(soil_pene$bedrockHit) # 39 failed tests over 1017 due to bedrock hit
-table(filter(soil_pene, bedrockHit == "y")$siteID) # 8 sites with up to 12 failures
-
-## Numeric variables - min/max, distribution, potential outliers
-
-### Min/max
-# test <- soil_pene |>
-#   summarise(
-#     tibble(
-#       across(
-#         where(is.numeric),
-#         ~min(.x, na.rm = TRUE),
-#         .names = "min_{.col}"
-#         ),
-#       across(
-#         where(is.numeric),
-#         ~max(.x, na.rm = TRUE),
-#         .names = "max_{.col}")
-#       )
-#     ) |>
-#   transpose() #validated - no visible height above maximum stick length
-
-### NA check
-# colnames(soil_pene)[apply(soil_pene, 2, anyNA)] #validated
-
-### Variable distribution & outliers
-# hist(soil_pene$visibleHeightCm) # Normal distribution, no outliers
-
-# Add/remove variables
-## New variable soilPenetrationDepth
-# soil_pene <- soil_pene %>% 
-#   mutate(soilPeneDepthCm = stickLengthCm - visibleHeightCm)
-## Removal stickLengthCm and visibleHeightCm
-# soil_pene <- subset(soil_pene, select = -c(stickLengthCm, visibleHeightCm))
-
-# Dataset export
-write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene.csv")
+# Clean data export
+write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene_clean.csv")
+osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene_clean.csv")
 
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
@@ -682,159 +512,14 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 #     ) |>
 #   transpose() #one negative wSatG value
 # filter(soil_bulk, weightSatG < 0) #ic3-p1-d3 - value before correction: 10.35 g -> wrong data entry, should be discarded
-soil_bulk <- filter(soil_bulk, weightSatG > 0)
+# soil_bulk <- filter(soil_bulk, weightSatG > 0)
 
 ### NA check
 # colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
 # soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1-p3-d2-r1) -> discarded due to lab incident
 # soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-d2-r1")
 
-### Quality check
-
-#### Soil core volume - low core volume affect weight measurements
-# hist(soil_bulk$coreVolCm3) # Visible threshold around 50 cm3
-# filter(soil_bulk, coreVolCm3<40) # 37 or 2% samples unfit
-# filter(soil_bulk, coreVolCm3<45) # 105 or 7% samples unfit
-# filter(soil_bulk, coreVolCm3<50) # 330 or 21% samples unfit -> cores should be minimum vol of 50 cm3
-# soil_bulk <- filter(soil_bulk, coreVolCm3 >= 50)
-
-### Soil core weight - weight loss should be consistent with drying processes
-# qualitycheck <- filter(soil_bulk,
-#                         weightSatG - weight0hG < 0 |
-#                         weight24hG - weightSatG > 0 |
-#                         weight48hG - weight24hG > 0 |
-#                         weightDryG - weight0hG > 0)
-
-### Variable distribution & outliers
-
-# W0 - Weight of fresh soil before saturation
-#soilbulk_full[is.na(soilbulk_full$W0g),] # same NAs -> validated
-#hist(soilbulk_full$W0g) # Weights range from 50 to 180 g in a normal distribution -> very low weights likely to be linked to low volumes
-
-# WSAT - Soil weight after water saturation
-#soilbulk_full[is.na(soilbulk_full$WSAT),] # same NAs -> validated
-#hist(soilbulk_full$WSAT) # Weights range from 60 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
-
-# W24H - Soil weight after 24h of drying
-#soilbulk_full[is.na(soilbulk_full$W24H),] # same NAs -> validated
-#hist(soilbulk_full$W24H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes, not so much difference compared to WSAT
-
-# W48H - Soil weight after 48h of drying
-#soilbulk_full[is.na(soilbulk_full$W48H),] # same NAs -> validated
-#hist(soilbulk_full$W48H) # Weights range from 50 to 190 g in a normal distribution -> very low weights likely to be linked to low volumes
-
-# WDRY - Soil weight after over at 105C
-#soilbulk_full[is.na(soilbulk_full$WDRY),] # same NAs -> validated
-#hist(soilbulk_full$WDRY) # Weights range from 20 to 140 g in a normal distribution -> very low weights likely to be linked to low volumes
-
-# Percent water loss in 24h
-#soilbulk_full[is.na(soilbulk_full$percent_Waterloss24h),] # same NAs -> validated
-#hist(soilbulk_full$percent_Waterloss24h) # % range from -40% to 40%, main between 0 and 10% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
-
-# Percent water loss in 48h
-#soilbulk_full[is.na(soilbulk_full$percent_Waterloss48h),] # same NAs -> validated
-#hist(soilbulk_full$percent_Waterloss48h) # % range from -70% to 70%, main between 0 and 20% -> negative and extreme values might be linked to processing issue (scale) or low soil volume
-
-# Bulk density
-#soilbulk_full[is.na(soilbulk_full$BD),] # same NAs -> validated
-#hist(soilbulk_full$BD) # % range from -0.2% to 3, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
-
-# Soil moisture in percentage weight = gravimetric water content
-#soilbulk_full[is.na(soilbulk_full$Weightpercent_Soilmoisture),] # same NAs -> validated
-#hist(soilbulk_full$Weightpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative and extreme values might be linked to processing issue (scale) or low soil volume
-
-# Soil moisture in percentage volume
-#soilbulk_full[is.na(soilbulk_full$Volpercent_Soilmoisture),] # same NAs -> validated
-#hist(soilbulk_full$Volpercent_Soilmoisture) # % range from -50% to 100%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
-
-# Soil porosity
-#soilbulk_full[is.na(soilbulk_full$percent_Soilporosity),] # same NAs -> validated
-#hist(soilbulk_full$percent_Soilporosity) # % range from -70% to 80%, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
-
-# WFPS
-#soilbulk_full[is.na(soilbulk_full$percent_WFPS),] # same two NAs -> validated
-#hist(soilbulk_full$percent_WFPS) # % range from -50% to one outlier over 10000, normal distribution -> negative values might be linked to processing issue (scale) or low soil volume
-
-#
-## New variables - gravimetric & volumetric water content from standardised W+48h dried soil
-
-# New variables
-# soilbulk_full <- soilbulk_full |> 
-#   mutate(GWC_48 = (W48H - WDRY)/W48H*100) |> 
-#   mutate(VWC_48 = GWC_48*BD)
-
-# Distribution
-# hist(soilbulk_full$GWC_48) # Normal distribution, from 20% to 80% -> some very high values
-# hist(soilbulk_full$VWC_48) # Normal distribution, from 5% to 60%
-
-#
-## Data filtering
-
-# Min soil core volume
-#filter(soilbulk_full, CoreVol<40 & !is.na(CoreVol)) # 40 or 2% samples unfit
-#filter(soilbulk_full, CoreVol<45 & !is.na(CoreVol)) # 111 or 7% samples unfit
-#filter(soilbulk_full, CoreVol<50 & !is.na(CoreVol)) # 344 or 21% samples unfit -> cores should be minimum vol of 50 cm3
-
-# Negative water loss values
-#filter(soilbulk_full, percent_Waterloss24h<0 & !is.na(percent_Waterloss24h)) #132 samples with water loss 24h negative
-#filter(soilbulk_full, percent_Waterloss48h<0 & !is.na(percent_Waterloss48h)) #82 samples with water loss 48h negative
-
-# Selection data with min 50 cm3 soil volume and positive water loss
-# soilbulk_full <- subset(soilbulk_full, CoreVol>50)
-# soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h>0)
-# soilbulk_full <- subset(soilbulk_full, percent_Waterloss48h>0)
-
-# Check new variable distribution - water loss 24h
-#hist(soilbulk_full$percent_Waterloss24h) # still some extreme values over 20%
-#filter(soilbulk_full, percent_Waterloss24h>20) # 6 cores with more than 20% over 24h
-# 2 cores from UC1, which is excluded from the analysis -> should be removed
-# 1 cores from OC3, concerned with scale issue (lots of negative values which are already removed). Water loss between 0-24 and 24-48 not coherent -> should be removed
-# 2 cores from OC2, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same plot (W48h>W24h for P1-D1_2) -> should be removed
-# 1 cores from OC5, concerned with scale issue. Water loss between 0-24 and 24-48 not coherent with other samples from same site -> should be removed
-# soilbulk_full <- subset(soilbulk_full, percent_Waterloss24h<20)
-
-# Check new variable distribution - water loss 48h
-#hist(soilbulk_full$percent_Waterloss48h) # still some extreme values over 25%
-#filter(soilbulk_full, percent_Waterloss48h>25) # 2 cores with more than 25% over 48h
-# OG6-P1-D3_1, not concerned by the scale issue and with values from other cores coherent -> to be kept
-# OC2-P2-D1_3, concerned with scale issue - value not coherent with water loss 24h and with other cores -> to be removed
-# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D1_3")
-
-# Check new variable distribution - bulk density
-#hist(soilbulk_full$BD) # no negative values anymore, quite nice normal distribution -> validated
-
-# Check new variable distribution - soil moisture in percent weight
-#hist(soilbulk_full$Weightpercent_Soilmoisture) # still some negative and extreme values (100%)
-#filter(soilbulk_full, Weightpercent_Soilmoisture<20) # 5 cores with less than 20% soil moisture
-# 3 cores from OC2, concerned with scale issue. OC2-P2-D2_2 negative value, OC2-P1-D1_3 very low not coherent with other samples from the plot -> to be removed - OC2-P3-D3_3 just under 20, not extreme compared with the other samples -> to be kept
-# OG4-P3-D3_1, concerned with scale issue -> values are coherent within the plot and relatively close to what is find in other plots (10%-30%) -> to be kept
-# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P2-D2_2")
-# soilbulk_full <- subset(soilbulk_full, BDcoreID != "OC2-P1-D1_3")
-#filter(soilbulk_full, Weightpercent_Soilmoisture>90) # IS3-P3-D4_1, with P3 concerned with scale issue. Incoherent with other samples from same plot -> to be removed
-# soilbulk_full <- subset(soilbulk_full, Weightpercent_Soilmoisture<90)
-
-# Check new variable distribution - soil moisture in percent volume
-#hist(soilbulk_full$Volpercent_Soilmoisture) # no extreme. nice normal distribution
-
-# Check new variable distribution - standardised gravimetric water content
-#hist(soilbulk_full$GWC_48) # no extreme. nice normal distribution
-
-# Check new variable distribution - standardised volumetric water content
-#hist(soilbulk_full$VWC_48) # no extreme. nice normal distribution
-
-# Check new variable distribution - WFPS
-#hist(soilbulk_full$percent_WFPS) # no extremes, nice normal distribution
-
-# Check new number of replicates per site
-#sort(table(soilbulk_full$SiteID)) 
-# 9 sites with less than 20 replicates and lowest IC3 with 9 replicates (due to missing values) -> validated
-
-### NA check
-# colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
-soil_bulk[!complete.cases(soil_bulk),] # two missing records (is1-p3-d4-r2 & og1-p3-d2-r1) -> discarded due to lab incident
-# soil_bulk <- filter(soil_bulk, recordID != "is1-p3-d4-r2" & recordID != "og1-p3-d2-r1")
-
-## Export clean data in new excel file
+## Clean data export
 
 write_csv(soil_bulk, "data/cleandata/tradmod_nbr_soilbulk.csv")
 osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
@@ -842,11 +527,11 @@ osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
 #### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
 
 # Raw datasets
-# Soil chemistry 2019 (3 per plot)
+## Soil chemistry 2019 (3 per plot)
 soil_chem_2019 <- read.csv("data/rawdata/tradmod_nbr_rawsoilchemistry2019.txt", sep=";")
-# Soil chemistry 2020 (3 per plot)
+## Soil chemistry 2020 (3 per plot)
 soil_chem_2020 <- read.csv("data/rawdata/tradmod_nbr_rawsoilchemistry2020.txt", sep=";")
-# Soil chemistry 2020 complementary dry matter content
+## Soil chemistry 2020 complementary dry matter content
 soil_chem_2020_DM <- read_excel(path = "data/rawdata/tradmod_nbr_rawsoilchemistry2020sup.xls")
 
 # Desired variables
@@ -1065,72 +750,277 @@ soil_chem <- soil_chem %>%
 #     ) |>
 #   transpose() # Check max Ca over 1000 mg/100g
 
-### NA check
-# colnames(soil_chem)[apply(soil_chem, 2, anyNA)] #validated
-
-### Variable distribution & outliers
-hist(soil_chem$lossOnIgnitionPercentDM) # 
-
-# Soil density
-#soilchem_full[is.na(soilchem_full$SoilDensity_kg.L),] # no NA
-#hist(soilchem_full$SoilDensity_kg.L) # range from 0 to 1.4 -> quite wide, but include both heathland and grassland. No visible outlier. Distribution a bit hectic
-
-# Percent of humus in dry matter
-#soilchem_full[is.na(soilchem_full$Humus_percentDM),] # no NA
-#hist(soilchem_full$Humus_percentDM) # range from 0 to 90 -> matching with LOI
-
-# pH
-#soilchem_full[is.na(soilchem_full$pH),] # no NA
-#hist(soilchem_full$pH) # range from 4 to 7, Normal distribution -> one outlier over 6.5
-#filter(soilchem_full, pH>6.5) # OC2-P1 with the calcium outlier -> should be removed
-
-# Phosphorus
-#soilchem_full[is.na(soilchem_full$P.Al_mg.100g),] # no NA
-#hist(soilchem_full$P.Al_mg.100g) # range from 0 to 40, Poisson distribution -> check high values
-#filter(soilchem_full, P.Al_mg.100g>20) # 10 plots among 5 sites over 20 mg/100g
-# 2 sites with all values over 20 (IS4, OC2)
-# other sites (IC2, OC5, OG4), values not to far from other plots
-
-# Potassium
-#soilchem_full[is.na(soilchem_full$K.Al_mg.100g),] # no NA
-#hist(soilchem_full$K.Al_mg.100g) # range from 0 to 30, Normal distribution -> check high values
-#filter(soilchem_full, K.Al_mg.100g>20) # 4 plots among 2 sites (IC2, OC1) over 20 mg/100g -> coherent with other values
-
-# Magnesium
-#soilchem_full[is.na(soilchem_full$Mg.Al_mg.100g),] # no NA
-#hist(soilchem_full$Mg.Al_mg.100g) # range from 0 to 35, Normal distribution -> check high values
-#filter(soilchem_full, Mg.Al_mg.100g>20) # 4 plots among 2 sites (IC2, OC1) over 20 mg/100g, same as for Potassium
-
-# Calcium
-#soilchem_full[is.na(soilchem_full$Ca.Al_mg.100g),] # no NA
-#hist(soilchem_full$Ca.Al_mg.100g) # range from 0 to 1000, one clear outlier
-#filter(soilchem_full, Ca.Al_mg.100g>1000) # OC2-P1, not coherent with other samples -> to be removed
-#filter(soilchem_full, Ca.Al_mg.100g>200) # 2 plots from same site (IC5) over 200 mg/100g
-
-# Sodium
-#soilchem_full[is.na(soilchem_full$Na.Al_mg.100g),] # no NA
-#hist(soilchem_full$Na.Al_mg.100g) # range from 0 to 21, one clear outlier over 20
-#filter(soilchem_full, Na.Al_mg.100g>20) # OC2-P1, same as Calcium -> to be removed
-#filter(soilchem_full, Na.Al_mg.100g>12) # IS4-P3 & IS5-P2 -> coherent with rest of the samples
-
-# Percent Dry Matter
-#soilchem_full[is.na(soilchem_full$DryMatter_percent),] # no NA
-#hist(soilchem_full$DryMatter_percent) # range from 10 to 100, distribution a bit hectic
-
-# Total N in percent dry matter
-#soilchem_full[is.na(soilchem_full$TotalN_percentDM),] # no NA
-#hist(soilchem_full$TotalN_percentDM) # range from 0.2 to 2.2, distribution a bit hectic
-
-#
-## Data filtering/removal
-
-# OC2-P1 outlier in several parameter -> farmer fertilizes in spring and summmer, maybe samples taken on a chunk
-soilchem_full <- subset(soilchem_full, !PlotID == "OC2-P1")
-
-
 ## Export clean data in new excel file
 
-write_csv(soilchem_full, "data/cleandata/NBR_FullSoilChem.csv")
+write_csv(soil_chem, "data/cleandata/tradmod_nbr_soilchem_clean.csv")
+
+
+#### DESTRUCTIVE SUBPLOTS - SOIL MESOFAUNA ####
+
+# Raw datasets
+## Acari and collembola abundance
+soil_mesobio_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesocommunity.xlsx", na="NA")
+## Soil core height
+soil_mesocore_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesofaunacore.xlsx", sheet="Mesofauna")
+
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## coreVolCm3 - Core volume in cm3
+## abundanceAcari - Acari abundance in samples
+## abundanceCollembola - Collembola abundance in samples
+
+# Consistency and reproducibility
+
+## Variable types
+# str(soil_mesobio_raw) # need to rename comments, siteID and plotID should also be added
+# str(soil_mesocore_raw) # need to rename comments, siteID and plotID should also be added
+
+## R-friendly with janitor package
+soil_mesobio_raw <- soil_mesobio_raw %>% 
+  clean_names("lower_camel")
+soil_mesocore_raw <- soil_mesocore_raw %>% 
+  clean_names("lower_camel")
+
+## Variable names
+names(soil_mesobio_raw) <- gsub("sampleNameOnPot", "subplotID", names(soil_mesobio_raw))
+names(soil_mesobio_raw) <- gsub("x5", "commentProcessing", names(soil_mesobio_raw))
+names(soil_mesocore_raw) <- gsub("site", "siteID", names(soil_mesocore_raw))
+names(soil_mesocore_raw) <- gsub("plotId", "subplotID", names(soil_mesocore_raw))
+names(soil_mesocore_raw) <- gsub("comment", "commentSampling", names(soil_mesocore_raw))
+
+## ID and replication
+# table(soil_mesobio_raw$subplotID) # wrong code ID for plots also associated with OY experiment
+# table(soil_mesocore_raw$subplotID) # consistent code
+soil_mesobio_raw <- soil_mesobio_raw |> 
+  mutate(subplotID = dplyr::recode(subplotID, "ØY-R1-T2-D1" = "OV1-P1-D1")) |> 
+  mutate(subplotID = dplyr::recode(subplotID, "ØY-R1-T3-D1" = "OV1-P2-D1")) |> 
+  mutate(subplotID = dplyr::recode(subplotID, "ØY-GK-T4-D1" = "OV1-P3-D1"))
+
+# Dataset
+
+## Data merging
+soil_meso <- dplyr::full_join(soil_mesobio_raw, soil_mesocore_raw)
+
+## New plotID variable
+soil_meso <- soil_meso |> 
+  mutate(plotID = substr(subplotID, 1, 6))
+
+## Selection desired variables
+soil_meso <- subset(
+  soil_meso, select = -c(
+    # anonymous
+    counter,
+    # redundant with site description dataset
+    date
+    )
+)
+
+## Duplicate check
+# get_dupes(soil_meso) #validated
+
+## Check comment anonymity
+# unique(soil_meso$commentSampling) #validated
+# unique(soil_meso$commentProcessing) #validated
+
+## Lower case character variables
+soil_meso <- soil_meso %>%
+  mutate_if(is.character, tolower)
+
+## Clean data export
+write_csv(mesobio_full, "data/cleandata/tradmod_nbr_soilmeso_clean.csv")
+
+
+#### DESTRUCTIVE SUBPLOTS - ABOVEGROUND BIOMASS ####
+
+# Raw datasets
+## Aboveground biomass (3 per plot)
+agb_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawabovegroundbiomass.xlsx", na="NA")
+
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## functionalType - Plant functional type (values: woody; forbs; monocotyledons; cryptogams; ferns)
+## dryWeightG - Aboveground biomass weight after 48H drying in the oven at 105C
+
+# Consistency and reproducibility
+
+## Variable types
+# str(agb_raw) #validated
+
+## R-friendly with janitor package
+agb_raw <- agb_raw |>  
+  clean_names("lower_camel")
+
+## Variable names
+names(agb_raw) <- gsub("sampleId", "subplotID", names(agb_raw))
+
+## ID and replication
+# table(agb_raw$subplotID) #validated
+
+## New plotID and siteID variables
+agb_raw <- agb_raw |> 
+  mutate(plotID = substr(subplotID, 1, 6)) |>
+  mutate(siteID = substr(subplotID, 1, 3))
+
+# Dataset
+
+## Selection desired variables
+agb_clean <- subset(
+  agb_raw, select = -c(
+    # anonymous
+    who,
+    # bag weight correction
+    biomassBagG,
+    bagType
+  )
+)
+
+## Duplicate check
+# get_dupes(agb_clean) #validated
+
+## Check comment anonymity
+# unique(agb_clean$commentSampling) #validated
+
+# Character variables
+
+## Lower case
+agb_clean <- agb_clean %>%
+  mutate_if(is.character, tolower)
+
+## Functional type
+# unique(agb_clean$functionalType) # Inconsistent categories
+agb_clean <- agb_clean |> 
+  mutate(functionalType = dplyr::recode(functionalType, "grasses" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminoids" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminioids" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminiods" = "monocotyledons")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "herbs" = "forbs")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "fern" = "ferns")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "moss" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "Moss" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "bryo" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "mosses" = "bryophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "leaf litter" = "litter")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "lichen" = "lichens")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "club mosses" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycopodium" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "huperzia selago" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "diphasiastrum alpinum" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "selaginella selaginoides" = "lycophytes")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycophytes" = "cryptogams")) |> 
+  mutate(FunctionalType = dplyr::recode(FunctionalType, "bryophytes" = "cryptogams"))
+
+# 9 categories
+
+# Check categories
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IV1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
+xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
+xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # all Ds, all functional groups
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # 3 D1s, all functional groups -> validated
+#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US6")) # 3 D1s, all functional groups -> validated
+
+#
+## Remove mislabelled & non fully sorted samples
+
+biomass_full <- filter(biomass_full, SampleID != "OS5-?-?" &
+                         SampleID != "OS2-P2-D1" &
+                         SampleID != "OS2-P3-D2")
+
+#
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- biomass_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # some negative values -> should be 
+
+# Check distribution of quantitative variable
+hist(biomass_full$DWbiomass_g) # quite a few negative values
+#filter(biomass_full, DWbiomass_g < 1) # 5 negative values
+
+# Check for duplicates in weights
+dupli <- biomass_full |>
+  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
+  summarise(n = n(), .groups = "drop") |> 
+  filter(n > 1L)
+unique(dupli$SampleID) # 8 duplicates
+
+# OS2-P1-D1 monocotyledons, OS2-P2-D3 forbs & monocotyledons
+# filter(biomass_full, SampleID == "OS2-P1-D1")
+# filter(biomass_full, SampleID == "OS2-P2-D3")
+# filter(biomass_full, SiteID == "OS2" & FunctionalType == "monocotyledons")
+# filter(biomass_full, SiteID == "OS2" & FunctionalType == "forbs")
+# Check on comments -> sample sorted in two half separatly -> weights should be summed
+
+# US4 lycophytes
+# filter(biomass_full, SampleID == "US4-P1-D1")
+# filter(biomass_full, SampleID == "US4-P1-D2")
+# filter(biomass_full, SampleID == "US4-P1-D3")
+# filter(biomass_full, SampleID == "US4-P1-D4")
+# filter(biomass_full, SampleID == "US4-P2-D4")
+# filter(biomass_full, SampleID == "US4-P3-D1")
+# filter(biomass_full, SiteID == "US4" & FunctionalType == "lycophytes") # duplicates due to renaming -> need to sum up all rows
+
+# Summarise duplicates by sum
+biomass_full <- biomass_full |> 
+  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
+  summarise(DWbiomass_g = sum(DWbiomass_g, na.rm = TRUE)) |> 
+  ungroup()
+
+# New biomass value per m^2^
+biomass_full <- biomass_full |> 
+  mutate(Biomass.m2 = DWbiomass_g*4)
+biomass_full <- subset(biomass_full, select = -c(DWbiomass_g))
+
+#
+## Prepare data for vegan
+
+# Select 3 replicates per site
+biomass_full <- biomass_full |> 
+  group_by(SiteID, PlotID) |>
+  pivot_wider(names_from = FunctionalType, values_from = Biomass.m2) |> 
+  # Select randomly one row which match unique combination of site & plot IDs
+  slice(1) |>
+  ungroup() |>
+  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "Biomass.m2")
+
+# Export clean data in new excel file
+write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
+
+
 
 
 
@@ -1358,296 +1248,5 @@ arthro_full <- arthro_full |>
 write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
 write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
 
-
-
-#### Mesofauna abundance data ####
-
-## Description
-
-## List of variables
-
-# [1] Name of the counter
-# [2] Sample ID
-# [3] Acari abundance
-# [4] Collembola abundance
-# [5] Site ID
-# [6] Other observer ?
-
-#
-## Summary - Check table size, list of variables, variable types (num/chr)
-
-#str(mesobio_raw) # need to rename comments, siteID and plotID should also be added
-#str(soilmeso_raw) # need to rename comments, siteID and plotID should also be added
-
-#
-## Character cleaning, Common ID and correct Latin names for merging
-
-# Common ID
-names(mesobio_raw) <- gsub("Sample_name_on_pot", "SampleID", names(mesobio_raw))
-names(mesobio_raw) <- gsub("...5", "Comments", names(mesobio_raw))
-names(soilmeso_raw) <- gsub("Site", "SiteID", names(soilmeso_raw))
-names(soilmeso_raw) <- gsub("PlotID", "SampleID", names(soilmeso_raw))
-names(soilmeso_raw) <- gsub("Core_depth", "CoreDepth", names(soilmeso_raw))
-names(soilmeso_raw) <- gsub("\\)", "", names(soilmeso_raw))
-names(soilmeso_raw) <- gsub("\\(", "", names(soilmeso_raw))
-
-# Check ID coding
-table(mesobio_raw$SampleID) # ØY experiment samples merged in, need to extract ØY-GK as OV1
-mesobio_raw <- mesobio_raw |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-R1-T2-D1" = "OV1-P1-D1")) |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-R1-T3-D1" = "OV1-P2-D1")) |> 
-  mutate(SampleID = dplyr::recode(SampleID, "ØY-GK-T4-D1" = "OV1-P3-D1"))
-#table(soilmeso_raw$SiteID) # all good, 12 cores per site
-
-# Add PlotID and SiteID
-mesobio_raw <- mesobio_raw |> 
-  mutate(PlotID = substr(SampleID, 1, 6)) |>
-  mutate(SiteID = substr(SampleID, 1, 3))
-soilmeso_raw <- soilmeso_raw |> 
-  mutate(PlotID = substr(SampleID, 1, 6))
-
-#
-## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
-
-# Site ID
-#table(mesobio_raw$SiteID) # at least 3 per sheep (S or V) sites -> validated
-
-#
-## Numeric var - Check min/max, distribution and potential outliers
-
-# Check min/max
-test <- mesobio_raw |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # All good
-
-# Check distribution of quantitative variable
-#hist(mesobio_raw$Acari) # Poisson distribution
-#hist(mesobio_raw$Collembola) # Poisson distribution
-#hist(soilmeso_raw$CoreDepth_cm) # Most around 14 cm -> validated
-
-#
-## New variable - abundance per soil area with correction soil volume
-
-# Extraction survey data only
-mesobio_full <- mesobio_raw |> 
-  filter(SiteID != "ØY-")
-
-# Merging datasets according to sorted fauna
-mesobio_full <- left_join(mesobio_full, soilmeso_raw)
-mesobio_full <- subset(mesobio_full, select = c(SampleID, Acari, Collembola, PlotID, SiteID, CoreDepth_cm))
-
-# New variable with correction for soil volume
-mesobio_full <- mesobio_full |> 
-  # corrected abundance = (measured_abundance*standard_coreheight)/measured_coreheight
-  mutate(Acari.m2 = ((Acari*14)/CoreDepth_cm)/(3.14*(0.105/2)^2)) |> 
-  mutate(Collembola.m2 = ((Collembola*14)/CoreDepth_cm)/(3.14*(0.105/2)^2))
-
-#
-## Export clean data in new excel file
-
-write_csv(mesobio_full, "data/cleandata/NBR_FullMesobio.csv")
-
-
-
-#### ABOVEGROUND BIOMASS ####
-
-## Description
-
-## List of variables
-
-# [1] Name of the observer who sorted and weighted the biomass
-# [2] Sample ID
-# [3] Plant functional type
-# [4] Dry weight of the biomass with the bag
-# [5] Dry weight of the biomass without the bag
-# [6] Type of bag
-# [7] Comments
-
-#
-## Summary  - Check table size, list of variables, variable types (num/chr)
-
-#str(biomass_raw) # all good
-
-#
-## Character cleaning, Common ID and correct Latin names for merging
-
-# Character cleaning & change variable name
-names(biomass_raw) <- gsub(" ", "", names(biomass_raw))
-names(biomass_raw) <-  gsub("\\(", "_", names(biomass_raw))
-names(biomass_raw) <-  gsub("\\)", "", names(biomass_raw))
-names(biomass_raw) <-  gsub("\\+", "And", names(biomass_raw))
-names(biomass_raw) <- gsub("Who", "ProcessedBy", names(biomass_raw))
-names(biomass_raw) <- gsub("Dryweight_g", "DWbiomass_g", names(biomass_raw))
-
-
-# Check ID coding
-#table(biomass_raw$SampleID) # all good
-
-# Add PlotID and SiteID
-biomass_raw <- biomass_raw |> 
-  mutate(PlotID = substr(SampleID, 1, 6)) |>
-  mutate(SiteID = substr(SampleID, 1, 3))
-
-#
-## Data cleaning - New R object
-
-biomass_full <- subset(biomass_raw, select = -c(BiomassAndbag_g, BagType, ProcessedBy, Comments))
-
-#
-## Char var Site Info - Check if all sites/samples are present, categories, doubletons, NAs, misprints...
-
-# Site ID
-table(biomass_full$SiteID) # all sheep sites with between 12 and 77 bags -> need to check functional types
-
-# Functional type
-#unique(biomass_full$FunctionalType) # Need clear categories
-biomass_full <- biomass_full |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Grasses" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminoids" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminoids" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminioids" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Graminiods" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Herbs" = "forbs")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Forbs" = "forbs")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Ferns" = "ferns")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "fern" = "ferns")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Fern" = "ferns")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Woody" = "woody")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Mosses" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "moss" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Moss" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Bryo" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "mosses" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "leaf litter" = "litter")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Litter" = "litter")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Lichens" = "lichens")) |>
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lichen" = "lichens")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Club mosses" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycopodium" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Lycopodium" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Huperzia selago" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Diphasiastrum alpinum" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Selaginella selaginoides" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycophytes" = "cryptogams")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "bryophytes" = "cryptogams"))
-  
-  # 9 categories
-
-# Check categories
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US6")) # 3 D1s, all functional groups -> validated
-
-#
-## Remove mislabelled & non fully sorted samples
-
-biomass_full <- filter(biomass_full, SampleID != "OS5-?-?" &
-                         SampleID != "OS2-P2-D1" &
-                         SampleID != "OS2-P3-D2")
-
-#
-## Numeric var - Check min/max, distribution and potential outliers
-
-# Check min/max
-test <- biomass_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # some negative values -> should be 
-
-# Check distribution of quantitative variable
-hist(biomass_full$DWbiomass_g) # quite a few negative values
-#filter(biomass_full, DWbiomass_g < 1) # 5 negative values
-
-# Check for duplicates in weights
-dupli <- biomass_full |>
-  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
-  summarise(n = n(), .groups = "drop") |> 
-  filter(n > 1L)
-unique(dupli$SampleID) # 8 duplicates
-
-# OS2-P1-D1 monocotyledons, OS2-P2-D3 forbs & monocotyledons
-# filter(biomass_full, SampleID == "OS2-P1-D1")
-# filter(biomass_full, SampleID == "OS2-P2-D3")
-# filter(biomass_full, SiteID == "OS2" & FunctionalType == "monocotyledons")
-# filter(biomass_full, SiteID == "OS2" & FunctionalType == "forbs")
-# Check on comments -> sample sorted in two half separatly -> weights should be summed
-
-# US4 lycophytes
-# filter(biomass_full, SampleID == "US4-P1-D1")
-# filter(biomass_full, SampleID == "US4-P1-D2")
-# filter(biomass_full, SampleID == "US4-P1-D3")
-# filter(biomass_full, SampleID == "US4-P1-D4")
-# filter(biomass_full, SampleID == "US4-P2-D4")
-# filter(biomass_full, SampleID == "US4-P3-D1")
-# filter(biomass_full, SiteID == "US4" & FunctionalType == "lycophytes") # duplicates due to renaming -> need to sum up all rows
-
-# Summarise duplicates by sum
-biomass_full <- biomass_full |> 
-  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
-  summarise(DWbiomass_g = sum(DWbiomass_g, na.rm = TRUE)) |> 
-  ungroup()
-
-# New biomass value per m^2^
-biomass_full <- biomass_full |> 
-  mutate(Biomass.m2 = DWbiomass_g*4)
-biomass_full <- subset(biomass_full, select = -c(DWbiomass_g))
-
-#
-## Prepare data for vegan
-
-# Select 3 replicates per site
-biomass_full <- biomass_full |> 
-  group_by(SiteID, PlotID) |>
-  pivot_wider(names_from = FunctionalType, values_from = Biomass.m2) |> 
-  # Select randomly one row which match unique combination of site & plot IDs
-  slice(1) |>
-  ungroup() |>
-  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "Biomass.m2")
-
-# Export clean data in new excel file
-write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
 
 
