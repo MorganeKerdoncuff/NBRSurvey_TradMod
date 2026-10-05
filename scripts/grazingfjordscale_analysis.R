@@ -882,12 +882,17 @@ rdafineplant <- statrda(rda) |>
   mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
 
+## Filtered rda outputs
+rda_species <- fortify(rda) |> 
+  filter(score == "species") |> 
+  filter(rda1 > 0.1 | rda1 < -0.1 | rda2 > 0.1 | rda2 < -0.1 | rda3 > 0.1 | rda3 < -0.1)
+
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
   xlim(-1.1, 1.1) +
   ylim(-1.2, 1.1) +
   geom_text(
-    data = filter(fortify(rda), score == "species"),
+    data = rda_species,
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
@@ -917,7 +922,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
   xlim(-1.1, 1) +
   ylim(-1.2, 1.1) +
   geom_text(
-    data = filter(fortify(rda), score == "species"),
+    data = rda_species,
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
