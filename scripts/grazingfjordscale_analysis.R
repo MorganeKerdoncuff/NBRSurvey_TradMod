@@ -819,19 +819,19 @@ plotrda_fieldfine <- ggrda(rda) +
   ylim(-3, 3) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "darkred",
     size = 3
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1*2, yend = RDA2*2),
+    mapping = aes(x = 0, y = 0, xend = rda1*2, yend = rda2*2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkgoldenrod3"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*2.5, y = RDA2*2.5, label = label),
+    mapping = aes(x = rda1*2.5, y = rda2*2.5, label = label),
     colour = "darkgoldenrod3",
     size = 3
   ) +
@@ -888,19 +888,19 @@ plotrda_fineplant12 <- ggrda(rda) +
   ylim(-1.2, 1.1) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -918,19 +918,19 @@ plotrda_fineplant23 <- ggrda23(rda) +
   ylim(-1.2, 1.1) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA2, y = RDA3, label = label),
+    mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA2, yend = RDA3),
+    mapping = aes(x = 0, y = 0, xend = rda2, yend = rda3),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA2*1.2, y = RDA3*1.2, label = label),
+    mapping = aes(x = rda2*1.2, y = rda3*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -969,19 +969,19 @@ plotrda_landscapebeetle <- ggrda(rda) +
   # ylim(-1, 1.8) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "chartreuse4"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "chartreuse4",
     size = 2.5
   ) +
@@ -1015,19 +1015,19 @@ plotrda_finebeetle <- ggrda(rda) +
   ylim(-1.2, 1.1) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
