@@ -202,12 +202,12 @@ dominantplant <- vege_site |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) |> 
   # filter species with at least 20% cover in at least one site
-  filter(PlantSp_cover > 20) |> 
+  filter(PlantSp_cover > 1) |> 
   ungroup() |> 
   group_by(Species) |> 
-  summarise() |> 
+  summarise() #|> 
   # removal bryophytes
-  filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
+  # filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
 
 ## Plant data table
 plant <- vege_site |> 
@@ -223,18 +223,18 @@ plant <- plant |>
   pivot_wider(names_from = Species, values_from = Freq)
 
 ## Suitable variable names
-names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
-names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
-names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
-names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
-names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
-names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
-names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
-names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
-names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
-names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
-names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
-names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
+# names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
+# names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
+# names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
+# names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
+# names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
+# names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
+# names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
+# names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
+# names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
+# names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
+# names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
+# names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
 
 # Selection & transformation plant community data plot-level
 
@@ -254,18 +254,18 @@ plant_plot <- plant_plot |>
   filter(PlotID != "OC2-P1")
 
 ## Suitable variable names
-names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
-names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
-names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
-names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
-names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
-names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
-names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
-names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
-names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
-names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
+# names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
+# names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
+# names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
+# names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
+# names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
+# names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
+# names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
+# names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
+# names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
+# names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
 
 # Transformation beetle assemblage data
 
@@ -275,7 +275,7 @@ dominantbeetle <- beetle_site |>
   group_by(BeetleFamilies, SiteID) |> 
   summarise_if(is.numeric, sum, na.rm = TRUE) |> 
   dplyr::arrange(desc(BeetleFam_abundance)) |> 
-  filter(BeetleFam_abundance > 50) |> 
+  filter(BeetleFam_abundance > 3) |> 
   ungroup() |> 
   group_by(BeetleFamilies) |> 
   summarise() |> 
@@ -298,20 +298,20 @@ beetle <- beetle |>
 
 # Selection & transformation beetle assemblage data plot-level
 
-# Plant data table
-beetle_plot <- beetle_plot |>
-  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
-contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
-
-## Wide table
-beetle_plot <- as.data.frame(contin_beetle_plot)
-beetle_plot <- beetle_plot |>
-  pivot_wider(names_from = BeetleFamilies, values_from = Freq) |>
-  mutate(SiteID = id$SiteID) |>
-  filter(PlotID != "OC2-P1")
+# Beetle data table
+# beetle_plot <- beetle_plot |>
+#   filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
+# contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
+# 
+# ## Wide table
+# beetle_plot <- as.data.frame(contin_beetle_plot)
+# beetle_plot <- beetle_plot |>
+#   pivot_wider(names_from = BeetleFamilies, values_from = Freq) |>
+#   mutate(SiteID = id$SiteID) |>
+#   filter(PlotID != "OC2-P1")
 
 # Explanatory set regional scale
 
@@ -431,7 +431,7 @@ field_sc <- field |>
 ## Selection variables
 fine <- purrr::reduce(list(groundcover_site, soilbulk_site, soilpene_site, soilchem_site, area20x20_infield), dplyr::left_join)
 fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
-# fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+# fine <- subset(fine, select = c(SiteID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
 # names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
@@ -439,7 +439,7 @@ fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, 
 
 # Variable distribution
 hist(fine$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
-hist(fine$Bryo) # Unbalanced Normal-like but no outlier -> validated
+# hist(fine$Bryo) # Unbalanced Normal-like but no outlier -> validated
 hist(fine$MeanHeight) # Poisson like, no outlier -> validated
 hist(fine$BD) # Normal-like, a bit unbalanced but no outlier -> validated
 hist(fine$GWC) # poisson like, one gap between 50 & 55 -> validated
@@ -469,7 +469,7 @@ fine_sc <- fine |>
 ## Selection variables
 fine_plot <- purrr::reduce(list(groundcover_plot, soilbulk_plot, soilpene_plot, soilchem_plot, area20x20_infield), dplyr::left_join)
 fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
-# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
 # names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
@@ -555,7 +555,7 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 fine_long <- fine_sc |> 
   pivot_longer(
     cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
-    # cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
+    # cols = c(MeanHeight, BD, Phosph, pH, SoilPene),
     names_to = "Factors",
     values_to = "Values")
 contin_fine <- xtabs(formula = Values ~ SiteID + Factors, data = fine_long)
@@ -884,9 +884,9 @@ rdafineplant <- statrda(rda) |>
 
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
-  xlim(-1.1, 1) +
+  xlim(-1.1, 1.1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
+  geom_text(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
@@ -916,7 +916,7 @@ ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, 
 plotrda_fineplant23 <- ggrda23(rda) +
   xlim(-1.1, 1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
+  geom_text(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
@@ -991,7 +991,7 @@ plotrda_landscapebeetle <- ggrda(rda) +
     size = 0.15
   )
 plotrda_landscapebeetle
-ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, bg = "white")
 
 # Field x beetle
 
@@ -1037,7 +1037,7 @@ plotrda_finebeetle <- ggrda(rda) +
     size = 0.15
   )
 plotrda_finebeetle
-ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
