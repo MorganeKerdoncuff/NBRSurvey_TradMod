@@ -991,7 +991,7 @@ plotrda_landscapebeetle <- ggrda(rda) +
     size = 0.15
   )
 plotrda_landscapebeetle
-ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_landscapebeetle.png", plot = plotrda_landscapebeetle, bg = "white")
 
 # Field x beetle
 
@@ -1037,7 +1037,7 @@ plotrda_finebeetle <- ggrda(rda) +
     size = 0.15
   )
 plotrda_finebeetle
-ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, width = 6, height = 6, units = "cm", bg = "white")
+ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, bg = "white")
 
 # Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
 
@@ -1112,24 +1112,24 @@ plotrda_fineplantplot12 <- ggplot() +
   ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2),
+    mapping = aes(x = rda1, y = rda2),
     size = 1
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -1152,24 +1152,24 @@ plotrda_fineplantplot23 <- ggplot() +
   ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA2, y = RDA3),
+    mapping = aes(x = rda2, y = rda3),
     size = 1
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA2, y = RDA3, label = label),
+    mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA2, yend = RDA3),
+    mapping = aes(x = 0, y = 0, xend = rda2, yend = rda3),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA2*1.2, y = RDA3*1.2, label = label),
+    mapping = aes(x = rda2*1.2, y = rda3*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -1200,24 +1200,24 @@ plotrda_finebeetleplot <- ggplot() +
   # ylim(-0.8, 1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2),
+    mapping = aes(x = rda1, y = rda2),
     size = 1
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
