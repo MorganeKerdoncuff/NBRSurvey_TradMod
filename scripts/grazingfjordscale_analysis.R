@@ -186,16 +186,17 @@ dominantplant <- vege_site |>
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) |> 
   # filter species with at least 20% cover in at least one site
-  filter(PlantSp_cover > 20) |> 
+  filter(PlantSp_cover > 0) |> 
   ungroup() |> 
   group_by(Species) |> 
-  summarise() |> 
+  summarise() #|> 
   # removal bryophytes
-  filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
+  # filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
 
 ## Plant data table
 plant <- vege_site |> 
-  filter(Species %in% dominantplant$Species)
+  filter(Species %in% dominantplant$Species) |>
+  mutate(PlantSp_cover = ifelse(PlantSp_cover > 0, 1, 0))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = plant)
@@ -207,24 +208,25 @@ plant <- plant |>
   pivot_wider(names_from = Species, values_from = Freq)
 
 ## Suitable variable names
-names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
-names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
-names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
-names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
-names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
-names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
-names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
-names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
-names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
-names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
-names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
-names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
+# names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
+# names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
+# names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
+# names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
+# names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
+# names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
+# names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
+# names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
+# names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
+# names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
+# names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
+# names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
 
 # Selection & transformation plant community data plot-level
 
 ## Plant data table
 plant_plot <- vege_plot |> 
-  filter(Species %in% dominantplant$Species)
+  # filter(Species %in% dominantplant$Species) |> 
+  mutate(PlantSp_cover = ifelse(PlantSp_cover > 0, 1, 0))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = plant_plot)
@@ -238,18 +240,18 @@ plant_plot <- plant_plot |>
   filter(PlotID != "OC2-P1")
 
 ## Suitable variable names
-names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
-names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
-names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
-names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
-names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
-names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
-names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
-names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
-names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
-names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
+# names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
+# names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
+# names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
+# names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
+# names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
+# names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
+# names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
+# names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
+# names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
+# names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
 
 # Transformation beetle assemblage data
 
@@ -259,7 +261,7 @@ dominantbeetle <- beetle_site |>
   group_by(BeetleFamilies, SiteID) |> 
   summarise_if(is.numeric, sum, na.rm = TRUE) |> 
   dplyr::arrange(desc(BeetleFam_abundance)) |> 
-  filter(BeetleFam_abundance > 50) |> 
+  filter(BeetleFam_abundance > 0) |> 
   ungroup() |> 
   group_by(BeetleFamilies) |> 
   summarise() |> 
@@ -269,7 +271,8 @@ dominantbeetle <- beetle_site |>
 
 ## Beetle data table
 beetle <- beetle_site |> 
-  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
+  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies) |>
+  mutate(BeetleFam_abundance = ifelse(BeetleFam_abundance > 0, 1, 0))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_beetle <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = beetle)
@@ -282,9 +285,10 @@ beetle <- beetle |>
 
 # Selection & transformation beetle assemblage data plot-level
 
-# Plant data table
+# Beetle data table
 beetle_plot <- beetle_plot |>
-  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
+  # filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies) |> 
+  mutate(BeetleFam_abundance = ifelse(BeetleFam_abundance > 0, 1, 0))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
@@ -866,12 +870,17 @@ rdafineplant <- statrda(rda) |>
   mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
 
+## Filtered rda outputs
+rda_species <- fortify(rda) |> 
+  filter(score == "species") |> 
+  filter(rda1 > 0.1 | rda1 < -0.1 | rda2 > 0.1 | rda2 < -0.1 | rda3 > 0.1 | rda3 < -0.1)
+
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
   xlim(-1.1, 1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
+  geom_text(
+    data = rda_species,
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
@@ -900,8 +909,8 @@ ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, 
 plotrda_fineplant23 <- ggrda23(rda) +
   xlim(-1.1, 1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
+  geom_text(
+    data = rda_species,
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
