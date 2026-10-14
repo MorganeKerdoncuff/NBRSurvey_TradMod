@@ -201,17 +201,27 @@ dominantplant <- vege_site |>
   group_by(Species, SiteID) |> 
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) |> 
-  # filter species with at least 20% cover in at least one site
-  filter(PlantSp_cover > 1) |> 
+  # plant functional group 
+  mutate(FunctionalGroup = case_when(
+    grepl("Achillea|Alchemilla|Anemone|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Euphrasia|Fraxinus|Galium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Ranunculus|Rumex|Sagina|Sedum|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Veronica|Viola", Species) ~ "forbs",
+    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Carex|Dactylis|Danthonia|Deschampsia|Eriophorum|Festuca|Holcus|Juncus|Lolium|Luzula|Molinia|Nardus|Poa|Trichophorum", Species) ~ "monocotyledons",
+    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "woody",
+    grepl("Athyrium|Blechnum|Phegopteris|Polypodium|Pteridium", Species) ~ "ferns",
+    .default = "cryptogams"
+  )) |> 
+  # filter species with at least 20% cover in at least one site |> 
+  filter(PlantSp_cover > 0) |> 
+  filter(FunctionalGroup != "cryptogams") |> 
   ungroup() |> 
   group_by(Species) |> 
-  summarise() #|> 
+  summarise() 
   # removal bryophytes
   # filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
 
 ## Plant data table
 plant <- vege_site |> 
-  filter(Species %in% dominantplant$Species)
+  filter(Species %in% dominantplant$Species) |> 
+  mutate(Species = make.cepnames(Species))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = plant)
@@ -240,7 +250,8 @@ plant <- plant |>
 
 ## Plant data table
 plant_plot <- vege_plot |> 
-  filter(Species %in% dominantplant$Species)
+  filter(Species %in% dominantplant$Species) |> 
+  mutate(Species = make.cepnames(Species))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = plant_plot)
@@ -713,7 +724,7 @@ rdaplot
 
 }
 
-# Aternative showing 2nd & 3rd axes
+# Alternative showing 2nd & 3rd axes
 ggrda23 <- function(rda) {
   
   rdaplot <- ggplot() +
@@ -1117,24 +1128,24 @@ plotrda_fineplantplot12 <- ggplot() +
   ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2),
+    mapping = aes(x = rda1, y = rda2),
     size = 1
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
+    mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -1157,24 +1168,24 @@ plotrda_fineplantplot23 <- ggplot() +
   ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA2, y = RDA3),
+    mapping = aes(x = rda2, y = rda3),
     size = 1
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA2, y = RDA3, label = label),
+    mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA2, yend = RDA3),
+    mapping = aes(x = 0, y = 0, xend = rda2, yend = rda3),
     arrow = arrow(length = unit(0.01, "npc")),
     colour = "darkred"
   ) +
   geom_text_repel(
     data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA2*1.2, y = RDA3*1.2, label = label),
+    mapping = aes(x = rda2*1.2, y = rda3*1.2, label = label),
     colour = "darkred",
     size = 2.5
   ) +
@@ -1190,48 +1201,48 @@ ggsave("outputs/singleRDA/plotrda_fineplantplot23.png", plot = plotrda_fineplant
 # Fine x beetle plot-level
 
 ## RDA model
-rda <- rda(select_if(beetle_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
-rdafinebeetleplot <- statrdaplot(rda) |>
-  mutate(model = "FinexPlant", explanatory = "Fine", response = "Beetle") |>
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
-
-## Plot RDA
-plotrda_finebeetleplot <- ggplot() +
-  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
-  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  # xlim(-1, 0.8) +
-  # ylim(-0.8, 1) +
-  geom_point(
-    data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = RDA1, y = RDA2),
-    size = 1
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = RDA1, y = RDA2, label = label),
-    colour = "black",
-    size = 2.5
-  ) +
-  geom_segment(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = RDA1, yend = RDA2),
-    arrow = arrow(length = unit(0.01, "npc")),
-    colour = "darkred"
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = RDA1*1.2, y = RDA2*1.2, label = label),
-    colour = "darkred",
-    size = 2.5
-  ) +
-  coord_equal() +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = 9),
-    axis.text = element_text(size = 8)
-  )
-plotrda_finebeetleplot
-ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
-
+# rda <- rda(select_if(beetle_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+# rdafinebeetleplot <- statrdaplot(rda) |>
+#   mutate(model = "FinexPlant", explanatory = "Fine", response = "Beetle") |>
+#   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
+# 
+# ## Plot RDA
+# plotrda_finebeetleplot <- ggplot() +
+#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+#   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+#   # xlim(-1, 0.8) +
+#   # ylim(-0.8, 1) +
+#   geom_point(
+#     data = filter(fortify(rda), score == "sites"),
+#     mapping = aes(x = rda1, y = rda2),
+#     size = 1
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "species"),
+#     mapping = aes(x = rda1, y = rda2, label = label),
+#     colour = "black",
+#     size = 2.5
+#   ) +
+#   geom_segment(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
+#     arrow = arrow(length = unit(0.01, "npc")),
+#     colour = "darkred"
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
+#     colour = "darkred",
+#     size = 2.5
+#   ) +
+#   coord_equal() +
+#   theme_bw() +
+#   theme(
+#     axis.title = element_text(size = 9),
+#     axis.text = element_text(size = 8)
+#   )
+# plotrda_finebeetleplot
+# ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
+# 
