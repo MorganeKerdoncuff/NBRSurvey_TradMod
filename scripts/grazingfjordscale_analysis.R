@@ -117,14 +117,6 @@ soilbulk_plot <- soilbulk_infield |>
 
 ## Soil chemistry - current at plot level -> site-level summary by average
 soilchem_site <- soilchem_infield |> 
-  # Post-analysis verification to determine if soil penetration is related to soil texture -> answer is no
-  # mutate(SoilType = ifelse(
-  #   SoilType == "Medium_sand", 2, ifelse(
-  #     SoilType == "Fine_sand", 3, ifelse(
-  #       SoilType == "Silty_medium_sand", 5, ifelse(
-  #         SoilType == "Silty_fine_sand", 6, ifelse(
-  #           SoilType == "Mineral_mixed_humus_soil", 13, 14
-  #         )))))) |>
   group_by(SiteID) |> 
   summarise(LOI = mean(LOI),
             #SoilType = mean(SoilType),
@@ -137,14 +129,6 @@ soilchem_site <- soilchem_infield |>
 
 ## Soil chemistry - current at plot level -> plot-level summary by average
 soilchem_plot <- soilchem_infield |> 
-  # Post-analysis verification to determine if soil penetration is related to soil texture -> answer is no
-  # mutate(SoilType = ifelse(
-  #   SoilType == "Medium_sand", 2, ifelse(
-  #     SoilType == "Fine_sand", 3, ifelse(
-  #       SoilType == "Silty_medium_sand", 5, ifelse(
-  #         SoilType == "Silty_fine_sand", 6, ifelse(
-  #           SoilType == "Mineral_mixed_humus_soil", 13, 14
-  #         )))))) |>
   group_by(PlotID, SiteID) |> 
   summarise(LOI = mean(LOI),
             #SoilType = mean(SoilType),
