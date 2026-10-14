@@ -185,17 +185,27 @@ dominantplant <- vege_site |>
   group_by(Species, SiteID) |> 
   summarise_if(is.numeric, mean, na.rm = TRUE) |>
   dplyr::arrange(desc(PlantSp_cover)) |> 
-  # filter species with at least 20% cover in at least one site
-  filter(PlantSp_cover > 20) |> 
+  # plant functional group 
+  mutate(FunctionalGroup = case_when(
+    grepl("Achillea|Alchemilla|Anemone|Bartsia|Campanula|Cardamine|Cerastium|Cirsium|Conopodium|Dactylorhiza|Digitalis|Epilobium|Euphrasia|Fraxinus|Galium|Gnaphalium|Hieracium|Hypericum|Hypochaeris|Lathyrus|Leontodon|Lotus|Melampyrum|Moneses|Narthecium|Oxalis|Pedicularis|Pinguicula|Plantago|Potentilla|Ranunculus|Rumex|Sagina|Sedum|Solidago|Stellaria|Succisa|Taraxacum|Trientalis|Trifolium|Veronica|Viola", Species) ~ "forbs",
+    grepl("Agrostis|Aira|Alopecurus|Anthoxanthum|Carex|Dactylis|Danthonia|Deschampsia|Eriophorum|Festuca|Holcus|Juncus|Lolium|Luzula|Molinia|Nardus|Poa|Trichophorum", Species) ~ "monocotyledons",
+    grepl("Andromeda|Arctostaphylos|Betula|Calluna|Chamaepericlymenum|Empetrum|Erica|Juniperus|Loiseleuria|Picea|Polygala|Polygonum|Populus|Prunus|Rubus|Salix|Sorbus|Ulmus|Vaccinium", Species) ~ "woody",
+    grepl("Athyrium|Blechnum|Phegopteris|Polypodium|Pteridium", Species) ~ "ferns",
+    .default = "cryptogams"
+  )) |> 
+  # filter species with at least 20% cover in at least one site |> 
+  filter(PlantSp_cover > 0) |> 
+  filter(FunctionalGroup != "cryptogams") |> 
   ungroup() |> 
   group_by(Species) |> 
-  summarise() |> 
+  summarise() 
   # removal bryophytes
-  filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
+  # filter(Species != "Cirriphyllum piliferum" & Species != "Rhytidiadelphus squarrosus")
 
 ## Plant data table
 plant <- vege_site |> 
-  filter(Species %in% dominantplant$Species)
+  filter(Species %in% dominantplant$Species) |> 
+  mutate(Species = make.cepnames(Species))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = plant)
@@ -207,24 +217,25 @@ plant <- plant |>
   pivot_wider(names_from = Species, values_from = Freq)
 
 ## Suitable variable names
-names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
-names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
-names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
-names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
-names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
-names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
-names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
-names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
-names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
-names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
-names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
-names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
+# names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
+# names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
+# names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
+# names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
+# names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
+# names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
+# names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
+# names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
+# names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
+# names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
+# names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
+# names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
 
 # Selection & transformation plant community data plot-level
 
 ## Plant data table
 plant_plot <- vege_plot |> 
-  filter(Species %in% dominantplant$Species)
+  filter(Species %in% dominantplant$Species) |> 
+  mutate(Species = make.cepnames(Species))
 
 ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
 contin_plant_plot <- xtabs(formula = PlantSp_cover ~ PlotID + Species, data = plant_plot)
@@ -238,18 +249,18 @@ plant_plot <- plant_plot |>
   filter(PlotID != "OC2-P1")
 
 ## Suitable variable names
-names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
-names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
-names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
-names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
-names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
-names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
-names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
-names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
-names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
-names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
-names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
+# names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
+# names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
+# names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
+# names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
+# names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
+# names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
+# names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
+# names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
+# names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
+# names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
+# names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
 
 # Transformation beetle assemblage data
 
@@ -259,7 +270,7 @@ dominantbeetle <- beetle_site |>
   group_by(BeetleFamilies, SiteID) |> 
   summarise_if(is.numeric, sum, na.rm = TRUE) |> 
   dplyr::arrange(desc(BeetleFam_abundance)) |> 
-  filter(BeetleFam_abundance > 50) |> 
+  filter(BeetleFam_abundance > 3) |> 
   ungroup() |> 
   group_by(BeetleFamilies) |> 
   summarise() |> 
@@ -282,20 +293,20 @@ beetle <- beetle |>
 
 # Selection & transformation beetle assemblage data plot-level
 
-# Plant data table
-beetle_plot <- beetle_plot |>
-  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
-
-## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
-contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
-
-## Wide table
-beetle_plot <- as.data.frame(contin_beetle_plot)
-beetle_plot <- beetle_plot |>
-  pivot_wider(names_from = BeetleFamilies, values_from = Freq) |>
-  mutate(SiteID = id$SiteID) |>
-  filter(PlotID != "OC2-P1")
+# Beetle data table
+# beetle_plot <- beetle_plot |>
+#   filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
+# 
+# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+# contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
+# contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
+# 
+# ## Wide table
+# beetle_plot <- as.data.frame(contin_beetle_plot)
+# beetle_plot <- beetle_plot |>
+#   pivot_wider(names_from = BeetleFamilies, values_from = Freq) |>
+#   mutate(SiteID = id$SiteID) |>
+#   filter(PlotID != "OC2-P1")
 
 # Explanatory set regional scale
 
@@ -415,7 +426,7 @@ field_sc <- field |>
 ## Selection variables
 fine <- purrr::reduce(list(groundcover_site, soilbulk_site, soilpene_site, soilchem_site, area20x20_infield), dplyr::left_join)
 fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
-# fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+# fine <- subset(fine, select = c(SiteID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
 # names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
@@ -423,7 +434,7 @@ fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, 
 
 # Variable distribution
 hist(fine$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
-hist(fine$Bryo) # Unbalanced Normal-like but no outlier -> validated
+# hist(fine$Bryo) # Unbalanced Normal-like but no outlier -> validated
 hist(fine$MeanHeight) # Poisson like, no outlier -> validated
 hist(fine$BD) # Normal-like, a bit unbalanced but no outlier -> validated
 hist(fine$GWC) # poisson like, one gap between 50 & 55 -> validated
@@ -453,7 +464,7 @@ fine_sc <- fine |>
 ## Selection variables
 fine_plot <- purrr::reduce(list(groundcover_plot, soilbulk_plot, soilpene_plot, soilchem_plot, area20x20_infield), dplyr::left_join)
 fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
-# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene, Aspect_degree, Slope_degree))
+# fine_plot <- subset(fine_plot, select = c(PlotID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
 # names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
@@ -539,7 +550,7 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 fine_long <- fine_sc |> 
   pivot_longer(
     cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
-    # cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene, Aspect, Slope),
+    # cols = c(MeanHeight, BD, Phosph, pH, SoilPene),
     names_to = "Factors",
     values_to = "Values")
 contin_fine <- xtabs(formula = Values ~ SiteID + Factors, data = fine_long)
@@ -697,7 +708,7 @@ rdaplot
 
 }
 
-# Aternative showing 2nd & 3rd axes
+# Alternative showing 2nd & 3rd axes
 ggrda23 <- function(rda) {
   
   rdaplot <- ggplot() +
@@ -866,12 +877,17 @@ rdafineplant <- statrda(rda) |>
   mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
 
+## Filtered rda outputs
+rda_species <- fortify(rda) |> 
+  filter(score == "species") |> 
+  filter(rda1 > 0.1 | rda1 < -0.1 | rda2 > 0.1 | rda2 < -0.1 | rda3 > 0.1 | rda3 < -0.1)
+
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
-  xlim(-1.1, 1) +
+  xlim(-1.1, 1.1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
+  geom_text(
+    data = rda_species,
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
@@ -900,8 +916,8 @@ ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, 
 plotrda_fineplant23 <- ggrda23(rda) +
   xlim(-1.1, 1) +
   ylim(-1.2, 1.1) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
+  geom_text(
+    data = rda_species,
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
     size = 2.5
@@ -1169,48 +1185,48 @@ ggsave("outputs/singleRDA/plotrda_fineplantplot23.png", plot = plotrda_fineplant
 # Fine x beetle plot-level
 
 ## RDA model
-rda <- rda(select_if(beetle_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
-rdafinebeetleplot <- statrdaplot(rda) |>
-  mutate(model = "FinexPlant", explanatory = "Fine", response = "Beetle") |>
-  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
-
-## Plot RDA
-plotrda_finebeetleplot <- ggplot() +
-  geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-  geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-  xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
-  ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  # xlim(-1, 0.8) +
-  # ylim(-0.8, 1) +
-  geom_point(
-    data = filter(fortify(rda), score == "sites"),
-    mapping = aes(x = rda1, y = rda2),
-    size = 1
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "species"),
-    mapping = aes(x = rda1, y = rda2, label = label),
-    colour = "black",
-    size = 2.5
-  ) +
-  geom_segment(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
-    arrow = arrow(length = unit(0.01, "npc")),
-    colour = "darkred"
-  ) +
-  geom_text_repel(
-    data = filter(fortify(rda), score == "biplot"),
-    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
-    colour = "darkred",
-    size = 2.5
-  ) +
-  coord_equal() +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = 9),
-    axis.text = element_text(size = 8)
-  )
-plotrda_finebeetleplot
-ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
-
+# rda <- rda(select_if(beetle_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
+# rdafinebeetleplot <- statrdaplot(rda) |>
+#   mutate(model = "FinexPlant", explanatory = "Fine", response = "Beetle") |>
+#   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
+# 
+# ## Plot RDA
+# plotrda_finebeetleplot <- ggplot() +
+#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
+#   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
+#   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
+#   # xlim(-1, 0.8) +
+#   # ylim(-0.8, 1) +
+#   geom_point(
+#     data = filter(fortify(rda), score == "sites"),
+#     mapping = aes(x = rda1, y = rda2),
+#     size = 1
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "species"),
+#     mapping = aes(x = rda1, y = rda2, label = label),
+#     colour = "black",
+#     size = 2.5
+#   ) +
+#   geom_segment(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
+#     arrow = arrow(length = unit(0.01, "npc")),
+#     colour = "darkred"
+#   ) +
+#   geom_text_repel(
+#     data = filter(fortify(rda), score == "biplot"),
+#     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
+#     colour = "darkred",
+#     size = 2.5
+#   ) +
+#   coord_equal() +
+#   theme_bw() +
+#   theme(
+#     axis.title = element_text(size = 9),
+#     axis.text = element_text(size = 8)
+#   )
+# plotrda_finebeetleplot
+# ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
+# 
