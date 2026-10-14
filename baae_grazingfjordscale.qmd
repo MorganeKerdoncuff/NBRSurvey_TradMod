@@ -6,7 +6,6 @@ number-sections: true
 execute: 
   echo: false
 format:
-  docx: default
   elsevier-pdf:
     keep-tex: true
     fig-dpi: 800
@@ -59,14 +58,14 @@ theme_set(theme_bw(base_size = 5))
 # ABSTRACT {.unnumbered}
 
 Low-intensity grazing systems have promoted the development of highly diverse plant and animal assemblages that sustain multiple ecosystem functions.
-However, the influence of management on the composition of these assemblages is yet to be fully understood due to complex interactions with underlying environmental gradients.
-Here we present an attempt at disentangling these relationships and their influences on grassland dominant plant and dung-associated beetle assemblages across multiple spatial scales in the agroecological system of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
+However, the influence of management on the composition of these assemblages is yet to be fully understood due to complex interactions with environmental variables.
+Here we present an attempt at disentangling these relationships and their influences on grassland vascular plant and dung-associated beetle assemblages across multiple spatial scales in the agroecological system of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
 We first used canonical correlation analyses to investigate links between the regional environment, the landscape matrix, field management, and the fine-scale environment of 29 grasslands grazed by cattle, sheep or goats.
-We then used redundancy analysis to assess the influences of environmental and management factors on dominant plant and dung-associated beetle assemblages.
+We then used redundancy analysis to assess the influences of environmental and management factors on vascular plant and dung-associated beetle assemblages.
 The composition of the landscape matrix was impacted by the regional environment, as land use intensity increased with closer proximity to fjords.
-Only the fine-scale environment explained a significant proportion of variance in dominant plant assemblages variance, which was affected by average vegetation height, soil bulk density, and soil resistance to penetration.
-Dominant dung-associated beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix. 
-Overall, our results suggest that the effects of management on dominant plant and dung-associated beetle assemblages of semi-natural grasslands in Western Norway may be overridden by a stronger influence of environmental gradients.
+Only the fine-scale environment explained a significant proportion of variance in vascular plant assemblages variance, which was affected by average vegetation height, soil bulk density, and soil resistance to penetration.
+Dung-associated beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix. 
+Overall, our results suggest that the effects of management on vascular plant and dung-associated beetle assemblages of semi-natural grasslands in Western Norway may be overridden by a stronger influence of environmental variables.
 Our study adds to the evidence that the responses of grassland assemblages to diversified grazing are not straightforward, especially in low-intensity grazing systems.
 We recommend future research to focus on disentangling the complex interactions between farmer practices and the environmental gradients in different local contexts to understand how management affects plant and animal assemblages of semi-natural grasslands.
 
@@ -102,9 +101,9 @@ However, how they interact with the different levels of environmental processes 
 
 In this study, we aim 
 (1) to explore how field management and environmental gradients operating at regional-, landscape-, and fine-scale interact with each other within the agroecological system of the fjord region; and 
-(2) to assess the respective influences of environmental and management factors on dominant vascular plant and dung-associated beetle assemblages.
-We focused on plant species and beetle families respectively representing the highest percent covers and catch frequencies in the assemblages because of their essential roles in grassland ecosystem functioning [@smithDominantSpeciesMaintain2003].
-Plants and dung-associated beetles are pertinent indicators in grazing research as they are directly associated with livestock-driven processes such as grazing (*i.e.*, biomass removal), trampling (*i.e.*, soil and vegetation disturbance), and dung deposition (*i.e.*, coprophilous resource).
+(2) to assess the respective influences of environmental and management factors on vascular plant and dung-associated beetle assemblages.
+<!-- We focused on plant species and beetle families respectively representing the highest percent covers and catch frequencies in the assemblages because of their essential roles in grassland ecosystem functioning [@smithDominantSpeciesMaintain2003]. -->
+Vascular plants and dung-associated beetles are pertinent indicators in grazing research as they are directly associated with livestock-driven processes such as grazing (*i.e.*, biomass removal), trampling (*i.e.*, soil and vegetation disturbance), and dung deposition (*i.e.*, coprophilous resource).
 We relied on a spatially-explicit conceptual design of the agroecological systems in the fjord region of Western Norway (@fig-fjordconcept), including:
 the *regional environment*, representing climate and elevation data operating at broad scale; 
 the *landscape matrix*, described by the cover of land use types surrounding the grazing fields; 
@@ -112,8 +111,8 @@ the *landscape matrix*, described by the cover of land use types surrounding the
 and finally the *fine-scale environment*, characterised by variables operating within the closest range to plant and beetle organisms such as vegetation structure and soil physicochemical parameters.
 Specifically, we asked the following research questions:
 (Q1) Can we identify linkages between the regional environment, the landscape matrix, field management, and the fine-scale environment of semi-natural grasslands resulting from top-down or bottom-up processes?
-(Q2) Which scales and environmental and management factors explain the most variance of dominant plant and dung-associated beetle assemblages?
-(Q3) What is the influence of field management on dominant plant and dung-associated beetle assemblages compared with underlying environmental gradients?
+(Q2) Which scales and environmental and management factors explain the most variance of vascular plant and dung-associated beetle assemblages?
+(Q3) What is the influence of field management on vascular plant and dung-associated beetle assemblages compared with environmental variables?
 
 ![Conceptual representation of expected cross-scale interactions between the regional environment, the landscape matrix, field management, the fine-scale environment and dominant plant and dung-associated beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, Norway. Explanatory variables included in the analysis after selection are in black typeface and those excluded are in grey. For description and selection of explanatory variables and response assemblages, see the Material and Methods section. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figure1.png){#fig-fjordconcept width=100%}
 
@@ -267,14 +266,14 @@ Beetles were stored in 70% ethanol and identified to the family level using the 
 First, we used canonical correlation analysis (CCA) to investigate linkages between the regional environment, the landscape matrix, field management, and the fine-scale environment of semi-natural grasslands.
 Canonical correlation analysis is a multivariate statistical method which quantifies a linkage between high-dimensional datasets [@hotellingRelationsTwoSets1992].
 Specifically, it searches for linear projections showing the maximum co-variance between two sets of quantitative variables.
-It is thus suitable for exploring relationships between environmental gradients and field management symmetrically (*i.e.*, without assuming any direction of causality).
+It is thus suitable for exploring relationships between the environment and field management symmetrically (*i.e.*, without assuming any direction of causality).
 The statistical significance of the canonical correlation coefficient *rho* was tested with the asymptotic approximation of Hotelling-Lawley Trace [@mullerPracticalMethodsComputing1984].
-In cases of significant canonical correlation coefficients, we used redundancy analysis (RDA) to further investigate the directional processes underlying the relationships between the environmental gradients and field management.
+In cases of significant canonical correlation coefficients, we used redundancy analysis (RDA) to further investigate the directional processes underlying the relationships between the environment and field management.
 Redundancy analysis is a constrained ordination method, based on Euclidean distance, which explores the variation explained by an explanatory matrix over a response matrix through multiple linear regression [@legendreNumericalEcology2012].
-It is therefore suitable for assessing the explanatory power of the environmental gradients and field management and for disentangling the influence of individual variables.
+It is therefore suitable for assessing the explanatory power of the environment and field management and for disentangling the influence of individual variables.
 The statistical significance of models, axes, and marginal terms was tested with ANOVA-like permutation tests (n = 999) [@legendreTestingSignificanceCanonical2011; @legendreNumericalEcology2012].
 
-Our analyses were performed on data averaged at the site-level because we aimed to understand how environmental gradients and field management interacted across sites rather than explain within-site variation.
+Our analyses were performed on data averaged at the site-level because we aimed to understand how the environment and field management interacted across sites rather than explain within-site variation.
 Environmental and management variables showing strongly skewed distributions or obvious outliers were removed to meet the assumptions of the canonical correlation analysis and the redundancy analysis [@tabachnickUsingMultivariateStatistics2014].
 Considering the limited replication rate of our study compared with the number of variables included, we removed variables rather than sites from further analyses.
 Livestock type was transformed into a dummy numeric variable explicitly representing sheep grazing (Sheep: 1; Cattle: 0) and cattle grazing (Sheep: 0; Cattle: 1), and implicitly representing goat grazing (Sheep: 0; Cattle: 0).
@@ -285,70 +284,24 @@ In the field management set, the number of adult animals grazing on site was rem
 In the fine-scale environment set, we removed litter percent cover, which showed a highly skewed distribution, and we removed gravimetric water content, loss of ignition, total nitrogen content, and humus content, which were all negatively correlated with bulk density (Spearman's rank correlation coefficients ranging from 0.78 to 1).
 See @tbl-varsum for the statistical summary of variables kept for the analyses.
 
-```{r communitysummary}
-
-# Plant species & percent cover
-nbplantspecies <- vege_site |> 
-  group_by(Species) |> 
-  summarise_if(is.numeric, mean, na.rm = TRUE)
-
-# Beetle families & occurrences
-nbbeetlefamilies <- beetle_infield |> 
-  group_by(BeetleFamilies) |> 
-  summarise_if(is.numeric, sum, na.rm = TRUE) |> 
-  # removal non-ID
-  filter(BeetleFamilies != "Other") |> 
-  mutate(freq = BeetleFam_abundance/sum(BeetleFam_abundance)*100)
-
-# Percent remaining families
-beetleremains <- filter(nbbeetlefamilies, BeetleFamilies != "Carabidae" & BeetleFamilies != "Staphylinidae" & BeetleFamilies != "Hydrophilidae" & BeetleFamilies != "Ptiliidae" & BeetleFamilies != "Scarabaeidae" & BeetleFamilies != "Silphidae") |> 
-  group_by(BeetleFamilies) |> 
-  summarise_if(is.numeric, sum, na.rm = TRUE)
-
-```
-
-Second, we used redundancy analysis to investigate how field management and the environmental gradients affect dominant plant and dung-associated beetle assemblages.
-However, as site-level averaging may cause a loss of sensitivity regarding relationships between the fine-scale environment and dominant plant assemblages, we performed a supplementary redundancy analysis at plot-level.
+Second, we used redundancy analysis to investigate how field management and the environment affect vascular plant and dung-associated beetle assemblages.
+However, as site-level averaging may cause a loss of sensitivity regarding relationships between the fine-scale environment and vascular plant assemblages, we performed a supplementary redundancy analysis at plot-level.
 We controlled for the structure of the nested sampling design by restricting permutations at plot-level to prevent pseudo-replication [@andersonPermutationTestsMultifactorial2003].
-This supplementary analysis did not apply for dominant dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent from each others due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
-
+This supplementary analysis did not apply for dung-associated beetle assemblages, as catches within a 20 m x 20 m sampling area will not be independent from each others due to the greater mobility of beetles [@larsenTrapSpacingTransect2005].
 Plant assemblage data were percent cover of vascular plant species in 1 m^2^ subplots, averaged at the site-level.
-Aided by a rank-abundance curve, we defined dominant plant species as having a minimum average percent cover of 20% in at least one site (@fig-figureS2).
-Twelve out of the `r op(nrow(nbplantspecies), 0)` recorded species fit this criteria:
-*Agrostis capillaris* L., 1753 (`r op(filter(nbplantspecies, Species == "Agrostis capillaris")$PlantSp_cover)`% of average cover across site),
-*Festuca rubra* L., 1753 (`r op(filter(nbplantspecies, Species == "Festuca rubra")$PlantSp_cover)`%),
-*Holcus lanatus* L., 1753 (`r op(filter(nbplantspecies, Species == "Holcus lanatus")$PlantSp_cover)`%),
-*Poa pratensis* L., 1753 (`r op(filter(nbplantspecies, Species == "Poa pratensis")$PlantSp_cover)`%),
-*Deschampsia cespitosa* (L.) P.Beauv., 1812 (`r op(filter(nbplantspecies, Species == "Deschampsia cespitosa")$PlantSp_cover)`%),
-*Anthoxanthum odoratum* L., 1753 (`r op(filter(nbplantspecies, Species == "Anthoxanthum odoratum")$PlantSp_cover)`%),
-*Trifolium repens* L., 1753 (`r op(filter(nbplantspecies, Species == "Trifolium repens")$PlantSp_cover)`%),
-*Rumex acetosa* L., 1753 (`r op(filter(nbplantspecies, Species == "Rumex acetosa")$PlantSp_cover)`%),
-*Lolium perenne* L., 1753 (`r op(filter(nbplantspecies, Species == "Lolium perenne")$PlantSp_cover)`%),
-*Galium saxatile* L., 1753 (`r op(filter(nbplantspecies, Species == "Galium saxatile")$PlantSp_cover)`%), 
-*Deschampsia flexuosa* (L.) Trin., 1836 (`r op(filter(nbplantspecies, Species == "Deschampsia flexuosa")$PlantSp_cover)`%) and
-*Potentilla erecta* (L.) Raeusch., 1797 (`r op(filter(nbplantspecies, Species == "Potentilla erecta")$PlantSp_cover)`%).
-
 Dung-associated beetle assemblage data were pitfall trap occurrences of beetle families, summed at the site-level.
-Aided by a rank-abundance curve, we defined dominant beetle families as having a minimum of 50 occurrences in at least one site (@fig-figureS3).
-Six out of the `r op(nrow(nbbeetlefamilies), 0)` recorded families fit this criteria, the remaining families accounting for `r op(sum(beetleremains$freq), 2)`% of the catches:
-Staphylinidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$BeetleFam_abundance, 0)` out of `r op(sum(nbbeetlefamilies$BeetleFam_abundance), 0)` identified individuals across sites, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$freq)`% of the catches),
-Ptiliidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$freq)`% of the catches), 
-Hydrophilidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Hydrophilidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Hydrophilidae")$freq)`% of the catches),
-Scarabaeidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Scarabaeidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Scarabaeidae")$freq)`% of the catches), 
-Carabidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Carabidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Carabidae")$freq)`% of the catches) and
-Silphidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Silphidae")$BeetleFam_abundance, 0)` identified individuals, representing `r op(filter(nbbeetlefamilies, BeetleFamilies == "Silphidae")$freq)`% of the catches).
 We performed Hellinger transformation on plant and dung-associated assemblage data to lower the weight of variables with low counts and many zeros [@borcardNumericalEcology2011; @legendreEcologicallyMeaningfulTransformations2001].
 See @tbl-comsum for the statistical summary of plant assemblage percentage covers and beetle assemblage percentage catches.
 
-All statistical analyses were performed in R (v.4.4.1) with R-Studio (v.2025.05.1) [@positteamRStudioIntegratedDevelopment2025; @rcoreteamLanguageEnvironmentStatistical2024]. 
-The canonical correlation analyses and the related statistical tests were made with the *CCA* [@gonzalezCCACanonicalCorrelation2023] and *CCP* [@menzelCCPSignificanceTests2022] packages. 
-The redundancy analyses were performed with the *vegan* package [@oksanenVeganCommunityEcology2024] and their visual representations were made with the *ggord* package [@beckGgordOrdinationPlots2022].
-The restricted permutations for the supplementary analyses were performed with the *permute* package [@simpsonPermuteFunctionsGenerating2011].
+All statistical analyses were performed in R (v.4.6.0) with R-Studio (v.2026.05.0) [@positteamRStudioIntegratedDevelopment2026; @rcoreteamLanguageEnvironmentStatistical2026]. 
+The canonical correlation analyses and the related statistical tests were made with the *CCA* [@gonzalezCCACanonicalCorrelation2023] and *CCP* [@menzelCCPSignificanceTests2023] packages. 
+The redundancy analyses were performed with the *vegan* package [@oksanenVeganCommunityEcology2026] and their visual representations were made with the *ggplot2* package [@wickhamGgplot2CreateElegant2026].
+The restricted permutations for the supplementary analyses were performed with the *permute* package [@simpsonPermuteFunctionsGenerating2026].
 
 \scriptsize
 
 ```{r tbl-varsum}
-#| tbl-cap: "Summary statistics of selected variables for the regional-scale, landscape-scale, field-scale, and fine-scale explanatory sets for the investigation of linkages between environmental gradients and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and of their influences on dominant plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
+#| tbl-cap: "Summary statistics of selected variables for the regional-scale, landscape-scale, field-scale, and fine-scale explanatory sets for the investigation of linkages between environmental gradients and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and of their influences on vascular plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
 #| message: false
 #| warning: false
 
@@ -453,6 +406,32 @@ varsum |>
 
 # RESULTS
 
+```{r communitysummary}
+# Plant species & percent cover
+nbplantspecies <- vege_site |>
+  filter(Species %in% dominantplant$Species) |> 
+  group_by(Species) |> 
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+
+# Beetle families & occurrences
+nbbeetlefamilies <- beetle_site |> 
+  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies) |> 
+  group_by(BeetleFamilies) |> 
+  summarise_if(is.numeric, sum, na.rm = TRUE) |> 
+  # removal non-ID
+  mutate(freq = BeetleFam_abundance/sum(BeetleFam_abundance)*100)
+
+# Percent remaining families
+# beetleremains <- filter(nbbeetlefamilies, BeetleFamilies != "Carabidae" & BeetleFamilies != "Staphylinidae" & BeetleFamilies != "Hydrophilidae" & BeetleFamilies != "Ptiliidae" & BeetleFamilies != "Scarabaeidae" & BeetleFamilies != "Silphidae") |> 
+#   group_by(BeetleFamilies) |> 
+#   summarise_if(is.numeric, sum, na.rm = TRUE)
+
+```
+
+We recorded a total of `r op(nrow(nbplantspecies), 0)` vascular plant species across the 29 study sites, among which `r op(nrow(filter(nbplantspecies, PlantSp_cover > 1)), 0)` species represented on average at least 1 percent cover (@fig-figureS2).
+We collected a total of `r op(sum(nbbeetlefamilies$BeetleFam_abundance), 0)` dung-associated beetles, which belonged to `r op(nrow(nbbeetlefamilies), 0)` families.
+Three families represented more than 90% of the catches, respectively Staphylinidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Staphylinidae")$freq)`%), Ptiliidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Ptiliidae")$freq)`%), and Hydrophilidae (`r op(filter(nbbeetlefamilies, BeetleFamilies == "Hydrophilidae")$freq)`%).
+
 ## Relationships between environmental gradients and field management
 
 We did not find any significant relationships between environmental gradients and field management (@tbl-cancorenv).
@@ -461,9 +440,9 @@ The regional environment explained a significant proportion of the landscape mat
 The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[3], 2)`, p-value = `r op(rdastat_envi$PrF[3], 3)`) and mainly driven by the distance to the closest fjord (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`).
 Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated lands and enclosed grazing areas (@fig-figureS4a).
 
-## Influence of environmental gradients and field management on dominant plant assemblages
+## Influence of environmental gradients and field management on vascular plant assemblages
 
-Only the fine-scale environment explained a significant proportion of dominant plant assemblages variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
+Only the fine-scale environment explained a significant proportion of vascular plant assemblages variance (R~adj~^2^ = `r op(rdastat_plant$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_plant$F[28], 2)`, p-value = `r op(rdastat_plant$PrF[28], 3)`) (@tbl-rdaplant).
 All three first axes of the RDA model were significant (F~RDA1~ = `r op(rdastat_plant$F[30], 2)`, p-value = `r op(rdastat_plant$PrF[30], 3)`; F~RDA2~ = `r op(rdastat_plant$F[31], 2)`, p-value = `r op(rdastat_plant$PrF[31], 3)`; F~RDA3~ = `r op(rdastat_plant$F[32], 2)`, p-value = `r op(rdastat_plant$PrF[32], 3)`).
 Both axes 1 and 2 were driven by average vegetation height (F = `r op(rdastat_plant$F[34], 2)`, p-value = `r op(rdastat_plant$PrF[34], 3)`) (@fig-figure3a).
 Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-value = `r op(rdastat_plant$PrF[35], 3)`) and axis 3 was mainly driven by soil penetration (F = `r op(rdastat_plant$F[38], 2)`, p-value = `r op(rdastat_plant$PrF[38], 3)`) (@fig-figure3b).
@@ -672,10 +651,10 @@ https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod.
 \newpage
 \scriptsize
 
-![Location of the study sites in the Nordhordland UNESCO Biosphere Reserve (light green line), Western Norway. Colour indicates the type of livestock at each study site: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figureS1.png){#fig-sitemap width=50%}
+![Location of the 29 study sites in the Nordhordland UNESCO Biosphere Reserve (light green line), Western Norway. Colour indicates the type of livestock at each study site: black for cattle, grey for sheep, white for goats. Credits: map created in QGIS v. 3.12, CSR ETRS89 (QGIS Association, http://www.qgis.org); background orthophotography (both main and miniature) from the Norwegian Mapping Authority (https://www.kartverket.no) CC BY 4.0.](figureS1.png){#fig-sitemap width=50%}
 
 ```{r tbl-sitelocation}
-#| tbl-cap: "Geolocation of the study sites in the Nordhordland UNESCO Biosphere Reserve converted to EPSG:4326 (WGS84). Longitude and latitude were rounded to two digits to preserve the privacy of the farmers involved in the study."
+#| tbl-cap: "Geolocation of the 29 study sites in the Nordhordland UNESCO Biosphere Reserve converted to EPSG:4326 (WGS84). Longitude and latitude were rounded to two digits to preserve the privacy of the farmers involved in the study."
 #| message: false
 #| warning: false
 
@@ -716,15 +695,16 @@ sitelocation |>
 ```{r fig-figureS2}
 #| message: false
 #| warning: false
-#| fig-cap: "Rank-abundance curve of plant species percent cover in each study site for determining dominant plant species in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve. Species below 1% cover are not shown for better clarity."
+#| fig-cap: "Rank-abundance curve of average plant species percent cover across all study sites of the Nordhordland UNESCO Biosphere Reserve. Species below 1% cover are not shown for better clarity."
 
 # Rank-abundance curves for plant species
-raplant <- vege_site |> 
-  group_by(Species, SiteID) |> 
-  summarise_if(is.numeric, mean, na.rm = TRUE) |> 
-  dplyr::arrange(desc(PlantSp_cover)) |> 
-  filter(PlantSp_cover > 1)
-  
+raplant <- vege_site |>
+  filter(Species %in% dominantplant$Species) |> 
+  group_by(Species) |>
+  summarise_if(is.numeric, mean, na.rm = TRUE) |>
+  dplyr::arrange(desc(PlantSp_cover)) |>
+  filter(PlantSp_cover > 0)
+
 barplot(sort(raplant$PlantSp_cover))
 
 ```
@@ -732,14 +712,15 @@ barplot(sort(raplant$PlantSp_cover))
 ```{r fig-figureS3}
 #| message: false
 #| warning: false
-#| fig-cap: "Rank-abundance curve of dung-associated beetle families number of catches in each study site for determining dominant plant species in the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve."
+#| fig-cap: "Rank-abundance curve of total catches of dung-associated beetle families across all study sites of the Nordhordland UNESCO Biosphere Reserve."
 
 # Rank-abundance curves for beetle families
-rabeetle <- beetle_infield |> 
-  group_by(BeetleFamilies, SiteID) |> 
-  summarise_if(is.numeric, sum, na.rm = TRUE) |> 
-  dplyr::arrange(desc(BeetleFam_abundance)) |> 
-  filter(BeetleFam_abundance > 3)
+rabeetle <- beetle_infield |>
+  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies) |> 
+  group_by(BeetleFamilies) |>
+  summarise_if(is.numeric, sum, na.rm = TRUE) |>
+  dplyr::arrange(desc(BeetleFam_abundance)) |>
+  filter(BeetleFam_abundance > 0)
 
 barplot(sort(rabeetle$BeetleFam_abundance))
 
@@ -748,8 +729,8 @@ barplot(sort(rabeetle$BeetleFam_abundance))
 \newpage
 \scriptsize
 
-```{r tbl-comsum}
-#| tbl-cap: "Summary statistics of dominant plant assemblage percent cover data and dung-associated beetle assemblage percent catch data."
+```{r tbl-plantlist}
+#| tbl-cap: "Summary statistics of vascular plant assemblage percent cover data collected in 29 study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway."
 #| message: false
 #| warning: false
 
@@ -758,40 +739,64 @@ library(gt)
 library(tidyverse)
 # library(kableExtra)
 
-# Join all variables
-allcom <- dplyr::full_join(plant, beetle)
-
 # Summary statistics
-comsum <- allcom |> 
+plantlist <- vege_site |> 
+  filter(Species %in% dominantplant$Species) |>
+  pivot_wider(names_from = Species, values_from = PlantSp_cover) |> 
   summarise(across(where(is.numeric), .fns =
                      list(Mean = mean,
                           sd = sd,
                           Min = min,
                           Max = max
                      ))) |>
-  pivot_longer(everything(), names_sep = "_", names_to = c( "Variable", ".value")) |>
-  mutate(Set = ifelse(
-    Variable == "Carabidae" |
-      Variable == "Hydrophilidae" |
-      Variable == "Ptilidae" |
-      Variable == "Scarabaeidae" |
-      Variable == "Silphidae" |
-      Variable == "Staphylinidae",
-    "Beetles", "Plants"
-  )) |>
-  arrange(Variable)
+  pivot_longer(everything(), names_sep = "_", names_to = c( "Species", ".value")) |>
+  arrange(Species)
 
-comsum |>
+plantlist |>
  # gt(groupname_col = "explanatory", rowname_col = "response") |>
  # tab_options(row_group.as_column = TRUE) |>
- gt(groupname_col = "Set", rowname_col = "Variable") |>
+ gt() |>
   fmt_number(
     decimals = 3,
   ) |>
   sub_missing(missing_text = "-") |>
-  row_group_order(
-    groups = c("Plants", "Beetles")
-  ) |> 
+  opt_stylize(style = 3, color = 'gray') |>
+  tab_options(
+    table.font.size = 11
+  )
+```
+
+\newpage
+
+```{r tbl-beetlelist}
+#| tbl-cap: "Summary statistics of dung-associated beetle assemblage percent catch data collected in 29 study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway."
+#| message: false
+#| warning: false
+
+# Packages
+library(gt)
+library(tidyverse)
+# library(kableExtra)
+
+# Summary statistics
+beetlelist <- beetle |> 
+  summarise(across(where(is.numeric), .fns =
+                     list(Mean = mean,
+                          sd = sd,
+                          Min = min,
+                          Max = max
+                     ))) |>
+  pivot_longer(everything(), names_sep = "_", names_to = c( "Families", ".value")) |>
+  arrange(Families)
+
+beetlelist |>
+ # gt(groupname_col = "explanatory", rowname_col = "response") |>
+ # tab_options(row_group.as_column = TRUE) |>
+ gt() |>
+  fmt_number(
+    decimals = 3,
+  ) |>
+  sub_missing(missing_text = "-") |>
   opt_stylize(style = 3, color = 'gray') |>
   tab_options(
     table.font.size = 11
