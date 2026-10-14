@@ -13,7 +13,7 @@ library(purrr) # Data manipulation: function "reduce" to bind several tables at 
 library(vegan) # Community ecology analysis
 library(BiodiversityR) # community ecology analysis
 library(ggplot2) # Visual representation
-library(ggord) # Ordination plot with ggplot2
+# library(ggord) # Ordination plot with ggplot2
 library(ggvegan) # Function autoplot.rda for ordination plot with ggplot2
 library(ggpubr) # Function ggarrange for several plots on same file
 library(ggrepel) # Prevent label overlap in graphs
@@ -270,7 +270,7 @@ dominantbeetle <- beetle_site |>
   group_by(BeetleFamilies, SiteID) |> 
   summarise_if(is.numeric, sum, na.rm = TRUE) |> 
   dplyr::arrange(desc(BeetleFam_abundance)) |> 
-  filter(BeetleFam_abundance > 3) |> 
+  filter(BeetleFam_abundance > 0) |> 
   ungroup() |> 
   group_by(BeetleFamilies) |> 
   summarise() |> 
