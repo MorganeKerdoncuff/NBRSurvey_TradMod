@@ -216,20 +216,6 @@ plant <- as.data.frame(contin_plant)
 plant <- plant |>
   pivot_wider(names_from = Species, values_from = Freq)
 
-## Suitable variable names
-# names(plant) <- gsub("Agrostis capillaris", "A.capillaris", names(plant))
-# names(plant) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant))
-# names(plant) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant))
-# names(plant) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant))
-# names(plant) <- gsub("Festuca rubra", "F.rubra", names(plant))
-# names(plant) <- gsub("Galium saxatile", "G.saxatile", names(plant))
-# names(plant) <- gsub("Holcus lanatus", "H.lanatus", names(plant))
-# names(plant) <- gsub("Lolium perenne", "L.perenne", names(plant))
-# names(plant) <- gsub("Poa pratensis", "P.pratensis", names(plant))
-# names(plant) <- gsub("Potentilla erecta", "P.erecta", names(plant))
-# names(plant) <- gsub("Rumex acetosa", "R.acetosa", names(plant))
-# names(plant) <- gsub("Trifolium repens", "T.repens", names(plant))
-
 # Selection & transformation plant community data plot-level
 
 ## Plant data table
@@ -247,20 +233,6 @@ plant_plot <- plant_plot |>
   pivot_wider(names_from = Species, values_from = Freq) |> 
   mutate(SiteID = id$SiteID) |> 
   filter(PlotID != "OC2-P1")
-
-## Suitable variable names
-# names(plant_plot) <- gsub("Agrostis capillaris", "A.capillaris", names(plant_plot))
-# names(plant_plot) <- gsub("Anthoxanthum odoratum", "A.odoratum", names(plant_plot))
-# names(plant_plot) <- gsub("Deschampsia cespitosa", "D.cespitosa", names(plant_plot))
-# names(plant_plot) <- gsub("Deschampsia flexuosa", "D.flexuosa", names(plant_plot))
-# names(plant_plot) <- gsub("Festuca rubra", "F.rubra", names(plant_plot))
-# names(plant_plot) <- gsub("Galium saxatile", "G.saxatile", names(plant_plot))
-# names(plant_plot) <- gsub("Holcus lanatus", "H.lanatus", names(plant_plot))
-# names(plant_plot) <- gsub("Lolium perenne", "L.perenne", names(plant_plot))
-# names(plant_plot) <- gsub("Poa pratensis", "P.pratensis", names(plant_plot))
-# names(plant_plot) <- gsub("Potentilla erecta", "P.erecta", names(plant_plot))
-# names(plant_plot) <- gsub("Rumex acetosa", "R.acetosa", names(plant_plot))
-# names(plant_plot) <- gsub("Trifolium repens", "T.repens", names(plant_plot))
 
 # Transformation beetle assemblage data
 
@@ -429,13 +401,12 @@ fine <- subset(fine, select = c(SiteID, Litter, Bryo, MeanHeight, BD, GWC, LOI, 
 # fine <- subset(fine, select = c(SiteID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
-# names(fine) <- gsub("Aspect_degree", "Aspect", names(fine))
-# names(fine) <- gsub("Slope_degree", "Slope", names(fine))
+names(fine) <- gsub("MeanHeight", "Height", names(fine))
 
 # Variable distribution
 hist(fine$Litter) # Highly skewed Poisson, very small range with 2 outliers -> rejected
 # hist(fine$Bryo) # Unbalanced Normal-like but no outlier -> validated
-hist(fine$MeanHeight) # Poisson like, no outlier -> validated
+hist(fine$Height) # Poisson like, no outlier -> validated
 hist(fine$BD) # Normal-like, a bit unbalanced but no outlier -> validated
 hist(fine$GWC) # poisson like, one gap between 50 & 55 -> validated
 hist(fine$LOI) # Poisson like, a bit skewed but no outlier -> validated
@@ -467,8 +438,7 @@ fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, 
 # fine_plot <- subset(fine_plot, select = c(PlotID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
-# names(fine_plot) <- gsub("Aspect_degree", "Aspect", names(fine_plot))
-# names(fine_plot) <- gsub("Slope_degree", "Slope", names(fine_plot))
+names(fine) <- gsub("MeanHeight", "Height", names(fine))
 
 ## Scaling numeric variables
 fineplot_sc <- subset(fine_plot, select = -c(Litter, PlotID))
@@ -549,8 +519,8 @@ contin_field <- xtabs(formula = Values ~ SiteID + Factors, data = field_long)
 # Fine set
 fine_long <- fine_sc |> 
   pivot_longer(
-    cols = c(Bryo, MeanHeight, BD, Phosph, pH, SoilPene),
-    # cols = c(MeanHeight, BD, Phosph, pH, SoilPene),
+    cols = c(Bryo, Height, BD, Phosph, pH, SoilPene),
+    # cols = c(Height, BD, Phosph, pH, SoilPene),
     names_to = "Factors",
     values_to = "Values")
 contin_fine <- xtabs(formula = Values ~ SiteID + Factors, data = fine_long)
@@ -884,13 +854,14 @@ rda_species <- fortify(rda) |>
 
 ## Plot RDA 1st & 2nd dim
 plotrda_fineplant12 <- ggrda(rda) +
-  xlim(-1.1, 1.1) +
-  ylim(-1.2, 1.1) +
-  geom_text(
+  # xlim(-0.9, 0.9) +
+  # ylim(-0.9, 1) +
+  geom_text_repel(
     data = rda_species,
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
     size = 2.5
+    # force = 0.2
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -914,13 +885,15 @@ ggsave("outputs/singleRDA/plotrda_fineplant12.png", plot = plotrda_fineplant12, 
 
 ## Plot RDA 2nd & 3rd dim
 plotrda_fineplant23 <- ggrda23(rda) +
-  xlim(-1.1, 1) +
-  ylim(-1.2, 1.1) +
-  geom_text(
+  # xlim(-0.9, 0.9) +
+  # ylim(-1, 1) +
+  geom_text_repel(
     data = rda_species,
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
-    size = 2.5
+    size = 2.5,
+    point.size = NA
+    # force = 0.2
   ) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
@@ -966,7 +939,7 @@ rdalandscapebeetle <- statrda(rda) |>
 ## RDA plot
 plotrda_landscapebeetle <- ggrda(rda) +
   # xlim(-1, 1) +
-  # ylim(-1, 1.8) +
+  # ylim(-0.9, 1.8) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda1, y = rda2, label = label),
@@ -1011,8 +984,8 @@ rdafinebeetle <- statrda(rda) |>
 
 ## RDA plot
 plotrda_finebeetle <- ggrda(rda) +
-  xlim(-1.1, 1) +
-  ylim(-1.2, 1.1) +
+  # xlim(-1.1, 1) +
+  # ylim(-1, 1) +
   geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda1, y = rda2, label = label),
