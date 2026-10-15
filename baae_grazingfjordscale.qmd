@@ -560,7 +560,7 @@ While in theory a *certain number of animals* is allocated on a *certain area of
 We witnessed it firsthand during our interviews, as the farmers themselves struggled to provide accurate grazing schedules for a single grazing field.
 Furthermore, low-intensity grazing systems are often characterised a high diversity of management history, which can override the effects of current practices on grassland assemblages [@leprovostLanduseHistoryImpacts2020; @milchunasQuantitativeEffectsGrazing1993].
 In our case, it is possible that grazing interruptions, and changes in livestock types and stocking density, up to 10 years before our study, have influenced the composition and structure of plant and dung-associated assemblages.
-For further research, we recommend to integrate spatial and temporal variation in the study design [@sinclairOptionsContextApproach2019], for instance by scaling the reference unit up to the farm level and developing novel indicators based on a mosaic concept [@deffontainesAgriculturalSystemsLandscape1995; @kokEuropeanBiodiversityAssessments2020].
+For further research, we recommend to integrate spatial and temporal variation in the study design [@sinclairOptionsContextApproach2019], for instance by scaling the reference unit up to the farm level and developing novel indicators based on a landscape mosaic concept [@deffontainesAgriculturalSystemsLandscape1995; @kokEuropeanBiodiversityAssessments2020].
 
 # CONCLUSION
 
@@ -891,7 +891,7 @@ rdaregiolandscape |>
 \newpage
 
 ```{r tbl-rdaplant}
-#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on dominant plant assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on percent cover data of vascular plant assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -932,7 +932,7 @@ rdaplant |>
 
 
 ```{r tbl-rdabeetle}
-#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on dominant dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on activity-abundance data of dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
 #| message: false
 #| warning: false
 
@@ -973,8 +973,128 @@ rdabeetle |>
 
 \newpage
 
+```{r tbl-rdaplantpa}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on presence-absence data of vascular plant assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+rdaplantpa <- subset(rdastat_plantpa, select = -c(r.squared, type, eigenval, explanatory, response))
+rdaplantpa |>
+  gt(groupname_col = "model", rowname_col = "dim") |>
+  cols_move_to_start(
+    columns = c("adj.r.squared")
+  ) |>
+  cols_move(
+    columns = Df,
+    after = F
+  ) |>
+  cols_label(
+    Variance = "variance",
+    PrF = "p-value",
+    Df = "df",
+    adj.r.squared = "adjRsq"
+  ) |>
+  fmt_number(
+    columns = c("Variance", "F", "adj.r.squared"),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = PrF,
+    decimals = 4
+  ) |>
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
+  tab_options(
+    table.font.size = 11
+  )
+
+```
+
+
+```{r tbl-rdabeetlepa}
+#| tbl-cap: "Summary of the RDA permutation tests for investigating the influence of the regional environment, the landscape matrix, field management and the fine-scale environment on presence-absence data of dung-associated beetle assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve."
+#| message: false
+#| warning: false
+
+library(gt)
+library(tidyverse)
+
+rdabeetlepa <- subset(rdastat_beetlepa, select = -c(r.squared, type, eigenval, explanatory, response))
+rdabeetlepa |>
+  gt(groupname_col = "model", rowname_col = "dim") |>
+  cols_move_to_start(
+    columns = c("adj.r.squared")
+  ) |>
+  cols_move(
+    columns = Df,
+    after = F
+  ) |>
+  cols_label(
+    Variance = "variance",
+    PrF = "p-value",
+    Df = "df",
+    adj.r.squared = "adjRsq"
+  ) |>
+  fmt_number(
+    columns = c("Variance", "F", "adj.r.squared"),
+    decimals = 2
+  ) |>
+  fmt_number(
+    columns = PrF,
+    decimals = 4
+  ) |>
+  sub_missing(missing_text = "-") |>
+  opt_stylize(style = 3, color = 'gray') |>
+    tab_options(
+    table.font.size = 11
+  )
+
+```
+
+\newpage
+
+:::{#fig-figureS4 layout-ncol=2}
+
+``` {r fig-figureS4a}
+#| fig-height: 3.5
+#| fig-width: 3.5
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_regiobeetlepa
+```
+
+``` {r fig-figureS4b}
+#| fig-height: 3.5
+#| fig-width: 3.5
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_fineplantpa12
+```
+
+``` {r fig-figureS4c}
+#| fig-height: 3.5
+#| fig-width: 3.5
+#| message: false
+#| warning: false
+#| echo: false
+
+plotrda_fineplantpa23
+```
+
+Ordination plots of (a) the RDA model between the regional environment and the landscape matrix of the agroecological system of the Nordhordland UNESCO Biosphere Reserve and (b,c) supplementary RDA models between the fine-scale environment and dominant plant assemblages of semi-natural grasslands, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Abbreviations: AnnPreci: annual precipitation; Bryo: percent bryophyte cover; BD: bulk density; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; SoilPene: soil penetration.
+:::
+
+\newpage
+
 ```{r tbl-rdaplot}
-#| tbl-cap: "Summary of supplementary RDA permutation tests for investigating the influence of the fine-scale environment on dominant plant assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve at plot-level."
+#| tbl-cap: "Summary of supplementary RDA permutation tests for investigating the influence of the fine-scale environment on percent cover data of vascular plant assemblages of semi-natural grasslands in the Nordhordland UNESCO Biosphere Reserve at plot-level."
 #| message: false
 #| warning: false
 
@@ -1013,11 +1133,12 @@ rdagrass |>
 
 ```
 
+
 \newpage
 
-:::{#fig-figureS4 layout-ncol=2}
+:::{#fig-figureS5 layout-ncol=2}
 
-``` {r fig-figureS4a}
+``` {r fig-figureS5a}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -1027,7 +1148,7 @@ rdagrass |>
 plotrda_regiolandscape
 ```
 
-``` {r fig-figureS4b}
+``` {r fig-figureS5b}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
@@ -1037,7 +1158,7 @@ plotrda_regiolandscape
 plotrda_fineplantplot12
 ```
 
-``` {r fig-figureS4c}
+``` {r fig-figureS5c}
 #| fig-height: 3.5
 #| fig-width: 3.5
 #| message: false
