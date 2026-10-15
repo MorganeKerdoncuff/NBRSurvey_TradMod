@@ -216,6 +216,23 @@ plant <- as.data.frame(contin_plant)
 plant <- plant |>
   pivot_wider(names_from = Species, values_from = Freq)
 
+# Selection & transformation plant community data presence-absence
+
+## Plant data table
+plant_pa <- vege_site |> 
+  filter(Species %in% dominantplant$Species) |> 
+  mutate(Species = make.cepnames(Species)) |> 
+  mutate(PlantSp_cover = ifelse(PlantSp_cover > 0, 1, 0))
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_plant_pa <- xtabs(formula = PlantSp_cover ~ SiteID + Species, data = plant_pa)
+contin_plant_pa <- decostand(contin_plant_pa, method = "hellinger")
+
+## Wide table
+plant_pa <- as.data.frame(contin_plant_pa)
+plant_pa <- plant_pa |>
+  pivot_wider(names_from = Species, values_from = Freq)
+
 # Selection & transformation plant community data plot-level
 
 ## Plant data table
@@ -263,22 +280,21 @@ beetle <- as.data.frame(contin_beetle)
 beetle <- beetle |>
   pivot_wider(names_from = BeetleFamilies, values_from = Freq)
 
-# Selection & transformation beetle assemblage data plot-level
+# Selection & transformation beetle community data presence-absence
 
-# Beetle data table
-# beetle_plot <- beetle_plot |>
-#   filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies)
-# 
-# ## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
-# contin_beetle_plot <- xtabs(formula = BeetleFam_abundance ~ PlotID + BeetleFamilies, data = beetle_plot)
-# contin_beetle_plot <- decostand(contin_beetle_plot, method = "hellinger")
-# 
-# ## Wide table
-# beetle_plot <- as.data.frame(contin_beetle_plot)
-# beetle_plot <- beetle_plot |>
-#   pivot_wider(names_from = BeetleFamilies, values_from = Freq) |>
-#   mutate(SiteID = id$SiteID) |>
-#   filter(PlotID != "OC2-P1")
+## Beetle data table
+beetlet_pa <- beetle_site |> 
+  filter(BeetleFamilies %in% dominantbeetle$BeetleFamilies) |> 
+  mutate(BeetleFam_abundance = ifelse(BeetleFam_abundance > 0, 1, 0))
+
+## Hellinger transformation on contingency table (Borcard, Gillet and Legendre 2011; Legendre and Gallagher 2001)
+contin_beetle_pa <- xtabs(formula = BeetleFam_abundance ~ SiteID + BeetleFamilies, data = beetlet_pa)
+contin_beetle_pa <- decostand(contin_beetle_pa, method = "hellinger")
+
+## Wide table
+beetle_pa <- as.data.frame(contin_beetle_pa)
+beetle_pa <- beetle_pa |>
+  pivot_wider(names_from = BeetleFamilies, values_from = Freq)
 
 # Explanatory set regional scale
 
@@ -1017,7 +1033,211 @@ ggsave("outputs/singleRDA/plotrda_finebeetle.png", plot = plotrda_finebeetle, bg
 # Stat summary
 rdastat_beetle <- purrr::reduce(list(rdaregiobeetle, rdalandscapebeetle, rdafieldbeetle, rdafinebeetle), dplyr::full_join)
 
-#### Supplementary RDA analysis ####
+#### Supplementary plant presence-absence analysis ####
+
+# Regional x plant
+
+## RDA model
+rda <- rda(select_if(plant_pa, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregioplantpa <- statrda(rda) |>
+  mutate(model = "RegionalxPlant", explanatory = "Regional", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+# Landscape x plant
+
+## RDA model
+rda <- rda(select_if(plant_pa, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapeplantpa <- statrda(rda) |>
+  mutate(model = "LandscapexPlant", explanatory = "Landscape", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+# Field x plant
+
+## RDA model
+rda <- rda(select_if(plant_pa, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldplantpa <- statrda(rda) |>
+  mutate(model = "FieldxPlant", explanatory = "Field", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+# Fine x plant site-level
+
+## RDA model
+rda <- rda(select_if(plant_pa, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafineplantpa <- statrda(rda) |>
+  mutate(model = "FinexPlant", explanatory = "Fine", response = "Plant") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
+
+## Filtered rda outputs
+rda_species <- fortify(rda) |> 
+  filter(score == "species") |> 
+  filter(rda1 > 0.1 | rda1 < -0.1 | rda2 > 0.1 | rda2 < -0.1 | rda3 > 0.1 | rda3 < -0.1)
+
+## Plot RDA 1st & 2nd dim
+plotrda_fineplantpa12 <- ggrda(rda) +
+  # xlim(-0.9, 0.9) +
+  # ylim(-0.9, 1) +
+  geom_text(
+    data = rda_species,
+    mapping = aes(x = rda1, y = rda2, label = label),
+    colour = "black",
+    size = 2.5
+    # force = 0.2
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
+    colour = "darkred",
+    size = 2.5
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
+    size = 0.15
+  )
+plotrda_fineplantpa12
+ggsave("outputs/singleRDA/plotrda_fineplantpa12.png", plot = plotrda_fineplantpa12, bg = "white")
+
+## Plot RDA 2nd & 3rd dim
+plotrda_fineplantpa23 <- ggrda23(rda) +
+  # xlim(-0.9, 0.9) +
+  # ylim(-1, 1) +
+  geom_text(
+    data = rda_species,
+    mapping = aes(x = rda2, y = rda3, label = label),
+    colour = "black",
+    size = 2.5,
+    point.size = NA
+    # force = 0.2
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = rda2, yend = rda3),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = rda2*1.2, y = rda3*1.2, label = label),
+    colour = "darkred",
+    size = 2.5
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
+    size = 0.15
+  )
+plotrda_fineplantpa23
+ggsave("outputs/singleRDA/plotrda_fineplantpa23.png", plot = plotrda_fineplantpa23, bg = "white")
+
+# Summary statistics for RDA analyses between explanatory sets and plant assemblage
+rdastat_plantpa <- purrr::reduce(list(rdaregioplantpa, rdalandscapeplantpa, rdafieldplantpa, rdafineplantpa), dplyr::full_join)
+
+#### Supplementary beetle presence-absence analysis ####
+
+# Regional x beetle
+
+## RDA model
+rda <- rda(select_if(beetle_pa, is.numeric) ~ ., data = select_if(regional_sc, is.numeric))
+rdaregiobeetlepa <- statrda(rda) |>
+  mutate(model = "RegionalxBeetle", explanatory = "Regional", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+plotrda_regiobeetlepa <- ggrda(rda) +
+  # xlim(-1, 1) +
+  # ylim(-0.9, 1.8) +
+  geom_text(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = rda1, y = rda2, label = label),
+    colour = "black",
+    size = 2.5
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "cyan4"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
+    colour = "cyan4",
+    size = 2.5
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.5, y = 1.5, image = "illustrations/Icons/icon_landscapebeetle.png"),
+    size = 0.15
+  )
+plotrda_regiobeetlepa
+ggsave("outputs/singleRDA/plotrda_regiobeetlepa.png", plot = plotrda_regiobeetlepa, bg = "white")
+
+# Landscape x beetle
+
+## RDA model
+rda <- rda(select_if(beetle_pa, is.numeric) ~ ., data = select_if(landscape_sc, is.numeric))
+rdalandscapebeetlepa <- statrda(rda) |>
+  mutate(model = "LandscapexBeetle", explanatory = "Landscape", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+# Field x beetle
+
+## RDA model
+rda <- rda(select_if(beetle_pa, is.numeric) ~ ., data = select_if(field_sc, is.numeric))
+rdafieldbeetlepa <- statrda(rda) |>
+  mutate(model = "FieldxBeetle", explanatory = "Field", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+# Fine x beetle
+
+## RDA model
+rda <- rda(select_if(beetle_pa, is.numeric) ~ ., data = select_if(fine_sc, is.numeric))
+rdafinebeetlepa <- statrda(rda) |>
+  mutate(model = "FinexBeetle", explanatory = "Fine", response = "Beetle") |> 
+  filter(type == "model" | dim == "RDA1" | dim == "RDA2" | type == "margin")
+
+## RDA plot
+plotrda_finebeetlepa <- ggrda(rda) +
+  # xlim(-1.1, 1) +
+  # ylim(-1, 1) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "species"),
+    mapping = aes(x = rda1, y = rda2, label = label),
+    colour = "black",
+    size = 2.5
+  ) +
+  geom_segment(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
+    arrow = arrow(length = unit(0.01, "npc")),
+    colour = "darkred"
+  ) +
+  geom_text_repel(
+    data = filter(fortify(rda), score == "biplot"),
+    mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
+    colour = "darkred",
+    size = 2.5
+  ) +
+  geom_image(
+    data = tibble(x = 1, y = 1),
+    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finebeetle.png"),
+    size = 0.15
+  )
+plotrda_finebeetlepa
+ggsave("outputs/singleRDA/plotrda_finebeetlepa.png", plot = plotrda_finebeetlepa, bg = "white")
+
+# Summary statistics for RDA analyses between explanatory sets and dominant forb assemblage
+
+# Stat summary
+rdastat_beetlepa <- purrr::reduce(list(rdaregiobeetlepa, rdalandscapebeetlepa, rdafieldbeetlepa, rdafinebeetlepa), dplyr::full_join)
+
+#### Supplementary plot analysis ####
 
 # Plot-level function
 
@@ -1154,52 +1374,3 @@ plotrda_fineplantplot23 <- ggplot() +
   )
 plotrda_fineplantplot23
 ggsave("outputs/singleRDA/plotrda_fineplantplot23.png", plot = plotrda_fineplantplot23, width = 6, height = 6, units = "cm", bg = "white")
-
-# Fine x beetle plot-level
-
-## RDA model
-# rda <- rda(select_if(beetle_plot, is.numeric) ~ ., data = select_if(fineplot_sc, is.numeric))
-# rdafinebeetleplot <- statrdaplot(rda) |>
-#   mutate(model = "FinexPlant", explanatory = "Fine", response = "Beetle") |>
-#   filter(type == "model" | dim == "RDA1" | dim == "RDA2" | dim == "RDA3" | type == "margin")
-# 
-# ## Plot RDA
-# plotrda_finebeetleplot <- ggplot() +
-#   geom_vline(xintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
-#   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
-#   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-#   # xlim(-1, 0.8) +
-#   # ylim(-0.8, 1) +
-#   geom_point(
-#     data = filter(fortify(rda), score == "sites"),
-#     mapping = aes(x = rda1, y = rda2),
-#     size = 1
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "species"),
-#     mapping = aes(x = rda1, y = rda2, label = label),
-#     colour = "black",
-#     size = 2.5
-#   ) +
-#   geom_segment(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = 0, y = 0, xend = rda1, yend = rda2),
-#     arrow = arrow(length = unit(0.01, "npc")),
-#     colour = "darkred"
-#   ) +
-#   geom_text_repel(
-#     data = filter(fortify(rda), score == "biplot"),
-#     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
-#     colour = "darkred",
-#     size = 2.5
-#   ) +
-#   coord_equal() +
-#   theme_bw() +
-#   theme(
-#     axis.title = element_text(size = 9),
-#     axis.text = element_text(size = 8)
-#   )
-# plotrda_finebeetleplot
-# ggsave("outputs/singleRDA/plotrda_finebeetleplot.png", plot = plotrda_finebeetleplot, width = 6, height = 6, units = "cm", bg = "white")
-# 
