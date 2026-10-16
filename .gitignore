@@ -61,6 +61,7 @@ submission/*
 *_Highlights.qmd
 *_TitlePage.qmd
 *_reviewresponseletter_r1.qmd
+*_reviewresponseletter_r2.qmd
 
 # Repo try (will be in new project)
 scripts/TradMod_RepoDataCleaning.R
