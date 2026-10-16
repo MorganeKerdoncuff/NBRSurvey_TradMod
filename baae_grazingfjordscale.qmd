@@ -1,5 +1,5 @@
 ---
-title: "Grazing the Norwegian fjord landscape: influence of management and environmental gradients on plants and beetles"
+title: "Grazing the Norwegian fjord landscape: influence of management and environmental factors on plants and beetles"
 date: today
 bibliography: references.bib
 number-sections: true
@@ -70,7 +70,7 @@ Only the fine-scale environment explained a significant proportion of variance i
 Dung-associated beetle assemblages were marginally influenced by the fine-scale environment and the landscape matrix. 
 Overall, our results suggest that the effects of management on vascular plant and dung-associated beetle assemblages of semi-natural grasslands in Western Norway may be overridden by a stronger influence of environmental variables.
 Our study adds to the evidence that the responses of grassland assemblages to diversified grazing are not straightforward, especially in low-intensity grazing systems.
-We recommend future research to focus on disentangling the complex interactions between farmer practices and the environmental gradients in different local contexts to understand how management affects plant and animal assemblages of semi-natural grasslands.
+We recommend future research to focus on disentangling the complex interactions between farmer practices and the environment in different local contexts to understand how management affects plant and animal assemblages of semi-natural grasslands.
 
 Keywords: agroecology; livestock; scale; Nordhordland UNESCO Biosphere Reserve
 
@@ -94,16 +94,16 @@ Manure deposition and animal excreta support the activity of diversified animal 
 Lastly, the fine-scale environment in the grazing fields, including gradients of topographic (*e.g.*, slope angle, aspect), edaphic (e.g. soil moisture, bulk density, nutrient availability), and biotic (*e.g.*, vegetation height, litter cover) parameters, determines the resources availability for plant assemblages [@fayGrasslandProductivityLimited2015; @klimekPlantSpeciesRichness2007] and arthropod ecological niches [@broseBottomupControlCarabid2003; @coleInfluenceFinescaleHabitat2010].
 Environmental and management factors can also interact across scales.
 For instance, livestock trampling and grazing affecting soil compaction and vegetation height respectively [@mayelHowDoesGrassland2021; @zhangSoilPhysicalChemical2019], while the distribution of nutrients and aboveground biomass in the field affects the livestock foraging behaviour [@hesterForagingBehaviourSheep1999].
-In the context of strong environmental gradients, a good understanding of these underlying interactions is therefore necessary to interpret the responses of plant and animal assemblages to management.
+In the context of a strong environmental context, a good understanding of these underlying interactions is therefore necessary to interpret the responses of plant and animal assemblages to management.
 
-A good example of a strong environmental context is the fjord landscape of Western Norway [@nesjeFjordsNorwayComplex2009], which has experienced limited land use intensification over time [@fjellstadPatternsChangeTwo1999].
+A good example of a strong and variable environmental filter upon plant and animal communities is the fjord landscape of Western Norway [@nesjeFjordsNorwayComplex2009], which has experienced limited land use intensification over time [@fjellstadPatternsChangeTwo1999].
 Agriculture in Western Norway carries a strong legacy of low-intensity grazing and diversified farming, which has shaped a mosaic-like landscape of remarkable ecological and functional diversity [@austadHumaninfluencedVegetationTypes1991; @olssonAgroecosystemsNeolithicTime1991]
 The small-scale grazing systems include different types of farm structure, ranging from extensive sheep and goat farming to more production-oriented mixed dairy-beef systems [@potthoffNorwegianLowintensityOvine2023].
 These different management practices would be expected to generate taxonomic and/or functional divergences in plant and animal assemblages of semi-natural grasslands [@boavistaEffectsGrazingRegimes2019; @lenoirEffectsTimingGrazing2010; @tothLivestockTypeMore2016].
 However, how they interact with the different levels of environmental processes operating in the agroecological landscape of the fjord region has yet to be investigated.
 
 In this study, we aim 
-(1) to explore how field management and environmental gradients operating at regional-, landscape-, and fine-scale interact with each other within the agroecological system of the fjord region; and 
+(1) to explore how field management and environmental factors operating at regional-, landscape-, and fine-scale interact with each other within the agroecological system of the fjord region; and 
 (2) to assess the respective influences of environmental and management factors on vascular plant and dung-associated beetle assemblages.
 <!-- We focused on plant species and beetle families respectively representing the highest percent covers and catch frequencies in the assemblages because of their essential roles in grassland ecosystem functioning [@smithDominantSpeciesMaintain2003]. -->
 Vascular plants and dung-associated beetles are pertinent indicators in grazing research as they are directly associated with livestock-driven processes such as grazing (*i.e.*, biomass removal), trampling (*i.e.*, soil and vegetation disturbance), and dung deposition (*i.e.*, coprophilous resource).
@@ -304,7 +304,7 @@ The restricted permutations for the supplementary analyses were performed with t
 \scriptsize
 
 ```{r tbl-varsum}
-#| tbl-cap: "Summary statistics of selected variables for the regional-scale, landscape-scale, field-scale, and fine-scale explanatory sets for the investigation of linkages between environmental gradients and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and of their influences on vascular plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
+#| tbl-cap: "Summary statistics of selected variables for the regional-scale, landscape-scale, field-scale, and fine-scale explanatory sets for the investigation of linkages between the environment and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and of their influences on vascular plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
 #| message: false
 #| warning: false
 
@@ -431,8 +431,8 @@ Three families represented more than 90% of the catches, respectively Staphylini
 
 ## Relationships between the environment and field management
 
-We did not find any significant relationships between environmental gradients and field management (@tbl-cancorenv).
-Among environmental gradients, only the regional environment and the landscape matrix were significantly correlated, with a canonical correlation coefficient *rho* of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@tbl-cancorenv).
+We did not find any significant relationships between the environment and field management (@tbl-cancorenv).
+Among environmental factors, only the regional environment and the landscape matrix were significantly correlated, with a canonical correlation coefficient *rho* of `r op(envar$rho[1], 2)` (F approximation of Hotelling-Lawley trace F~30,82~ = `r op(envar$approx[1], 2)`, p-value = `r op(envar$p.value[1], 3)`) (@tbl-cancorenv).
 The regional environment explained a significant proportion of the landscape matrix variance (adjusted R^2^ = `r op(rdastat_envi$adj.r.squared[1], 2)`, F~5~ = `r op(rdastat_envi$F[1], 2)`, p-value = `r op(rdastat_envi$PrF[1], 3)` (@tbl-rdaregio).
 The first axis of the RDA model was significant (F = `r op(rdastat_envi$F[3], 2)`, p-value = `r op(rdastat_envi$PrF[3], 3)`) and mainly driven by the distance to the closest fjord (F = `r op(rdastat_envi$F[9], 2)`, p-value = `r op(rdastat_envi$PrF[9], 3)`).
 Fjord proximity was associated with a decrease of forest and outfield areas and an increase of cultivated lands and enclosed grazing areas (@fig-figureS4a).
@@ -527,7 +527,7 @@ The presence of Elateridae and Curculionidae was associated with more oceanic si
 We were able to identify only one significant linkage between environmental factors operating at different spatial scales in the fjord landscape of Western Norway.
 The composition of the landscape matrix was impacted by the geography of the fjord region, with an increase of more intensively managed areas, *i.e.*, enclosed grazing areas and croplands, towards the nearest fjord shorelines.
 We did not detect clear divergences between vascular plant assemblages according to environmental or management factors.
-However, plant species were significantly affected by the fine-scale environment at both site- and plot-levels, and consistently responded to gradients of soil structure and texture.
+However, plant species were significantly affected by the fine-scale environment at both site- and plot-levels, and consistently responded to gradients of soil penetration and bulk density.
 Dung-associated beetle assemblages were influenced by the fine-scale environment as well, and to a lesser extent by the landscape matrix.
 Ptiliidae were more sensitive to soil variables, while Carabidae, Hydrophilidae and Staphylinidae rather responded to the percent cover of forest area in the landscape.
 Overall, we found no effect of field management on grassland assemblages of vascular plants or dung-associated beetles.
@@ -566,9 +566,9 @@ Such methods could also better address how the landscape matrix affect dung-asso
 
 Our trapping design did not fulfill the conditions for accurate density measures of dung-associated beetle assemblages, especially regarding the short distance between pitfall traps [@brownReviewExtensiveVariation2016; @zhaoSolvingPitfallsPitfall2013].
 Additionally, the catches of non-coprophilous families such as Carabidae, Elateridae, and Curculionidae, can be biased by the use of the dung bait [@bandeiraOptimizingSamplingProtocols2026].
-We must therefore exercise caution in our interpretation of beetle families' responses to environmental gradients shown in our analysis [@larsenTrapSpacingTransect2005].
+We must therefore exercise caution in our interpretation of beetle families' responses to environmental factors shown in our analysis [@larsenTrapSpacingTransect2005].
 Nevertheless, our study highlights a weak contribution of Scarabaeidae (only 2.5% of our total catches) to dung-associated beetle assemblages, especially in the Nordic region where Scarabaeinae and Aphodiinae are poorly represented [@artsdatabankenArtsdatabankenKunnskapsbankNaturmangfold2023].
-Further research should prioritise comprehensive assessments of the coprophilous community, beyond the typical "dung beetle" taxa (*i.e.*, Scarabaeinae, Aphodiinae, Scarabaeidae or Geotrupidae), to test the influences of environmental gradients and management [*e.g.*, @daoudiCompositionPhenologyBeetle2022; @sigsgaardEnvironmentalDNAMetabarcoding2021].
+Further research should prioritise comprehensive assessments of the coprophilous community, beyond the typical "dung beetle" taxa (*i.e.*, Scarabaeinae, Aphodiinae, Scarabaeidae or Geotrupidae), to test the influences of the environment and management [*e.g.*, @daoudiCompositionPhenologyBeetle2022; @sigsgaardEnvironmentalDNAMetabarcoding2021].
 
 ## Implications for management and future research
 
@@ -588,10 +588,10 @@ For further research, we recommend to integrate spatial and temporal variation i
 
 # CONCLUSION
 
-Our study investigated how field management and environmental gradients operating at different scales influence vascular plant and dung-associated beetle assemblages of semi-natural grasslands in the fjord region of Western Norway.
+Our study investigated how the environment and field management operating at different scales influence vascular plant and dung-associated beetle assemblages of semi-natural grasslands in the fjord region of Western Norway.
 We found that both plant species and beetle families were primarily determined by the fine-scale environment, and beetle families were also affected by the landscape matrix to a lesser extent.
 However, we observed no significant effect of field management on either vascular plant or dung-associated beetle assemblages.
-Our analyses thus suggest that, in low-intensity grazing systems, the effects of diversified grazing management may be overridden by stronger influences of environmental gradients.
+Our analyses thus suggest that, in low-intensity grazing systems, the effects of diversified grazing management may be overridden by stronger influences of underlying environmental gradients.
 <!-- Overall, we highlighted the complexity of interactions between the environment and grazing management in agroecological landscapes. -->
 <!-- We recommend to further investigate these relationships and disentangle their respective influences on plant and animal assemblages in different local contexts to assess the ecological implications of diversified management practices. -->
 
