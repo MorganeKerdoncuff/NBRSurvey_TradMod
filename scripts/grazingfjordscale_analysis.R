@@ -454,7 +454,7 @@ fine_plot <- subset(fine_plot, select = c(PlotID, Litter, Bryo, MeanHeight, BD, 
 # fine_plot <- subset(fine_plot, select = c(PlotID, Litter, MeanHeight, BD, GWC, LOI, Nitrog, Phosph, pH, Humus, SoilPene))
 
 ## Suitable variable names
-names(fine) <- gsub("MeanHeight", "Height", names(fine))
+names(fine_plot) <- gsub("MeanHeight", "Height", names(fine_plot))
 
 ## Scaling numeric variables
 fineplot_sc <- subset(fine_plot, select = -c(Litter, PlotID))
@@ -734,10 +734,10 @@ plotrda_regiolandscape <- ggrda(rda) +
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "chartreuse4",
-    size = 3
+    size = 2.5
   ) +
-  xlim(-2.2, 3) +
-  ylim(-1.7, 3.5) +
+  # xlim(-2.2, 3) +
+  # ylim(-1.7, 3.5) +
   geom_segment(
     data = filter(fortify(rda), score == "biplot"),
     mapping = aes(x = 0, y = 0, xend = rda1*2.5, yend = rda2*2.5),
@@ -752,7 +752,7 @@ plotrda_regiolandscape <- ggrda(rda) +
   ) #+
   # geom_image(
   #   data = tibble(x = 1, y = 1),
-  #   aes(x = 3, y = 2.9, image = "illustrations/Icons/icon_regiolandscape.png"),
+  #   aes(x = 2.5, y = 2.9, image = "illustrations/Icons/icon_regiolandscape.png"),
   #   size = 0.15
   # )
 plotrda_regiolandscape
@@ -893,7 +893,7 @@ plotrda_fineplant12 <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
+    aes(x = 0.6, y = 0.8, image = "illustrations/Icons/icon_fineplant.png"),
     size = 0.15
   )
 plotrda_fineplant12
@@ -925,7 +925,7 @@ plotrda_fineplant23 <- ggrda23(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
+    aes(x = 0.7, y = 0.8, image = "illustrations/Icons/icon_fineplant.png"),
     size = 0.15
   )
 plotrda_fineplant23
@@ -976,7 +976,7 @@ plotrda_landscapebeetle <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.5, y = 1.5, image = "illustrations/Icons/icon_landscapebeetle.png"),
+    aes(x = 0.5, y = 1.45, image = "illustrations/Icons/icon_landscapebeetle.png"),
     size = 0.15
   )
 plotrda_landscapebeetle
@@ -1022,7 +1022,7 @@ plotrda_finebeetle <- ggrda(rda) +
   ) +
   geom_image(
     data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finebeetle.png"),
+    aes(x = 0.6, y = -0.8, image = "illustrations/Icons/icon_finebeetle.png"),
     size = 0.15
   )
 plotrda_finebeetle
@@ -1076,7 +1076,7 @@ rda_species <- fortify(rda) |>
 plotrda_fineplantpa12 <- ggrda(rda) +
   # xlim(-0.9, 0.9) +
   # ylim(-0.9, 1) +
-  geom_text(
+  geom_text_repel(
     data = rda_species,
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
@@ -1094,11 +1094,6 @@ plotrda_fineplantpa12 <- ggrda(rda) +
     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
-    size = 0.15
   )
 plotrda_fineplantpa12
 ggsave("outputs/singleRDA/plotrda_fineplantpa12.png", plot = plotrda_fineplantpa12, bg = "white")
@@ -1107,7 +1102,7 @@ ggsave("outputs/singleRDA/plotrda_fineplantpa12.png", plot = plotrda_fineplantpa
 plotrda_fineplantpa23 <- ggrda23(rda) +
   # xlim(-0.9, 0.9) +
   # ylim(-1, 1) +
-  geom_text(
+  geom_text_repel(
     data = rda_species,
     mapping = aes(x = rda2, y = rda3, label = label),
     colour = "black",
@@ -1126,11 +1121,6 @@ plotrda_fineplantpa23 <- ggrda23(rda) +
     mapping = aes(x = rda2*1.2, y = rda3*1.2, label = label),
     colour = "darkred",
     size = 2.5
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_fineplant.png"),
-    size = 0.15
   )
 plotrda_fineplantpa23
 ggsave("outputs/singleRDA/plotrda_fineplantpa23.png", plot = plotrda_fineplantpa23, bg = "white")
@@ -1152,7 +1142,7 @@ rdaregiobeetlepa <- statrda(rda) |>
 plotrda_regiobeetlepa <- ggrda(rda) +
   # xlim(-1, 1) +
   # ylim(-0.9, 1.8) +
-  geom_text(
+  geom_text_repel(
     data = filter(fortify(rda), score == "species"),
     mapping = aes(x = rda1, y = rda2, label = label),
     colour = "black",
@@ -1169,11 +1159,6 @@ plotrda_regiobeetlepa <- ggrda(rda) +
     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "cyan4",
     size = 2.5
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.5, y = 1.5, image = "illustrations/Icons/icon_landscapebeetle.png"),
-    size = 0.15
   )
 plotrda_regiobeetlepa
 ggsave("outputs/singleRDA/plotrda_regiobeetlepa.png", plot = plotrda_regiobeetlepa, bg = "white")
@@ -1223,11 +1208,6 @@ plotrda_finebeetlepa <- ggrda(rda) +
     mapping = aes(x = rda1*1.2, y = rda2*1.2, label = label),
     colour = "darkred",
     size = 2.5
-  ) +
-  geom_image(
-    data = tibble(x = 1, y = 1),
-    aes(x = 0.8, y = -1, image = "illustrations/Icons/icon_finebeetle.png"),
-    size = 0.15
   )
 plotrda_finebeetlepa
 ggsave("outputs/singleRDA/plotrda_finebeetlepa.png", plot = plotrda_finebeetlepa, bg = "white")
@@ -1301,8 +1281,8 @@ plotrda_fineplantplot12 <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA1", " (", round(100 * statrdaplot(rda)[3, "Variance"], 2), "%)")) +
   ylab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
-  xlim(-1.1, 1) +
-  ylim(-1.2, 1.1) +
+  # xlim(-1.1, 1) +
+  # ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = rda1, y = rda2),
@@ -1326,7 +1306,7 @@ plotrda_fineplantplot12 <- ggplot() +
     colour = "darkred",
     size = 2.5
   ) +
-  coord_equal() +
+  # coord_equal() +
   theme_bw() +
   theme(
     axis.title = element_text(size = 9),
@@ -1341,8 +1321,8 @@ plotrda_fineplantplot23 <- ggplot() +
   geom_hline(yintercept = 0, colour = "grey80", linewidth = 0.2) +
   xlab(paste0("RDA2", " (", round(100 * statrdaplot(rda)[4, "Variance"], 2), "%)")) +
   ylab(paste0("RDA3", " (", round(100 * statrdaplot(rda)[5, "Variance"], 2), "%)")) +
-  xlim(-1.1, 1) +
-  ylim(-1.2, 1.1) +
+  # xlim(-1.1, 1) +
+  # ylim(-1.2, 1.1) +
   geom_point(
     data = filter(fortify(rda), score == "sites"),
     mapping = aes(x = rda2, y = rda3),
@@ -1366,7 +1346,7 @@ plotrda_fineplantplot23 <- ggplot() +
     colour = "darkred",
     size = 2.5
   ) +
-  coord_equal() +
+  # coord_equal() +
   theme_bw() +
   theme(
     axis.title = element_text(size = 9),
