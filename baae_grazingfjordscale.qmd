@@ -65,10 +65,10 @@ Here we present an attempt at disentangling these relationships and their influe
 We investigated links between the regional environment, the landscape matrix, field management, and the fine-scale environment of 29 grasslands grazed by cattle, sheep or goats, and assessed their effects on vascular plant and dung-associated beetle assemblages.
 We found that landscape composition was more affected by the distance to the nearest fjord shorelines than temperature or precipitation, suggesting a greater influence of land use history in shaping the landscape matrix compared with phenology.
 Only the fine-scale environment explained a significant proportion of vascular plant assemblage variance at both site- and plot-level.
-Our findings supported previous grassland community analyses while highlighting soil resistance to penetration as the strongest edaphic predictor.
+Our findings support previous grassland community analyses while highlighting soil resistance to penetration as the strongest edaphic predictor.
 Dung-associated beetle assemblages were influenced by the fine-scale environment and, to a lesser extent, the landscape matrix. 
-Our study emphasized the weight of Staphylinidae in dung-associated beetle assemblages compared with typical dung beetle families (e.g. Scarabaeidae).
-Overall, our results suggest that the effects of management on vascular plant and dung-associated beetle assemblages of semi-natural grasslands in Western Norway may be overridden by a stronger influence of environmental variables.
+Our study emphasized the large contribution of Staphylinidae in dung-associated beetle assemblages compared with typical dung beetle families.
+Overall, our results suggest that the effects of grazing management on vascular plant and dung-associated beetle assemblages of semi-natural grasslands in Western Norway may be overridden by a stronger influence of environmental variables.
 Our study adds to the evidence that the responses of grassland assemblages to diversified grazing are not straightforward, especially in low-intensity grazing systems, challenging one-size-fits-all agroecological policies.
 We recommend future research to focus on disentangling the complex interactions between farmer practices and the environment in different local contexts to understand how management affects plant and animal assemblages of semi-natural grasslands.
 
@@ -96,7 +96,7 @@ Environmental and management factors can also interact across scales.
 For instance, livestock trampling and grazing affect soil compaction and vegetation height respectively [@mayelHowDoesGrassland2021; @zhangSoilPhysicalChemical2019], while the distribution of nutrients and aboveground biomass in the field affects the livestock foraging behaviour [@hesterForagingBehaviourSheep1999].
 In the context of a strong environmental context, a good understanding of these underlying interactions is therefore necessary to interpret the responses of plant and animal assemblages to management.
 
-A good example of a strong and variable environmental filter upon plant and animal communities is the fjord landscape of Western Norway [@nesjeFjordsNorwayComplex2009], which has experienced limited land use intensification over time [@fjellstadPatternsChangeTwo1999].
+A good example of a strong and variable environmental filter upon plant and animal communities is the fjord landscape of the Nordhordland UNESCO Biosphere Reserve, Western Norway, which has experienced limited land use intensification over time [@fjellstadPatternsChangeTwo1999; @nesjeFjordsNorwayComplex2009].
 Agriculture in Western Norway carries a strong legacy of low-intensity grazing and diversified farming, which has shaped a mosaic-like landscape of remarkable ecological and functional diversity [@austadHumaninfluencedVegetationTypes1991; @olssonAgroecosystemsNeolithicTime1991]
 The small-scale grazing systems include different types of farm structure, ranging from extensive sheep and goat farming to more production-oriented mixed dairy-beef systems [@potthoffNorwegianLowintensityOvine2023].
 These different management practices would be expected to generate taxonomic and/or functional divergences in plant and animal assemblages of semi-natural grasslands [@boavistaEffectsGrazingRegimes2019; @lenoirEffectsTimingGrazing2010; @tothLivestockTypeMore2016].
@@ -106,7 +106,7 @@ In this study, we aim
 (1) to explore how field management and environmental factors operating at regional-, landscape-, and fine-scale interact with each other within the agroecological system of the fjord region; and 
 (2) to assess the respective influences of environmental and management factors on vascular plant and dung-associated beetle assemblages.
 Vascular plants and dung-associated beetles are pertinent indicators in grazing research as they are directly associated with livestock-driven processes such as grazing (*i.e.*, biomass removal), trampling (*i.e.*, soil and vegetation disturbance), and dung deposition (*i.e.*, coprophilous resource).
-We relied on a spatially-explicit characterisation of the agroecological systems in the fjord region of Western Norway (@fig-fjordconcept), including:
+We relied on a spatially-explicit characterisation of the agroecological systems in the fjord region of the Nordhordland UNESCO Biosphere Reserve (@fig-fjordconcept), including:
 the *regional environment*, representing climate and elevation variables operating at a broad scale; 
 the *landscape matrix*, described by the cover of land use types surrounding the grazing fields; 
 *field management*, which refers to management factors applied at the scale of the entire field; 
@@ -116,7 +116,7 @@ Specifically, we asked the following research questions:
 (Q2) Which scales and environmental and management factors explain the most variance of vascular plant and dung-associated beetle assemblages?
 (Q3) What is the influence of field management on vascular plant and dung-associated beetle assemblages compared with environmental variables?
 
-![Conceptual representation of expected cross-scale interactions between the regional environment, the landscape matrix, field management, the fine-scale environment and vascular plant and dung-associated beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, Norway. Explanatory variables included in the analysis after selection are in black typeface and those excluded are in grey. For description and selection of explanatory variables and response assemblages, see the Material and Methods section. Credits: figure created on Inkscape v. 1.1 (Inkscape Developers, https://inkscape.org).](figure1.png){#fig-fjordconcept width=100%}
+![Conceptual representation of expected cross-scale interactions between the regional environment, the landscape matrix, field management, the fine-scale environment and vascular plant and dung-associated beetle assemblages of the semi-natural grasslands of the Nordhordland UNESCO Biosphere Reserve, Norway. Explanatory variables included in the analysis after selection are in black typeface and those excluded are in grey. For description and selection of explanatory variables and response assemblages, see the Material and Methods section. Credits: figure created on Inkscape v. 1.4.4 (Inkscape Developers, https://inkscape.org).](figure1.png){#fig-fjordconcept width=100%}
 
 # MATERIAL AND METHODS
 
@@ -299,112 +299,6 @@ The canonical correlation analyses and the related statistical tests were made w
 The redundancy analyses were performed with the *vegan* package [@oksanenVeganCommunityEcology2026] and their visual representations were made with the *ggplot2* package [@wickhamGgplot2CreateElegant2026].
 The restricted permutations for the supplementary analyses were performed with the *permute* package [@simpsonPermuteFunctionsGenerating2026].
 
-\scriptsize
-
-```{r tbl-varsum}
-#| tbl-cap: "Summary statistics of selected variables for the regional-scale, landscape-scale, field-scale, and fine-scale explanatory sets for the investigation of linkages between the environment and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and of their influences on vascular plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
-#| message: false
-#| warning: false
-
-# Packages
-library(gt)
-library(tidyverse)
-# library(kableExtra)
-
-# Join all variables
-allvar <- purrr::reduce(list(subset(regional, select = -c(JanTemp)), landscape, field, subset(fine, select = -c(GWC, LOI, Humus, Nitrog))), dplyr::full_join)
-
-# Summary statistics
-varsum <- allvar |> 
-  summarise(across(where(is.numeric), .fns =
-                     list(Mean = mean,
-                          sd = sd,
-                          Min = min,
-                          Max = max
-                     ))) |>
-  pivot_longer(everything(), names_sep = "_", names_to = c( "Variable", ".value")) |>
-  mutate(Set = ifelse(Variable == "AnnPreci" |
-                        Variable == "Elev" |
-                        Variable == "FjordDist" |
-                        Variable == "TempRange" |
-                        Variable == "JulTemp", "Regional", ifelse(
-                          Variable == "Cultivated" |
-                          Variable == "Forest" | 
-                          Variable == "Infield" | 
-                          Variable == "Artificial" |
-                          Variable == "Outfield" |
-                          Variable == "Wetland", "Landscape", ifelse(
-                            Variable == "FieldArea" |
-                            Variable == "StockDens" |
-                            Variable == "Cattle" |
-                            Variable == "Sheep", "Field", "Fine"
-    )
-  ))) |> 
-  mutate(
-    Variable = dplyr::recode(
-      Variable,
-          "Elev" = "Elevation (masl)",
-    "AnnPreci" = "Annual precipitation (mm)",
-    "JulTemp" = "Maximum July temperature (°C)",
-    "TempRange" = "Annual temperature range (°C)",
-    "FjordDist" = "Distance to fjord (m)",
-    "Cultivated" = "Cultivated area (%)",
-    "Forest" = "Forest area (%)",
-    "Infield" = "Infield area (%)",
-    "Outfield" = "Outfield area (%)",
-    "Artificial" = "Infrastructure area (%)",
-    "Wetland" = "Wetland area (%)",
-    "FieldArea" = "Site area (ha)",
-    "StockDens" = "Stocking density (LU/ha)",
-    "Bryo" = "Bryophyte cover (%)",
-    "MeanHeight" = "Sward height (cm)",
-    "BD" = "Bulk density (g/cm3)",
-    "pH" = "pH",
-    "Phosph" = "Available phosphorus (mg/100g)",
-    "SoilPene" = "Soil penetration (cm)"
-    )
-  ) |> 
-  arrange(Variable)
-
-varsum |>
- # gt(groupname_col = "explanatory", rowname_col = "response") |>
- # tab_options(row_group.as_column = TRUE) |>
- gt(groupname_col = "Set", rowname_col = "Variable") |>
-  # cols_label(
-  #   Variance = "variance",
-  #   PrF = "p-value",
-  #   Df = "df",
-  #   adj.r.squared = "adjRsq"
-  # ) |>
-  fmt_number(
-    decimals = 1,
-  ) |>
-  fmt_number(
-    decimals = 0,
-    sep_mark = " ",
-    rows = c("Elevation (masl)", "Annual precipitation (mm)", "Distance to fjord (m)")
-  ) |>
-  fmt_number(
-    decimals = 2,
-    rows = c("Stocking density (LU/ha)")
-  ) |>
-  sub_values(
-    rows = c("Sheep", "Cattle"),
-    fn = function(x) x >=0 & x <= 1,
-    replacement = "-"
-  ) |> 
-  sub_missing(missing_text = "-") |>
-  row_group_order(
-    groups = c("Regional", "Landscape", "Field", "Fine")
-  ) |> 
-  opt_stylize(style = 3, color = 'gray') |>
-  tab_options(
-    table.font.size = 11
-  )
-```
-
-\normalsize
-
 # RESULTS
 
 ```{r communitysummary}
@@ -461,8 +355,8 @@ Axis 2 was also driven by bulk density (F = `r op(rdastat_plant$F[35], 2)`, p-va
 We did not observe clear divergences of different assemblages according to underlying gradients, but some species were more strongly associated with at least one environmental variable.
 For example, average vegetation height was positively related to the cover of *Deschampsia cespitosa* (L.) P.Beauv., but negatively related to the cover of *Poa pratensis* L..
 Greater soil penetration was associated with higher cover of *Galium saxatile* L. and *Deschampsia flexuosa* (L.) Trin., but lower cover of *Festuca rubra* L. and *Holcus lanatus* L..
-*Lolium perenne* was associated with greater bulk density, which was inversely correlated with gravimetric water content (rho = `r op(cor_bdxgwc$estimate[1], 2)`, p-value = `r op(cor_bdxgwc$p.value[1], 3)`) and total nitrogen content (rho = `r op(cor_bdxn$estimate[1], 2)`, p-value = `r op(cor_bdxn$p.value[1], 3)`).
-Fine-scale environment variables were also the only significant factors affecting vascular assemblages at plot-level (R~adj~^2^ = `r op(rdafineplantplot$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantplot$F[1], 2)`, p-value = `r op(rdafineplantplot$PrF[1], 3)`) (@tbl-rdaplot) or when based on presence-absence data (R~adj~^2^ = `r op(rdafineplantpa$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantpa$F[1], 2)`, p-value = `r op(rdafineplantpa$PrF[1], 3)`) (@tbl-rdaplantpa).
+*Lolium perenne* L. was associated with greater bulk density, which was inversely correlated with gravimetric water content (rho = `r op(cor_bdxgwc$estimate[1], 2)`, p-value = `r op(cor_bdxgwc$p.value[1], 3)`) and total nitrogen content (rho = `r op(cor_bdxn$estimate[1], 2)`, p-value = `r op(cor_bdxn$p.value[1], 3)`).
+Fine-scale environment variables were also the only significant factors affecting vascular plant assemblages at plot-level (R~adj~^2^ = `r op(rdafineplantplot$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantplot$F[1], 2)`, p-value = `r op(rdafineplantplot$PrF[1], 3)`) (@tbl-rdaplot) or when based on presence-absence data (R~adj~^2^ = `r op(rdafineplantpa$adj.r.squared[1], 2)`, F~6~ = `r op(rdafineplantpa$F[1], 2)`, p-value = `r op(rdafineplantpa$PrF[1], 3)`) (@tbl-rdaplantpa).
 Soil penetration and bulk density remained the most important drivers, while average vegetation height was non-significant at plot-level (F = `r op(rdafineplantplot$F[7], 2)`, p-value = `r op(rdafineplantplot$PrF[7], 3)`) (@tbl-rdaplot).
 
 :::{#fig-rda layout-ncol=2}
@@ -512,11 +406,10 @@ Ordination plots of RDA models (a, b) between the fine-scale environment and vas
 
 ## Influence of the environment and field management on dung-associated beetle assemblages
 
-Dung-associated beetle assemblage variance was explained by the fine-scale environment (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`), and to a lesser extent by the landscape matrix (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
-The first axis of the model explained by the fine-scale environment was marginally significant (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) and mostly driven by bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure3c).
+The fine-scale environment affected dung-associated beetle assemblages (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[28], 2)`, F~6~ = `r op(rdastat_beetle$F[28], 2)`, p-value = `r op(rdastat_beetle$PrF[28], 3)`) (@tbl-rdabeetle), with a marginally significant first axis (F = `r op(rdastat_beetle$F[30], 2)`, p-value = `r op(rdastat_beetle$PrF[30], 3)`) mostly associated with bulk density (F = `r op(rdastat_beetle$F[34], 2)`, p-value = `r op(rdastat_beetle$PrF[34], 3)`) (@fig-figure3c).
 Specifically, sites with more compact soils were associated with a greater abundance of Carabidae and a lower abundance of Ptiliidae.
-The first axis of the model explained by the landscape matrix was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`).
-The variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`), which positively affected the abundance of Carabidae and Hydrophilidae and negatively affected Staphylinidae abundance (@fig-figure3d).
+Dung-associated beetle assemblage variance was also explained by the landscape matrix, to a lesser extent (R~adj~^2^ = `r op(rdastat_beetle$adj.r.squared[10], 2)`, F~6~ = `r op(rdastat_beetle$F[10], 2)`, p-value = `r op(rdastat_beetle$PrF[10], 3)`) (@tbl-rdabeetle).
+The first axis was not significant (F = `r op(rdastat_beetle$F[12], 2)`, p-value = `r op(rdastat_beetle$PrF[12], 3)`) and the variable showing the highest explanatory power was the relative percent cover of forest area (F = `r op(rdastat_beetle$F[15], 2)`, p-value = `r op(rdastat_beetle$PrF[15], 3)`), which positively affected the abundance of Carabidae and Hydrophilidae and negatively affected Staphylinidae abundance (@fig-figure3d).
 The supplementary analysis based on presence-absence data did not support our main findings and showed instead a weak relationship between the regional environment and dung-associated beetle assemblages (R~adj~^2^ = `r op(rdaregiobeetlepa$adj.r.squared[1], 2)`, F~6~ = `r op(rdaregiobeetlepa$F[1], 2)`, p-value = `r op(rdaregiobeetlepa$PrF[1], 3)`) (@tbl-rdabeetlepa).
 The presence of Elateridae and Curculionidae was associated with more oceanic sites, i.e. those characterised by a lower range between winter and summer temperatures (F = `r op(rdaregiobeetlepa$F[8], 2)`, p-value = `r op(rdaregiobeetlepa$PrF[8], 3)`).
 
@@ -524,17 +417,16 @@ The presence of Elateridae and Curculionidae was associated with more oceanic si
 
 We were able to identify only one significant linkage between environmental factors operating at different spatial scales in the fjord landscape of Western Norway.
 The composition of the landscape matrix was impacted by the geography of the fjord region, with an increase of more intensively managed areas, *i.e.*, enclosed grazing areas and croplands, towards the nearest fjord shorelines.
-We did not detect clear divergences between vascular plant assemblages according to environmental or management factors.
-However, plant species were significantly affected by the fine-scale environment at both site- and plot-levels and responded consistently to gradients of soil penetration and bulk density.
+Plant species were significantly affected by the fine-scale environment and responded consistently to gradients of soil penetration and bulk density, even though we did not observe consistent groups of co-occurring species according to these same gradients.
 Dung-associated beetle assemblages were influenced by the fine-scale environment as well, and to a lesser extent by the landscape matrix.
 Ptiliidae were more sensitive to soil variables, while Carabidae, Hydrophilidae and Staphylinidae rather responded to the percent cover of forest area in the landscape.
-Overall, we found no effect of field management on grassland assemblages of vascular plants or dung-associated beetles.
+Overall, we found no effect of grazing management on grassland assemblages of vascular plants or dung-associated beetles.
 
 ## Fjord geography influences land use at landscape scale
 
 We expected the regional environment of the fjord region to influence land use due to strong oceanity and elevation gradients affecting plant phenology and soil fertility [@karlsenVariabilityStartGrowing2007; @uttakleivLandskapskartleggingNorgeLandscape2011].
 However, we observed that, within the investigated range, the environmental context at the individual fjord level had a stronger influence on landscape composition than broader west-east patterns.
-Our findings may reflect how land use history and the evolution of the socioeconomic context have been durably imprinted upon the landscape of the fjord region [@beleHeritageBoundariesNatureculture2024].
+Our findings may reflect how land use history and the evolution of the socioeconomic context have been durably imprinted upon the landscape of the fjord region [@beleHeritageBoundariesNatureculture2024; @malcolmLivingHeritageSustainable2026].
 Traditional farmer-fisher communities used to rely on both land and water resources to ensure their livelihood, using the fjords not only for fishing but also for the transport of livestock and people [@brekkeKulturhistoriskVegbokHordaland1993; @hetlandPluriactivityStrategyEmployment1986].
 Therefore, crops and hay-meadows were mostly cultivated and managed along the fjords and fjord arms, while less-accessible grasslands and shrublands were used for extensive grazing [@indrelidFarmingSystemIts1988; @olssonAgroecosystemsNeolithicTime1991].
 During the post-WW2 agricultural transition, the outermost areas were abandoned or converted for the development of forestry, while livestock was moved to more fertile areas [@fjellstadPatternsChangeTwo1999].
@@ -572,15 +464,14 @@ Further research should prioritise comprehensive assessments of the coprophilous
 ## Implications for management and future research
 
 Against expectations [*e.g.*, @mayelHowDoesGrassland2021; @pakemanLongTermImpacts2019], we identified no interactions between field management and the fine-scale environment which could suggest variations in soil compaction and vegetation height under different livestock types or levels of grazing intensity.
-Neither did we observe any significant influence of livestock type, stocking density, or field area on vascular plant species nor dung-associated beetle families.
-Our findings suggested that the effect of field management on vascular plant species and dung-associated beetle families of semi-natural grasslands is overridden by the environmental variation at fine scale.
+Neither did we observe any significant influence of livestock type, stocking density, or field area on vascular plant species nor dung-associated beetle families [see also @demeauxJustGrazeIt2024].
+Our findings suggest that the effect of field management on vascular plant species and dung-associated beetle families of semi-natural grasslands is overridden by the environmental variation at fine scale.
 The current diverse, adaptive farming practice and variable environment means that each field is unique.
-The lack of aggregations of sites in ordination analyses implies site-level assemblages of species idiosyncratically filtered by the fine-scale environment, rather than groups of species being affiliated with one another and consistently repeated across several sites (as in the phytosociological or Clementsian concept of a community).
+The lack of aggregations of sites in ordination analyses implies site-level assemblages of species idiosyncratically filtered by the fine-scale environment, rather than groups of species being affiliated with one another and consistently repeated across several sites (as in the phytosociological or Clementsian concept of a community) [@weaverClementssPlantSuccession1917].
 In the context of Western Norway, it implies that grassland types do not substantially vary between more productivity-oriented mixed dairy beef systems and more extensive sheep and goat farming.
-From a broader perspective, our study adds to the evidence that the effect of diversified management practices on grassland communities is not as straightforward, especially in low-intensity grazing systems [see also @jerrentrupDiverseSwardsMixedgrazing2020; @pakemanLongTermImpacts2019; @pozsgaiGrazingImpactsGround2022].
-Neither one-size-fits-all agroecological policies, nor exclusively landscape-scale actions, can be used to shift community composition in ecosystems with high underlying environmental heterogeneity.
-However, we acknolwedge a lack of sample power and caution against entirely rejecting lanscape- and field management-scale actions.
-<!-- We recommend that observational studies in grazing research should first focus on disentangling the complex interactions occurring within agroecological systems in different local contexts, before aiming to test the independent effects of individual management practices [@sinclairOptionsContextApproach2019]. -->
+From a broader perspective, our study adds to the evidence that the effect of diversified management practices on grassland communities is not straightforward, especially in low-intensity grazing systems [see also @jerrentrupDiverseSwardsMixedgrazing2020; @pakemanLongTermImpacts2019; @pozsgaiGrazingImpactsGround2022].
+Neither one-size-fits-all agroecological policies, nor exclusively landscape-scale actions, substantially alter community composition in ecosystems with high underlying environmental heterogeneity.
+However, we acknowledge a lack of sample power and caution against entirely rejecting landscape- and field management-scale actions [see for example @susannezazzeraManagementMattersBee2026].
 
 We also showed that standard indicators of land use, such as stocking density, are not always suitable to describe the actual grazing pressure on site, particularly when rotational management is involved.
 While in theory a *certain number of animals* is allocated to a *certain area of land* for a *certain period of time*, farmers continuously adapt their management to unforeseeable circumstances, such as for instance the livestock birth rate/survival or the timing of spring bloom [@nuthallIntuitiveWorldFarmers2012].
@@ -591,7 +482,7 @@ For further research, we recommend the integration of spatial and temporal varia
 
 # CONCLUSION
 
-Our study investigated how the environment and field management are related to one another at different scales, and how these influence vascular plant and dung-associated beetle assemblages of semi-natural grasslands in the fjord region of Western Norway.
+Our study investigated how environmental variation and livestock grazing are related to one another at different scales, and how these influence vascular plant and dung-associated beetle assemblages of semi-natural grasslands in the fjord region of the Nordhordland UNESCO Biosphere Reserve, Western Norway.
 Land use was distributed across the landscape following the fjord shorelines, rather than by climatic or elevational gradients.
 We found that environmental filters operate most strongly at the fine-scale level for both vascular plants and dung-associated beetles, though beetle families were also affected by the landscape matrix to a lesser extent, reflecting their greater mobility.
 However, we observed no significant effect of field management on either vascular plant or dung-associated beetle assemblages, weakening the potential for management changes to influence ecological communities of low-intensity grazed grasslands already subjected to strong environmental constraints.
@@ -712,6 +603,110 @@ sitelocation |>
 
 \scriptsize
 
+```{r tbl-varsum}
+#| tbl-cap: "Summary statistics of selected variables for the regional-, landscape-, field-, and fine-scale, to explore relationships between the environment and field management in the agroecological landscape of the Nordhordland UNESCO Biosphere Reserve and their influences on vascular plant and dung-associated beetle assemblages of semi-natural grasslands. Not applicable for livestock dummy numeric."
+#| message: false
+#| warning: false
+
+# Packages
+library(gt)
+library(tidyverse)
+# library(kableExtra)
+
+# Join all variables
+allvar <- purrr::reduce(list(subset(regional, select = -c(JanTemp)), landscape, field, subset(fine, select = -c(GWC, LOI, Humus, Nitrog))), dplyr::full_join)
+
+# Summary statistics
+varsum <- allvar |> 
+  summarise(across(where(is.numeric), .fns =
+                     list(Mean = mean,
+                          sd = sd,
+                          Min = min,
+                          Max = max
+                     ))) |>
+  pivot_longer(everything(), names_sep = "_", names_to = c( "Variable", ".value")) |>
+  mutate(Set = ifelse(Variable == "AnnPreci" |
+                        Variable == "Elev" |
+                        Variable == "FjordDist" |
+                        Variable == "TempRange" |
+                        Variable == "JulTemp", "Regional", ifelse(
+                          Variable == "Cultivated" |
+                          Variable == "Forest" | 
+                          Variable == "Infield" | 
+                          Variable == "Artificial" |
+                          Variable == "Outfield" |
+                          Variable == "Wetland", "Landscape", ifelse(
+                            Variable == "FieldArea" |
+                            Variable == "StockDens" |
+                            Variable == "Cattle" |
+                            Variable == "Sheep", "Field", "Fine"
+    )
+  ))) |> 
+  mutate(
+    Variable = dplyr::recode(
+      Variable,
+          "Elev" = "Elevation (masl)",
+    "AnnPreci" = "Annual precipitation (mm)",
+    "JulTemp" = "Maximum July temperature (°C)",
+    "TempRange" = "Annual temperature range (°C)",
+    "FjordDist" = "Distance to fjord (m)",
+    "Cultivated" = "Cultivated area (%)",
+    "Forest" = "Forest area (%)",
+    "Infield" = "Infield area (%)",
+    "Outfield" = "Outfield area (%)",
+    "Artificial" = "Infrastructure area (%)",
+    "Wetland" = "Wetland area (%)",
+    "FieldArea" = "Site area (ha)",
+    "StockDens" = "Stocking density (LU/ha)",
+    "Bryo" = "Bryophyte cover (%)",
+    "MeanHeight" = "Sward height (cm)",
+    "BD" = "Bulk density (g/cm3)",
+    "pH" = "pH",
+    "Phosph" = "Available phosphorus (mg/100g)",
+    "SoilPene" = "Soil penetration (cm)"
+    )
+  ) |> 
+  arrange(Variable)
+
+varsum |>
+ # gt(groupname_col = "explanatory", rowname_col = "response") |>
+ # tab_options(row_group.as_column = TRUE) |>
+ gt(groupname_col = "Set", rowname_col = "Variable") |>
+  # cols_label(
+  #   Variance = "variance",
+  #   PrF = "p-value",
+  #   Df = "df",
+  #   adj.r.squared = "adjRsq"
+  # ) |>
+  fmt_number(
+    decimals = 1,
+  ) |>
+  fmt_number(
+    decimals = 0,
+    sep_mark = " ",
+    rows = c("Elevation (masl)", "Annual precipitation (mm)", "Distance to fjord (m)")
+  ) |>
+  fmt_number(
+    decimals = 2,
+    rows = c("Stocking density (LU/ha)")
+  ) |>
+  sub_values(
+    rows = c("Sheep", "Cattle"),
+    fn = function(x) x >=0 & x <= 1,
+    replacement = "-"
+  ) |> 
+  sub_missing(missing_text = "-") |>
+  row_group_order(
+    groups = c("Regional", "Landscape", "Field", "Fine")
+  ) |> 
+  opt_stylize(style = 3, color = 'gray') |>
+  tab_options(
+    table.font.size = 11
+  )
+```
+
+\newpage
+
 ```{r tbl-plantlist}
 #| tbl-cap: "Summary statistics of vascular plant assemblage percent cover data collected in 29 study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway."
 #| message: false
@@ -752,6 +747,7 @@ plantlist |>
   )
 ```
 
+\newpage
 
 ```{r tbl-beetlelist}
 #| tbl-cap: "Summary statistics of dung-associated beetle assemblage percent catch data collected in 29 study sites in the Nordhordland UNESCO Biosphere Reserve, Western Norway."
@@ -1094,7 +1090,7 @@ rdabeetlepa |>
 #| warning: false
 #| echo: false
 
-plotrda_regiobeetlepa
+plotrda_regiolandscape
 ```
 
 ``` {r fig-figureS4b}
@@ -1104,7 +1100,7 @@ plotrda_regiobeetlepa
 #| warning: false
 #| echo: false
 
-plotrda_fineplantpa12
+plotrda_regiobeetlepa
 ```
 
 ``` {r fig-figureS4c}
@@ -1114,10 +1110,20 @@ plotrda_fineplantpa12
 #| warning: false
 #| echo: false
 
+plotrda_fineplantpa12
+```
+
+``` {r fig-figureS4d}
+#| fig-height: 3.5
+#| fig-width: 3.5
+#| message: false
+#| warning: false
+#| echo: false
+
 plotrda_fineplantpa23
 ```
 
-Ordination plots of (a) the RDA model between the regional environment and the landscape matrix of the agroecological system of the Nordhordland UNESCO Biosphere Reserve and (b,c) supplementary RDA models between the fine-scale environment and vascular plant assemblages of semi-natural grasslands, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Abbreviations: AnnPreci: annual precipitation; Bryo: percent bryophyte cover; BD: bulk density; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; SoilPene: soil penetration.
+Ordination plots of RDA models (a) between the regional environment and the landscape matrix of the agroecological system of the Nordhordland UNESCO Biosphere Reserve; (b) between the regional environment and dung-associated beetle assemblages based on presence-absence data; and (c,d) between the fine-scale environment and vascular plant assemblages based on presence-absence data, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Black dots represent sites. Only taxa with axes scores of 0.1 or more are shown. Abbreviations: AnnPreci: annual precipitation; Bryo: percent bryophyte cover; BD: bulk density; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; SoilPene: soil penetration; Achimill: *Achillea millefolium*; Conomaju: *Conopodium majus*; Descflex: *Deschampsia flexuosa*; Epilsp: *Epilobium* sp; Ranuacri: *Ranunculus acris*.
 :::
 
 \newpage
@@ -1174,7 +1180,7 @@ rdagrass |>
 #| warning: false
 #| echo: false
 
-plotrda_regiolandscape
+plotrda_fineplantplot12
 ```
 
 ``` {r fig-figureS5b}
@@ -1184,19 +1190,9 @@ plotrda_regiolandscape
 #| warning: false
 #| echo: false
 
-plotrda_fineplantplot12
-```
-
-``` {r fig-figureS5c}
-#| fig-height: 3.5
-#| fig-width: 3.5
-#| message: false
-#| warning: false
-#| echo: false
-
 plotrda_fineplantplot23
 ```
 
-Ordination plots of (a) the RDA model between the regional environment and the landscape matrix of the agroecological system of the Nordhordland UNESCO Biosphere Reserve and (b,c) supplementary RDA models between the fine-scale environment and vascular plant assemblages of semi-natural grasslands, showing 1st and 2nd dimensions and 2nd and 3rd dimensions respectively. Abbreviations: AnnPreci: annual precipitation; Bryo: percent bryophyte cover; BD: bulk density; Elev: elevation; JulTemp: average July temperature; SeaDist: distance to sea; SoilPene: soil penetration.
+Ordination plots of supplementary RDA models between the fine-scale environment and vascular plant assemblages of semi-natural grasslands, showing (a) 1st and 2nd dimensions and (b) 2nd and 3rd dimensions respectively. Black dots represent sites. Only taxa with axes scores of 0.1 or more are shown. Abbreviations: Desccesp: *Deschampsia cespitosa*; Festrubr: *Festuca rubra*; Lolipere: *Lolium perenne*; Poaprate: *Poa pratensis*; Bryo: percent bryophyte cover; BD: bulk density; SoilPene: soil penetration.
 :::
 
