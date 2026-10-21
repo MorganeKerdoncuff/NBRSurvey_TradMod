@@ -128,7 +128,7 @@ Elevation increases from west to east, from sea-level to 1313 masl.
 Annual precipitation is high overall, ranging from 1560 mm to 4820 mm, and shows a sharp increase along the elevation gradient [@ketzlerClimateNorway2021; @meteorologiskinstituttNorskKlimaservicesenter2023].
 The climate is oceanic, and average July temperature ranges from 15.9°C on the coastline to 8.2°C in the mountain ranges.
 
-In the summers of 2019 and 2020, we conducted an ecological survey on 29 sites distributed across the southern part of the Nordhordland UNESCO Biosphere Reserve, all located below 250 masl [@fig-sitemap; @demeauxJustGrazeIt2024].
+In the summers of 2019 and 2020, we conducted an ecological survey on 29 sites distributed across the southern part of the Nordhordland UNESCO Biosphere Reserve, all located below 250 masl [@demeauxJustGrazeIt2024] (@fig-sitemap; @tbl-sitelocation).
 Our sites were classified as "*innmarksbeite*" under the Norwegian AR5 land cover classification system, which represents "*agricultural land that cannot be harvested mechanically* \[with\] *at least 50% of the area* \[...\] *covered with cultured grass or pasture-tolerant herbs*" [@ahlstromAR5Klassifikasjonssystem2019].
 *Innmarksbeite* includes both sown pastures and unsown semi-natural grasslands.
 To avoid interference between naturally occurring and sown plant species, we selected sites which, to the knowledge of the farmers, had not been resown since at least the 1970s.
