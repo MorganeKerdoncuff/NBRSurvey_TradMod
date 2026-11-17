@@ -15,9 +15,10 @@
 
 #### PACKAGES ####
 
-library(osfr) # Retrieve raw data from OSF
+# library(osfr) # Retrieve raw data from OSF
 library(tidyverse) # R language
 library(janitor) # Data cleaning
+# library(plyr) # Anonymisation (round_any for geographical location)
 library(readxl) # Read xl files
 library(lubridate) # Standard date
 library(purrr) # Merge tables
@@ -36,10 +37,10 @@ arthro_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA
 #### CLEAN DATA OSF UPLOAD ####
 
 ## Access to OSF project
-nbr_project <- osf_retrieve_node("https://osf.io/5gh3c")
-nbr_project
-## Define target directory for uploading clean data
-target_dir <- osf_ls_files(nbr_project, path = "tradmod_nbr_data", pattern = "cleandata")
+# nbr_project <- osf_retrieve_node("https://osf.io/5gh3c")
+# nbr_project
+# ## Define target directory for uploading clean data
+# target_dir <- osf_ls_files(nbr_project, path = "tradmod_nbr_data", pattern = "cleandata")
 
 #### SITE DESCRIPTION ####
 
@@ -104,13 +105,17 @@ site_description <- left_join(
 ## Duplicate check for siteID and geolocation
 # get_dupes(site_description, siteID, latitude25832, longitude25832) #validated
 
-## Character variables - desirable categories, NAs, misprints
+# Anonymisation
+
+## Round geographical coordinates
+
+# Character variables - desirable categories, NAs, misprints
 
 ### Consistent lower camel
 site_description <- site_description %>%
   mutate_if(is.character, tolower)
 
-### Categories & distribution
+### Category validation
 # table(site_description$landscapeZone) #validated
 # unique(site_description$municipality) # NA
 site_description[is.na(site_description$municipality),] # NA identified - US2 located in Masfjorden
@@ -151,7 +156,7 @@ site_description <- site_description |>
 
 # Clean data export
 write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
+# osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
 
 #### 20x20 SAMPLING AREA ####
 
@@ -236,7 +241,7 @@ sampling_area <- filter(sampling_area, siteID != "uc1")
 
 # Clean data export
 write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
+# osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
 
 #### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
 
@@ -335,7 +340,7 @@ ground_cover <- ground_cover |>
 
 # Clean data export
 write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover_clean.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover_clean.csv")
+# osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover_clean.csv")
 
 
 #### DESTRUCTIVE SUBPLOTS - SOIL PENETRATION TESTS ####
@@ -399,7 +404,7 @@ soil_pene <- soil_pene %>%
 
 # Clean data export
 write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene_clean.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene_clean.csv")
+# osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene_clean.csv")
 
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
 
@@ -522,7 +527,7 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 ## Clean data export
 
 write_csv(soil_bulk, "data/cleandata/tradmod_nbr_soilbulk.csv")
-osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
+# osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
 
