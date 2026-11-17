@@ -27,6 +27,7 @@ GENERAL INFORMATION
 
 // Description of dataset:
 <(Short) description of what the dataset is about, including reference to related project(s) and publication(s), if applicable. Should correspond to the information entered in the metadata fields Description and Related Publication.>
+
 This dataset is associated to the TradMod project (2018-2023) "From traditional resource use to modern industrial production: Holistic management in western Norway", funded by the Research Council of Norway (grant number 280299).
 It contains biological, environmental and management data collected in 2019 and 2020 in the Nordhordland UNESCO Biosphere Reserve, Western Norway.
 This dataset was used for the following publications: 
@@ -43,6 +44,7 @@ METHODOLOGICAL INFORMATION
 
 // Description of sources and methods used for collection/generation of data:
 <Include links or references to sources, publications, reports or other documentation (e.g. survey questionnaires, interview protocols, Preregistrations or Registered Reports) containing (experimental) study design or protocols, or other collection techniques used, as well as personnel involved in data collection/generation.>
+
 Ecological data was collected in 2019 and 2020, from June to August, in the Nordhordland UNESCO Biosphere Reserve (60°47'N, 5°15'E), Western Norway.
 We visited a total of 45 sites of semi-natural grasslands and heathlands distributed along a west-east gradient, from the coastline to subalpine areas.
 The sampling design is described in details in Kerdoncuf (2026). Marking the landscape : Ecological assessment of small-scale grazing systems in the fjord region of the Nordhordland UNESCO Biosphere Reserve (doctoral thesis). https://hdl.handle.net/11250/5332751.
@@ -62,21 +64,19 @@ We identified all plant species, specifically recording blossoming ones, and est
 When necessary, specimens were collected, coded and brought for microscopic or expert identification.
 All field identifications and percent cover assessments were made by one or the other of the same two observers across the two field seasons.
 
-In destructive subplots, we collected soil, aboveground biomass and dung-associated beetles.
-We performed several measurements of soil physicochemical properties.
-On site, we tested soil resistance to penetration twice in each subplot by dropping a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) from 1 m above ground, through a PVC tube to ensure vertical fall.
+In destructive subplots, we assessed soil physicochemical properties, aboveground biomass and the composition of dung-associated beetle assemblages.
+
+(1) On site, we tested soil resistance to penetration twice in each subplot by dropping a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) from 1 m above ground, through a PVC tube to ensure vertical fall.
 The visible standing part of the stick was measured and subtracted from the total stick length to obtain the length of penetration into the soil.
 We also recorded whether the stick hit the bedrock.
 Before dropping the stick, the surrounding vegetation around a 5 cm radius was cleared to prevent resistance from the aboveground vegetation. 
 The tip was regularly sharpened and remeasured to account for the decrease in length, which was of 1.6 % (0.7 cm) by the end of the data collection.
 
-In each subplot, we also sampled two series of soil cores.
-We collected three cores for the determination of bulk density and water gravimetric content using PVC tubes of 57.23 cm^3^ (diam. 3.7 cm, height 10 cm).
+(2) We collected three small soil cores per subplot for the determination of bulk density and water gravimetric content using PVC tubes of 57.23 cm^3^ (diam. 3.7 cm, height 10 cm).
 To limit soil compression during collection, we sharpened the edges of the PVC tubes and cut the surrounding root mat with a knife while pushing down the cores. 
-Samples were covered with plastic foil and stored at 6°C before processing in the laboratory. 
+Samples were covered with plastic foil and stored at 6°C before processing. 
 If necessary, the soil volume of each core was corrected for holes or unfilled space.
 Cheesecloth was attached to the bottom of soil cores with an elastic band to prevent soil from falling during processing.
-
 We took the following measurements: 
 initial weight of fresh soil;
 weight after water saturation for 24h;
@@ -86,12 +86,30 @@ weight after oven drying at 105°C for 48h.
 During the processing of 2020 samples, we encountered an issue with the weighing scale which affected the accuracy of some measurements, especially when soil core volume was low.
 We therefore recommend to filter the data and only keep weight measurements of cores containing at least 50 cm^3^ of soil.
 
+(3) We collected one more soil sample per subplot for chemical analyses and soil mesofauna extraction using a stainless steel cylindrical core of 200 cm^3^ (diameter 10.5 cm; height 12 cm).
+Samples were stored in plastic bags at 6°C before processing.
+Mesofauna was extracted with the Berlese-Tullgren method, using aluminium of 62 cm height, 33.5 cm top diameter and 5.3 cm exit diameter.
+The soil was put to dry for 96 hours on 2 cm mesh size grids and at 40 cm under heating lamps of 50 W.
+The extracted samples were stored in 70% ethanol and sorted into Collembola and Acari.
+Mesofauna extraction was performed on all soil cores from the 2019 field season and only on one soil core per plot from the 2020 field season.
+For the chemical analyses, soil cores were sieved and merged at the plot level.
+We sent a subsample of 0.5 L to a certified analysis laboratory for the determination of soil type, clay content, loss on ignition, soil density, humus content, pH, available phosphorus, available potassium, available magnesium, available calcium, available sodium, dry matter content, and total nitrogen content.
+Chemical analyses were performed on dry soil from all soil cores of the 2019 field season, after Berlese-Tullgren extraction, and on fresh soil from three soil cores per plot of the 2020 field season. 
+
+
 // Methods for processing the data:
 <If data other than raw data are provided, describe how the submitted data were processed from the raw or collected/generated data. The documentation of methods used for data processing should include (if applicable): details that may influence reuse or replication efforts; data cleaning and analysis syntax; code or algorithms, with commenting to explain steps taken, to reproduce all reported findings; de-identification procedures for sensitive human subjects or endangered species data. If applicable, code, algorithm or command files used to create derived data should be included in the dataset and referred to in this section.>
+
+General cleaning procedure.
+When applicable, special Norwegian characters were replaced by standard latin characters directly in Excel.
+In R, we anonymised the data by excluding names, addresses, farm national identification code, as well as any personal text element, and by rounding geographical coordinates up to the nearest hundredth degree.
+We used the *janitor* package to standardise variable names and character strings, and to identify duplicated entries.
+
 Raw data was anonymised and cleaned using the *janitor* package to ensure that variables are consistent and follow naming convention standards.
 One site (bog), which did not belong to the same habitat type than other sites (grasslands, heathlands), was entirely removed from the data.
 Latin names of plant species and beetle families were corrected and recoded when mispelled.
 When applicable, records containing wrong data entry (e.g. for soil bulk density) were removed from the dataset.
+The R script used for data cleaning is available on GitHub: https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod/blob/master/scripts/tradmod_nbr_datacleaning.R
 
 <Remove sections below that are not applicable.>
 
@@ -100,7 +118,10 @@ When applicable, records containing wrong data entry (e.g. for soil bulk density
 
 // Standards and calibration information: 
 
-// Environmental/experimental conditions: 
+// Environmental/experimental conditions:
+
+Study sites were 
+Data collection occurred under various weather conditions (sunny, cloudy, rainy).
 
 // Describe any quality-assurance procedures performed on the data: 
 
