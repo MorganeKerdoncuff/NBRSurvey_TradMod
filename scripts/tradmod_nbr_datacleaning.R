@@ -51,18 +51,18 @@ site_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsitedescription.xlsx"
 management_raw <- read_excel(path = "data/rawdata/CONFIDENTIAL_tradmod_nbr_rawmanagement.xlsx", sheet="Farms Information_R")
 
 # Desired variables
-## siteID - Field identification code for data collection
+## siteID - Site identification code
 ## samplingYear - Year of data collection (values: 2019; 2020)
 ## landscapeZone - Landscape zone (values: coastal; fjord; mountain) adapted from Uttakleiv, Lars A., and Trond Simensen. 2011. “Landskapskartlegging i Norge [Landscape Mapping in Norway].” Plan 43 (3-4): 76–83. https://doi.org/10.18261/ISSN1504-3045-2011-03-04-15.
-## municipality - Smaller administrative region
+## municipality - Local administrative region
 ## latitude25832 - Latitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832)
 ## longitude25832 - Longitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832)
 ## habitatType - Simplified habitat type according to shrub dominance, geographical location and land use (values: coastal heathland; permanent grassland; transition heathland; subalpine heathland)
 ## fieldType - Land use type according to traditional Norwegian farming system (values: infield; outfield)
-## livestockType - Type of livestock grazing on field (values: cattle; goat; sheep)
-## numberAnimalsAdult - Number of adult animals grazing on field during the year of sampling
-## numberAnimalsYoung - Number of young animals grazing on field during the year of sampling (born in the year for sheep & goats, less than 1 year old for cattle)
-## fieldAreaHa - Surface area of the field selected for the survey in hectares
+## livestockType - Type of livestock grazing on site (values: cattle; goat; sheep)
+## numberAnimalsAdult - Number of adult animals grazing on site during the year of sampling
+## numberAnimalsYoung - Number of young animals grazing on site during the year of sampling (born in the year for sheep & goats, less than 1 year old for cattle)
+## fieldAreaHa - Surface area of the site selected for the survey in hectares
 ## farmGrazingAreaHa - Total surface area of grazing fields (innmark) of the farm, collected from https://gardskart.nibio.no/search (only valid for fieldType = infield)
 
 # Variable names
@@ -156,6 +156,7 @@ site_description <- site_description |>
 
 # Clean data export
 write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
+write_csv(site_description, "data/repodata/tradmod_nbr_sitedescription.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_sitedescription_clean.csv")
 
 #### 20x20 SAMPLING AREA ####
@@ -165,7 +166,7 @@ write_csv(site_description, "data/cleandata/tradmod_nbr_sitedescription_clean.cs
 sampling_area_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsamplingarea.xlsx")
 
 # Desired variables
-## siteID - Field identification code for data collection
+## siteID - Site identification code
 ## eventDate - Date of data collection
 ## numberLivestockPaths - Number of paths created by the livestock in the sampling area
 ## lengthLivestockPathM - Total length of livestock path in the sampling area in meters
@@ -241,6 +242,7 @@ sampling_area <- filter(sampling_area, siteID != "uc1")
 
 # Clean data export
 write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
+write_csv(sampling_area, "data/repodata/tradmod_nbr_sampling_area.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
 
 #### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
@@ -340,6 +342,7 @@ ground_cover <- ground_cover |>
 
 # Clean data export
 write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover_clean.csv")
+write_csv(ground_cover, "data/repodata/tradmod_nbr_groundcover.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover_clean.csv")
 
 
@@ -404,6 +407,7 @@ soil_pene <- soil_pene %>%
 
 # Clean data export
 write_csv(soil_pene, "data/cleandata/tradmod_nbr_soilpene_clean.csv")
+write_csv(soil_pene, "data/repodata/tradmod_nbr_soilpene.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilpene_clean.csv")
 
 #### DESTRUCTIVE SUBPLOTS - BULK DENSITY & GRAVIMETRIC WATER CONTENT ####
@@ -418,11 +422,11 @@ soil_bulk_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawbulkdensity.xlsx
 ## subplotID - Subplot identification code for data collection
 ## recordID - Identification code for individual bulk density cores
 ## coreVolCm3 - Core volume corrected for gaps in cm3
-## weight0hG - Initial core weight after collection in g
-## weightSatG - Water saturated weight of soil cores in g
-## weight24hG - Core weight after 24h air drying in g
-## weight48hG - Core weight after 48h air drying in g
-## weightDryG - Core weight after 48h oven drying at 105°C in g
+## weight0hG - Fresh soil core weight in g
+## weightSatG - Water saturated soil core weight in g
+## weight24hG - Soil core weight after 24h air drying in g
+## weight48hG - Soil core weight after 48h air drying in g
+## weightDryG - Soil core weight after 48h oven drying at 105°C in g
 
 # Variable names & structure
 
@@ -516,8 +520,8 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 #       )
 #     ) |>
 #   transpose() #one negative wSatG value
-# filter(soil_bulk, weightSatG < 0) #ic3-p1-d3 - value before correction: 10.35 g -> wrong data entry, should be discarded
-# soil_bulk <- filter(soil_bulk, weightSatG > 0)
+filter(soil_bulk, weightSatG < 0) #ic3-p1-d3 - value before correction: 10.35 g -> wrong data entry, should be discarded
+soil_bulk <- filter(soil_bulk, weightSatG > 0)
 
 ### NA check
 # colnames(soil_bulk)[apply(soil_bulk, 2, anyNA)] # all variable, check row identification
@@ -526,7 +530,8 @@ soil_bulk <- filter(soil_bulk, siteID != "uc1")
 
 ## Clean data export
 
-write_csv(soil_bulk, "data/cleandata/tradmod_nbr_soilbulk.csv")
+write_csv(soil_bulk, "data/cleandata/tradmod_nbr_soilbulk_clean.csv")
+write_csv(soil_pene, "data/repodata/tradmod_nbr_soilbulk.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_soilbulk.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL CHEMISTRY ####
@@ -758,7 +763,7 @@ soil_chem <- soil_chem %>%
 ## Export clean data in new excel file
 
 write_csv(soil_chem, "data/cleandata/tradmod_nbr_soilchem_clean.csv")
-
+write_csv(soil_chem, "data/repodata/tradmod_nbr_soilchem.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL MESOFAUNA ####
 
@@ -863,7 +868,9 @@ agb_raw <- agb_raw |>
 names(agb_raw) <- gsub("sampleId", "subplotID", names(agb_raw))
 
 ## ID and replication
-# table(agb_raw$subplotID) #validated
+# table(agb_raw$subplotID) # one entry with missing label (OS5-?-?), which does not match a potential missing bag from other OS5 samples - to be removed
+agb_raw <- agb_raw |> 
+  filter(subplotID != "OS5-?-?")
 
 ## New plotID and siteID variables
 agb_raw <- agb_raw |> 
@@ -884,7 +891,7 @@ agb_clean <- subset(
 )
 
 ## Duplicate check
-# get_dupes(agb_clean) #validated
+#get_dupes(agb_clean) #validated
 
 ## Check comment anonymity
 # unique(agb_clean$commentSampling) #validated
@@ -898,61 +905,28 @@ agb_clean <- agb_clean %>%
 ## Functional type
 # unique(agb_clean$functionalType) # Inconsistent categories
 agb_clean <- agb_clean |> 
-  mutate(functionalType = dplyr::recode(functionalType, "grasses" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminoids" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminioids" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "graminiods" = "monocotyledons")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "herbs" = "forbs")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "fern" = "ferns")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "moss" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "Moss" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "bryo" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "mosses" = "bryophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "leaf litter" = "litter")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lichen" = "lichens")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "club mosses" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycopodium" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "huperzia selago" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "diphasiastrum alpinum" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "selaginella selaginoides" = "lycophytes")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "lycophytes" = "cryptogams")) |> 
-  mutate(FunctionalType = dplyr::recode(FunctionalType, "bryophytes" = "cryptogams"))
+  mutate(functionalType = dplyr::recode(functionalType, "grasses" = "monocotyledon")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "graminoids" = "monocotyledon")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "graminioids" = "monocotyledon")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "graminiods" = "monocotyledon")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "herbs" = "forb")) |>
+  mutate(functionalType = dplyr::recode(functionalType, "forbs" = "forb")) |>
+  mutate(functionalType = dplyr::recode(functionalType, "fern" = "fern")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "moss" = "bryophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "Moss" = "bryophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "bryo" = "bryophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "mosses" = "bryophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "leaf litter" = "litter")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "lichens" = "lichen")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "club mosses" = "lycophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "lycopodium" = "lycophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "huperzia selago" = "lycophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "diphasiastrum alpinum" = "lycophyte")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "selaginella selaginoides" = "lycophyte")) |> 
+  # mutate(functionalType = dplyr::recode(functionalType, "lycophytes" = "cryptogams")) |> 
+  # mutate(functionalType = dplyr::recode(functionalType, "bryophytes" = "cryptogams")) |> 
+  mutate(functionalType = dplyr::recode(functionalType, "bryo/litter" = "mix bryophyte litter")) # incomplete sorting
 
-# 9 categories
-
-# Check categories
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US6")) # 3 D1s, all functional groups -> validated
-
-#
-## Remove mislabelled & non fully sorted samples
-
-biomass_full <- filter(biomass_full, SampleID != "OS5-?-?" &
-                         SampleID != "OS2-P2-D1" &
-                         SampleID != "OS2-P3-D2")
-
-#
 ## Numeric var - Check min/max, distribution and potential outliers
 
 # Check min/max
