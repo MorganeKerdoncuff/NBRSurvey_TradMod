@@ -76,6 +76,8 @@ The tip was regularly sharpened and remeasured to account for the decrease in le
 To limit soil compression during collection, we sharpened the edges of the PVC tubes and cut the surrounding root mat with a knife while pushing down the cores. 
 Samples were covered with plastic foil and stored at 6°C before processing. 
 If necessary, the soil volume of each core was corrected for holes or unfilled space.
+In case of unfilled space (e.g. "slopes") at the top and/or bottom of the core, we measured the highest and lowest heights with a fine ruler and used the average to recalculate soil core volume.
+In case of holes, we measured the length, width, and depth of the empty space with a fine ruler and substracted the resulting volume from the total core volume.
 Cheesecloth was attached to the bottom of soil cores with an elastic band to prevent soil from falling during processing.
 We took the following measurements: 
 initial weight of fresh soil;
@@ -86,29 +88,46 @@ weight after oven drying at 105°C for 48h.
 During the processing of 2020 samples, we encountered an issue with the weighing scale which affected the accuracy of some measurements, especially when soil core volume was low.
 We therefore recommend to filter the data and only keep weight measurements of cores containing at least 50 cm^3^ of soil.
 
-(3) We collected one more soil sample per subplot for chemical analyses and soil mesofauna extraction using a stainless steel cylindrical core of 200 cm^3^ (diameter 10.5 cm; height 12 cm).
+(3) We collected one more soil sample per subplot for soil mesofauna extraction and chemical analyses using a stainless steel cylindrical core of 200 cm^3^ (diameter 10.5 cm; height 12 cm).
 Samples were stored in plastic bags at 6°C before processing.
-Mesofauna was extracted with the Berlese-Tullgren method, using aluminium of 62 cm height, 33.5 cm top diameter and 5.3 cm exit diameter.
+In 2019, mesofauna extraction was performed on all soil cores, while in 2020 we only extracted mesofauna from one core out of four per plot.
+We relied on the Berlese-Tullgren method, using aluminium of 62 cm height, 33.5 cm top diameter and 5.3 cm exit diameter.
 The soil was put to dry for 96 hours on 2 cm mesh size grids and at 40 cm under heating lamps of 50 W.
 The extracted samples were stored in 70% ethanol and sorted into Collembola and Acari.
-Mesofauna extraction was performed on all soil cores from the 2019 field season and only on one soil core per plot from the 2020 field season.
 For the chemical analyses, soil cores were sieved and merged at the plot level.
+In 2019, all cores were processed after mesofauna extraction, while in 2020 we directly sieved and merged fresh soil from three cores out of four per plot.
 We sent a subsample of 0.5 L to a certified analysis laboratory for the determination of soil type, clay content, loss on ignition, soil density, humus content, pH, available phosphorus, available potassium, available magnesium, available calcium, available sodium, dry matter content, and total nitrogen content.
-Chemical analyses were performed on dry soil from all soil cores of the 2019 field season, after Berlese-Tullgren extraction, and on fresh soil from three soil cores per plot of the 2020 field season. 
 
 
 // Methods for processing the data:
 <If data other than raw data are provided, describe how the submitted data were processed from the raw or collected/generated data. The documentation of methods used for data processing should include (if applicable): details that may influence reuse or replication efforts; data cleaning and analysis syntax; code or algorithms, with commenting to explain steps taken, to reproduce all reported findings; de-identification procedures for sensitive human subjects or endangered species data. If applicable, code, algorithm or command files used to create derived data should be included in the dataset and referred to in this section.>
 
-General cleaning procedure.
+///General cleaning procedure.
 When applicable, special Norwegian characters were replaced by standard latin characters directly in Excel.
-In R, we anonymised the data by excluding names, addresses, farm national identification code, as well as any personal text element, and by rounding geographical coordinates up to the nearest hundredth degree.
-We used the *janitor* package to standardise variable names and character strings, and to identify duplicated entries.
+In R, we anonymised data by excluding names, addresses, farm national identification code, as well as any personal text element, and by rounding geographical coordinates up to the nearest hundredth degree.
+We used the *janitor* package to standardise variable names and character strings and to identify duplicate.
+We used the *lubridate* package to standardise date.
+Norwegian vocabulary was replaced by English when applicable (e.g. soil-chemistry).
+Latin names of plant species and beetle families were recoded when mispelled.
+When necessary, we added plotID, subplotID, and recordID variables.
+When applicable, we removed contextual variables already accounted for in "tradmod_nbr_sitedescription_clean.csv" (e.g. date, GPS coordinates).
 
-Raw data was anonymised and cleaned using the *janitor* package to ensure that variables are consistent and follow naming convention standards.
-One site (bog), which did not belong to the same habitat type than other sites (grasslands, heathlands), was entirely removed from the data.
-Latin names of plant species and beetle families were corrected and recoded when mispelled.
-When applicable, records containing wrong data entry (e.g. for soil bulk density) were removed from the dataset.
+///Individual data cleaning and curation cases.
+We removed one site entirely from all datasets because the habitat type (bog) was an outlier and the data collection process subsenquently interrupted for this site.
+The dataset "tradmod_nbr_sitedescription.csv" resulted from the merging of two datasets including on-site contextual variables and management variables from farmer interview data respectively.
+When necessary, we completed missing values of flock size using interview data of the same farmers from Margit Reiersen (2019). Bærekraft i Vestnorsk Landbruk - En deskriptiv studie av landbruket i Nordhordland Biosfæreområdet og bøndenes syn på bærekraft i landbruket. https://hdl.handle.net/1956/20820
+In "tradmod_nbr_samplingarea.csv", we removed redundant variables including:
+minimum elevation recorded in the sampling area, which was unnecessary as maximum elevation and slope were recorded;
+aspect cardinal direction, which was unnecessary as aspect degree was recorded.
+In "tradmod_nbr_groundcover.csv", we removed plant species richness variables, which was already accounted for in "plant community".
+In "tradmod_nbr_soilbulk.csv", we calculated corrected core volume (substraction empty volumes) in Excel and corrected weight measurements (substraction PVC core and cheesecloth weights) in R.
+Only corrected variables were kept in the final dataset.
+We removed one record (ic3-p1-d3-r1) because of the wrong data entry of water saturated weight (10.35 g).
+The dataset "tradmod_nbr_soilchem.csv" resulted from the merging of several files of soil chemistry data received in either txt, xls, and pdf formats.
+When data was only provided in a PDF file, we entered the values manually in R.
+When applicable, we replaced the numerical factor of categorical variables by the corresponding character strings.
+The dataset "tradmod_nbr_soilmeso.csv" resulted from the merging of a dataset containing mesofauna count values and a dataset containing core height.
+
 The R script used for data cleaning is available on GitHub: https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod/blob/master/scripts/tradmod_nbr_datacleaning.R
 
 <Remove sections below that are not applicable.>
@@ -120,7 +139,6 @@ The R script used for data cleaning is available on GitHub: https://github.com/M
 
 // Environmental/experimental conditions:
 
-Study sites were 
 Data collection occurred under various weather conditions (sunny, cloudy, rainy).
 
 // Describe any quality-assurance procedures performed on the data: 
@@ -132,16 +150,12 @@ DATA & FILE OVERVIEW
 // File List: 
 <List all files (or folders, as appropriate for dataset organization) contained in the dataset. Where appropriate, a file overview may be provided by explaining file naming conventions, instead of listing individual files. For each file (or folder), provide a brief description of what data it contains, and of the file format (e.g. plain text) if not obvious from file extension (e.g. .txt). If necessary, also include system and hardware requirements needed to open and read the file.>
 
+///tradmod_nbr_sitedescription.csv
+General information on study sites, including contextual and management data.
+
 // Relationship between files, if important: 
 
-// Is this an updated version of a dataset published on DataverseNO? yes/no
-<This question is relevant if you make changes to the original dataset on file level. It does not relate to (minor) changes in the metadata. If the answer is yes, fill out the information below and repeat for each file that was updated. If the answer is no, leave the lines below unchanged. These might be used for updates to the dataset in the future> 
-     Version number of dataset:     
-     File name: 
-     Why was the file updated? 
-     When was the file updated (YYYY-MM-DD)?: 
-     What was changed? 
-
+// Is this an updated version of a dataset published on DataverseNO? no
 
 -----------------------------------------
 DATA-SPECIFIC INFORMATION FOR: [FILENAME]
@@ -164,6 +178,422 @@ DATA-SPECIFIC INFORMATION FOR: [FILENAME]
 // Contextual Information:
 <Where applicable, provide biographical or other contextual information relating to the interview or interviewee, either embedded at the beginning of the transcript files, as a summary page, or added below, as appropriate.>
 
+--------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_sitedescription.csv
+--------------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///samplingYear
+Description: Year of data collection (values: 2019; 2020).
+Variable type: quantitative.
+Unit: none.
+
+///landscapeZone
+Description: Biogeographical zone adapted from Uttakleiv, Lars A., and Trond Simensen. 2011. “Landskapskartlegging i Norge [Landscape Mapping in Norway].” Plan 43 (3-4): 76–83. https://doi.org/10.18261/ISSN1504-3045-2011-03-04-15.
+Variable type: qualitative (values: coastal; fjord; mountain).
+
+///municipality
+Description: Local administrative region.
+Variable type: qualitative.
+
+///latitude25832
+Description: Latitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832).
+Variable type: quantitative.
+Unit: none.
+Decimal separator: "."
+
+///longitude25832
+Description: Longitude in coordinate reference system ETRS89 / UTM zone 32N (EPSG 25832).
+Variable type: quantitative.
+Unit: none.
+Decimal separator: "."
+
+///habitatType
+Description: Simplified habitat type according to shrub dominance, geographical location and land use.
+Variable type: qualitative (values: coastal heathland; permanent grassland; transition heathland; subalpine heathland).
+
+///fieldType
+Description: Land use type according to the AR5 land cover classification system (2019) from NIBIO (https://hdl.handle.net/11250/2596511).
+Infields are enclosed, productive grazing area, while outfields are unenclosed, nutrient-poor grazing areas. 
+Variable type: qualitative (values: infield; outfield).
+
+///livestockType
+Description: Type of livestock grazing on site (values: cattle; goat; sheep).
+Variable type: qualitative.
+
+///numberAnimalsAdult
+Description: Number of adult animals grazing on field during the year of sampling.
+Variable type: quantitative.
+Unit: none.
+
+///numberAnimalsYoung
+Description: Number of young animals grazing on field during the year of sampling (born in the year for sheep & goats, less than 1 year old for cattle)
+Variable type: quantitative.
+Unit: none.
+
+///fieldAreaHa
+Description: Surface area of the site selected for the survey.
+Variable type: quantitative.
+Unit: hectare.
+Decimal separator: "."
+
+///farmGrazingAreaHa
+Description: Total surface area of grazing fields (innmark) of the farm, collected from https://gardskart.nibio.no/search (only valid for fieldType = infield)
+Variable type: quantitative.
+Unit: hectare.
+Decimal separator: "."
+
+// Missing data codes: 
+"NA"
+
+// Specialized formats or other abbreviations used: 
+
+-----------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_samplingarea.csv
+-----------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///eventDate
+Description: Date of data collection
+Variable type: quantitative.
+Unit: none.
+
+///numberLivestockPaths
+Description: Number of paths created by the livestock in the sampling area.
+Variable type: quantitative.
+Unit: none.
+
+///lengthLivestockPathM
+Description: Total length of livestock paths in the sampling area.
+Variable type: quantitative.
+Unit: meter.
+
+///elevationMasl
+Description: Elevation at the highest point of the sampling area.
+Variable type: quantitative.
+Unit: meter above sea level.
+
+///slopeAngleDegree
+Description: Slope angle from the highest point to the lowest point of the sampling area.
+Variable type: quantitative.
+Unit: degree.
+
+///slopeAspectDegree
+Description: Slope aspect from the highest point to the lowest point of the sampling area.
+Variable type: quantitative.
+Unit: degree.
+
+///percentRock
+Description: Estimated percentage cover of exposed rock in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentMud
+Description: Estimated percentage cover of visible mud in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentTreeTallShrubs
+Description: Estimated percentage cover of trees and shrubs over 1 m in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentLowShrubs
+Description: Estimated percentage cover of shrubs under 1 m in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentForbs
+Description: Estimated percentage cover of forbs in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentMonocotyledons
+Description: Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentBryophytes
+Description: Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentFerns
+Description: Estimated percentage cover of ferns in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+///percentLichens
+Description: Estimated percentage cover of lichens in the sampling area.
+Variable type: quantitative.
+Unit: percent.
+
+// Missing data codes: 
+"NA"
+
+-----------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_groundcover.csv
+-----------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///percentBareGround
+Description: Estimated percentage cover of bare ground in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentRock
+Description: Estimated percentage cover of exposed rock in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentLitter
+Description: Estimated percentage cover of plant litter in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentDeadWood
+Description: Estimated percentage cover of dead wood in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentBryophytes
+Description: Estimated percentage cover of bryophytes (mosses, liverworts) in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentVascular
+Description: Estimated percentage cover of vascular plants in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentLichens
+Description: Estimated percentage cover of lichens in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentBlossom
+Description: Estimated percentage cover of flower blossom in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///percentDung
+Description: Estimated percentage cover of dung pellets or pads in the subplot.
+Variable type: quantitative.
+Unit: percent.
+
+///blossomSp[1-5]
+Description: Latin names of blossoming plant species in the subplot.
+Variable type: qualitative.
+
+///avgVegetationHeightCm
+Description: Average vegetation height in the subplot.
+Variable type: quantitative.
+Unit: cm.
+
+///maxVegetationHeightCm
+Description: Maximum vegetation height in the subplot.
+Variable type: quantitative.
+Unit: cm.
+
+// Missing data codes: 
+"NA"
+
+-------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilpene.csv
+-------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///recordID
+Description: Record identification code.
+Variable type: qualitative.
+
+///soilPenetrationDepthCm
+Description: Soil penetration depth of a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) dropped from 1 m above ground.
+Variable type: quantitative.
+Unit: cm.
+
+///bedrockHit
+Description: If the penetration stick hit the bedrock during the test.
+Variable type: qualitative (value: yes; no).
+
+// Missing data codes: 
+"NA"
+
+-------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilbulk.csv
+-------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///recordID
+Description: Record identification code.
+Variable type: qualitative.
+
+///coreVolCm3
+Description: Soil core volume corrected for gaps.
+Variable type: quantitative.
+Unit: cm^3^.
+
+///weight0hG
+Description: Fresh soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///weightSatG
+Description: Water saturated soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///weight24hG
+Description: Soil core weight after 24h air drying.
+Variable type: quantitative.
+Unit: g.
+
+///weight48hG
+Description: Soil core weight after 48h air dryingt.
+Variable type: quantitative.
+Unit: g.
+
+///weightDryG
+Description: Soil core weight after 48h oven drying at 105°C.
+Variable type: quantitative.
+Unit: g.
+
+// Missing data codes: 
+"NA"
+
+-------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilchem.csv
+-------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///soilType
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///clayContentClass
+Description: Record identification code.
+Variable type: qualitative.
+
+///lossOnIgnitionPercentDM
+Description: Soil core volume corrected for gaps.
+Variable type: quantitative.
+Unit: cm^3^.
+
+///soilDensityKgL
+Description: Fresh soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///dryMatterPercent
+Description: Water saturated soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///humusPercentDM
+Description: Soil core weight after 24h air drying.
+Variable type: quantitative.
+Unit: g.
+
+///humusContentClass
+Description: Soil core weight after 48h air dryingt.
+Variable type: quantitative.
+Unit: g.
+
+///pH
+Description: Soil core weight after 48h oven drying at 105°C.
+Variable type: quantitative.
+Unit: g.
+
+///availablePMg100g
+Description: Soil core volume corrected for gaps.
+Variable type: quantitative.
+Unit: cm^3^.
+
+///availableKMg100g
+Description: Fresh soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///availableMgMg100g
+Description: Water saturated soil core weight.
+Variable type: quantitative.
+Unit: g.
+
+///availableCaMg100g
+Description: Soil core weight after 24h air drying.
+Variable type: quantitative.
+Unit: g.
+
+///availableNaMg100g
+Description: Soil core weight after 48h air dryingt.
+Variable type: quantitative.
+Unit: g.
+
+///totalNPercentDM
+Description: Soil core weight after 48h oven drying at 105°C.
+Variable type: quantitative.
+Unit: g.
+
+// Missing data codes: 
+"NA"
 
 --------------------------
 SHARING/ACCESS INFORMATION
