@@ -85,11 +85,9 @@ weight after water saturation for 24h;
 weight after air drying for 24h;
 weight after air drying for 48h;
 weight after oven drying at 105°C for 48h.
-During the processing of 2020 samples, we encountered an issue with the weighing scale which affected the accuracy of some measurements, especially when soil core volume was low.
-We therefore recommend to filter the data and only keep weight measurements of cores containing at least 50 cm^3^ of soil.
 
-(3) We collected one more soil sample per subplot for soil mesofauna extraction and chemical analyses using a stainless steel cylindrical core of 200 cm^3^ (diameter 10.5 cm; height 12 cm).
-Samples were stored in plastic bags at 6°C before processing.
+(3) We collected one more soil sample per subplot for soil mesofauna extraction and chemical analyses using a stainless steel cylindrical core of about 1040 cm^3^ (diameter 10.5 cm; height 12 cm).
+The height of the collected soil cores was re-measured and samples were stored in plastic bags at 6°C before processing.
 In 2019, mesofauna extraction was performed on all soil cores, while in 2020 we only extracted mesofauna from one core out of four per plot.
 We relied on the Berlese-Tullgren method, using aluminium of 62 cm height, 33.5 cm top diameter and 5.3 cm exit diameter.
 The soil was put to dry for 96 hours on 2 cm mesh size grids and at 40 cm under heating lamps of 50 W.
@@ -98,6 +96,10 @@ For the chemical analyses, soil cores were sieved and merged at the plot level.
 In 2019, all cores were processed after mesofauna extraction, while in 2020 we directly sieved and merged fresh soil from three cores out of four per plot.
 We sent a subsample of 0.5 L to a certified analysis laboratory for the determination of soil type, clay content, loss on ignition, soil density, humus content, pH, available phosphorus, available potassium, available magnesium, available calcium, available sodium, dry matter content, and total nitrogen content.
 
+(4) We collected aboveground biomass by cutting vegetation as close to the ground as possible within a 0.5 m x 0.5 m quadrat in the destructive subplots.
+Samples were stored in plastic bags at -20°C before processing.
+Aboveground biomass was sorted into woody, monocotyledons, forbs, bryophytes, lycophytes, and litter, and stored in paper bags. 
+We measured biomass weight after drying at 65°C for 48H.
 
 // Methods for processing the data:
 <If data other than raw data are provided, describe how the submitted data were processed from the raw or collected/generated data. The documentation of methods used for data processing should include (if applicable): details that may influence reuse or replication efforts; data cleaning and analysis syntax; code or algorithms, with commenting to explain steps taken, to reproduce all reported findings; de-identification procedures for sensitive human subjects or endangered species data. If applicable, code, algorithm or command files used to create derived data should be included in the dataset and referred to in this section.>
@@ -122,11 +124,16 @@ aspect cardinal direction, which was unnecessary as aspect degree was recorded.
 In "tradmod_nbr_groundcover.csv", we removed plant species richness variables, which was already accounted for in "plant community".
 In "tradmod_nbr_soilbulk.csv", we calculated corrected core volume (substraction empty volumes) in Excel and corrected weight measurements (substraction PVC core and cheesecloth weights) in R.
 Only corrected variables were kept in the final dataset.
-We removed one record (ic3-p1-d3-r1) because of the wrong data entry of water saturated weight (10.35 g).
-The dataset "tradmod_nbr_soilchem.csv" resulted from the merging of several files of soil chemistry data received in either txt, xls, and pdf formats.
+Several weight values of samples with low soil volume are inaccurate because of an issue that occurred with the weighing scale.
+We therefore recommend to filter data from cores containing at least 50 cm^3^ of soil.
+We removed one record (ic3-p1-d3-r1) because of a wrong data entry of water saturated weight (10.35 g).
+The dataset "tradmod_nbr_soilchemistry.csv" resulted from the merging of several files of soil chemistry data received in either txt, xls, and pdf formats.
 When data was only provided in a PDF file, we entered the values manually in R.
 When applicable, we replaced the numerical factor of categorical variables by the corresponding character strings.
-The dataset "tradmod_nbr_soilmeso.csv" resulted from the merging of a dataset containing mesofauna count values and a dataset containing core height.
+The dataset "tradmod_nbr_soilmesofauna.csv" resulted from the merging of a dataset containing mesofauna count values and a dataset containing core height.
+We calculated core volume from the corrected measurement of soil core height after sampling.
+The dataset "tradmod_nbr_abovegroundbiomass.csv" contains many missing values because biomass sorting was not performed on all samples due to a lack of time. 
+We calculated aboveground biomass dry weight by substracting standard bag weights, which could result in negative values when biomass weight was very light.
 
 The R script used for data cleaning is available on GitHub: https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod/blob/master/scripts/tradmod_nbr_datacleaning.R
 
@@ -153,7 +160,30 @@ DATA & FILE OVERVIEW
 ///tradmod_nbr_sitedescription.csv
 General information on study sites, including contextual and management data.
 
+///tradmod_nbr_samplingarea.csv
+Environmental data collected at the scale of the 20 m x 20 m representative sampling area.
+
+///tradmod_nbr_groundcover.csv
+Ground cover and vegetation structure data at the scale of the 1 m^2^ non-destructive subplot.
+
+///tradmod_nbr_soilpenetration.csv
+Depth of soil penetration by a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) from 1 m above ground, recorded twice in each 1 m^2^ destructive subplot.
+
+///tradmod_nbr_soilbulk.csv
+Weight at different moisture levels, including dry weight, of 57.23 cm^3^ soil cores (diam. 3.7 cm, height 10 cm) collected in 1 m^2^ destructive subplots.
+This data was collected for the determination of soil bulk density and water gravimetric water content.
+
+///tradmod_nbr_soilchemistry.csv
+Chemical analysis data of 0.5 L soil samples, first collected in 1 m^2^ destructive subplots and then pooled at the plot level (9 m^2^).
+
+///tradmod_nbr_soilmesofauna.csv
+Count data of soil Acari and Collembola extracted from 1040 cm^3^ soil cores (diameter 10.5 cm; height 12 cm).
+
+///tradmod_nbr_abovegroundbiomass.csv
+Dry weight data of vegetation aboveground biomass collected in 0.5 m x 0.5 m quadrats in the destructive subplots.
+
 // Relationship between files, if important: 
+All files can be analysed separately, but we recommend to always refer to tradmod_nbr_sitedescription.csv.
 
 // Is this an updated version of a dataset published on DataverseNO? no
 
@@ -277,66 +307,83 @@ Unit: none.
 Description: Total length of livestock paths in the sampling area.
 Variable type: quantitative.
 Unit: meter.
+Decimal separator: "."
 
 ///elevationMasl
 Description: Elevation at the highest point of the sampling area.
 Variable type: quantitative.
 Unit: meter above sea level.
+Decimal separator: "."
 
 ///slopeAngleDegree
 Description: Slope angle from the highest point to the lowest point of the sampling area.
 Variable type: quantitative.
 Unit: degree.
+Decimal separator: none
 
 ///slopeAspectDegree
 Description: Slope aspect from the highest point to the lowest point of the sampling area.
 Variable type: quantitative.
 Unit: degree.
+Decimal separator: none
 
 ///percentRock
 Description: Estimated percentage cover of exposed rock in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentMud
 Description: Estimated percentage cover of visible mud in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentTreeTallShrubs
 Description: Estimated percentage cover of trees and shrubs over 1 m in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentLowShrubs
 Description: Estimated percentage cover of shrubs under 1 m in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentForbs
 Description: Estimated percentage cover of forbs in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentMonocotyledons
 Description: Estimated percentage cover of monocotyledons (grasses, rushes, sedges) in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentBryophytes
 Description: Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentFerns
 Description: Estimated percentage cover of ferns in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentLichens
 Description: Estimated percentage cover of lichens in the sampling area.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
+
+///commentsRecording
+Description: Additional contextual information during data recording.
+Variable type: qualitative
 
 // Missing data codes: 
 "NA"
@@ -363,46 +410,55 @@ Variable type: qualitative.
 Description: Estimated percentage cover of bare ground in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentRock
 Description: Estimated percentage cover of exposed rock in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentLitter
 Description: Estimated percentage cover of plant litter in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentDeadWood
 Description: Estimated percentage cover of dead wood in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentBryophytes
 Description: Estimated percentage cover of bryophytes (mosses, liverworts) in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentVascular
 Description: Estimated percentage cover of vascular plants in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentLichens
 Description: Estimated percentage cover of lichens in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentBlossom
 Description: Estimated percentage cover of flower blossom in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///percentDung
 Description: Estimated percentage cover of dung pellets or pads in the subplot.
 Variable type: quantitative.
 Unit: percent.
+Decimal separator: "."
 
 ///blossomSp[1-5]
 Description: Latin names of blossoming plant species in the subplot.
@@ -412,18 +468,24 @@ Variable type: qualitative.
 Description: Average vegetation height in the subplot.
 Variable type: quantitative.
 Unit: cm.
+Decimal separator: "."
 
 ///maxVegetationHeightCm
 Description: Maximum vegetation height in the subplot.
 Variable type: quantitative.
 Unit: cm.
+Decimal separator: "."
+
+///commentsRecording
+Description: Additional contextual information during data recording.
+Variable type: qualitative
 
 // Missing data codes: 
 "NA"
 
--------------------------------------------------------
-DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilpene.csv
--------------------------------------------------------
+--------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilpenetration.csv
+--------------------------------------------------------------
 
 // Variable/Column List: 
 
@@ -443,14 +505,25 @@ Variable type: qualitative.
 Description: Record identification code.
 Variable type: qualitative.
 
+///rodLengthCm
+Description: Total length of the metal rod before performing soil penetration tests, which decreases during sharpening.
+Variable type: quantitative.
+Unit: cm.
+Decimal separator: "."
+
 ///soilPenetrationDepthCm
 Description: Soil penetration depth of a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) dropped from 1 m above ground.
 Variable type: quantitative.
 Unit: cm.
+Decimal separator: "."
 
 ///bedrockHit
 Description: If the penetration stick hit the bedrock during the test.
 Variable type: qualitative (value: yes; no).
+
+///commentsRecording
+Description: Additional contextual information during data recording.
+Variable type: qualitative
 
 // Missing data codes: 
 "NA"
@@ -481,38 +554,48 @@ Variable type: qualitative.
 Description: Soil core volume corrected for gaps.
 Variable type: quantitative.
 Unit: cm^3^.
+Decimal separator: "."
 
 ///weight0hG
 Description: Fresh soil core weight.
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
 
 ///weightSatG
 Description: Water saturated soil core weight.
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
 
 ///weight24hG
 Description: Soil core weight after 24h air drying.
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
 
 ///weight48hG
-Description: Soil core weight after 48h air dryingt.
+Description: Soil core weight after 48h air drying.
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
 
 ///weightDryG
 Description: Soil core weight after 48h oven drying at 105°C.
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
+
+///commentsProcessing
+Description: Additional contextual information during sample processing.
+Variable type: qualitative
 
 // Missing data codes: 
 "NA"
 
--------------------------------------------------------
-DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilchem.csv
--------------------------------------------------------
+------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilchemistry.csv
+------------------------------------------------------------
 
 // Variable/Column List: 
 
@@ -525,72 +608,157 @@ Description: Plot identification code.
 Variable type: qualitative.
 
 ///soilType
-Description: Subplot identification code.
+Description: Soil type classification according to sand, clay, and humus content.
 Variable type: qualitative.
 
 ///clayContentClass
-Description: Record identification code.
+Description: Percent class of clay content in the soil.
 Variable type: qualitative.
 
 ///lossOnIgnitionPercentDM
-Description: Soil core volume corrected for gaps.
+Description: Labile carbon content in the soil.
 Variable type: quantitative.
-Unit: cm^3^.
+Unit: percent dry matter content.
 
 ///soilDensityKgL
-Description: Fresh soil core weight.
+Description: Soil density.
 Variable type: quantitative.
-Unit: g.
+Unit: kg.L^-1^.
+Decimal separator: "."
 
 ///dryMatterPercent
-Description: Water saturated soil core weight.
+Description: Dry matter content of the soil.
 Variable type: quantitative.
-Unit: g.
+Unit: percent.
+Decimal separator: "."
 
 ///humusPercentDM
-Description: Soil core weight after 24h air drying.
+Description: Humus content in the soil.
 Variable type: quantitative.
-Unit: g.
+Unit: percent dry matter content.
+Decimal separator: "."
 
 ///humusContentClass
-Description: Soil core weight after 48h air dryingt.
-Variable type: quantitative.
-Unit: g.
+Description: Concentration class of humus content in the soil.
+Variable type: qualitative.
 
 ///pH
-Description: Soil core weight after 48h oven drying at 105°C.
+Description: Soil pH.
 Variable type: quantitative.
-Unit: g.
+Unit: none.
+Decimal separator: "."
 
 ///availablePMg100g
-Description: Soil core volume corrected for gaps.
+Description: Soil concentration of available phosphorus.
 Variable type: quantitative.
-Unit: cm^3^.
+Unit: mg per 100 g of soil.
+Decimal separator: "."
 
 ///availableKMg100g
-Description: Fresh soil core weight.
+Description: Soil concentration of available potassium.
 Variable type: quantitative.
-Unit: g.
+Unit: mg per 100 g of soil.
+Decimal separator: "."
 
 ///availableMgMg100g
-Description: Water saturated soil core weight.
+Description: Soil concentration of available magnesium.
 Variable type: quantitative.
-Unit: g.
+Unit: mg per 100 g of soil.
+Decimal separator: "."
 
 ///availableCaMg100g
-Description: Soil core weight after 24h air drying.
+Description: Soil concentration of available calcium.
 Variable type: quantitative.
-Unit: g.
+Unit: mg per 100 g of soil.
+Decimal separator: "."
 
 ///availableNaMg100g
-Description: Soil core weight after 48h air dryingt.
+Description: Soil concentration of available sodium.
 Variable type: quantitative.
-Unit: g.
+Unit: mg per 100 g of soil.
+Decimal separator: "."
 
 ///totalNPercentDM
-Description: Soil core weight after 48h oven drying at 105°C.
+Description: Total nitrogen content in the soil.
+Variable type: quantitative.
+Unit: percent dry matter content.
+Decimal separator: "."
+
+// Missing data codes: 
+"NA"
+
+------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_soilmesofauna.csv
+------------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///coreVolCm3
+Description: Soil core volume, calculated from the remeasurement of soil cores after sampling.
+Variable type: quantitative.
+Unit: cm^3^.
+Decimal separator: "."
+
+///acariCount
+Description: Total count of Acari extracted from each soil core.
+Variable type: quantitative.
+Unit: none.
+
+///collembolaCount
+Description: Total count of Collembola extracted from each soil core.
+Variable type: quantitative.
+Unit: none.
+
+///commentsSampling
+Description: Additional contextual information during sampling.
+Variable type: qualitative
+
+///commentsProcessing
+Description: Additional contextual information during sample processing.
+Variable type: qualitative
+
+// Missing data codes: 
+"NA"
+
+-----------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_abovegroundbiomass.csv
+-----------------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///functionalType
+Description: Record identification code.
+Variable type: qualitative (value: woody; forb; monocotyledon; fern; bryophyte; lycophyte; lichen; litter; mix bryophyte litter).
+
+///biomassDryWeightG
+Description: Aboveground biomass weight after drying at 65°C for 48H. 
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
 
 // Missing data codes: 
 "NA"
