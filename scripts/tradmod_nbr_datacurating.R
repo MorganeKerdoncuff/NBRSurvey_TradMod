@@ -472,34 +472,34 @@ mesobio_full <- mesobio_full |>
 # 9 categories
 
 # Check categories
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "IV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
-xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "OV2")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US1")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US3")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US4")) # all Ds, all functional groups
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US5")) # 3 D1s, all functional groups -> validated
-#xtabs(DWbiomass_g ~ SampleID + FunctionalType, data = filter(biomass_full, SiteID == "US6")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IS1")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IS2")) # 3 D1s, all functional groups but woody 0 for IS2-P1-D1 -> no samples found for woody
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IS3")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IS4")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IS5")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "IV1")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS1")) # 3 D1s, all functional groups -> validated
+xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS2")) # all site, but some samples including D1s not finished sorting -> need to standardise or exclude samples with mix bryo/litter
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS3")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS4")) # 3 D1s, all functional groups -> validated
+xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS5")) # one non ID woody sample which should be removed - even if not all D1s, all samples with same functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS6")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS7")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS8")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OS9")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OV1")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "OV2")) # all Ds, all functional groups
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US1")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US2")) # 3 D1s, all functional groups -> validated 
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US3")) # all Ds, all functional groups
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US4")) # all Ds, all functional groups
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US5")) # 3 D1s, all functional groups -> validated
+#xtabs(dryWeightG ~ subplotID + functionalType, data = filter(agb_clean, SiteID == "US6")) # 3 D1s, all functional groups -> validated
 
 ## Numeric var - Check min/max, distribution and potential outliers
 
 # Check min/max
-test <- biomass_full |>  
+test <- agb_clean |>  
   summarise(
     tibble(
       across(
@@ -516,5 +516,22 @@ test <- biomass_full |>
   transpose() # some negative values -> should be 
 
 # Check distribution of quantitative variable
-hist(biomass_full$DWbiomass_g) # quite a few negative values
+hist(agb_clean$DWbiomass_g) # quite a few negative values
 #filter(biomass_full, DWbiomass_g < 1) # 5 negative values
+
+# New biomass value per m^2^
+agb_clean <- agb_clean |> 
+  mutate(dryBiomassM2 = dryWeightG*4)
+agb_clean <- subset(agb_clean, select = -c(dryWeightG))
+
+#
+## Prepare data for vegan
+
+# Select 3 replicates per site
+agb_clean <- agb_clean |> 
+  group_by(siteID, plotID) |>
+  pivot_wider(names_from = functionalType, values_from = dryBiomassM2) |> 
+  # Select randomly one row which match unique combination of site & plot IDs
+  slice(1) |>
+  ungroup() |>
+  pivot_longer(cols = c(-siteID, -slotID, -subplotID), names_to = "functionalType", values_to = "dryBiomassM2")
