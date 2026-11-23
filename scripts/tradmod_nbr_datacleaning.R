@@ -182,6 +182,7 @@ sampling_area_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsamplingarea
 ## percentBryophytes - Estimated percentage cover of bryophytes (mosses, liverworts) in the sampling area
 ## percentFerns - Estimated percentage cover of ferns in the sampling area
 ## percentLichens - Estimated percentage cover of lichens in the sampling area
+## commentsRecording - Contextual comments during data recording
 
 # Variable names
 
@@ -200,6 +201,7 @@ names(sampling_area_raw) <- gsub("aspectDegree", "slopeAspectDegree", names(samp
 names(sampling_area_raw) <- gsub("percentHerbs", "percentForbs", names(sampling_area_raw))
 names(sampling_area_raw) <- gsub("percentFern", "percentFerns", names(sampling_area_raw))
 names(sampling_area_raw) <- gsub("percentLichen", "percentLichens", names(sampling_area_raw))
+names(sampling_area_raw) <- gsub("comments", "commentsRecording", names(sampling_area_raw))
 
 # Dataset
 
@@ -216,8 +218,7 @@ sampling_area <- subset(
     # redundant with elevationMax
     elevationMin,
     # redundant with slopeAspectDegree
-    aspect,
-    comments
+    aspect
   )
 )
 
@@ -267,6 +268,7 @@ ground_cover_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawgroundcover.x
 ## percentDung - Estimated percentage cover of dung pellets or pads in the subplot
 ## avgVegetationHeightCm - Average vegetation height in the subplot in cm
 ## maxVegetationHeightCm - Maximum vegetation height in the subplot in cm
+## commentsRecording - Contextual comments during data recording
 
 # Variable names & structure
 
@@ -288,6 +290,7 @@ names(ground_cover_raw) <- gsub("blossomCover", "percentBlossom", names(ground_c
 names(ground_cover_raw) <- gsub("dung", "percentDung", names(ground_cover_raw))
 names(ground_cover_raw) <- gsub("vgMeanHeightCm", "avgVegetationHeightCm", names(ground_cover_raw))
 names(ground_cover_raw) <- gsub("vgMaxHeightCm", "maxVegetationHeightCm", names(ground_cover_raw))
+names(ground_cover_raw) <- gsub("comment", "commentsRecording", names(ground_cover_raw))
 
 ## New plotID variable
 ground_cover_raw <- ground_cover_raw %>% 
@@ -301,10 +304,14 @@ ground_cover <- subset(
     # redundant with sampling_area
     date,
     # redundant with plant community data
-    plantSpeciesRichness,
-    comment
+    plantSpeciesRichness
   )
 )
+
+## Column rearrange
+ground_cover <- ground_cover |> 
+  relocate(plotID, .after = siteID) |> 
+  relocate(subplotID, .after = plotID)
 
 # Variable format
 
@@ -340,7 +347,7 @@ ground_cover <- ground_cover |>
 ### NA check
 # colnames(ground_cover)[apply(ground_cover, 2, anyNA)] #validated - only blossom species ID
 
-# Clean data export
+## Clean data export
 write_csv(ground_cover, "data/cleandata/tradmod_nbr_groundcover_clean.csv")
 write_csv(ground_cover, "data/repodata/tradmod_nbr_groundcover.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_groundcover_clean.csv")
@@ -357,8 +364,10 @@ soil_pene_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawsoilpenetration.
 ## plotID - Plot identification code for data collection
 ## subplotID - Subplot identification code for data collection
 ## recordID - Identification code for individual penetration tests
+## rodLengthCm - Total length of the dropping stick before soil penetration tests in cm
 ## soilPenetrationDepthCm - Soil penetration depth of a sharpened metal rod of 43.4 cm length (diam. 2.2 cm; weight 1.3 kg) dropped from 1 m above ground in cm
 ## bedrockHit - If the penetration stick hit the bedrock during the test (yes/no)
+## commentsRecording - Contextual comments during data recording
 
 # Variable names & structure
 
@@ -369,7 +378,8 @@ soil_pene_raw <- soil_pene_raw %>%
 ## Consistent & FAIR
 names(soil_pene_raw) <- gsub("site", "siteID", names(soil_pene_raw))
 names(soil_pene_raw) <- gsub("plotId", "subplotID", names(soil_pene_raw))
-names(soil_pene_raw) <- gsub("stickHeight", "stickLengthCm", names(soil_pene_raw))
+names(soil_pene_raw) <- gsub("stickHeight", "rodLengthCm", names(soil_pene_raw))
+names(soil_pene_raw) <- gsub("comments", "commentsRecording", names(soil_pene_raw))
 
 ## New plot & record ID variables
 soil_pene_raw <- soil_pene_raw %>%
@@ -389,10 +399,15 @@ soil_pene <- subset(
     # redundant with sampling_area
     date,
     # redundant with recordID
-    leftRight,
-    comments
+    leftRight
   )
 )
+
+## Column rearrange
+soil_pene <- soil_pene |> 
+  relocate(plotID, .after = siteID) |> 
+  relocate(recordID, .after = subplotID) |> 
+  relocate(stickLengthCm, .after = recordID)
 
 # Variable format
 
@@ -427,6 +442,7 @@ soil_bulk_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawbulkdensity.xlsx
 ## weight24hG - Soil core weight after 24h air drying in g
 ## weight48hG - Soil core weight after 48h air drying in g
 ## weightDryG - Soil core weight after 48h oven drying at 105°C in g
+## commentsProcessing - Additional contextual information during sample processing
 
 # Variable names & structure
 
@@ -480,9 +496,16 @@ soil_bulk <- subset(
     weightSatG,
     weight24hG,
     weight48hG,
-    weightDryG
+    weightDryG,
+    # sample processing comments
+    commentsProcessing
   )
 )
+
+## Column rearrange
+soil_bulk <- soil_bulk |> 
+  relocate(subplotID, .after = plotID) |> 
+  relocate(recordID, .after = subplotID)
 
 # Variable format
 
@@ -644,6 +667,10 @@ soil_chem <- subset(
   )
 )
 
+## Column rearrange
+soil_chem <- soil_chem |> 
+  relocate(siteID, .before = plotID)
+
 ## Duplicate check
 # get_dupes(soil_chem) #validated
 
@@ -761,9 +788,9 @@ soil_chem <- soil_chem %>%
 #   transpose() # Check max Ca over 1000 mg/100g
 
 ## Export clean data in new excel file
+write_csv(soil_chem, "data/cleandata/tradmod_nbr_soilchemistry_clean.csv")
+write_csv(soil_chem, "data/repodata/tradmod_nbr_soilchemistry.csv")
 
-write_csv(soil_chem, "data/cleandata/tradmod_nbr_soilchem_clean.csv")
-write_csv(soil_chem, "data/repodata/tradmod_nbr_soilchem.csv")
 
 #### DESTRUCTIVE SUBPLOTS - SOIL MESOFAUNA ####
 
@@ -777,9 +804,11 @@ soil_mesocore_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesofaunacor
 ## siteID - Field identification code for data collection
 ## plotID - Plot identification code for data collection
 ## subplotID - Subplot identification code for data collection
-## coreVolCm3 - Core volume in cm3
-## abundanceAcari - Acari abundance in samples
-## abundanceCollembola - Collembola abundance in samples
+## coreVolCm3 - Soil core volume in cm3
+## acariCount - Total Acari count in soil cores
+## collembolaCount - Total Collembola abundance in soil cores
+## commentsSampling - Additional contextual information during sampling
+## commentsProcessing - Additional contextual information during sample processing
 
 # Consistency and reproducibility
 
@@ -795,18 +824,23 @@ soil_mesocore_raw <- soil_mesocore_raw %>%
 
 ## Variable names
 names(soil_mesobio_raw) <- gsub("sampleNameOnPot", "subplotID", names(soil_mesobio_raw))
-names(soil_mesobio_raw) <- gsub("x5", "commentProcessing", names(soil_mesobio_raw))
+names(soil_mesobio_raw) <- gsub("acari", "acariCount", names(soil_mesobio_raw))
+names(soil_mesobio_raw) <- gsub("collembola", "collembolaCount", names(soil_mesobio_raw))
+names(soil_mesobio_raw) <- gsub("x5", "commentsProcessing", names(soil_mesobio_raw))
 names(soil_mesocore_raw) <- gsub("site", "siteID", names(soil_mesocore_raw))
 names(soil_mesocore_raw) <- gsub("plotId", "subplotID", names(soil_mesocore_raw))
-names(soil_mesocore_raw) <- gsub("comment", "commentSampling", names(soil_mesocore_raw))
+names(soil_mesocore_raw) <- gsub("comment", "commentsSampling", names(soil_mesocore_raw))
 
 ## ID and replication
-# table(soil_mesobio_raw$subplotID) # wrong code ID for plots also associated with OY experiment
+# table(soil_mesobio_raw$subplotID) # includes samples from the OY experiment
 # table(soil_mesocore_raw$subplotID) # consistent code
 soil_mesobio_raw <- soil_mesobio_raw |> 
+  # replace code ID for samples included in the tradmod-nbr survey
   mutate(subplotID = dplyr::recode(subplotID, "ØY-R1-T2-D1" = "OV1-P1-D1")) |> 
   mutate(subplotID = dplyr::recode(subplotID, "ØY-R1-T3-D1" = "OV1-P2-D1")) |> 
-  mutate(subplotID = dplyr::recode(subplotID, "ØY-GK-T4-D1" = "OV1-P3-D1"))
+  mutate(subplotID = dplyr::recode(subplotID, "ØY-GK-T4-D1" = "OV1-P3-D1")) |> 
+  # remove samples only associated with the OY experiment
+  filter(!grepl("ØY", subplotID))
 
 # Dataset
 
@@ -817,15 +851,28 @@ soil_meso <- dplyr::full_join(soil_mesobio_raw, soil_mesocore_raw)
 soil_meso <- soil_meso |> 
   mutate(plotID = substr(subplotID, 1, 6))
 
+## New coreVolCm3 variable
+soil_meso <- soil_meso |> 
+  mutate(coreVolCm3 = 3.14*(5.25*5.25)*coreDepthCm)
+
 ## Selection desired variables
 soil_meso <- subset(
   soil_meso, select = -c(
     # anonymous
     counter,
     # redundant with site description dataset
-    date
+    date,
+    # redundant with coreVolCm3
+    coreDepthCm
     )
 )
+
+## Column rearrange
+soil_meso <- soil_meso |> 
+  relocate(siteID, .before = subplotID) |> 
+  relocate(plotID, .after = siteID) |> 
+  relocate(coreVolCm3, .after = subplotID) |> 
+  relocate(commentsProcessing, .after = commentsSampling)
 
 ## Duplicate check
 # get_dupes(soil_meso) #validated
@@ -839,7 +886,8 @@ soil_meso <- soil_meso %>%
   mutate_if(is.character, tolower)
 
 ## Clean data export
-write_csv(mesobio_full, "data/cleandata/tradmod_nbr_soilmeso_clean.csv")
+write_csv(soil_meso, "data/cleandata/tradmod_nbr_soilmesofauna_clean.csv")
+write_csv(soil_meso, "data/repodata/tradmod_nbr_soilmesofauna.csv")
 
 
 #### DESTRUCTIVE SUBPLOTS - ABOVEGROUND BIOMASS ####
@@ -853,7 +901,7 @@ agb_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawabovegroundbiomass.xls
 ## plotID - Plot identification code for data collection
 ## subplotID - Subplot identification code for data collection
 ## functionalType - Plant functional type (values: woody; forbs; monocotyledons; cryptogams; ferns)
-## dryWeightG - Aboveground biomass weight after 48H drying in the oven at 105C
+## biomassDryWeightG - Aboveground biomass weight after 48H drying in the oven at 105C
 
 # Consistency and reproducibility
 
@@ -866,6 +914,7 @@ agb_raw <- agb_raw |>
 
 ## Variable names
 names(agb_raw) <- gsub("sampleId", "subplotID", names(agb_raw))
+names(agb_raw) <- gsub("comments", "commentsProcessing", names(agb_raw))
 
 ## ID and replication
 # table(agb_raw$subplotID) # one entry with missing label (OS5-?-?), which does not match a potential missing bag from other OS5 samples - to be removed
@@ -877,6 +926,19 @@ agb_raw <- agb_raw |>
   mutate(plotID = substr(subplotID, 1, 6)) |>
   mutate(siteID = substr(subplotID, 1, 3))
 
+## Aboveground biomass weight - removal standard bag weight
+agb_raw <- agb_raw |> 
+  mutate(bagType = replace_na(bagType, "not recorded")) |> 
+  mutate(biomassDryWeightG = ifelse(
+    bagType == "little brown enveloppe", biomassBagG - 1.65, ifelse(
+      bagType == "white paper bag", biomassBagG - 4.44, ifelse(
+        bagType == "Brown paper bag", biomassBagG - 7.92, ifelse(
+          bagType == "big brown bag", biomassBagG - 39.11, dryWeightG
+        )
+      )
+    )
+  ))
+
 # Dataset
 
 ## Selection desired variables
@@ -886,9 +948,16 @@ agb_clean <- subset(
     who,
     # bag weight correction
     biomassBagG,
-    bagType
+    bagType,
+    dryWeightG
   )
 )
+
+## Column rearrange
+agb_clean <- agb_clean |> 
+  relocate(plotID, .before = subplotID) |> 
+  relocate(siteID, .before = plotID) |> 
+  relocate(biomassDryWeightG, .after = functionalType)
 
 ## Duplicate check
 #get_dupes(agb_clean) #validated
@@ -929,33 +998,12 @@ agb_clean <- agb_clean |>
 
 ## Numeric var - Check min/max, distribution and potential outliers
 
-# Check min/max
-test <- biomass_full |>  
-  summarise(
-    tibble(
-      across(
-        where(is.numeric),
-        ~min(.x, na.rm = TRUE),
-        .names = "min_{.col}"
-      ),
-      across(
-        where(is.numeric),
-        ~max(.x, na.rm = TRUE),
-        .names = "max_{.col}")
-    )
-  ) |>  
-  transpose() # some negative values -> should be 
-
-# Check distribution of quantitative variable
-hist(biomass_full$DWbiomass_g) # quite a few negative values
-#filter(biomass_full, DWbiomass_g < 1) # 5 negative values
-
 # Check for duplicates in weights
-dupli <- biomass_full |>
-  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
+dupli <- agb_clean |>
+  group_by(subplotID, plotID, siteID, functionalType) |> 
   summarise(n = n(), .groups = "drop") |> 
   filter(n > 1L)
-unique(dupli$SampleID) # 8 duplicates
+unique(dupli$subplotID) # 8 duplicates
 
 # OS2-P1-D1 monocotyledons, OS2-P2-D3 forbs & monocotyledons
 # filter(biomass_full, SampleID == "OS2-P1-D1")
@@ -974,33 +1022,14 @@ unique(dupli$SampleID) # 8 duplicates
 # filter(biomass_full, SiteID == "US4" & FunctionalType == "lycophytes") # duplicates due to renaming -> need to sum up all rows
 
 # Summarise duplicates by sum
-biomass_full <- biomass_full |> 
-  group_by(SampleID, PlotID, SiteID, FunctionalType) |> 
-  summarise(DWbiomass_g = sum(DWbiomass_g, na.rm = TRUE)) |> 
+agb_clean <- agb_clean |> 
+  group_by(siteID, plotID, subplotID, functionalType) |> 
+  summarise(biomassDryWeightG = sum(biomassDryWeightG, na.rm = TRUE)) |> 
   ungroup()
 
-# New biomass value per m^2^
-biomass_full <- biomass_full |> 
-  mutate(Biomass.m2 = DWbiomass_g*4)
-biomass_full <- subset(biomass_full, select = -c(DWbiomass_g))
-
-#
-## Prepare data for vegan
-
-# Select 3 replicates per site
-biomass_full <- biomass_full |> 
-  group_by(SiteID, PlotID) |>
-  pivot_wider(names_from = FunctionalType, values_from = Biomass.m2) |> 
-  # Select randomly one row which match unique combination of site & plot IDs
-  slice(1) |>
-  ungroup() |>
-  pivot_longer(cols = c(-SiteID, -PlotID, -SampleID), names_to = "FunctionalType", values_to = "Biomass.m2")
-
 # Export clean data in new excel file
-write_csv(biomass_full, "data/cleandata/NBR_FullBiomass.csv")
-
-
-
+write_csv(agb_clean, "data/cleandata/tradmod_nbr_abovegroundbiomass_clean.csv")
+write_csv(agb_clean, "data/repodata/tradmod_nbr_abovegroundbiomass.csv")
 
 
 #### Plant species community ####
