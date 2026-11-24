@@ -243,7 +243,7 @@ sampling_area <- filter(sampling_area, siteID != "uc1")
 
 # Clean data export
 write_csv(sampling_area, "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
-write_csv(sampling_area, "data/repodata/tradmod_nbr_sampling_area.csv")
+write_csv(sampling_area, "data/repodata/tradmod_nbr_samplingarea.csv")
 # osf_upload(target_dir, path = "data/cleandata/tradmod_nbr_samplingarea_clean.csv")
 
 #### NON-DESTRUCTIVE SUBPLOTS - GROUND COVER ####
@@ -798,7 +798,7 @@ write_csv(soil_chem, "data/repodata/tradmod_nbr_soilchemistry.csv")
 ## Acari and collembola abundance
 soil_mesobio_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesocommunity.xlsx", na="NA")
 ## Soil core height
-soil_mesocore_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesofaunacore.xlsx", sheet="Mesofauna")
+soil_mesocore_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawmesofaunacore.xlsx", na="NA")
 
 # Desired variables
 ## siteID - Field identification code for data collection
@@ -1032,13 +1032,50 @@ write_csv(agb_clean, "data/cleandata/tradmod_nbr_abovegroundbiomass_clean.csv")
 write_csv(agb_clean, "data/repodata/tradmod_nbr_abovegroundbiomass.csv")
 
 
-#### Plant species community ####
+#### NON-DESTRUCTIVE SUBPLOTS - PLANT COMMUNITY ####
 
-## Description
+# Raw datasets
+## Plant species percent cover data
+plant_com_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawplantcommunity.xlsx")
 
-# Plant community table, with species as rows and quadrats as columns.
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## plantSp - Plant species latin name
+## percentCover - Estimated percent cover of plant species in 1 m^2^
 
-#
+# Consistency and reproducibility
+
+## Variable types - check if subplot columns numeric only
+chrvar <- plant_com_raw |> 
+  dplyr::select(where(is.character)) # 2 mismatching column types
+
+### Identification character string
+unique(chrvar$`OS2-P2-N4`) # presence of "X"
+unique(chrvar$`OS2-P1-N5`) # presence of "X"
+
+### Identification involved species
+xcheck <- subset(plant_com_raw, select = Species:`OS2-P3-N5`)
+xcheck <- xcheck |> 
+  filter(`OS2-P2-N4` == "X" | `OS2-P1-N5` == "X") |> 
+  remove_empty(which = "cols") # Three species : Festuca rubra; Hypnum cupressiforme; Rhytidiadelphus squarrosus
+
+### Check species cover to compare with plant functional group cover
+covercheck1 <- subset(plant_com_raw, select = c(Species, `OS2-P1-N5`))
+covercheck1 <- covercheck1 |> 
+  drop_na()
+covercheck2 <- subset(plant_com_raw, select = c(Species, `OS2-P2-N4`))
+covercheck2 <- covercheck2 |> 
+  drop_na()
+covercheck <- full_join(covercheck1, covercheck2)
+
+## Large community table - should be transformed in long table
+plant_com_raw <- plant_com_raw |> 
+  pivot_longer(cols = c(-Species), names_to = "subplotID", values_to = "percentCover") |> 
+  mutate(siteID = substr(subplotID, 1, 3)) |> 
+  mutate(plotID = substr(subplotID, 1, 6))
+
 ## Check species names
 
 #table(vege_raw$Species) # several name repetitions + some unknown species
@@ -1117,7 +1154,6 @@ vege_full <- vege_full |>
 ## Export clean data in new excel file
 
 write_csv(vege_full, "data/cleandata/NBR_FullPlantComm.csv")
-
 
 
 #### Beetle families community ####
