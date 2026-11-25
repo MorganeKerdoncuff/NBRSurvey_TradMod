@@ -1047,6 +1047,9 @@ plant_com_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawplantcommunity.x
 
 # Consistency and reproducibility
 
+## Variable names
+names(plant_com_raw) <- gsub("Species", "plantSp", names(plant_com_raw))
+
 ## Variable types - check if subplot columns numeric only
 chrvar <- plant_com_raw |> 
   dplyr::select(where(is.character)) # 2 mismatching column types
@@ -1056,104 +1059,103 @@ unique(chrvar$`OS2-P2-N4`) # presence of "X"
 unique(chrvar$`OS2-P1-N5`) # presence of "X"
 
 ### Identification involved species
-xcheck <- subset(plant_com_raw, select = Species:`OS2-P3-N5`)
+xcheck <- subset(plant_com_raw, select = plantSp:`OS2-P3-N5`)
 xcheck <- xcheck |> 
   filter(`OS2-P2-N4` == "X" | `OS2-P1-N5` == "X") |> 
   remove_empty(which = "cols") # Three species : Festuca rubra; Hypnum cupressiforme; Rhytidiadelphus squarrosus
 
-### Check species cover to compare with plant functional group cover
-covercheck1 <- subset(plant_com_raw, select = c(Species, `OS2-P1-N5`))
+### Check sum species cover to compare with tradmod_nbr_groundcover
+covercheck1 <- subset(plant_com_raw, select = c(plantSp, `OS2-P1-N5`))
 covercheck1 <- covercheck1 |> 
-  drop_na()
-covercheck2 <- subset(plant_com_raw, select = c(Species, `OS2-P2-N4`))
+  # remove non recorded species
+  drop_na() # 50% total bryophyte cover minus 2% P. commune: 48% R. squarrosus + 0.1% H. cupressiforme
+covercheck2 <- subset(plant_com_raw, select = c(plantSp, `OS2-P2-N4`))
 covercheck2 <- covercheck2 |> 
-  drop_na()
-covercheck <- full_join(covercheck1, covercheck2)
+  # remove non recorded species
+  drop_na() |>
+  # filter bryophytes & missing
+  filter(plantSp != "Rhytidiadelphus squarrosus" & plantSp != "Festuca rubra") |> 
+  mutate(`OS2-P2-N4` = as.numeric(`OS2-P2-N4`))
+sum(covercheck2$`OS2-P2-N4`) # 92% total vascular plant cover against 92.18% sum species cover: 1% F. rubra with expected overlap - coherent with similarly low cover in os2-p2-n2
+
+# Dataset
+
+## Replacement missing data
+plant_com <- plant_com_raw |> 
+  mutate(`OS2-P1-N5` = ifelse(
+    plantSp == "Rhytidiadelphus squarrosus" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "48"), ifelse(
+      plantSp == "Hypnum cupressiforme" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "0.1"), `OS2-P1-N5`
+    )
+  )) |> 
+  mutate(`OS2-P2-N4` = dplyr::recode(`OS2-P2-N4`, "X" = "1")) |> 
+  mutate(`OS2-P1-N5` = as.numeric(`OS2-P1-N5`)) |> 
+  mutate(`OS2-P2-N4` = as.numeric(`OS2-P2-N4`))
+
+## Remove empty rows
+plant_com <- plant_com[rowSums(is.na(plant_com)) != ncol(plant_com), ]
 
 ## Large community table - should be transformed in long table
-plant_com_raw <- plant_com_raw |> 
-  pivot_longer(cols = c(-Species), names_to = "subplotID", values_to = "percentCover") |> 
+plant_com <- plant_com |> 
+  pivot_longer(cols = c(-plantSp), names_to = "subplotID", values_to = "percentCover") |> 
   mutate(siteID = substr(subplotID, 1, 3)) |> 
-  mutate(plotID = substr(subplotID, 1, 6))
+  mutate(plotID = substr(subplotID, 1, 6)) |>
+  # drop empty columns
+  drop_na()
 
-## Check species names
-
-#table(vege_raw$Species) # several name repetitions + some unknown species
-
-# Liste species names
-unique(vege_raw$Species)
-
-# Correction latin name
-vege_raw <- vege_raw |>
-  mutate(Species = dplyr::recode(Species, "Antittrichia curtipendula" = "Antitrichia curtipendula")) |> 
-  mutate(Species = dplyr::recode(Species, "Antrichum undulatum" = "Atrichum undulatum")) |> 
-  mutate(Species = dplyr::recode(Species, "Braen sp US5-P2" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Bryum sp" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Carex ovalis" = "Carex leporina")) |>
-  mutate(Species = dplyr::recode(Species, "Carex sp2 US2-P2" = "Carex sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Chamaepericlymenum suecica" = "Chamaepericlymenum suecicum")) |> 
-  mutate(Species = dplyr::recode(Species, "Chiloscytinus pallenscens" = "Chiloscyphus pallescens")) |> 
-  mutate(Species = dplyr::recode(Species, "Cuppy moss UC1" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Gnaphlium sylvaticum" = "Gnaphalium sylvaticum")) |> 
-  mutate(Species = dplyr::recode(Species, "Golden curly fern UG2-P1" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Hieracium sp IG3-P1" = "Hieracium sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Kystkransmose" = "Rhytidiadelphus loreus")) |> 
-  mutate(Species = dplyr::recode(Species, "Liverwort UG2-P2" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Luminous liverwort US1-P3" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Moss ND1 UG1-P1" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Mystery Carex OV1-P1" = "Carex sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Mystery grass OC5-P1" = "Poaceae sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Orchid sp" = "Orchidaceae sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Plagomnium medium" = "Plagiomnium medium")) |> 
-  mutate(Species = dplyr::recode(Species, "Polytrichiastrum alpinum" = "Polytrichastrum alpinum")) |> 
-  mutate(Species = dplyr::recode(Species, "Polytrichum juniperirinum" = "Polytrichum juniperinum")) |> 
-  mutate(Species = dplyr::recode(Species, "Rhacomitrium lanuginosum" = "Racomitrium lanuginosum")) |> 
-  mutate(Species = dplyr::recode(Species, "Rhacomitrium canescens" = "Racomitrium canescens")) |> 
-  mutate(Species = dplyr::recode(Species, "Rhacomitrium sudeticum" = "Racomitrium sudeticum")) |> 
-  mutate(Species = dplyr::recode(Species, "Rhacomitrium affine" = "Racomitrium affine")) |> 
-  mutate(Species = dplyr::recode(Species, "Saniona uncinata" = "Sanionia uncinata")) |> 
-  mutate(Species = dplyr::recode(Species, "Skinny pleurocarp IS5-P1" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Sphagunm compactum" = "Sphagnum compactum")) |>
-  mutate(Species = dplyr::recode(Species, "Sphagnum sp UG2-P2" = "Bryophyte sp")) |> 
-  mutate(Species = dplyr::recode(Species, "Straminergon straminergon" = "Straminergon stramineum")) |> 
-  mutate(Species = dplyr::recode(Species, "Unknown shrub US2-P1" = "Woody sp"))
-
-#
-## Data cleaning and manipulation
-
-# New R object
-vege_full <- vege_raw
-
-# Remove full NA rows
-vege_full <- vege_full[rowSums(is.na(vege_full)) != ncol(vege_full), ] #remove full NA rows
-
-# Aggregate repetitions
-vege_full <- vege_full |>  
-  group_by(Species) |> 
-  summarise_if(is.numeric, sum, na.rm = TRUE) |>  
+## Duplicate check
+get_dupes(plant_com) # 6 duplicates
+plant_com <- plant_com |> 
   distinct()
-#sort(table(vege_full$Species)) #no doubletons remaining
-# from 676 to 674 variables -> 2 quadrats removed?
 
-# Remove non-identified species
-vege_full <- subset(vege_full, Species != "Bryophyte sp" &
-           Species != "Woody sp" &
-           Species != "Hieracium sp" &
-           Species != "Carex sp" &
-           Species != "Poaceae sp" &
-           Species != "Orchidaceae sp")
+## Column rearrange
+plant_com <- plant_com |> 
+  relocate(plotID, .before = subplotID) |> 
+  relocate(siteID, .before = plotID) |> 
+  relocate(plantSp, .after = subplotID)
 
-#
-## Table formatting for vegan (long table)
-vege_full <- vege_full |> 
-  pivot_longer(cols = c(-Species), names_to = "SampleID", values_to = "Abundance") |> 
-  mutate(PlotID = substr(SampleID, 1, 6)) |>
-  mutate(SiteID = substr(SampleID, 1, 3))
+## Lower case character strings
+plant_com <- plant_com |> 
+  mutate_if(is.character, tolower)
 
+## Latin name check
+unique(arrange(plant_com, plantSp)$plantSp) # several name repetitions + some non-identified species
+plant_com <- plant_com |>
+  mutate(plantSp = dplyr::recode(plantSp, "antittrichia curtipendula" = "antitrichia curtipendula")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "antrichum undulatum" = "atrichum undulatum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "braen sp us5-p2" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "bryum sp" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "carex ovalis" = "carex leporina")) |>
+  mutate(plantSp = dplyr::recode(plantSp, "carex sp2 us2-p2" = "carex sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "chamaepericlymenum suecica" = "chamaepericlymenum suecicum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "chiloscytinus pallenscens" = "chiloscyphus pallescens")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "cuppy moss uc1" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "gnaphlium sylvaticum" = "gnaphalium sylvaticum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "golden curly fern ug2-p1" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "hieracium sp ig3-p1" = "hieracium sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "kystkransmose" = "rhytidiadelphus loreus")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "liverwort ug2-p2" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "luminous liverwort us1-p3" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "moss nd1 ug1-p1" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "mystery carex ov1-p1" = "carex sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "mystery grass oc5-p1" = "poaceae sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "orchid sp" = "orchidaceae sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "plagomnium medium" = "plagiomnium medium")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "polytrichiastrum alpinum" = "polytrichastrum alpinum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "polytrichum juniperirinum" = "polytrichum juniperinum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium lanuginosum" = "racomitrium lanuginosum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium canescens" = "racomitrium canescens")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium sudeticum" = "racomitrium sudeticum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium affine" = "racomitrium affine")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "saniona uncinata" = "sanionia uncinata")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "skinny pleurocarp is5-p1" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "sphagunm compactum" = "sphagnum compactum")) |>
+  mutate(plantSp = dplyr::recode(plantSp, "sphagnum sp ug2-p2" = "bryophyte sp")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "straminergon straminergon" = "straminergon stramineum")) |> 
+  mutate(plantSp = dplyr::recode(plantSp, "unknown shrub us2-p1" = "woody sp"))
 
-## Export clean data in new excel file
-
-write_csv(vege_full, "data/cleandata/NBR_FullPlantComm.csv")
+# Export clean data in new excel file
+write_csv(plant_com, "data/cleandata/tradmod_nbr_plantcommunity_clean.csv")
+write_csv(plant_com, "data/repodata/tradmod_nbr_plantcommunity.csv")
 
 
 #### Beetle families community ####
