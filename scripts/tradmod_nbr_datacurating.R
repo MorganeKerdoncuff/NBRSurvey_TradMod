@@ -535,3 +535,15 @@ agb_clean <- agb_clean |>
   slice(1) |>
   ungroup() |>
   pivot_longer(cols = c(-siteID, -slotID, -subplotID), names_to = "functionalType", values_to = "dryBiomassM2")
+
+
+#### NON-DESTRUCTIVE SUBPLOTS - PLANT COMMUNITY ####
+
+# Remove non-identified species
+vege_full <- subset(vege_full, Species != "Bryophyte sp" &
+                      Species != "Woody sp" &
+                      Species != "Hieracium sp" &
+                      Species != "Carex sp" &
+                      Species != "Poaceae sp" &
+                      Species != "Orchidaceae sp")
+
