@@ -27,12 +27,6 @@ library(purrr) # Merge tables
 
 # 1 m^2^ dung collection in non-destructive subplot
 dung_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="Poo", na="NA")
-# 1 m^2^ plant community, species level
-plant_com_raw <- read_excel(path = "data/rawdata/NBR_RawAll.xlsx", sheet="PlantRichness")
-# Arthropod community, family level (beetles) and order level (others)
-arthro_com_raw <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA")
-# Arthropod community complementary
-arthro_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA")
 
 #### CLEAN DATA OSF UPLOAD ####
 
@@ -1042,13 +1036,13 @@ plant_com_raw <- read_excel(path = "data/rawdata/tradmod_nbr_rawplantcommunity.x
 ## siteID - Field identification code for data collection
 ## plotID - Plot identification code for data collection
 ## subplotID - Subplot identification code for data collection
-## plantSp - Plant species latin name
+## speciesName - Plant species latin name
 ## percentCover - Estimated percent cover of plant species in 1 m^2^
 
 # Consistency and reproducibility
 
 ## Variable names
-names(plant_com_raw) <- gsub("Species", "plantSp", names(plant_com_raw))
+names(plant_com_raw) <- gsub("Species", "speciesName", names(plant_com_raw))
 
 ## Variable types - check if subplot columns numeric only
 chrvar <- plant_com_raw |> 
@@ -1059,22 +1053,22 @@ unique(chrvar$`OS2-P2-N4`) # presence of "X"
 unique(chrvar$`OS2-P1-N5`) # presence of "X"
 
 ### Identification involved species
-xcheck <- subset(plant_com_raw, select = plantSp:`OS2-P3-N5`)
+xcheck <- subset(plant_com_raw, select = speciesName:`OS2-P3-N5`)
 xcheck <- xcheck |> 
   filter(`OS2-P2-N4` == "X" | `OS2-P1-N5` == "X") |> 
   remove_empty(which = "cols") # Three species : Festuca rubra; Hypnum cupressiforme; Rhytidiadelphus squarrosus
 
 ### Check sum species cover to compare with tradmod_nbr_groundcover
-covercheck1 <- subset(plant_com_raw, select = c(plantSp, `OS2-P1-N5`))
+covercheck1 <- subset(plant_com_raw, select = c(speciesName, `OS2-P1-N5`))
 covercheck1 <- covercheck1 |> 
   # remove non recorded species
   drop_na() # 50% total bryophyte cover minus 2% P. commune: 48% R. squarrosus + 0.1% H. cupressiforme
-covercheck2 <- subset(plant_com_raw, select = c(plantSp, `OS2-P2-N4`))
+covercheck2 <- subset(plant_com_raw, select = c(speciesName, `OS2-P2-N4`))
 covercheck2 <- covercheck2 |> 
   # remove non recorded species
   drop_na() |>
   # filter bryophytes & missing
-  filter(plantSp != "Rhytidiadelphus squarrosus" & plantSp != "Festuca rubra") |> 
+  filter(speciesName != "Rhytidiadelphus squarrosus" & speciesName != "Festuca rubra") |> 
   mutate(`OS2-P2-N4` = as.numeric(`OS2-P2-N4`))
 sum(covercheck2$`OS2-P2-N4`) # 92% total vascular plant cover against 92.18% sum species cover: 1% F. rubra with expected overlap - coherent with similarly low cover in os2-p2-n2
 
@@ -1083,8 +1077,8 @@ sum(covercheck2$`OS2-P2-N4`) # 92% total vascular plant cover against 92.18% sum
 ## Replacement missing data
 plant_com <- plant_com_raw |> 
   mutate(`OS2-P1-N5` = ifelse(
-    plantSp == "Rhytidiadelphus squarrosus" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "48"), ifelse(
-      plantSp == "Hypnum cupressiforme" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "0.1"), `OS2-P1-N5`
+    speciesName == "Rhytidiadelphus squarrosus" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "48"), ifelse(
+      speciesName == "Hypnum cupressiforme" & `OS2-P1-N5` == "X", dplyr::recode(`OS2-P1-N5`, "X" = "0.1"), `OS2-P1-N5`
     )
   )) |> 
   mutate(`OS2-P2-N4` = dplyr::recode(`OS2-P2-N4`, "X" = "1")) |> 
@@ -1096,7 +1090,7 @@ plant_com <- plant_com[rowSums(is.na(plant_com)) != ncol(plant_com), ]
 
 ## Large community table - should be transformed in long table
 plant_com <- plant_com |> 
-  pivot_longer(cols = c(-plantSp), names_to = "subplotID", values_to = "percentCover") |> 
+  pivot_longer(cols = c(-speciesName), names_to = "subplotID", values_to = "percentCover") |> 
   mutate(siteID = substr(subplotID, 1, 3)) |> 
   mutate(plotID = substr(subplotID, 1, 6)) |>
   # drop empty columns
@@ -1111,89 +1105,174 @@ plant_com <- plant_com |>
 plant_com <- plant_com |> 
   relocate(plotID, .before = subplotID) |> 
   relocate(siteID, .before = plotID) |> 
-  relocate(plantSp, .after = subplotID)
+  relocate(speciesName, .after = subplotID)
 
 ## Lower case character strings
 plant_com <- plant_com |> 
   mutate_if(is.character, tolower)
 
 ## Latin name check
-unique(arrange(plant_com, plantSp)$plantSp) # several name repetitions + some non-identified species
+unique(arrange(plant_com, speciesName)$speciesName) # several name repetitions + some non-identified species
 plant_com <- plant_com |>
-  mutate(plantSp = dplyr::recode(plantSp, "antittrichia curtipendula" = "antitrichia curtipendula")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "antrichum undulatum" = "atrichum undulatum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "braen sp us5-p2" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "bryum sp" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "carex ovalis" = "carex leporina")) |>
-  mutate(plantSp = dplyr::recode(plantSp, "carex sp2 us2-p2" = "carex sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "chamaepericlymenum suecica" = "chamaepericlymenum suecicum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "chiloscytinus pallenscens" = "chiloscyphus pallescens")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "cuppy moss uc1" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "gnaphlium sylvaticum" = "gnaphalium sylvaticum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "golden curly fern ug2-p1" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "hieracium sp ig3-p1" = "hieracium sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "kystkransmose" = "rhytidiadelphus loreus")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "liverwort ug2-p2" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "luminous liverwort us1-p3" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "moss nd1 ug1-p1" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "mystery carex ov1-p1" = "carex sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "mystery grass oc5-p1" = "poaceae sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "orchid sp" = "orchidaceae sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "plagomnium medium" = "plagiomnium medium")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "polytrichiastrum alpinum" = "polytrichastrum alpinum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "polytrichum juniperirinum" = "polytrichum juniperinum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium lanuginosum" = "racomitrium lanuginosum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium canescens" = "racomitrium canescens")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium sudeticum" = "racomitrium sudeticum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "rhacomitrium affine" = "racomitrium affine")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "saniona uncinata" = "sanionia uncinata")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "skinny pleurocarp is5-p1" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "sphagunm compactum" = "sphagnum compactum")) |>
-  mutate(plantSp = dplyr::recode(plantSp, "sphagnum sp ug2-p2" = "bryophyte sp")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "straminergon straminergon" = "straminergon stramineum")) |> 
-  mutate(plantSp = dplyr::recode(plantSp, "unknown shrub us2-p1" = "woody sp"))
+  mutate(speciesName = dplyr::recode(speciesName, "antittrichia curtipendula" = "antitrichia curtipendula")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "antrichum undulatum" = "atrichum undulatum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "braen sp us5-p2" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "bryum sp" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "carex ovalis" = "carex leporina")) |>
+  mutate(speciesName = dplyr::recode(speciesName, "carex sp2 us2-p2" = "carex sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "chamaepericlymenum suecica" = "chamaepericlymenum suecicum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "chiloscytinus pallenscens" = "chiloscyphus pallescens")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "cuppy moss uc1" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "gnaphlium sylvaticum" = "gnaphalium sylvaticum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "golden curly fern ug2-p1" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "hieracium sp ig3-p1" = "hieracium sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "kystkransmose" = "rhytidiadelphus loreus")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "liverwort ug2-p2" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "luminous liverwort us1-p3" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "moss nd1 ug1-p1" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "mystery carex ov1-p1" = "carex sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "mystery grass oc5-p1" = "poaceae sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "orchid sp" = "orchidaceae sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "plagomnium medium" = "plagiomnium medium")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "polytrichiastrum alpinum" = "polytrichastrum alpinum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "polytrichum juniperirinum" = "polytrichum juniperinum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "rhacomitrium lanuginosum" = "racomitrium lanuginosum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "rhacomitrium canescens" = "racomitrium canescens")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "rhacomitrium sudeticum" = "racomitrium sudeticum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "rhacomitrium affine" = "racomitrium affine")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "saniona uncinata" = "sanionia uncinata")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "skinny pleurocarp is5-p1" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "sphagunm compactum" = "sphagnum compactum")) |>
+  mutate(speciesName = dplyr::recode(speciesName, "sphagnum sp ug2-p2" = "bryophyte sp")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "straminergon straminergon" = "straminergon stramineum")) |> 
+  mutate(speciesName = dplyr::recode(speciesName, "unknown shrub us2-p1" = "woody sp"))
 
 # Export clean data in new excel file
 write_csv(plant_com, "data/cleandata/tradmod_nbr_plantcommunity_clean.csv")
 write_csv(plant_com, "data/repodata/tradmod_nbr_plantcommunity.csv")
 
 
-#### Beetle families community ####
+#### NON-DESTRUCTIVE SUBPLOTS - DUNG-ASSOCIATED BEETLE COMMUNITY ####
 
-## Description
+# Raw datasets
+# Beetle community main dataset, at family level
+beetle_com_raw <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA")
+# Beetle community complementary dataset, at family level
+beetle_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA")
 
-# Arthropod community table, with families/orders as columns and pitfall traps as rows
+# Desired variables beetle dataset
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## samplingStart - First day of the sampling period
+## samplingEnd - Last day of the sampling period
+## familyName - Beetle family latin name
+## trapCount - Number of beetles counted in each dung-baited pitfall trap
 
-#
-## Summary - Check table size, list of variables, variable types (num/chr)
+# Consistency and reproducibility
 
-#str(arthro_main) # Sampling period a bit messy
-#str(arthro_sup) # Need to check Latin names for families
+## Check variable types
+# str(beetle_com_raw) # validated
+# str(beetle_com_sup) # validated
 
-#
-## Character cleaning, Common ID and correct Latin names for merging
+## R-friendly with janitor package
+beetle_com_raw <- beetle_com_raw |>  
+  clean_names("lower_camel")
+beetle_com_sup <- beetle_com_sup |>  
+  clean_names("lower_camel")
 
-# Character cleaning
-names(arthro_sup) <- gsub(" ", "", names(arthro_sup))
-names(arthro_main) <- gsub("-", "", names(arthro_main))
+## Variable names
+names(beetle_com_raw) <- gsub("site", "siteID", names(beetle_com_raw))
+names(beetle_com_raw) <- gsub("pitfallId", "subplotID", names(beetle_com_raw))
+names(beetle_com_raw) <- gsub("scarabidae", "scarabaeidae", names(beetle_com_raw)) #rename families
+names(beetle_com_raw) <- gsub("ptilidae", "ptiliidae", names(beetle_com_raw)) #rename families
+names(beetle_com_raw) <- gsub("other", "nonIdentifiedColeoptera", names(beetle_com_raw)) #rename families
+names(beetle_com_raw) <- gsub("comments", "commentsSampling", names(beetle_com_raw)) #rename families
+names(beetle_com_sup) <- gsub("site", "siteID", names(beetle_com_sup))
+names(beetle_com_sup) <- gsub("pitfallId", "subplotID", names(beetle_com_sup))
+names(beetle_com_sup) <- gsub("curculinoideae", "curculionidae", names(beetle_com_sup)) #rename families
+names(beetle_com_sup) <- gsub("chysomelidae", "chrysomelidae", names(beetle_com_sup)) #rename families
+names(beetle_com_sup) <- gsub("other", "nonIdentifiedColeoptera", names(beetle_com_sup)) #rename families
 
-# Common ID
-names(arthro_main) <- gsub("Site", "SiteID", names(arthro_main))
-names(arthro_main) <- gsub("Pitfall_ID", "SampleID", names(arthro_main))
-names(arthro_sup) <- gsub("Site", "SiteID", names(arthro_sup))
-names(arthro_sup) <- gsub("PitfallID", "SampleID", names(arthro_sup))
-names(arthro_sup) <- gsub("Samplingperiod", "Sampling_period", names(arthro_sup))
+# Dataset
 
-# Latin names
-names(arthro_main) <- gsub("Scarabidae", "Scarabaeidae", names(arthro_main)) #rename families
-names(arthro_main) <- gsub("Ptilidae", "Ptiliidae", names(arthro_main)) #rename families
-names(arthro_sup) <- gsub("Curculinoideae", "Curculionidae", names(arthro_sup)) #rename families
-names(arthro_sup) <- gsub("Chysomelidae", "Chrysomelidae", names(arthro_sup)) #rename families
+## Merging main and complementary datasets
+beetle_com <- full_join(beetle_com_raw, beetle_com_sup)
 
-# Binding main and complementary tables
-arthro_raw <- full_join(arthro_main, arthro_sup)
+## Selection desired variables
+beetle_com <- subset(
+  beetle_com, select = -c(
+    # anonymous
+    whoIdentified,
+    # other arthropods
+    spider,
+    diptera,
+    hemiptera,
+    hymenoptera,
+    opilion,
+    worm,
+    slug,
+    snail,
+    cloporte,
+    millipoda,
+    orthoptera,
+    nonIdentified,
+    # redundant with other datasets
+    year,
+    habitat,
+    livestock,
+    # redundant with comments
+    storage
+  )
+)
 
-#
+## Sampling period start & end variables
+
+### List sampling periods
+unique(beetle_com$samplingPeriod) # missing values
+beetle_com[is.na(beetle_com$samplingPeriod),] # 4 sites without sampling periods
+
+### Start and end date variables
+beetle_com <- beetle_com |>
+  mutate(samplingStart = ifelse(
+    samplingPeriod == "26.06-03.07.2019", "2019-06-26", ifelse(
+      samplingPeriod == "20-27.06.2019", "2019-06-20", ifelse(
+        samplingPeriod == "12-19.07.2019", "2019-07-12", ifelse(
+          samplingPeriod == "02-09.08.2019" | samplingPeriod == "02-09/08/2019", "2019-08-02", ifelse(
+            samplingPeriod == "02-09.07.2020", "2020-07-02", ifelse(
+              samplingPeriod == "03-10.07.2020", "2020-07-03", ifelse(
+                samplingPeriod == "10-17.07.2020", "2020-07-10", ifelse(
+                  samplingPeriod == "27.07-03.08.2020", "2020-07-27", "2020-08-06"
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )) |> 
+  mutate(samplingEnd = ifelse(
+    samplingPeriod == "26.06-03.07.2019", "2019-07-03", ifelse(
+      samplingPeriod == "20-27.06.2019", "2019-06-27", ifelse(
+        samplingPeriod == "12-19.07.2019", "2019-07-19", ifelse(
+          samplingPeriod == "02-09.08.2019" | samplingPeriod == "02-09/08/2019", "2019-08-09", ifelse(
+            samplingPeriod == "02-09.07.2020", "2020-07-09", ifelse(
+              samplingPeriod == "03-10.07.2020", "2020-07-10", ifelse(
+                samplingPeriod == "10-17.07.2020", "2020-07-17", ifelse(
+                  samplingPeriod == "27.07-03.08.2020", "2020-08-03", "2020-08-13"
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )) 
+  
+table(beetle_com$samplingPeriod) # missing values
+table(beetle_com$samplingStart) # missing values
+
+
 ## Summary sampling area - Check table size, list of variables, variable types (num/chr)
 
 #str(arthro_raw) # all good except from period of sampling which has messy format - also missing plotID
@@ -1241,23 +1320,6 @@ test <- arthro_full |>
 #arthro_full[is.na(arthro_full$Beetle),] # 9 NAs -> pitfall traps crushed in OC5 (5), OC4 (1), IC5 (1) or water overloaded in US2 (2)
 #hist(arthro_full$Beetle) # Poisson distribution, skewed.
 
-# Distribution of beetle families
-#hist(arthro_full$Staphylinidae) # Poisson, skewed from 0 to over 1000
-#hist(arthro_full$Carabidae) # Poisson, skewed from 0 to 15
-#hist(arthro_full$Hydrophilidae) # Poisson, skewed, from 0 to 130
-#hist(arthro_full$Scarabaeidae) # Poisson, skewed, from 0 to 35
-#hist(arthro_full$Ptiliidae) # Poisson, skewed from 0 to 400
-#hist(arthro_full$Curculionidae) # Low abundance (from 1 to 4), but 50 samples have at least one
-#hist(arthro_full$Elateridae) # Low abundance (from 1 to 4), but 50 samples have at least one
-#hist(arthro_full$Leiodidae) # Only two loners -> not to be taken in account in the analysis
-#hist(arthro_full$Rhizophagidae) # Only two loners -> not to be taken in account in the analysis
-#hist(arthro_full$Silphidae) # Poisson, skewed from 0 to 35
-#hist(arthro_full$Histeridae) # Very low abundance (10 pitfall traps with 1-2) -> not to be taken in account
-#hist(arthro_full$Geotrupidae) # Low abundance (from 1 to 3), but 20 samples have at least one
-#hist(arthro_full$Chrysomelidae) # Only four loners -> not to be taken in account
-#hist(arthro_full$Dascillidae) # Only one loner -> not to be taken in account
-#hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
-
 #
 ## Table formatting for vegan
 
@@ -1295,4 +1357,18 @@ write_csv(beetle_full, "data/cleandata/NBR_FullBeetleComm.csv")
 write_csv(arthro_full, "data/cleandata/NBR_FullArtComm.csv")
 
 
+#### NON-DESTRUCTIVE SUBPLOTS - OTHER ARTHROPOD COMMUNITY ####
+
+# Raw datasets
+# Other arthropod community main dataset, at order level
+arthro_com_raw <- read_excel(path = "data/rawdata/NBR_RawArthro.xlsx", na="NA")
+# Other arthropod community complementary dataset, at order level 
+arthro_com_sup <- read_excel(path = "data/rawdata/NBR_RawArthroSup.xlsx", na="NA")
+
+# Desired variables
+## siteID - Field identification code for data collection
+## plotID - Plot identification code for data collection
+## subplotID - Subplot identification code for data collection
+## speciesName - Plant species latin name
+## percentCover - Estimated percent cover of plant species in 1 m^2^
 
