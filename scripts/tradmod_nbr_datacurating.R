@@ -547,3 +547,45 @@ vege_full <- subset(vege_full, Species != "Bryophyte sp" &
                       Species != "Poaceae sp" &
                       Species != "Orchidaceae sp")
 
+
+#### DESTRUCTIVE SUBPLOT - BEETLE COMMUNITY ####
+
+## Numeric var - Check min/max, distribution and potential outliers
+
+# Check min/max
+test <- arthro_full |>  
+  summarise(
+    tibble(
+      across(
+        where(is.numeric),
+        ~min(.x, na.rm = TRUE),
+        .names = "min_{.col}"
+      ),
+      across(
+        where(is.numeric),
+        ~max(.x, na.rm = TRUE),
+        .names = "max_{.col}")
+    )
+  ) |>  
+  transpose() # no obvious outliers, some loners
+
+# Tot Beetle
+#arthro_full[is.na(arthro_full$Beetle),] # 9 NAs -> pitfall traps crushed in OC5 (5), OC4 (1), IC5 (1) or water overloaded in US2 (2)
+#hist(arthro_full$Beetle) # Poisson distribution, skewed.
+
+# Distribution of beetle families
+#hist(arthro_full$Staphylinidae) # Poisson, skewed from 0 to over 1000
+#hist(arthro_full$Carabidae) # Poisson, skewed from 0 to 15
+#hist(arthro_full$Hydrophilidae) # Poisson, skewed, from 0 to 130
+#hist(arthro_full$Scarabaeidae) # Poisson, skewed, from 0 to 35
+#hist(arthro_full$Ptiliidae) # Poisson, skewed from 0 to 400
+#hist(arthro_full$Curculionidae) # Low abundance (from 1 to 4), but 50 samples have at least one
+#hist(arthro_full$Elateridae) # Low abundance (from 1 to 4), but 50 samples have at least one
+#hist(arthro_full$Leiodidae) # Only two loners -> not to be taken in account in the analysis
+#hist(arthro_full$Rhizophagidae) # Only two loners -> not to be taken in account in the analysis
+#hist(arthro_full$Silphidae) # Poisson, skewed from 0 to 35
+#hist(arthro_full$Histeridae) # Very low abundance (10 pitfall traps with 1-2) -> not to be taken in account
+#hist(arthro_full$Geotrupidae) # Low abundance (from 1 to 3), but 20 samples have at least one
+#hist(arthro_full$Chrysomelidae) # Only four loners -> not to be taken in account
+#hist(arthro_full$Dascillidae) # Only one loner -> not to be taken in account
+#hist(arthro_full$Erotylidae) # Only one loner -> not to be taken in account
