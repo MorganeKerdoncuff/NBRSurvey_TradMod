@@ -116,24 +116,34 @@ When applicable, we removed contextual variables already accounted for in "tradm
 
 ///Individual data cleaning and curation cases.
 We removed one site entirely from all datasets because the habitat type (bog) was an outlier and the data collection process subsenquently interrupted for this site.
+
 The dataset "tradmod_nbr_sitedescription.csv" resulted from the merging of two datasets including on-site contextual variables and management variables from farmer interview data respectively.
 When necessary, we completed missing values of flock size using interview data of the same farmers from Margit Reiersen (2019). Bærekraft i Vestnorsk Landbruk - En deskriptiv studie av landbruket i Nordhordland Biosfæreområdet og bøndenes syn på bærekraft i landbruket. https://hdl.handle.net/1956/20820
+
 In "tradmod_nbr_samplingarea.csv", we removed redundant variables including:
 minimum elevation recorded in the sampling area, which was unnecessary as maximum elevation and slope were recorded;
 aspect cardinal direction, which was unnecessary as aspect degree was recorded.
+
 In "tradmod_nbr_groundcover.csv", we removed plant species richness variables, which was already accounted for in "plant community".
+
 In "tradmod_nbr_soilbulk.csv", we calculated corrected core volume (substraction empty volumes) in Excel and corrected weight measurements (substraction PVC core and cheesecloth weights) in R.
 Only corrected variables were kept in the final dataset.
 Several weight values of samples with low soil volume are inaccurate because of an issue that occurred with the weighing scale.
 We therefore recommend to filter data from cores containing at least 50 cm^3^ of soil.
 We removed one record (ic3-p1-d3-r1) because of a wrong data entry of water saturated weight (10.35 g).
+
 The dataset "tradmod_nbr_soilchemistry.csv" resulted from the merging of several files of soil chemistry data received in either txt, xls, and pdf formats.
 When data was only provided in a PDF file, we entered the values manually in R.
 When applicable, we replaced the numerical factor of categorical variables by the corresponding character strings.
+
 The dataset "tradmod_nbr_soilmesofauna.csv" resulted from the merging of a dataset containing mesofauna count values and a dataset containing core height.
 We calculated core volume from the corrected measurement of soil core height after sampling.
+
 The dataset "tradmod_nbr_abovegroundbiomass.csv" contains many missing values because biomass sorting was not performed on all samples due to a lack of time. 
 We calculated aboveground biomass dry weight by substracting standard bag weights, which could result in negative values when biomass weight was very light.
+
+In "tradmod_nbr_plantcommunity.csv", we found three missing values of plant cover: Rhytidiadelphus squarrosus and Hypnum cupressiforme in os2-p1-n5, and Festuca rubra in os2-p2-n4.
+
 
 The R script used for data cleaning is available on GitHub: https://github.com/MorganeKerdoncuff/NBRSurvey_TradMod/blob/master/scripts/tradmod_nbr_datacleaning.R
 
@@ -181,6 +191,9 @@ Count data of soil Acari and Collembola extracted from 1040 cm^3^ soil cores (di
 
 ///tradmod_nbr_abovegroundbiomass.csv
 Dry weight data of vegetation aboveground biomass collected in 0.5 m x 0.5 m quadrats in the destructive subplots.
+
+///tradmod_nbr_plantcommunity.csv
+Plant species percent cover data recorded in 1 m^2^ non-destructive subplots.
 
 // Relationship between files, if important: 
 All files can be analysed separately, but we recommend to always refer to tradmod_nbr_sitedescription.csv.
@@ -758,6 +771,37 @@ Variable type: qualitative (value: woody; forb; monocotyledon; fern; bryophyte; 
 Description: Aboveground biomass weight after drying at 65°C for 48H. 
 Variable type: quantitative.
 Unit: g.
+Decimal separator: "."
+
+// Missing data codes: 
+"NA"
+
+-------------------------------------------------------------
+DATA-SPECIFIC INFORMATION FOR: tradmod_nbr_plantcommunity.csv
+-------------------------------------------------------------
+
+// Variable/Column List: 
+
+///siteID
+Description: Site identification code.
+Variable type: qualitative.
+
+///plotID
+Description: Plot identification code.
+Variable type: qualitative.
+
+///subplotID
+Description: Subplot identification code.
+Variable type: qualitative.
+
+///speciesName
+Description: Latin name of plant species.
+Variable type: qualitative.
+
+///percentCover
+Description: Estimated percent cover of plant species in a 1 m^2^ subplot. 
+Variable type: quantitative.
+Unit: percent.
 Decimal separator: "."
 
 // Missing data codes: 
